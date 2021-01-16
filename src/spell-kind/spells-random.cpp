@@ -159,7 +159,8 @@ bool activate_ty_curse(player_type *target_ptr, bool stop_ty, int *count)
         case 8:
         case 9:
         case 18:
-            (*count) += summon_specific(target_ptr, 0, target_ptr->y, target_ptr->x, floor_ptr->dun_level, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET));
+            (*count) += summon_specific(
+                target_ptr, 0, target_ptr->y, target_ptr->x, floor_ptr->dun_level, SUMMON_NONE, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET));
             if (!one_in_(6))
                 break;
             /* Fall through */
@@ -237,7 +238,7 @@ bool activate_ty_curse(player_type *target_ptr, bool stop_ty, int *count)
  */
 void wild_magic(player_type *caster_ptr, int spell)
 {
-    int type = SUMMON_MOLD + randint0(6);
+    summon_type type = summon_type(SUMMON_MOLD + randint0(6));
     if (type < SUMMON_MOLD)
         type = SUMMON_MOLD;
     else if (type > SUMMON_MIMIC)

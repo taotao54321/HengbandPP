@@ -67,22 +67,22 @@ static bool exe_alter(player_type *creature_ptr)
     f_ptr = &f_info[feat];
     take_turn(creature_ptr, 100);
     if (g_ptr->m_idx) {
-        do_cmd_attack(creature_ptr, y, x, 0);
+        do_cmd_attack(creature_ptr, y, x, combat_options(0));
         return FALSE;
     }
-    
+
     if (has_flag(f_ptr->flags, FF_OPEN))
         return exe_open(creature_ptr, y, x);
-    
+
     if (has_flag(f_ptr->flags, FF_BASH))
         return exe_bash(creature_ptr, y, x, dir);
-    
+
     if (has_flag(f_ptr->flags, FF_TUNNEL))
         return exe_tunnel(creature_ptr, y, x);
-    
+
     if (has_flag(f_ptr->flags, FF_CLOSE))
         return exe_close(creature_ptr, y, x);
-    
+
     if (has_flag(f_ptr->flags, FF_DISARM))
         return exe_disarm(creature_ptr, y, x, dir);
 

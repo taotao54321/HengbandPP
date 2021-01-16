@@ -88,7 +88,7 @@ void learnt_info(player_type *learner_ptr, char *p, int power)
     case MS_BALL_MANA:
     case MS_BALL_DARK:
     case MS_STARBURST:
-        set_bluemage_damage(learner_ptr, power, plev, KWD_DAM, p);
+        set_bluemage_damage(learner_ptr, monster_spell_type(power), plev, KWD_DAM, p);
         break;
     case MS_DISPEL:
         break;
@@ -125,10 +125,10 @@ void learnt_info(player_type *learner_ptr, char *p, int power)
     case MS_BALL_POIS:
     case MS_BALL_NETHER:
     case MS_BALL_WATER:
-        set_bluemage_damage(learner_ptr, power, plev, KWD_DAM, p);
+        set_bluemage_damage(learner_ptr, monster_spell_type(power), plev, KWD_DAM, p);
         break;
     case MS_DRAIN_MANA:
-        set_bluemage_damage(learner_ptr, power, plev, KWD_HEAL, p);
+        set_bluemage_damage(learner_ptr, monster_spell_type(power), plev, KWD_HEAL, p);
         break;
     case MS_MIND_BLAST:
     case MS_BRAIN_SMASH:
@@ -146,13 +146,13 @@ void learnt_info(player_type *learner_ptr, char *p, int power)
     case MS_BOLT_PLASMA:
     case MS_BOLT_ICE:
     case MS_MAGIC_MISSILE:
-        set_bluemage_damage(learner_ptr, power, plev, KWD_DAM, p);
+        set_bluemage_damage(learner_ptr, monster_spell_type(power), plev, KWD_DAM, p);
         break;
     case MS_SPEED:
         sprintf(p, " %sd%d+%d", KWD_DURATION, 20 + plev, plev);
         break;
     case MS_HEAL:
-        set_bluemage_damage(learner_ptr, power, plev, KWD_HEAL, p);
+        set_bluemage_damage(learner_ptr, monster_spell_type(power), plev, KWD_HEAL, p);
         break;
     case MS_INVULNER:
         sprintf(p, " %sd7+7", KWD_DURATION);
@@ -164,7 +164,7 @@ void learnt_info(player_type *learner_ptr, char *p, int power)
         sprintf(p, " %s%d", KWD_SPHERE, plev * 5);
         break;
     case MS_PSY_SPEAR:
-        set_bluemage_damage(learner_ptr, power, plev, KWD_DAM, p);
+        set_bluemage_damage(learner_ptr, monster_spell_type(power), plev, KWD_DAM, p);
         break;
         break;
     case MS_RAISE_DEAD:

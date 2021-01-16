@@ -78,13 +78,13 @@ typedef struct {
 static BUF *buf_new(void)
 {
     BUF *p;
-    p = malloc(sizeof(BUF));
+    p = (BUF *)malloc(sizeof(BUF));
     if (!p)
         return NULL;
 
     p->size = 0;
     p->max_size = BUFSIZE;
-    p->data = malloc(BUFSIZE);
+    p->data = (char *)malloc(BUFSIZE);
     if (!p->data) {
         free(p);
         return NULL;
@@ -114,7 +114,7 @@ static int buf_append(BUF *buf, concptr data, size_t size)
 {
     while (buf->size + size > buf->max_size) {
         char *tmp;
-        if ((tmp = malloc(buf->max_size * 2)) == NULL)
+        if ((tmp = (char *)malloc(buf->max_size * 2)) == NULL)
             return -1;
 
         memcpy(tmp, buf->data, buf->max_size);

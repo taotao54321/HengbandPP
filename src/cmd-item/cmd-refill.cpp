@@ -5,17 +5,17 @@
 #include "inventory/inventory-object.h"
 #include "inventory/inventory-slot-types.h"
 #include "object-enchant/object-ego.h"
+#include "object-enchant/tr-types.h"
 #include "object-hook/hook-expendable.h"
 #include "object/item-tester-hooker.h"
 #include "object/item-use-flags.h"
+#include "object/object-flags.h"
 #include "player/attack-defense-types.h"
 #include "player/special-defense-types.h"
 #include "status/action-setter.h"
 #include "sv-definition/sv-lite-types.h"
-#include "view/display-messages.h"
-#include "object-enchant/tr-types.h"
-#include "object/object-flags.h"
 #include "util/bit-flags-calculator.h"
+#include "view/display-messages.h"
 
 /*!
  * @brief ランタンに燃料を加えるコマンドのメインルーチン
@@ -30,7 +30,7 @@ static void do_cmd_refill_lamp(player_type *user_ptr)
     item_tester_hook = item_tester_refill_lantern;
     concptr q = _("どの油つぼから注ぎますか? ", "Refill with which flask? ");
     concptr s = _("油つぼがない。", "You have no flasks of oil.");
-    o_ptr = choose_object(user_ptr, &item, q, s, USE_INVEN | USE_FLOOR, 0);
+    o_ptr = choose_object(user_ptr, &item, q, s, USE_INVEN | USE_FLOOR, TV_NONE);
     if (!o_ptr)
         return;
 
@@ -70,7 +70,7 @@ static void do_cmd_refill_torch(player_type *user_ptr)
     item_tester_hook = object_can_refill_torch;
     concptr q = _("どの松明で明かりを強めますか? ", "Refuel with which torch? ");
     concptr s = _("他に松明がない。", "You have no extra torches.");
-    o_ptr = choose_object(user_ptr, &item, q, s, USE_INVEN | USE_FLOOR, 0);
+    o_ptr = choose_object(user_ptr, &item, q, s, USE_INVEN | USE_FLOOR, TV_NONE);
     if (!o_ptr)
         return;
 

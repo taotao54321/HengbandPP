@@ -33,8 +33,8 @@
 #include "spell-kind/spells-launcher.h"
 #include "spell/spell-types.h"
 #include "system/floor-type-definition.h"
-#include "target/target-checker.h"
 #include "target/grid-selector.h"
+#include "target/target-checker.h"
 #include "util/bit-flags-calculator.h"
 #include "view/display-messages.h"
 #include "world/world.h"
@@ -369,7 +369,7 @@ bool teleport_player_aux(player_type *creature_ptr, POSITION dis, bool is_quantu
  * @param mode オプション
  * @return なし
  */
-void teleport_player(player_type *creature_ptr, POSITION dis, BIT_FLAGS mode)
+void teleport_player(player_type *creature_ptr, POSITION dis, teleport_flags mode)
 {
     if (!teleport_player_aux(creature_ptr, dis, FALSE, mode))
         return;

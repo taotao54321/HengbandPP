@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-typedef enum combat_options {
-	HISSATSU_NONE = 0,
+enum combat_options {
+    HISSATSU_NONE = 0,
     HISSATSU_2 = 1,
     HISSATSU_3WAY = 2,
     HISSATSU_SUTEMI = 3,
@@ -33,4 +33,4 @@ typedef enum combat_options {
     HISSATSU_3DAN = 29,
     HISSATSU_100NIN = 30,
     HISSATSU_IAI = 100,
-} combat_options;
+};

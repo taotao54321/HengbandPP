@@ -109,7 +109,7 @@ bool know_damage(MONRACE_IDX r_idx, int i)
  * @param tmp 返すメッセージを格納する配列
  * @return なし
  */
-void set_damage(player_type *player_ptr, MONRACE_IDX r_idx, monster_spell_type ms_type, char *msg, char *tmp)
+void set_damage(player_type *player_ptr, MONRACE_IDX r_idx, monster_spell_type ms_type, const char *msg, char *tmp)
 {
     int base_damage = monspell_race_damage(player_ptr, ms_type, r_idx, BASE_DAM);
     int dice_num = monspell_race_damage(player_ptr, ms_type, r_idx, DICE_NUM);

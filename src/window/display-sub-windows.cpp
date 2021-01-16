@@ -206,7 +206,7 @@ static void display_equipment(player_type *owner_ptr, tval_type tval)
     TERM_COLOR attr = TERM_WHITE;
     char tmp_val[80];
     GAME_TEXT o_name[MAX_NLEN];
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         o_ptr = &owner_ptr->inventory_list[i];
         tmp_val[0] = tmp_val[1] = tmp_val[2] = ' ';
@@ -216,7 +216,8 @@ static void display_equipment(player_type *owner_ptr, tval_type tval)
         }
 
         term_putstr(0, i - INVEN_RARM, 3, TERM_WHITE, tmp_val);
-        if ((((i == INVEN_RARM) && has_left_hand_weapon(owner_ptr)) || ((i == INVEN_LARM) && has_right_hand_weapon(owner_ptr))) && has_two_handed_weapons(owner_ptr)) {
+        if ((((i == INVEN_RARM) && has_left_hand_weapon(owner_ptr)) || ((i == INVEN_LARM) && has_right_hand_weapon(owner_ptr)))
+            && has_two_handed_weapons(owner_ptr)) {
             strcpy(o_name, _("(武器を両手持ち)", "(wielding with two-hands)"));
             attr = TERM_WHITE;
         } else {

@@ -16,13 +16,13 @@
 #include "object/object-info.h"
 #include "object/object-kind.h"
 #include "perception/object-perception.h"
-#include "player/attack-defense-types.h"
 #include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
 #include "player/player-class.h"
 #include "player/player-race-types.h"
 #include "player/player-race.h"
-#include "player/player-status.h"
 #include "player/player-status-flags.h"
+#include "player/player-status.h"
 #include "player/special-defense-types.h"
 #include "spell-kind/earthquake.h"
 #include "spell-kind/spells-curse-removal.h"
@@ -94,7 +94,7 @@ int staff_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, bool *use
     case SV_STAFF_SUMMONING: {
         const int times = randint1(powerful ? 8 : 4);
         for (k = 0; k < times; k++) {
-            if (summon_specific(creature_ptr, 0, creature_ptr->y, creature_ptr->x, creature_ptr->current_floor_ptr->dun_level, 0,
+            if (summon_specific(creature_ptr, 0, creature_ptr->y, creature_ptr->x, creature_ptr->current_floor_ptr->dun_level, SUMMON_NONE,
                     (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET))) {
                 ident = TRUE;
             }
@@ -103,17 +103,17 @@ int staff_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, bool *use
     }
 
     case SV_STAFF_TELEPORTATION: {
-        teleport_player(creature_ptr, (powerful ? 150 : 100), 0L);
+        teleport_player(creature_ptr, (powerful ? 150 : 100), teleport_flags(0L));
         ident = TRUE;
         break;
     }
 
     case SV_STAFF_IDENTIFY: {
         if (powerful) {
-            if (!identify_fully(creature_ptr, FALSE, 0))
+            if (!identify_fully(creature_ptr, FALSE, TV_NONE))
                 *use_charge = FALSE;
         } else {
-            if (!ident_spell(creature_ptr, FALSE, 0))
+            if (!ident_spell(creature_ptr, FALSE, TV_NONE))
                 *use_charge = FALSE;
         }
         ident = TRUE;

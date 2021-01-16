@@ -10,11 +10,11 @@
 #include "object-enchant/apply-magic.h"
 #include "object-enchant/item-apply-magic.h"
 #include "object-enchant/object-ego.h"
-#include "perception/object-perception.h"
 #include "object/object-generator.h"
+#include "object/object-info.h"
 #include "object/object-kind-hook.h"
 #include "object/object-kind.h"
-#include "object/object-info.h"
+#include "perception/object-perception.h"
 #include "player/player-personalities-types.h"
 #include "player/player-race-types.h"
 #include "realm/realm-types.h"
@@ -187,7 +187,7 @@ void player_outfit(player_type *creature_ptr)
         add_outfit(creature_ptr, q_ptr);
     } else if (creature_ptr->pclass == CLASS_SORCERER) {
         tval_type book_tval;
-        for (book_tval = TV_LIFE_BOOK; book_tval <= TV_LIFE_BOOK + MAX_MAGIC - 1; book_tval++) {
+        for (book_tval = TV_LIFE_BOOK; book_tval <= TV_LIFE_BOOK + MAX_MAGIC - 1; book_tval = tval_type(book_tval + 1)) {
             object_prep(creature_ptr, q_ptr, lookup_kind(book_tval, 0));
             q_ptr->number = 1;
             add_outfit(creature_ptr, q_ptr);
@@ -239,15 +239,15 @@ void player_outfit(player_type *creature_ptr)
     }
 
     for (int i = 0; i < 3; i++) {
-        tval_type tv = player_init[creature_ptr->pclass][i][0];
+        tval_type tv = tval_type(player_init[creature_ptr->pclass][i][0]);
         OBJECT_SUBTYPE_VALUE sv = player_init[creature_ptr->pclass][i][1];
         if ((creature_ptr->prace == RACE_ANDROID) && ((tv == TV_SOFT_ARMOR) || (tv == TV_HARD_ARMOR)))
             continue;
 
         if (tv == TV_SORCERY_BOOK)
-            tv = TV_LIFE_BOOK + creature_ptr->realm1 - 1;
+            tv = tval_type(TV_LIFE_BOOK + creature_ptr->realm1 - 1);
         else if (tv == TV_DEATH_BOOK)
-            tv = TV_LIFE_BOOK + creature_ptr->realm2 - 1;
+            tv = tval_type(TV_LIFE_BOOK + creature_ptr->realm2 - 1);
         else if (tv == TV_RING && sv == SV_RING_RES_FEAR && creature_ptr->prace == RACE_BARBARIAN)
             sv = SV_RING_SUSTAIN_STR;
         else if (tv == TV_RING && sv == SV_RING_SUSTAIN_INT && creature_ptr->prace == RACE_MIND_FLAYER) {

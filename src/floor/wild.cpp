@@ -300,7 +300,7 @@ static void generate_area(player_type *player_ptr, POSITION y, POSITION x, bool 
     if (player_ptr->town_num) {
         init_buildings();
         if (border | corner)
-            init_flags = INIT_CREATE_DUNGEON | INIT_ONLY_FEATURES;
+            init_flags = init_flags_type(INIT_CREATE_DUNGEON | INIT_ONLY_FEATURES);
         else
             init_flags = INIT_CREATE_DUNGEON;
 
@@ -400,7 +400,7 @@ void wilderness_gen(player_type *creature_ptr)
     generate_area(creature_ptr, y + 1, x, TRUE, FALSE);
     for (int i = 1; i < MAX_WID - 1; i++)
         border.south[i] = floor_ptr->grid_array[1][i].feat;
-    
+
     /* West border */
     generate_area(creature_ptr, y, x - 1, TRUE, FALSE);
     for (int i = 1; i < MAX_HGT - 1; i++)
@@ -654,9 +654,9 @@ errr parse_line_wilderness(player_type *creature_ptr, char *buf, int xmin, int x
             int index = zz[0][0];
 
             if (num > 1)
-                w_letter[index].terrain = atoi(zz[1]);
+                w_letter[index].terrain = wt_type(atoi(zz[1]));
             else
-                w_letter[index].terrain = 0;
+                w_letter[index].terrain = wt_type(0);
 
             if (num > 2)
                 w_letter[index].level = (s16b)atoi(zz[2]);

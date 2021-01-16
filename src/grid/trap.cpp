@@ -25,8 +25,8 @@
 #include "player/player-class.h"
 #include "player/player-damage.h"
 #include "player/player-personalities-types.h"
-#include "player/player-status.h"
 #include "player/player-status-flags.h"
+#include "player/player-status.h"
 #include "spell-kind/spells-launcher.h"
 #include "spell-kind/spells-random.h"
 #include "spell-kind/spells-sight.h"
@@ -456,7 +456,7 @@ void hit_trap(player_type *trapped_ptr, bool break_trap)
         msg_print(_("何かがピカッと光った！", "There is a flash of shimmering light!"));
         num = 2 + randint1(3);
         for (i = 0; i < num; i++) {
-            (void)summon_specific(trapped_ptr, 0, y, x, trapped_ptr->current_floor_ptr->dun_level, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET));
+            (void)summon_specific(trapped_ptr, 0, y, x, trapped_ptr->current_floor_ptr->dun_level, SUMMON_NONE, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET));
         }
 
         if (trapped_ptr->current_floor_ptr->dun_level > randint1(100)) /* No nasty effect for low levels */
@@ -519,8 +519,7 @@ void hit_trap(player_type *trapped_ptr, bool break_trap)
 
     case TRAP_CONFUSE: {
         hit_trap_set_abnormal_status_p(trapped_ptr, _("きらめくガスに包み込まれた！", "A gas of scintillating colors surrounds you!"),
-            (has_resist_conf(trapped_ptr) != 0),
-            set_confused, trapped_ptr->confused + (TIME_EFFECT)randint0(20) + 10);
+            (has_resist_conf(trapped_ptr) != 0), set_confused, trapped_ptr->confused + (TIME_EFFECT)randint0(20) + 10);
         break;
     }
 

@@ -11,12 +11,12 @@
 #include "main/sound-of-music.h"
 #include "mind/mind-blue-mage.h"
 #include "mspell/monster-power-table.h"
+#include "player/player-status-table.h"
 #include "realm/realm-types.h"
 #include "spell/spell-info.h"
 #include "term/screen-processor.h"
 #include "util/int-char-converter.h"
 #include "view/display-messages.h"
-#include "player/player-status-table.h"
 
 typedef struct learnt_magic_type {
     int blue_magic_num;
@@ -170,7 +170,7 @@ static bool check_blue_magic_kind(learnt_magic_type *lm_ptr)
 
 static bool sweep_learnt_spells(player_type *caster_ptr, learnt_magic_type *lm_ptr)
 {
-    set_rf_masks(&lm_ptr->f4, &lm_ptr->f5, &lm_ptr->f6, lm_ptr->mode);
+    set_rf_masks(&lm_ptr->f4, &lm_ptr->f5, &lm_ptr->f6, blue_magic_type(lm_ptr->mode));
     for (lm_ptr->blue_magic_num = 0, lm_ptr->count = 0; lm_ptr->blue_magic_num < 32; lm_ptr->blue_magic_num++)
         if ((0x00000001 << lm_ptr->blue_magic_num) & lm_ptr->f4)
             lm_ptr->blue_magics[lm_ptr->count++] = lm_ptr->blue_magic_num;

@@ -1,4 +1,5 @@
-﻿#include "system/angband.h"
+﻿#include "player/player-status-table.h"
+#include "system/angband.h"
 
 /*!
  * @brief 能力値テーブル / Abbreviations of healthy stats

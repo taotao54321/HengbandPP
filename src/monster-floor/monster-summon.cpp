@@ -108,7 +108,7 @@ bool summon_specific(player_type *player_ptr, MONSTER_IDX who, POSITION y1, POSI
 
     MONRACE_IDX r_idx = get_mon_num(player_ptr, (floor_ptr->dun_level + lev) / 2 + 5, 0);
     if (!r_idx) {
-        summon_specific_type = 0;
+        summon_specific_type = SUMMON_NONE;
         return FALSE;
     }
 
@@ -116,11 +116,11 @@ bool summon_specific(player_type *player_ptr, MONSTER_IDX who, POSITION y1, POSI
         mode |= PM_NO_KAGE;
 
     if (!place_monster_aux(player_ptr, who, y, x, r_idx, mode)) {
-        summon_specific_type = 0;
+        summon_specific_type = SUMMON_NONE;
         return FALSE;
     }
 
-    summon_specific_type = 0;
+    summon_specific_type = SUMMON_NONE;
     sound(SOUND_SUMMON);
     return TRUE;
 }

@@ -19,11 +19,11 @@ typedef union spell_functions {
 
 } spell_functions;
 
-typedef struct debug_spell_command {
+struct debug_spell_command {
     int type;
-    char *command_name;
+    const char *command_name;
     spell_functions command_function;
-} debug_spell_command;
+};
 
 extern debug_spell_command debug_spell_commands_list[SPELL_MAX];
 

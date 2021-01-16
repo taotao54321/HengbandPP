@@ -287,7 +287,7 @@ WEIGHT calc_inventory_weight(player_type *creature_ptr)
     WEIGHT weight = 0;
 
     object_type *o_ptr;
-    for (inventory_slot_type i = 0; i < INVEN_TOTAL; i++) {
+    for (int i = 0; i < INVEN_TOTAL; i++) {
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
@@ -1108,7 +1108,7 @@ s16b calc_num_fire(player_type *creature_ptr, object_type *o_ptr)
     int extra_shots = 0;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *q_ptr;
         q_ptr = &creature_ptr->inventory_list[i];
         if (!q_ptr->k_idx)
@@ -1133,7 +1133,7 @@ s16b calc_num_fire(player_type *creature_ptr, object_type *o_ptr)
     num = 100;
     num += (extra_shots * 100);
 
-    tval_type tval_ammo = bow_tval_ammo(o_ptr);
+    tval_type tval_ammo = tval_type(bow_tval_ammo(o_ptr));
     if ((creature_ptr->pclass == CLASS_RANGER) && (tval_ammo == TV_ARROW)) {
         num += (creature_ptr->lev * 4);
     }
@@ -1190,7 +1190,7 @@ static ACTION_SKILL_POWER calc_intra_vision(player_type *creature_ptr)
         pow += 3;
     }
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -1238,7 +1238,7 @@ static ACTION_SKILL_POWER calc_stealth(player_type *creature_ptr)
     pow = 1 + tmp_rp_ptr->r_stl + c_ptr->c_stl + a_ptr->a_stl;
     pow += (c_ptr->x_stl * creature_ptr->lev / 10);
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -1340,7 +1340,7 @@ static ACTION_SKILL_POWER calc_device_ability(player_type *creature_ptr)
     pow = tmp_rp_ptr->r_dev + c_ptr->c_dev + a_ptr->a_dev;
     pow += ((c_ptr->x_dev * creature_ptr->lev / 10) + (ap_ptr->a_dev * creature_ptr->lev / 50));
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -1438,7 +1438,7 @@ static ACTION_SKILL_POWER calc_search(player_type *creature_ptr)
     pow = tmp_rp_ptr->r_srh + c_ptr->c_srh + a_ptr->a_srh;
     pow += (c_ptr->x_srh * creature_ptr->lev / 10);
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -1486,7 +1486,7 @@ static ACTION_SKILL_POWER calc_search_freq(player_type *creature_ptr)
     pow = tmp_rp_ptr->r_fos + c_ptr->c_fos + a_ptr->a_fos;
     pow += (c_ptr->x_fos * creature_ptr->lev / 10);
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -1620,7 +1620,7 @@ static ACTION_SKILL_POWER calc_skill_dig(player_type *creature_ptr)
     if (creature_ptr->pclass == CLASS_BERSERKER)
         pow += (100 + creature_ptr->lev * 8);
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
@@ -1834,7 +1834,7 @@ static s16b calc_strength_addition(player_type *creature_ptr)
             pow++;
     }
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -1909,7 +1909,7 @@ s16b calc_intelligence_addition(player_type *creature_ptr)
     const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
     pow = tmp_rp_ptr->r_adj[A_INT] + c_ptr->c_adj[A_INT] + a_ptr->a_adj[A_INT];
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -1971,7 +1971,7 @@ static s16b calc_wisdom_addition(player_type *creature_ptr)
     const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
     pow = tmp_rp_ptr->r_adj[A_WIS] + c_ptr->c_adj[A_WIS] + a_ptr->a_adj[A_WIS];
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -2045,7 +2045,7 @@ static s16b calc_dexterity_addition(player_type *creature_ptr)
             pow--;
     }
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -2130,7 +2130,7 @@ static s16b calc_constitution_addition(player_type *creature_ptr)
             pow++;
     }
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -2212,7 +2212,7 @@ static s16b calc_charisma_addition(player_type *creature_ptr)
     const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
     pow = tmp_rp_ptr->r_adj[A_CHR] + c_ptr->c_adj[A_CHR] + a_ptr->a_adj[A_CHR];
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -2275,7 +2275,7 @@ static s16b calc_to_magic_chance(player_type *creature_ptr)
     if (creature_ptr->pseikaku == PERSONALITY_CHARGEMAN)
         chance += 5;
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
@@ -2299,7 +2299,7 @@ static ARMOUR_CLASS calc_base_ac(player_type *creature_ptr)
     if (creature_ptr->yoiyami)
         return 0;
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -2343,7 +2343,7 @@ static ARMOUR_CLASS calc_to_ac(player_type *creature_ptr, bool is_true_value)
         ac -= 50;
     }
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr;
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -2416,7 +2416,7 @@ static ARMOUR_CLASS calc_to_ac(player_type *creature_ptr, bool is_true_value)
             ac += 30;
         }
 
-        for (inventory_slot_type i = INVEN_RARM; i <= INVEN_FEET; i++) {
+        for (int i = INVEN_RARM; i <= INVEN_FEET; i++) {
             object_type *o_ptr = &creature_ptr->inventory_list[i];
             if (!o_ptr->k_idx)
                 continue;
@@ -2525,7 +2525,7 @@ static s16b calc_speed(player_type *creature_ptr)
             }
         }
 
-        for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+        for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
             object_type *o_ptr = &creature_ptr->inventory_list[i];
             BIT_FLAGS flgs[TR_FLAG_SIZE];
             object_flags(creature_ptr, o_ptr, flgs);
@@ -2952,7 +2952,7 @@ static s16b calc_to_damage(player_type *creature_ptr, INVENTORY_IDX slot, bool i
         }
     }
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         int bonus_to_d = 0;
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx || o_ptr->tval == TV_CAPTURE || (i == INVEN_RARM && has_melee_weapon(creature_ptr, i))
@@ -3052,7 +3052,7 @@ static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_t
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         object_flags(creature_ptr, o_ptr, flgs);
 
-        tval_type tval = o_ptr->tval - TV_WEAPON_BEGIN;
+        tval_type tval = tval_type(o_ptr->tval - TV_WEAPON_BEGIN);
         OBJECT_SUBTYPE_VALUE sval = o_ptr->sval;
 
         /* Traind bonuses */
@@ -3132,15 +3132,12 @@ static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_t
     }
 
     /* Bonuses from inventory */
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         object_type *o_ptr = &creature_ptr->inventory_list[i];
 
         /* Ignore empty hands, handed weapons, bows and capture balls */
-        if (!o_ptr->k_idx
-            || o_ptr->tval == TV_CAPTURE
-            || (i == INVEN_RARM && has_melee_weapon(creature_ptr, i))
-            || (i == INVEN_LARM && has_melee_weapon(creature_ptr, i))
-            || i == INVEN_BOW)
+        if (!o_ptr->k_idx || o_ptr->tval == TV_CAPTURE || (i == INVEN_RARM && has_melee_weapon(creature_ptr, i))
+            || (i == INVEN_LARM && has_melee_weapon(creature_ptr, i)) || i == INVEN_BOW)
             continue;
 
         /* Fake value does not include unknown objects' value */
@@ -3241,7 +3238,7 @@ static s16b calc_to_hit_bow(player_type *creature_ptr, bool is_true_value)
     }
 
     // 武器以外の装備による修正
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         int bonus_to_h;
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx || o_ptr->tval == TV_CAPTURE || (i == INVEN_RARM && has_melee_weapon(creature_ptr, i))
@@ -3271,7 +3268,7 @@ static s16b calc_to_damage_misc(player_type *creature_ptr)
 
     s16b to_dam = 0;
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
@@ -3307,7 +3304,7 @@ static s16b calc_to_hit_misc(player_type *creature_ptr)
 
     s16b to_hit = 0;
 
-    for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i++) {
+    for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;

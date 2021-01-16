@@ -8,9 +8,9 @@
 #include "load/load-v1-5-0.h"
 #include "cmd-item/cmd-smith.h"
 #include "dungeon/dungeon.h"
+#include "game-option/birth-options.h"
 #include "grid/grid.h"
 #include "grid/trap.h"
-#include "game-option/birth-options.h"
 #include "load/angband-version-comparer.h"
 #include "load/item-loader.h"
 #include "load/load-util.h"
@@ -68,7 +68,7 @@ void rd_item_old(player_type *player_ptr, object_type *o_ptr)
 
     /* Type/Subtype */
     rd_byte(&tmp8u);
-    o_ptr->tval = tmp8u;
+    o_ptr->tval = tval_type(tmp8u);
     rd_byte(&tmp8u);
     o_ptr->sval = tmp8u;
 

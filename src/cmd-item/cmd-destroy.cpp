@@ -20,8 +20,8 @@
 #include "object/object-generator.h"
 #include "object/object-stack.h"
 #include "object/object-value.h"
-#include "player/attack-defense-types.h"
 #include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
 #include "player/special-defense-types.h"
 #include "racial/racial-android.h"
 #include "realm/realm-names-table.h"
@@ -86,7 +86,7 @@ static bool select_destroying_item(player_type *creature_ptr, destroy_type *dest
 {
     concptr q = _("どのアイテムを壊しますか? ", "Destroy which item? ");
     concptr s = _("壊せるアイテムを持っていない。", "You have nothing to destroy.");
-    destroy_ptr->o_ptr = choose_object(creature_ptr, &destroy_ptr->item, q, s, USE_INVEN | USE_FLOOR, 0);
+    destroy_ptr->o_ptr = choose_object(creature_ptr, &destroy_ptr->item, q, s, USE_INVEN | USE_FLOOR, TV_NONE);
     if (destroy_ptr->o_ptr == NULL)
         return FALSE;
 
@@ -110,10 +110,10 @@ static bool decide_magic_book_exp(player_type *creature_ptr, destroy_type *destr
 {
     if (creature_ptr->prace == RACE_ANDROID)
         return FALSE;
-    
+
     if ((creature_ptr->pclass == CLASS_WARRIOR) || (creature_ptr->pclass == CLASS_BERSERKER))
         return TRUE;
-    
+
     if (creature_ptr->pclass != CLASS_PALADIN)
         return FALSE;
 

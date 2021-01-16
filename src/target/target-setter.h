@@ -2,5 +2,6 @@
 
 #include "system/angband.h"
 
-typedef enum target_type target_type;
+#include "target/target-types.h"
+
 bool target_set(player_type *creature_ptr, target_type mode);

@@ -10,7 +10,11 @@ if test $jp -eq 1; then
     mv $src_file $backup
     nkf -e $backup > $src_file
     $@
+    status=$?
     mv $backup $src_file
 else
     $@
+    status=$?
 fi
+
+exit $status

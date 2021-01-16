@@ -6,8 +6,8 @@
 #include "floor/floor-object.h"
 #include "object-enchant/item-feeling.h"
 #include "object-enchant/special-object-flags.h"
-#include "object-enchant/trc-types.h"
 #include "object-enchant/tr-types.h"
+#include "object-enchant/trc-types.h"
 #include "object-hook/hook-checker.h"
 #include "object-hook/hook-enchant.h"
 #include "object-hook/hook-weapon.h"
@@ -32,7 +32,7 @@ bool bless_weapon(player_type *caster_ptr)
     concptr s = _("祝福できる武器がありません。", "You have weapon to bless.");
 
     OBJECT_IDX item;
-    object_type *o_ptr = choose_object(caster_ptr, &item, q, s, USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT, 0);
+    object_type *o_ptr = choose_object(caster_ptr, &item, q, s, USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT, TV_NONE);
     if (!o_ptr)
         return FALSE;
 

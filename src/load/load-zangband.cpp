@@ -8,8 +8,8 @@
 #include "market/bounty.h"
 #include "monster-race/monster-race.h"
 #include "pet/pet-util.h"
-#include "player/attack-defense-types.h"
 #include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
 #include "player/patron.h"
 #include "player/player-class.h"
 #include "player/player-personality.h"
@@ -69,7 +69,7 @@ void load_zangband_options(void)
         option_flag[5] |= (0x00000001 << 3);
 }
 
-void set_zangband_realm(player_type* creature_ptr)
+void set_zangband_realm(player_type *creature_ptr)
 {
     if (creature_ptr->realm1 == 9)
         creature_ptr->realm1 = REALM_MUSIC;
@@ -92,7 +92,7 @@ void set_zangband_skill(player_type *creature_ptr)
     creature_ptr->skill_exp[GINOU_RIDING] = MIN(creature_ptr->skill_exp[GINOU_RIDING], s_info[creature_ptr->pclass].s_max[GINOU_RIDING]);
 }
 
-void set_zangband_spells(player_type* creature_ptr)
+void set_zangband_spells(player_type *creature_ptr)
 {
     for (int i = 0; i < MAX_SPELLS; i++)
         creature_ptr->magic_num1[i] = 0;
@@ -243,22 +243,22 @@ void set_zangband_class(player_type *creature_ptr)
 {
     if (z_older_than(10, 2, 2) && (creature_ptr->pclass == CLASS_BEASTMASTER) && !creature_ptr->is_dead) {
         creature_ptr->hitdie = rp_ptr->r_mhp + cp_ptr->c_mhp + ap_ptr->a_mhp;
-        roll_hitdice(creature_ptr, 0L);
+        roll_hitdice(creature_ptr, spell_operation(0L));
     }
 
     if (z_older_than(10, 3, 2) && (creature_ptr->pclass == CLASS_ARCHER) && !creature_ptr->is_dead) {
         creature_ptr->hitdie = rp_ptr->r_mhp + cp_ptr->c_mhp + ap_ptr->a_mhp;
-        roll_hitdice(creature_ptr, 0L);
+        roll_hitdice(creature_ptr, spell_operation(0L));
     }
 
     if (z_older_than(10, 2, 6) && (creature_ptr->pclass == CLASS_SORCERER) && !creature_ptr->is_dead) {
         creature_ptr->hitdie = rp_ptr->r_mhp / 2 + cp_ptr->c_mhp + ap_ptr->a_mhp;
-        roll_hitdice(creature_ptr, 0L);
+        roll_hitdice(creature_ptr, spell_operation(0L));
     }
 
     if (z_older_than(10, 4, 7) && (creature_ptr->pclass == CLASS_BLUE_MAGE) && !creature_ptr->is_dead) {
         creature_ptr->hitdie = rp_ptr->r_mhp + cp_ptr->c_mhp + ap_ptr->a_mhp;
-        roll_hitdice(creature_ptr, 0L);
+        roll_hitdice(creature_ptr, spell_operation(0L));
     }
 }
 

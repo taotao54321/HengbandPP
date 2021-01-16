@@ -30,9 +30,9 @@
 #include "object-hook/hook-magic.h"
 #include "object/item-tester-hooker.h"
 #include "object/item-use-flags.h"
+#include "player-info/avatar.h"
 #include "player-info/self-info.h"
 #include "player/attack-defense-types.h"
-#include "player-info/avatar.h"
 #include "player/eldritch-horror.h"
 #include "player/player-class.h"
 #include "player/player-damage.h"
@@ -558,7 +558,7 @@ void do_cmd_browse(player_type *caster_ptr)
     object_type *o_ptr;
 
     concptr q, s;
-    tval_type tval = 0;
+    tval_type tval = TV_NONE;
 
     /* Warriors are illiterate */
     if (!(caster_ptr->realm1 || caster_ptr->realm2) && (caster_ptr->pclass != CLASS_SORCERER) && (caster_ptr->pclass != CLASS_RED_MAGE)) {
@@ -664,7 +664,7 @@ void do_cmd_browse(player_type *caster_ptr)
  * @param next_realm 変更先の魔法領域ID
  * @return なし
  */
-static void change_realm2(player_type *caster_ptr, player_personality_type next_realm)
+static void change_realm2(player_type *caster_ptr, magic_realm_type next_realm)
 {
     int i, j = 0;
     char tmp[80];
@@ -715,7 +715,7 @@ void do_cmd_study(player_type *caster_ptr)
     concptr p = spell_category_name(mp_ptr->spell_book);
     object_type *o_ptr;
     concptr q, s;
-    tval_type tval = 0;
+    tval_type tval = TV_NONE;
 
     if (!caster_ptr->realm1) {
         msg_print(_("本を読むことができない！", "You cannot read books!"));
@@ -1018,8 +1018,11 @@ void do_cmd_cast(player_type *caster_ptr)
 
         /* Ask for a spell */
 #ifdef JP
-    if (!get_spell(caster_ptr, &spell, ((mp_ptr->spell_book == TV_LIFE_BOOK) ? "詠唱する" : (mp_ptr->spell_book == TV_MUSIC_BOOK) ? "歌う" : "唱える"), sval,
-            TRUE, realm)) {
+    if (!get_spell(caster_ptr, &spell,
+            ((mp_ptr->spell_book == TV_LIFE_BOOK)           ? "詠唱する"
+                    : (mp_ptr->spell_book == TV_MUSIC_BOOK) ? "歌う"
+                                                            : "唱える"),
+            sval, TRUE, realm)) {
         if (spell == -2)
             msg_format("その本には知っている%sがない。", prayer);
         return;
@@ -1057,7 +1060,9 @@ void do_cmd_cast(player_type *caster_ptr)
             /* Warning */
 #ifdef JP
         msg_format("その%sを%sのに十分なマジックポイントがない。", prayer,
-            ((mp_ptr->spell_book == TV_LIFE_BOOK) ? "詠唱する" : (mp_ptr->spell_book == TV_LIFE_BOOK) ? "歌う" : "唱える"));
+            ((mp_ptr->spell_book == TV_LIFE_BOOK)          ? "詠唱する"
+                    : (mp_ptr->spell_book == TV_LIFE_BOOK) ? "歌う"
+                                                           : "唱える"));
 #else
         msg_format("You do not have enough mana to %s this %s.", ((mp_ptr->spell_book == TV_LIFE_BOOK) ? "recite" : "cast"), prayer);
 #endif

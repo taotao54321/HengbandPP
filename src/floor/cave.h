@@ -2,8 +2,9 @@
 
 #include "system/angband.h"
 
-typedef enum feature_flag_type feature_flag_type;
-typedef struct grid_type grid_type;
+#include "grid/feature-flag-types.h"
+#include "grid/grid.h"
+
 bool in_bounds(floor_type *floor_ptr, POSITION y, POSITION x);
 bool in_bounds2(floor_type *floor_ptr, POSITION y, POSITION x);
 bool in_bounds2u(floor_type *floor_ptr, POSITION y, POSITION x);

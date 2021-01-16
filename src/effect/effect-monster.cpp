@@ -402,7 +402,7 @@ static void process_monster_teleport(player_type *caster_ptr, effect_monster_typ
     if (!em_ptr->who)
         chg_virtue(caster_ptr, V_VALOUR, -1);
 
-    teleport_away(caster_ptr, em_ptr->g_ptr->m_idx, em_ptr->do_dist, (!em_ptr->who ? TELEPORT_DEC_VALOUR : 0L) | TELEPORT_PASSIVE);
+    teleport_away(caster_ptr, em_ptr->g_ptr->m_idx, em_ptr->do_dist, teleport_flags((!em_ptr->who ? TELEPORT_DEC_VALOUR : 0L) | TELEPORT_PASSIVE));
 
     em_ptr->y = em_ptr->m_ptr->fy;
     em_ptr->x = em_ptr->m_ptr->fx;

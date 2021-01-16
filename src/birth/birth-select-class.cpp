@@ -1,8 +1,8 @@
 ﻿#include "birth/birth-select-class.h"
 #include "birth/birth-util.h"
+#include "io/input-key-acceptor.h"
 #include "player/player-class.h"
 #include "player/player-race.h"
-#include "io/input-key-acceptor.h"
 #include "term/screen-processor.h"
 #include "term/term-color-types.h"
 #include "util/int-char-converter.h"
@@ -164,7 +164,7 @@ bool get_player_class(player_type *creature_ptr)
     if (!select_class(creature_ptr, cur, sym, &k))
         return FALSE;
 
-    creature_ptr->pclass = (byte)k;
+    creature_ptr->pclass = player_class_type(k);
     cp_ptr = &class_info[creature_ptr->pclass];
     mp_ptr = &m_info[creature_ptr->pclass];
     c_put_str(TERM_L_BLUE, cp_ptr->title, 5, 15);

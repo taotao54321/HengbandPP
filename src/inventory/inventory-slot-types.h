@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-typedef enum inventory_slot_type {
-	INVEN_PACK = 23, /*!< アイテムスロット…所持品(0～) */
-	INVEN_RARM = 24, /*!< アイテムスロット…右手 */
+enum inventory_slot_type {
+    INVEN_PACK = 23, /*!< アイテムスロット…所持品(0～) */
+    INVEN_RARM = 24, /*!< アイテムスロット…右手 */
     INVEN_LARM = 25, /*!< アイテムスロット…左手 */
     INVEN_BOW = 26, /*!< アイテムスロット…射撃 */
     INVEN_RIGHT = 27, /*!< アイテムスロット…右手指 */
@@ -17,4 +17,4 @@ typedef enum inventory_slot_type {
     INVEN_AMMO = 23, /*!< used for get_random_ego()  */
     INVEN_TOTAL = 36, /*!< Total number of inventory_list slots (hard-coded). */
     INVEN_FORCE = 1111, /*!< inventory_list slot for selecting force (hard-coded). */
-} inventory_slot_type;
+};

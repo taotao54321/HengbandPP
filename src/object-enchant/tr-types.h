@@ -3,7 +3,7 @@
 /*!
  * todo TRが何の略か分かる人、補足求む
  */
-typedef enum tr_type {
+enum tr_type {
     TR_STR = 0, /* STR += "pval" */
     TR_INT = 1, /* INT += "pval" */
     TR_WIS = 2, /* WIS += "pval" */
@@ -36,7 +36,7 @@ typedef enum tr_type {
     TR_BRAND_ELEC = 29,
     TR_BRAND_FIRE = 30,
     TR_BRAND_COLD = 31,
-    
+
     TR_SUST_STR = 32,
     TR_SUST_INT = 33,
     TR_SUST_WIS = 34,
@@ -69,7 +69,7 @@ typedef enum tr_type {
     TR_RES_NEXUS = 61,
     TR_RES_CHAOS = 62,
     TR_RES_DISEN = 63,
-    
+
     TR_SH_FIRE = 64, /* Immolation (Fire) */
     TR_SH_ELEC = 65, /* Electric Sheath */
     TR_SLAY_HUMAN = 66, /* Slay human */
@@ -102,7 +102,7 @@ typedef enum tr_type {
     TR_ES_ATTACK = 93, /* Fake flag for Smith */
     TR_ES_AC = 94, /* Fake flag for Smith */
     TR_KILL_GOOD = 95,
-    
+
     TR_KILL_ANIMAL = 96,
     TR_KILL_EVIL = 97,
     TR_KILL_UNDEAD = 98,
@@ -135,7 +135,7 @@ typedef enum tr_type {
     TR_LITE_M2 = 125, /* Permanent decrease Light Area (-1) */
     TR_LITE_M3 = 126, /* Permanent decrease Light Area (-1) */
     TR_LITE_FUEL = 127, /* Lights need Fuels */
-    
+
     TR_CALL_ANIMAL = 128,
     TR_CALL_DEMON = 129,
     TR_CALL_DRAGON = 130,
@@ -154,6 +154,6 @@ typedef enum tr_type {
     TR_RES_TIME = 143,
     TR_RES_WATER = 144,
     TR_INVULN_ARROW = 145,
-    TR_DARK_SOURCE = 146, 
+    TR_DARK_SOURCE = 146,
     TR_FLAG_MAX = 147,
-} tr_type;
+};

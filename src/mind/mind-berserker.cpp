@@ -9,8 +9,8 @@
 #include "player-attack/player-attack.h"
 #include "player/player-move.h"
 #include "spell-kind/earthquake.h"
-#include "system/floor-type-definition.h"
 #include "spell-kind/spells-detection.h"
+#include "system/floor-type-definition.h"
 #include "target/target-getter.h"
 #include "view/display-messages.h"
 
@@ -44,7 +44,7 @@ bool cast_berserk_spell(player_type *caster_ptr, mind_berserker_type spell)
             return FALSE;
         }
 
-        do_cmd_attack(caster_ptr, y, x, 0);
+        do_cmd_attack(caster_ptr, y, x, combat_options(0));
         if (!player_can_enter(caster_ptr, caster_ptr->current_floor_ptr->grid_array[y][x].feat, 0)
             || is_trap(caster_ptr, caster_ptr->current_floor_ptr->grid_array[y][x].feat))
             break;

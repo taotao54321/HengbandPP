@@ -20,14 +20,14 @@
 #include "object/object-info.h"
 #include "object/object-kind.h"
 #include "perception/object-perception.h"
+#include "player-info/avatar.h"
 #include "player-info/self-info.h"
 #include "player/attack-defense-types.h"
-#include "player-info/avatar.h"
-#include "player/player-status-flags.h"
 #include "player/digestion-processor.h"
 #include "player/eldritch-horror.h"
 #include "player/mimic-info-table.h"
 #include "player/player-damage.h"
+#include "player/player-status-flags.h"
 #include "realm/realm-hex-numbers.h"
 #include "spell-kind/spells-detection.h"
 #include "spell-kind/spells-floor.h"
@@ -80,7 +80,7 @@ static bool booze(player_type *creature_ptr)
         else
             wiz_dark(creature_ptr);
 
-        (void)teleport_player_aux(creature_ptr, 100, FALSE, TELEPORT_NONMAGICAL | TELEPORT_PASSIVE);
+        (void)teleport_player_aux(creature_ptr, 100, FALSE, teleport_flags(TELEPORT_NONMAGICAL | TELEPORT_PASSIVE));
         wiz_dark(creature_ptr);
         msg_print(_("知らない場所で目が醒めた。頭痛がする。", "You wake up somewhere with a sore head..."));
         msg_print(_("何も思い出せない。どうやってここへ来たのかも分からない！", "You can't remember a thing or how you got here!"));
@@ -515,7 +515,7 @@ void exe_quaff_potion(player_type *creature_ptr, INVENTORY_IDX item)
             break;
 
         case SV_POTION_NEW_LIFE:
-            roll_hitdice(creature_ptr, 0L);
+            roll_hitdice(creature_ptr, spell_operation(0L));
             get_max_stats(creature_ptr);
             creature_ptr->update |= PU_BONUS;
             lose_all_mutations(creature_ptr);

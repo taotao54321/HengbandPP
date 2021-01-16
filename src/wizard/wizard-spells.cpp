@@ -20,8 +20,8 @@
 #include "spell/spells-status.h"
 #include "spell/summon-types.h"
 #include "system/floor-type-definition.h"
-#include "target/target-checker.h"
 #include "target/grid-selector.h"
+#include "target/target-checker.h"
 #include "view/display-messages.h"
 
 debug_spell_command debug_spell_commands_list[SPELL_MAX] = {
@@ -122,7 +122,7 @@ void wiz_learn_blue_magic_all(player_type *caster_ptr)
 {
     BIT_FLAGS f4 = 0L, f5 = 0L, f6 = 0L;
     for (int j = 1; j < A_MAX; j++) {
-        set_rf_masks(&f4, &f5, &f6, j);
+        set_rf_masks(&f4, &f5, &f6, blue_magic_type(j));
 
         int i;
         for (i = 0; i < 32; i++) {
@@ -152,7 +152,8 @@ void wiz_learn_blue_magic_all(player_type *caster_ptr)
 void wiz_summon_random_enemy(player_type *caster_ptr, int num)
 {
     for (int i = 0; i < num; i++)
-        (void)summon_specific(caster_ptr, 0, caster_ptr->y, caster_ptr->x, caster_ptr->current_floor_ptr->dun_level, 0, PM_ALLOW_GROUP | PM_ALLOW_UNIQUE);
+        (void)summon_specific(
+            caster_ptr, 0, caster_ptr->y, caster_ptr->x, caster_ptr->current_floor_ptr->dun_level, SUMMON_NONE, PM_ALLOW_GROUP | PM_ALLOW_UNIQUE);
 }
 
 /*!

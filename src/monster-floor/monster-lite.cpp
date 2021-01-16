@@ -198,7 +198,7 @@ void update_mon_lite(player_type *subject_ptr)
                 continue;
 
             grid_type *g_ptr;
-            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx, f_flag)) {
+            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx, feature_flag_type(f_flag))) {
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy + 2, ml_ptr->mon_fx + 1, ml_ptr);
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy + 2, ml_ptr->mon_fx, ml_ptr);
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy + 2, ml_ptr->mon_fx - 1, ml_ptr);
@@ -210,7 +210,7 @@ void update_mon_lite(player_type *subject_ptr)
                 }
             }
 
-            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy - 1, ml_ptr->mon_fx, f_flag)) {
+            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy - 1, ml_ptr->mon_fx, feature_flag_type(f_flag))) {
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy - 2, ml_ptr->mon_fx + 1, ml_ptr);
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy - 2, ml_ptr->mon_fx, ml_ptr);
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy - 2, ml_ptr->mon_fx - 1, ml_ptr);
@@ -222,7 +222,7 @@ void update_mon_lite(player_type *subject_ptr)
                 }
             }
 
-            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy, ml_ptr->mon_fx + 1, f_flag)) {
+            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy, ml_ptr->mon_fx + 1, feature_flag_type(f_flag))) {
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx + 2, ml_ptr);
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy, ml_ptr->mon_fx + 2, ml_ptr);
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy - 1, ml_ptr->mon_fx + 2, ml_ptr);
@@ -234,7 +234,7 @@ void update_mon_lite(player_type *subject_ptr)
                 }
             }
 
-            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy, ml_ptr->mon_fx - 1, f_flag)) {
+            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy, ml_ptr->mon_fx - 1, feature_flag_type(f_flag))) {
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx - 2, ml_ptr);
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy, ml_ptr->mon_fx - 2, ml_ptr);
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy - 1, ml_ptr->mon_fx - 2, ml_ptr);
@@ -249,16 +249,16 @@ void update_mon_lite(player_type *subject_ptr)
             if (rad != 3)
                 continue;
 
-            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx + 1, f_flag))
+            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx + 1, feature_flag_type(f_flag)))
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy + 2, ml_ptr->mon_fx + 2, ml_ptr);
 
-            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx - 1, f_flag))
+            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx - 1, feature_flag_type(f_flag)))
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy + 2, ml_ptr->mon_fx - 2, ml_ptr);
 
-            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy - 1, ml_ptr->mon_fx + 1, f_flag))
+            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy - 1, ml_ptr->mon_fx + 1, feature_flag_type(f_flag)))
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy - 2, ml_ptr->mon_fx + 2, ml_ptr);
 
-            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy - 1, ml_ptr->mon_fx - 1, f_flag))
+            if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy - 1, ml_ptr->mon_fx - 1, feature_flag_type(f_flag)))
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy - 2, ml_ptr->mon_fx - 2, ml_ptr);
         }
     }

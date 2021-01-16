@@ -25,8 +25,8 @@
 #include "player/player-class.h"
 #include "player/player-race.h"
 #include "player/player-sex.h"
-#include "player/process-name.h"
 #include "player/player-status-table.h"
+#include "player/process-name.h"
 #include "system/game-option-types.h"
 #include "term/screen-processor.h"
 #include "term/term-color-types.h"
@@ -157,7 +157,7 @@ static bool get_player_sex(player_type *creature_ptr, char *buf)
 static bool let_player_select_race(player_type *creature_ptr)
 {
     clear_from(10);
-    creature_ptr->prace = 0;
+    creature_ptr->prace = RACE_HUMAN;
     while (TRUE) {
         char temp[80 * 10];
         if (!get_player_race(creature_ptr))
@@ -187,7 +187,7 @@ static bool let_player_select_race(player_type *creature_ptr)
 static bool let_player_select_class(player_type *creature_ptr)
 {
     clear_from(10);
-    creature_ptr->pclass = 0;
+    creature_ptr->pclass = CLASS_WARRIOR;
     while (TRUE) {
         char temp[80 * 9];
         if (!get_player_class(creature_ptr))
@@ -216,7 +216,7 @@ static bool let_player_select_class(player_type *creature_ptr)
 
 static bool let_player_select_personality(player_type *creature_ptr)
 {
-    creature_ptr->pseikaku = 0;
+    creature_ptr->pseikaku = player_personality_type(0);
     while (TRUE) {
         char temp[80 * 8];
         if (!get_player_personality(creature_ptr))
@@ -294,10 +294,7 @@ static void display_auto_roller_success_rate(const int col)
         sprintf(buf, _("確率 :     1/10000以上", "Prob :     >1/10000"));
     put_str(buf, 11, col + 10);
 
-    put_str(_(
-        "注意 : 体格等のオートローラを併用時は、上記確率より困難です。",
-        "Note : Prob may be lower when you use the 'autochara' option."
-        ), 22, 5);
+    put_str(_("注意 : 体格等のオートローラを併用時は、上記確率より困難です。", "Note : Prob may be lower when you use the 'autochara' option."), 22, 5);
 
     for (int i = 0; i < A_MAX; i++) {
         put_str(stat_names[i], 3 + i, col + 8);

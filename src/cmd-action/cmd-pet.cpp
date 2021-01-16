@@ -39,9 +39,9 @@
 #include "player/player-damage.h"
 #include "player/player-move.h"
 #include "player/player-skill.h"
+#include "player/player-status-flags.h"
 #include "player/player-status.h"
 #include "player/special-defense-types.h"
-#include "player/player-status-flags.h"
 #include "status/action-setter.h"
 #include "system/floor-type-definition.h"
 #include "target/target-checker.h"
@@ -221,7 +221,7 @@ bool do_cmd_riding(player_type *creature_ptr, bool force)
 
             msg_print(_("モンスターが立ちふさがっている！", "There is a monster in the way!"));
 
-            do_cmd_attack(creature_ptr, y, x, 0);
+            do_cmd_attack(creature_ptr, y, x, combat_options(0));
             return FALSE;
         }
 

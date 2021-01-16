@@ -14,8 +14,8 @@
 #include "term/term-color-types.h"
 #include "view/display-messages.h"
 #include "view/display-player.h"
-#include "window/display-sub-windows.h"
 #include "window/display-sub-window-spells.h"
+#include "window/display-sub-windows.h"
 #include "window/main-window-left-frame.h"
 #include "window/main-window-row-column.h"
 #include "window/main-window-stat-poster.h"
@@ -242,12 +242,12 @@ void window_stuff(player_type *player_ptr)
 
     if (player_ptr->window & (PW_INVEN)) {
         player_ptr->window &= ~(PW_INVEN);
-        fix_inventory(player_ptr, 0); // TODO:2.2.2 まともなtval参照手段を確保
+        fix_inventory(player_ptr, TV_NONE); // TODO:2.2.2 まともなtval参照手段を確保
     }
 
     if (player_ptr->window & (PW_EQUIP)) {
         player_ptr->window &= ~(PW_EQUIP);
-        fix_equip(player_ptr, 0); // TODO:2.2.2 まともなtval参照手段を確保
+        fix_equip(player_ptr, TV_NONE); // TODO:2.2.2 まともなtval参照手段を確保
     }
 
     if (player_ptr->window & (PW_SPELL)) {

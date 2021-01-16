@@ -1,8 +1,8 @@
 ﻿#include "market/building-quest.h"
 #include "cmd-building/cmd-building.h"
-#include "info-reader/fixed-map-parser.h"
 #include "dungeon/quest.h"
 #include "grid/grid.h"
+#include "info-reader/fixed-map-parser.h"
 #include "market/building-util.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-flags1.h"
@@ -34,7 +34,7 @@ static void get_questinfo(player_type *player_ptr, IDX questnum, bool do_init)
 
     init_flags = INIT_SHOW_TEXT;
     if (do_init)
-        init_flags |= INIT_ASSIGN;
+        init_flags = init_flags_type(init_flags | INIT_ASSIGN);
 
     parse_fixed_map(player_ptr, "q_info.txt", 0, 0, 0, 0);
     floor_ptr->inside_quest = old_quest;

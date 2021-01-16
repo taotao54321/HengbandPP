@@ -55,7 +55,7 @@ bool psychometry(player_type *caster_ptr)
     concptr s = _("調べるアイテムがありません。", "You have nothing appropriate.");
     object_type *o_ptr;
     OBJECT_IDX item;
-    o_ptr = choose_object(caster_ptr, &item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT), 0);
+    o_ptr = choose_object(caster_ptr, &item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT), TV_NONE);
     if (!o_ptr)
         return FALSE;
 
@@ -208,7 +208,7 @@ bool cast_mindcrafter_spell(player_type *caster_ptr, mind_mindcrafter_type spell
         if (plev < 25)
             return psychometry(caster_ptr);
         else
-            return ident_spell(caster_ptr, FALSE, 0);
+            return ident_spell(caster_ptr, FALSE, TV_NONE);
     case MIND_WAVE:
         msg_print(_("精神を捻じ曲げる波動を発生させた！", "Mind-warping forces emanate from your brain!"));
         if (plev < 25)

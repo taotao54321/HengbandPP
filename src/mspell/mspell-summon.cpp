@@ -229,10 +229,10 @@ void spell_RF6_S_MONSTER(player_type *target_ptr, POSITION y, POSITION x, MONSTE
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
     for (int k = 0; k < 1; k++) {
         if (mon_to_player)
-            count += summon_specific(target_ptr, m_idx, y, x, rlev, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE));
+            count += summon_specific(target_ptr, m_idx, y, x, rlev, SUMMON_NONE, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE));
 
         if (mon_to_mon)
-            count += summon_specific(target_ptr, m_idx, y, x, rlev, 0, (monster_u_mode(floor_ptr, m_idx)));
+            count += summon_specific(target_ptr, m_idx, y, x, rlev, SUMMON_NONE, (monster_u_mode(floor_ptr, m_idx)));
     }
 
     if (target_ptr->blind && count && mon_to_player)
@@ -265,10 +265,10 @@ void spell_RF6_S_MONSTERS(player_type *target_ptr, POSITION y, POSITION x, MONST
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
     for (int k = 0; k < S_NUM_6; k++) {
         if (mon_to_player)
-            count += summon_specific(target_ptr, m_idx, y, x, rlev, 0, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE));
+            count += summon_specific(target_ptr, m_idx, y, x, rlev, SUMMON_NONE, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE));
 
         if (mon_to_mon)
-            count += summon_specific(target_ptr, m_idx, y, x, rlev, 0, (PM_ALLOW_GROUP | monster_u_mode(floor_ptr, m_idx)));
+            count += summon_specific(target_ptr, m_idx, y, x, rlev, SUMMON_NONE, (PM_ALLOW_GROUP | monster_u_mode(floor_ptr, m_idx)));
     }
 
     if (target_ptr->blind && count && mon_to_player)
@@ -693,7 +693,7 @@ void spell_RF6_S_UNIQUE(player_type *target_ptr, POSITION y, POSITION x, MONSTER
         non_unique_type = SUMMON_ANGEL;
 
     for (int k = count; k < S_NUM_4; k++) {
-        count += summon_specific(target_ptr, m_idx, y, x, rlev, non_unique_type, (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE));
+        count += summon_specific(target_ptr, m_idx, y, x, rlev, summon_type(non_unique_type), (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE));
     }
 
     if (target_ptr->blind && count && mon_to_player) {

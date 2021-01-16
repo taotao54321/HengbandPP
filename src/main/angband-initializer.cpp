@@ -56,7 +56,6 @@ void init_file_paths(char *libpath, char *varpath)
     string_free(ANGBAND_DIR_USER);
     string_free(ANGBAND_DIR_XTRA);
 
-
     ANGBAND_DIR = string_make(libpath);
     libtail = libpath + strlen(libpath);
     vartail = varpath + strlen(varpath);
@@ -129,7 +128,7 @@ void put_version(char *buf)
         sprintf(buf, "変愚蛮怒 %d.%d.%dAlpha%d", H_VER_MAJOR, H_VER_MINOR, H_VER_PATCH, H_VER_EXTRA);
 
     } else {
-        char *mode = IS_STABLE_VERSION ? _("安定版", "Stable") : _("開発版", "Developing");
+        const char *mode = IS_STABLE_VERSION ? _("安定版", "Stable") : _("開発版", "Developing");
         sprintf(buf, _("変愚蛮怒 %d.%d.%d.%d(%s)", "Hengband %d.%d.%d.%d(%s)"), H_VER_MAJOR, H_VER_MINOR, H_VER_PATCH, H_VER_EXTRA, mode);
     }
 }

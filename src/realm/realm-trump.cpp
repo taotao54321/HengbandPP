@@ -538,7 +538,7 @@ concptr do_trump_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode
 
         {
             if (cast) {
-                if (!identify_fully(caster_ptr, FALSE, 0))
+                if (!identify_fully(caster_ptr, FALSE, TV_NONE))
                     return NULL;
             }
         }
