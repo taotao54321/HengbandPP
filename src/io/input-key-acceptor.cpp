@@ -19,7 +19,7 @@ int num_more = 0;
  * trigger any macros, and cannot be bypassed by the Borg.  It is used
  * in Angband to handle "keymaps".
  */
-concptr inkey_next = NULL;
+concptr inkey_next = nullptr;
 
 /* Save macro trigger string for use in inkey_special() */
 static char inkey_macro_trigger_string[1024];
@@ -41,7 +41,7 @@ static bool parse_under = FALSE;
 /*
  * Cancel macro action on the queue
  */
-static void forget_macro_action(void) {
+static void forget_macro_action() {
     if (!parse_macro)
         return;
 
@@ -75,7 +75,7 @@ static void forget_macro_action(void) {
  * macro trigger, 500 milliseconds must pass before the key sequence is
  * known not to be that macro trigger.
  */
-static char inkey_aux(void) {
+static char inkey_aux() {
     int k = 0, n, p = 0, w = 0;
     char ch;
     char* buf = inkey_macro_trigger_string;
@@ -165,7 +165,7 @@ static char inkey_aux(void) {
  * @param なし
  * return キーを表すコード
  */
-char inkey(void) {
+char inkey() {
     char ch = 0;
     bool done = FALSE;
     term_type* old = Term;
@@ -176,7 +176,7 @@ char inkey(void) {
         return (ch);
     }
 
-    inkey_next = NULL;
+    inkey_next = nullptr;
     if (inkey_xtra) {
         parse_macro = FALSE;
         parse_under = FALSE;
@@ -217,17 +217,13 @@ char inkey(void) {
                 break;
             }
 
-            while (TRUE) {
-                if (0 == term_inkey(&ch, FALSE, TRUE)) {
+            while (true) {
+                if (0 == term_inkey(&ch, FALSE, TRUE)) break;
+                w += 10;
+                if (w >= 100)
                     break;
-                }
-                else {
-                    w += 10;
-                    if (w >= 100)
-                        break;
 
-                    term_xtra(TERM_XTRA_DELAY, w);
-                }
+                term_xtra(TERM_XTRA_DELAY, w);
             }
 
             break;
@@ -244,16 +240,9 @@ char inkey(void) {
             parse_under = FALSE;
         }
 
-        if (ch == 30) {
-            ch = 0;
-        }
-        else if (ch == 31) {
-            ch = 0;
-            parse_under = TRUE;
-        }
-        else if (parse_under) {
-            ch = 0;
-        }
+        parse_under = ch == 31;
+
+        if (ch == 30 || parse_under) ch = 0;
     }
 
     term_activate(old);
@@ -276,7 +265,7 @@ int inkey_special(bool numpad_cursor) {
     } modifier_key_list[] = {
         { "shift-", SKEY_MOD_SHIFT },
         { "control-", SKEY_MOD_CONTROL },
-        { NULL, 0 },
+        { nullptr, 0 },
     };
 
     static const struct {
@@ -308,7 +297,7 @@ int inkey_special(bool numpad_cursor) {
         { TRUE, "KP_3]", SKEY_PGDOWN },
         { TRUE, "KP_7]", SKEY_TOP },
         { TRUE, "KP_1]", SKEY_BOTTOM },
-        { FALSE, NULL, 0 },
+        { FALSE, nullptr, 0 },
     };
 
     static const struct {
@@ -323,7 +312,7 @@ int inkey_special(bool numpad_cursor) {
         { "4~", SKEY_BOTTOM },
         { "5~", SKEY_PGUP },
         { "6~", SKEY_PGDOWN },
-        { NULL, 0 },
+        { nullptr, 0 },
     };
 
     char buf[1024];
