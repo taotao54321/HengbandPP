@@ -1574,6 +1574,8 @@ bool has_riding_wield_weapon(player_type* creature_ptr, int i) {
 }
 
 bool has_not_ninja_weapon(player_type* creature_ptr, int i) {
+    if (!has_melee_weapon(creature_ptr, INVEN_RARM + i)) return FALSE;
+
     tval_type tval = tval_type(creature_ptr->inventory_list[INVEN_RARM + i].tval - TV_WEAPON_BEGIN);
     OBJECT_SUBTYPE_VALUE sval = creature_ptr->inventory_list[INVEN_RARM + i].sval;
     return creature_ptr->pclass == CLASS_NINJA
@@ -1581,6 +1583,8 @@ bool has_not_ninja_weapon(player_type* creature_ptr, int i) {
 }
 
 bool has_not_monk_weapon(player_type* creature_ptr, int i) {
+    if (!has_melee_weapon(creature_ptr, INVEN_RARM + i)) return FALSE;
+
     tval_type tval = tval_type(creature_ptr->inventory_list[INVEN_RARM + i].tval - TV_WEAPON_BEGIN);
     OBJECT_SUBTYPE_VALUE sval = creature_ptr->inventory_list[INVEN_RARM + i].sval;
     return ((creature_ptr->pclass == CLASS_MONK) || (creature_ptr->pclass == CLASS_FORCETRAINER)) && !(s_info[creature_ptr->pclass].w_max[tval][sval]);
