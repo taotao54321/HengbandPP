@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(hengband, 2.1.5)
 
 AC_CONFIG_HEADERS(src/autoconf.h)
-AC_CONFIG_SRCDIR(src/main.c)
+AC_CONFIG_SRCDIR(src/main.cpp)
 AM_INIT_AUTOMAKE
 
 AC_ARG_WITH(setgid,
@@ -15,7 +15,7 @@ esac])
 AC_SUBST(GAMEGROUP)
 AM_CONDITIONAL(SET_GID, test "$GAMEGROUP" != "")
 
-AC_LANG_C
+AC_LANG([C++])
 
 dnl generate the installation path for the ./lib/ folder
 if test "$GAMEGROUP" != ""; then
@@ -44,7 +44,7 @@ DEFAULT_VAR_PATH="$game_varpath"
 AC_SUBST(DEFAULT_VAR_PATH)
 
 dnl Checks for programs.
-AC_PROG_CC
+AC_PROG_CXX
 
 AC_ARG_ENABLE(japanese,
 [  --disable-japanese      build english version], use_japanese=no, [AC_DEFINE(JP, 1, [Enable Japanese]) AC_DEFINE(EUC, 1, [Use Extended Unix Code])])
@@ -82,7 +82,7 @@ AC_PATH_XTRA
 if test "$have_x" = yes; then
   LIBS="$LIBS -lX11"
   AC_DEFINE(USE_X11, 1, [Allow -mX11 environment])
-  CFLAGS="$X_CFLAGS $CFLAGS"
+  CXXFLAGS="$X_CXXFLAGS $CXXFLAGS"
   LDFLAGS="$X_LIBS $LDFLAGS"
 
   if test "$use_fontset" = yes; then

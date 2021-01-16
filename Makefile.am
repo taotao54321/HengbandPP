@@ -2,12 +2,6 @@
 
 AUTOMAKE_OPTIONS = foreign
 
-visual_studio_files = \
-	Hengband/Hengband.sln \
-	Hengband/Hengband/Hengband.vcxproj \
-	Hengband/Hengband/Hengband.vcxproj.filters \
-	Hengband/Hengband/packages.config
-
 EXTRA_DIST = \
 	autopick.txt \
 	autopick_eng.txt \
@@ -15,7 +9,6 @@ EXTRA_DIST = \
 	readme.txt \
 	readme_angband \
 	readme_eng.txt \
-	hengband.spec \
-	$(visual_studio_files)
+	hengband.spec
 
 SUBDIRS = src lib
