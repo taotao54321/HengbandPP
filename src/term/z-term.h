@@ -125,7 +125,6 @@ struct term_type {
 /**** Available Variables ****/
 extern term_type* Term;
 
-errr term_win_nuke(term_win* s, TERM_LEN w, TERM_LEN h);
 errr term_user(int n);
 errr term_xtra(int n, int v);
 
