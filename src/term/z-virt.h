@@ -8,8 +8,7 @@
  * are included in all such copies.
  */
 
-#ifndef INCLUDED_Z_VIRT_H
-#define INCLUDED_Z_VIRT_H
+#pragma once
 
 #include "system/h-basic.h"
 
@@ -150,5 +149,3 @@ extern concptr string_make(concptr str);
 
 /* Free a string allocated with "string_make()" */
 extern errr string_free(concptr str);
-
-#endif
