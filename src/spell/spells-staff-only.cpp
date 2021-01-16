@@ -15,8 +15,7 @@
  * @magic 魔法の効果である場合TRUE (杖と同じ効果の呪文はあったか？ 要調査)
  * @powerful 効果が増強される時TRUE (TRUEになるタイミングはあるか？ 要調査)
  */
-bool cleansing_nova(player_type *creature_ptr, bool magic, bool powerful)
-{
+bool cleansing_nova(player_type* creature_ptr, bool magic, bool powerful) {
     bool ident = FALSE;
     if (dispel_evil(creature_ptr, powerful ? 225 : 150))
         ident = TRUE;
@@ -48,8 +47,7 @@ bool cleansing_nova(player_type *creature_ptr, bool magic, bool powerful)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @powerful 効果が増強される時TRUE (TRUEになるタイミングはあるか？ 要調査)
  */
-bool unleash_mana_storm(player_type *creature_ptr, bool powerful)
-{
+bool unleash_mana_storm(player_type* creature_ptr, bool powerful) {
     msg_print(_("強力な魔力が敵を引き裂いた！", "Mighty magics rend your enemies!"));
     project(creature_ptr, 0, (powerful ? 7 : 5), creature_ptr->y, creature_ptr->x, (randint1(200) + (powerful ? 500 : 300)) * 2, GF_MANA,
         PROJECT_KILL | PROJECT_ITEM | PROJECT_GRID, -1);

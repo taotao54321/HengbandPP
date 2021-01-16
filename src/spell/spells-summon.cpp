@@ -44,8 +44,7 @@
  * @param mode モンスター生成条件フラグ
  * @return モンスターが（敵対も含めて）召還されたならばTRUEを返す。
  */
-bool trump_summoning(player_type *caster_ptr, int num, bool pet, POSITION y, POSITION x, DEPTH lev, int type, BIT_FLAGS mode)
-{
+bool trump_summoning(player_type* caster_ptr, int num, bool pet, POSITION y, POSITION x, DEPTH lev, int type, BIT_FLAGS mode) {
     /* Default level */
     PLAYER_LEVEL plev = caster_ptr->lev;
     if (!lev)
@@ -65,7 +64,8 @@ bool trump_summoning(player_type *caster_ptr, int num, bool pet, POSITION y, POS
 
         /* Player is who summons */
         who = -1;
-    } else {
+    }
+    else {
         /* Prevent taming, allow unique monster */
         mode |= PM_NO_PET;
 
@@ -86,8 +86,7 @@ bool trump_summoning(player_type *caster_ptr, int num, bool pet, POSITION y, POS
     return success;
 }
 
-bool cast_summon_demon(player_type *caster_ptr, int power)
-{
+bool cast_summon_demon(player_type* caster_ptr, int power) {
     u32b flg = 0L;
     bool pet = !one_in_(3);
     if (pet)
@@ -103,15 +102,15 @@ bool cast_summon_demon(player_type *caster_ptr, int power)
     msg_print(_("硫黄の悪臭が充満した。", "The area fills with a stench of sulphur and brimstone."));
     if (pet) {
         msg_print(_("「ご用でございますか、ご主人様」", "'What is thy bidding... Master?'"));
-    } else {
+    }
+    else {
         msg_print(_("「卑しき者よ、我は汝の下僕にあらず！ お前の魂を頂くぞ！」", "'NON SERVIAM! Wretch! I shall feast on thy mortal soul!'"));
     }
 
     return TRUE;
 }
 
-bool cast_summon_undead(player_type *creature_ptr, int power)
-{
+bool cast_summon_undead(player_type* creature_ptr, int power) {
     bool pet = one_in_(3);
     summon_type type = (creature_ptr->lev > 47 ? SUMMON_HI_UNDEAD : SUMMON_UNDEAD);
 
@@ -134,8 +133,7 @@ bool cast_summon_undead(player_type *creature_ptr, int power)
     return TRUE;
 }
 
-bool cast_summon_hound(player_type *creature_ptr, int power)
-{
+bool cast_summon_hound(player_type* creature_ptr, int power) {
     BIT_FLAGS mode = PM_ALLOW_GROUP;
     bool pet = !one_in_(5);
     if (pet)
@@ -153,8 +151,7 @@ bool cast_summon_hound(player_type *creature_ptr, int power)
     return TRUE;
 }
 
-bool cast_summon_elemental(player_type *creature_ptr, int power)
-{
+bool cast_summon_elemental(player_type* creature_ptr, int power) {
     bool pet = one_in_(3);
     BIT_FLAGS mode = 0L;
     if (!(pet && (creature_ptr->lev < 50)))
@@ -175,8 +172,7 @@ bool cast_summon_elemental(player_type *creature_ptr, int power)
     return TRUE;
 }
 
-bool cast_summon_octopus(player_type *creature_ptr)
-{
+bool cast_summon_octopus(player_type* creature_ptr) {
     BIT_FLAGS mode = PM_ALLOW_GROUP;
     bool pet = !one_in_(5);
     if (pet)
@@ -196,8 +192,7 @@ bool cast_summon_octopus(player_type *creature_ptr)
  * @param o_ptr オブジェクト構造体の参照ポインタ
  * @return 生贄に使用可能な死体ならばTRUEを返す。
  */
-bool item_tester_offer(player_type *creature_ptr, object_type *o_ptr)
-{
+bool item_tester_offer(player_type* creature_ptr, object_type* o_ptr) {
     /* Unused */
     (void)creature_ptr;
 
@@ -214,13 +209,12 @@ bool item_tester_offer(player_type *creature_ptr, object_type *o_ptr)
  * @brief 悪魔領域のグレーターデーモン召喚を処理する / Daemon spell Summon Greater Demon
  * @return 処理を実行したならばTRUEを返す。
  */
-bool cast_summon_greater_demon(player_type *caster_ptr)
-{
+bool cast_summon_greater_demon(player_type* caster_ptr) {
     item_tester_hook = item_tester_offer;
     concptr q = _("どの死体を捧げますか? ", "Sacrifice which corpse? ");
     concptr s = _("捧げられる死体を持っていない。", "You have nothing to scrifice.");
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(caster_ptr, &item, q, s, (USE_INVEN | USE_FLOOR), TV_NONE);
     if (!o_ptr)
         return FALSE;
@@ -232,7 +226,8 @@ bool cast_summon_greater_demon(player_type *caster_ptr)
         msg_print(_("硫黄の悪臭が充満した。", "The area fills with a stench of sulphur and brimstone."));
         msg_print(_("「ご用でございますか、ご主人様」", "'What is thy bidding... Master?'"));
         vary_item(caster_ptr, item, -1);
-    } else {
+    }
+    else {
         msg_print(_("悪魔は現れなかった。", "No Greater Demon arrives."));
     }
 
@@ -248,8 +243,7 @@ bool cast_summon_greater_demon(player_type *caster_ptr)
  * @param mode 召喚オプション
  * @return ターンを消費した場合TRUEを返す
  */
-bool summon_kin_player(player_type *creature_ptr, DEPTH level, POSITION y, POSITION x, BIT_FLAGS mode)
-{
+bool summon_kin_player(player_type* creature_ptr, DEPTH level, POSITION y, POSITION x, BIT_FLAGS mode) {
     bool pet = (bool)(mode & PM_FORCE_PET);
     if (!pet)
         mode |= PM_NO_PET;
@@ -264,13 +258,12 @@ bool summon_kin_player(player_type *creature_ptr, DEPTH level, POSITION y, POSIT
  * @param x 召喚位置X座標
  * @return 作用が実際にあった場合TRUEを返す
  */
-int summon_cyber(player_type *creature_ptr, MONSTER_IDX who, POSITION y, POSITION x)
-{
+int summon_cyber(player_type* creature_ptr, MONSTER_IDX who, POSITION y, POSITION x) {
     /* Summoned by a monster */
     BIT_FLAGS mode = PM_ALLOW_GROUP;
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (who > 0) {
-        monster_type *m_ptr = &floor_ptr->m_list[who];
+        monster_type* m_ptr = &floor_ptr->m_list[who];
         if (is_pet(m_ptr))
             mode |= PM_FORCE_PET;
     }
@@ -287,8 +280,7 @@ int summon_cyber(player_type *creature_ptr, MONSTER_IDX who, POSITION y, POSITIO
     return count;
 }
 
-void mitokohmon(player_type *kohmon_ptr)
-{
+void mitokohmon(player_type* kohmon_ptr) {
     int count = 0;
     concptr sukekakusan = "";
     if (summon_named_creature(kohmon_ptr, 0, kohmon_ptr->y, kohmon_ptr->x, MON_SUKE, PM_FORCE_PET)) {
@@ -305,7 +297,7 @@ void mitokohmon(player_type *kohmon_ptr)
 
     if (!count) {
         for (int i = kohmon_ptr->current_floor_ptr->m_max - 1; i > 0; i--) {
-            monster_type *m_ptr;
+            monster_type* m_ptr;
             m_ptr = &kohmon_ptr->current_floor_ptr->m_list[i];
             if (!monster_is_valid(m_ptr))
                 continue;
@@ -345,14 +337,14 @@ void mitokohmon(player_type *kohmon_ptr)
  * @param can_pet プレイヤーのペットとなる可能性があるならばTRUEにする
  * @return 作用が実際にあった場合TRUEを返す
  */
-int activate_hi_summon(player_type *caster_ptr, POSITION y, POSITION x, bool can_pet)
-{
+int activate_hi_summon(player_type* caster_ptr, POSITION y, POSITION x, bool can_pet) {
     BIT_FLAGS mode = PM_ALLOW_GROUP;
     bool pet = FALSE;
     if (can_pet) {
         if (one_in_(4)) {
             mode |= PM_FORCE_FRIENDLY;
-        } else {
+        }
+        else {
             mode |= PM_FORCE_PET;
             pet = TRUE;
         }
@@ -440,8 +432,7 @@ int activate_hi_summon(player_type *caster_ptr, POSITION y, POSITION x, bool can
  * @param dir 方向ID
  * @return なし
  */
-void cast_invoke_spirits(player_type *caster_ptr, DIRECTION dir)
-{
+void cast_invoke_spirits(player_type* caster_ptr, DIRECTION dir) {
     PLAYER_LEVEL plev = caster_ptr->lev;
     int die = randint1(100) + plev / 5;
     int vir = virtue_number(caster_ptr, V_CHANCE);
@@ -450,7 +441,8 @@ void cast_invoke_spirits(player_type *caster_ptr, DIRECTION dir)
         if (caster_ptr->virtues[vir - 1] > 0) {
             while (randint1(400) < caster_ptr->virtues[vir - 1])
                 die++;
-        } else {
+        }
+        else {
             while (randint1(400) < (0 - caster_ptr->virtues[vir - 1]))
                 die--;
         }
@@ -470,53 +462,75 @@ void cast_invoke_spirits(player_type *caster_ptr, DIRECTION dir)
         (void)summon_specific(caster_ptr, 0, caster_ptr->y, caster_ptr->x, caster_ptr->current_floor_ptr->dun_level, SUMMON_UNDEAD,
             (PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET));
         chg_virtue(caster_ptr, V_UNLIFE, 1);
-    } else if (die < 14) {
+    }
+    else if (die < 14) {
         msg_print(_("名状し難い邪悪な存在があなたの心を通り過ぎて行った...", "An unnamable evil brushes against your mind..."));
 
         set_afraid(caster_ptr, caster_ptr->afraid + randint1(4) + 4);
-    } else if (die < 26) {
+    }
+    else if (die < 26) {
         msg_print(_("あなたの頭に大量の幽霊たちの騒々しい声が押し寄せてきた...", "Your head is invaded by a horde of gibbering spectral voices..."));
 
         set_confused(caster_ptr, caster_ptr->confused + randint1(4) + 4);
-    } else if (die < 31) {
+    }
+    else if (die < 31) {
         poly_monster(caster_ptr, dir, plev);
-    } else if (die < 36) {
+    }
+    else if (die < 36) {
         fire_bolt_or_beam(caster_ptr, beam_chance(caster_ptr) - 10, GF_MISSILE, dir, damroll(3 + ((plev - 1) / 5), 4));
-    } else if (die < 41) {
+    }
+    else if (die < 41) {
         confuse_monster(caster_ptr, dir, plev);
-    } else if (die < 46) {
+    }
+    else if (die < 46) {
         fire_ball(caster_ptr, GF_POIS, dir, 20 + (plev / 2), 3);
-    } else if (die < 51) {
+    }
+    else if (die < 51) {
         (void)lite_line(caster_ptr, dir, damroll(6, 8));
-    } else if (die < 56) {
+    }
+    else if (die < 56) {
         fire_bolt_or_beam(caster_ptr, beam_chance(caster_ptr) - 10, GF_ELEC, dir, damroll(3 + ((plev - 5) / 4), 8));
-    } else if (die < 61) {
+    }
+    else if (die < 61) {
         fire_bolt_or_beam(caster_ptr, beam_chance(caster_ptr) - 10, GF_COLD, dir, damroll(5 + ((plev - 5) / 4), 8));
-    } else if (die < 66) {
+    }
+    else if (die < 66) {
         fire_bolt_or_beam(caster_ptr, beam_chance(caster_ptr), GF_ACID, dir, damroll(6 + ((plev - 5) / 4), 8));
-    } else if (die < 71) {
+    }
+    else if (die < 71) {
         fire_bolt_or_beam(caster_ptr, beam_chance(caster_ptr), GF_FIRE, dir, damroll(8 + ((plev - 5) / 4), 8));
-    } else if (die < 76) {
+    }
+    else if (die < 76) {
         hypodynamic_bolt(caster_ptr, dir, 75);
-    } else if (die < 81) {
+    }
+    else if (die < 81) {
         fire_ball(caster_ptr, GF_ELEC, dir, 30 + plev / 2, 2);
-    } else if (die < 86) {
+    }
+    else if (die < 86) {
         fire_ball(caster_ptr, GF_ACID, dir, 40 + plev, 2);
-    } else if (die < 91) {
+    }
+    else if (die < 91) {
         fire_ball(caster_ptr, GF_ICE, dir, 70 + plev, 3);
-    } else if (die < 96) {
+    }
+    else if (die < 96) {
         fire_ball(caster_ptr, GF_FIRE, dir, 80 + plev, 3);
-    } else if (die < 101) {
+    }
+    else if (die < 101) {
         hypodynamic_bolt(caster_ptr, dir, 100 + plev);
-    } else if (die < 104) {
+    }
+    else if (die < 104) {
         earthquake(caster_ptr, caster_ptr->y, caster_ptr->x, 12, 0);
-    } else if (die < 106) {
+    }
+    else if (die < 106) {
         (void)destroy_area(caster_ptr, caster_ptr->y, caster_ptr->x, 13 + randint0(5), FALSE);
-    } else if (die < 108) {
+    }
+    else if (die < 108) {
         symbol_genocide(caster_ptr, plev + 50, TRUE);
-    } else if (die < 110) {
+    }
+    else if (die < 110) {
         dispel_monsters(caster_ptr, 120);
-    } else {
+    }
+    else {
         dispel_monsters(caster_ptr, 150);
         slow_monsters(caster_ptr, plev);
         sleep_monsters(caster_ptr, plev);

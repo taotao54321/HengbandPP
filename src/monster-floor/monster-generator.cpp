@@ -59,8 +59,7 @@ static MONSTER_IDX place_monster_m_idx = 0;
  * @return 成功したらtrue
  *
  */
-bool mon_scatter(player_type *player_ptr, MONRACE_IDX r_idx, POSITION *yp, POSITION *xp, POSITION y, POSITION x, POSITION max_dist)
-{
+bool mon_scatter(player_type* player_ptr, MONRACE_IDX r_idx, POSITION* yp, POSITION* xp, POSITION y, POSITION x, POSITION max_dist) {
     POSITION place_x[MON_SCAT_MAXD];
     POSITION place_y[MON_SCAT_MAXD];
     int num[MON_SCAT_MAXD];
@@ -72,7 +71,7 @@ bool mon_scatter(player_type *player_ptr, MONRACE_IDX r_idx, POSITION *yp, POSIT
     for (i = 0; i < MON_SCAT_MAXD; i++)
         num[i] = 0;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (POSITION nx = x - max_dist; nx <= x + max_dist; nx++) {
         for (POSITION ny = y - max_dist; ny <= y + max_dist; ny++) {
             if (!in_bounds(floor_ptr, ny, nx))
@@ -80,10 +79,11 @@ bool mon_scatter(player_type *player_ptr, MONRACE_IDX r_idx, POSITION *yp, POSIT
             if (!projectable(player_ptr, y, x, ny, nx))
                 continue;
             if (r_idx > 0) {
-                monster_race *r_ptr = &r_info[r_idx];
+                monster_race* r_ptr = &r_info[r_idx];
                 if (!monster_can_enter(player_ptr, ny, nx, r_ptr, 0))
                     continue;
-            } else {
+            }
+            else {
                 if (!is_cave_empty_bold2(player_ptr, ny, nx))
                     continue;
                 if (pattern_tile(floor_ptr, ny, nx))
@@ -124,10 +124,9 @@ bool mon_scatter(player_type *player_ptr, MONRACE_IDX r_idx, POSITION *yp, POSIT
  * @details
  * Note that "reproduction" REQUIRES empty space.
  */
-bool multiply_monster(player_type *player_ptr, MONSTER_IDX m_idx, bool clone, BIT_FLAGS mode)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+bool multiply_monster(player_type* player_ptr, MONSTER_IDX m_idx, bool clone, BIT_FLAGS mode) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     POSITION y, x;
     if (!mon_scatter(player_ptr, m_ptr->r_idx, &y, &x, m_ptr->fy, m_ptr->fx, 1))
         return FALSE;
@@ -155,17 +154,17 @@ bool multiply_monster(player_type *player_ptr, MONSTER_IDX m_idx, bool clone, BI
  * @param mode 生成オプション
  * @return 成功したらtrue
  */
-static bool place_monster_group(player_type *player_ptr, MONSTER_IDX who, POSITION y, POSITION x, MONRACE_IDX r_idx, BIT_FLAGS mode)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+static bool place_monster_group(player_type* player_ptr, MONSTER_IDX who, POSITION y, POSITION x, MONRACE_IDX r_idx, BIT_FLAGS mode) {
+    monster_race* r_ptr = &r_info[r_idx];
     int total = randint1(10);
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     int extra = 0;
     if (r_ptr->level > floor_ptr->dun_level) {
         extra = r_ptr->level - floor_ptr->dun_level;
         extra = 0 - randint1(extra);
-    } else if (r_ptr->level < floor_ptr->dun_level) {
+    }
+    else if (r_ptr->level < floor_ptr->dun_level) {
         extra = floor_ptr->dun_level - r_ptr->level;
         extra = randint1(extra);
     }
@@ -211,11 +210,10 @@ static bool place_monster_group(player_type *player_ptr, MONSTER_IDX who, POSITI
  * @param r_idx チェックするモンスター種族のID
  * @return 護衛にできるならばtrue
  */
-static bool place_monster_can_escort(player_type *player_ptr, MONRACE_IDX r_idx)
-{
-    monster_race *r_ptr = &r_info[place_monster_idx];
-    monster_type *m_ptr = &player_ptr->current_floor_ptr->m_list[place_monster_m_idx];
-    monster_race *z_ptr = &r_info[r_idx];
+static bool place_monster_can_escort(player_type* player_ptr, MONRACE_IDX r_idx) {
+    monster_race* r_ptr = &r_info[place_monster_idx];
+    monster_type* m_ptr = &player_ptr->current_floor_ptr->m_list[place_monster_m_idx];
+    monster_race* z_ptr = &r_info[r_idx];
 
     if (mon_hook_dungeon(player_ptr, place_monster_idx) != mon_hook_dungeon(player_ptr, r_idx))
         return FALSE;
@@ -256,9 +254,8 @@ static bool place_monster_can_escort(player_type *player_ptr, MONRACE_IDX r_idx)
  * @param mode 生成オプション
  * @return 生成に成功したらtrue
  */
-bool place_monster_aux(player_type *player_ptr, MONSTER_IDX who, POSITION y, POSITION x, MONRACE_IDX r_idx, BIT_FLAGS mode)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+bool place_monster_aux(player_type* player_ptr, MONSTER_IDX who, POSITION y, POSITION x, MONRACE_IDX r_idx, BIT_FLAGS mode) {
+    monster_race* r_ptr = &r_info[r_idx];
 
     if (!(mode & PM_NO_KAGE) && one_in_(333))
         mode |= PM_KAGE;
@@ -319,8 +316,7 @@ bool place_monster_aux(player_type *player_ptr, MONSTER_IDX who, POSITION y, POS
  * @param mode 生成オプション
  * @return 生成に成功したらtrue
  */
-bool place_monster(player_type *player_ptr, POSITION y, POSITION x, BIT_FLAGS mode)
-{
+bool place_monster(player_type* player_ptr, POSITION y, POSITION x, BIT_FLAGS mode) {
     get_mon_num_prep(player_ptr, get_monster_hook(player_ptr), get_monster_hook2(player_ptr, y, x));
     MONRACE_IDX r_idx = get_mon_num(player_ptr, player_ptr->current_floor_ptr->monster_level, 0);
     if (r_idx == 0)
@@ -341,14 +337,13 @@ bool place_monster(player_type *player_ptr, POSITION y, POSITION x, BIT_FLAGS mo
  * @param x 生成地点x座標
  * @return 生成に成功したらtrue
  */
-bool alloc_horde(player_type *player_ptr, POSITION y, POSITION x, summon_specific_pf summon_specific)
-{
+bool alloc_horde(player_type* player_ptr, POSITION y, POSITION x, summon_specific_pf summon_specific) {
     get_mon_num_prep(player_ptr, get_monster_hook(player_ptr), get_monster_hook2(player_ptr, y, x));
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     MONRACE_IDX r_idx = 0;
     int attempts = 1000;
-    monster_race *r_ptr = NULL;
+    monster_race* r_ptr = NULL;
     while (--attempts) {
         r_idx = get_mon_num(player_ptr, floor_ptr->monster_level, 0);
         if (!r_idx)
@@ -400,10 +395,9 @@ bool alloc_horde(player_type *player_ptr, POSITION y, POSITION x, summon_specifi
  * @param def_val 現在の主の生成状態
  * @return 生成に成功したらtrue
  */
-bool alloc_guardian(player_type *player_ptr, bool def_val)
-{
+bool alloc_guardian(player_type* player_ptr, bool def_val) {
     MONRACE_IDX guardian = d_info[player_ptr->dungeon_idx].final_guardian;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     bool is_guardian_applicable = guardian > 0;
     is_guardian_applicable &= d_info[player_ptr->dungeon_idx].maxdepth == floor_ptr->dun_level;
     is_guardian_applicable &= r_info[guardian].cur_num < r_info[guardian].max_num;
@@ -443,12 +437,11 @@ bool alloc_guardian(player_type *player_ptr, bool def_val)
  * Use "slp" to choose the initial "sleep" status
  * Use "floor_ptr->monster_level" for the monster level
  */
-bool alloc_monster(player_type *player_ptr, POSITION dis, BIT_FLAGS mode, summon_specific_pf summon_specific)
-{
+bool alloc_monster(player_type* player_ptr, POSITION dis, BIT_FLAGS mode, summon_specific_pf summon_specific) {
     if (alloc_guardian(player_ptr, FALSE))
         return TRUE;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     POSITION y = 0, x = 0;
     int attempts_left = 10000;
     while (attempts_left--) {
@@ -458,7 +451,8 @@ bool alloc_monster(player_type *player_ptr, POSITION dis, BIT_FLAGS mode, summon
         if (floor_ptr->dun_level) {
             if (!is_cave_empty_bold2(player_ptr, y, x))
                 continue;
-        } else {
+        }
+        else {
             if (!is_cave_empty_bold(player_ptr, y, x))
                 continue;
         }
@@ -479,7 +473,8 @@ bool alloc_monster(player_type *player_ptr, POSITION dis, BIT_FLAGS mode, summon
         if (alloc_horde(player_ptr, y, x, summon_specific)) {
             return TRUE;
         }
-    } else {
+    }
+    else {
         if (place_monster(player_ptr, y, x, (mode | PM_ALLOW_GROUP)))
             return TRUE;
     }

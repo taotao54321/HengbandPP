@@ -4,8 +4,7 @@
 #include "io/write-diary.h"
 #include "view/display-messages.h"
 
-void msg_print_wizard(player_type *player_ptr, int cheat_type, concptr msg)
-{
+void msg_print_wizard(player_type* player_ptr, int cheat_type, concptr msg) {
     if (!cheat_room && cheat_type == CHEAT_DUNGEON)
         return;
     if (!cheat_peek && cheat_type == CHEAT_OBJECT)
@@ -28,8 +27,7 @@ void msg_print_wizard(player_type *player_ptr, int cheat_type, concptr msg)
 /*
  * Display a formatted message, using "vstrnfmt()" and "msg_print()".
  */
-void msg_format_wizard(player_type *player_ptr, int cheat_type, concptr fmt, ...)
-{
+void msg_format_wizard(player_type* player_ptr, int cheat_type, concptr fmt, ...) {
     if (!cheat_room && cheat_type == CHEAT_DUNGEON)
         return;
     if (!cheat_peek && cheat_type == CHEAT_OBJECT)

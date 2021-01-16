@@ -33,11 +33,10 @@
  * @details
  * Assume there is no monster blocking the destination
  */
-static bool exe_open_chest(player_type *creature_ptr, POSITION y, POSITION x, OBJECT_IDX o_idx)
-{
+static bool exe_open_chest(player_type* creature_ptr, POSITION y, POSITION x, OBJECT_IDX o_idx) {
     bool flag = TRUE;
     bool more = FALSE;
-    object_type *o_ptr = &creature_ptr->current_floor_ptr->o_list[o_idx];
+    object_type* o_ptr = &creature_ptr->current_floor_ptr->o_list[o_idx];
     take_turn(creature_ptr, 100);
     if (o_ptr->pval > 0) {
         flag = FALSE;
@@ -56,7 +55,8 @@ static bool exe_open_chest(player_type *creature_ptr, POSITION y, POSITION x, OB
             msg_print(_("鍵をはずした。", "You have picked the lock."));
             gain_exp(creature_ptr, 1);
             flag = TRUE;
-        } else {
+        }
+        else {
             more = TRUE;
             if (flush_failure)
                 flush();
@@ -80,8 +80,7 @@ static bool exe_open_chest(player_type *creature_ptr, POSITION y, POSITION x, OB
  * @details
  * Unlocking a locked door/chest is worth one experience point.
  */
-void do_cmd_open(player_type *creature_ptr)
-{
+void do_cmd_open(player_type* creature_ptr) {
     POSITION y, x;
     DIRECTION dir;
     OBJECT_IDX o_idx;
@@ -110,7 +109,7 @@ void do_cmd_open(player_type *creature_ptr)
 
     if (get_rep_dir(creature_ptr, &dir, TRUE)) {
         FEAT_IDX feat;
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         y = creature_ptr->y + ddy[dir];
         x = creature_ptr->x + ddx[dir];
         g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
@@ -118,13 +117,16 @@ void do_cmd_open(player_type *creature_ptr)
         o_idx = chest_check(creature_ptr->current_floor_ptr, y, x, FALSE);
         if (!has_flag(f_info[feat].flags, FF_OPEN) && !o_idx) {
             msg_print(_("そこには開けるものが見当たらない。", "You see nothing there to open."));
-        } else if (g_ptr->m_idx && creature_ptr->riding != g_ptr->m_idx) {
+        }
+        else if (g_ptr->m_idx && creature_ptr->riding != g_ptr->m_idx) {
             take_turn(creature_ptr, 100);
             msg_print(_("モンスターが立ちふさがっている！", "There is a monster in the way!"));
             do_cmd_attack(creature_ptr, y, x, combat_options(0));
-        } else if (o_idx) {
+        }
+        else if (o_idx) {
             more = exe_open_chest(creature_ptr, y, x, o_idx);
-        } else {
+        }
+        else {
             more = exe_open(creature_ptr, y, x);
         }
     }
@@ -140,8 +142,7 @@ void do_cmd_open(player_type *creature_ptr)
  * @details
  * Unlocking a locked door/chest is worth one experience point.
  */
-void do_cmd_close(player_type *creature_ptr)
-{
+void do_cmd_close(player_type* creature_ptr) {
     POSITION y, x;
     DIRECTION dir;
     bool more = FALSE;
@@ -161,7 +162,7 @@ void do_cmd_close(player_type *creature_ptr)
     }
 
     if (get_rep_dir(creature_ptr, &dir, FALSE)) {
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         FEAT_IDX feat;
         y = creature_ptr->y + ddy[dir];
         x = creature_ptr->x + ddx[dir];
@@ -169,11 +170,13 @@ void do_cmd_close(player_type *creature_ptr)
         feat = get_feat_mimic(g_ptr);
         if (!has_flag(f_info[feat].flags, FF_CLOSE)) {
             msg_print(_("そこには閉じるものが見当たらない。", "You see nothing there to close."));
-        } else if (g_ptr->m_idx) {
+        }
+        else if (g_ptr->m_idx) {
             take_turn(creature_ptr, 100);
             msg_print(_("モンスターが立ちふさがっている！", "There is a monster in the way!"));
             do_cmd_attack(creature_ptr, y, x, combat_options(0));
-        } else {
+        }
+        else {
             more = exe_close(creature_ptr, y, x);
         }
     }
@@ -187,8 +190,7 @@ void do_cmd_close(player_type *creature_ptr)
  * Disarms a trap, or chest
  * @return なし
  */
-void do_cmd_disarm(player_type *creature_ptr)
-{
+void do_cmd_disarm(player_type* creature_ptr) {
     POSITION y, x;
     DIRECTION dir;
     OBJECT_IDX o_idx;
@@ -216,7 +218,7 @@ void do_cmd_disarm(player_type *creature_ptr)
     }
 
     if (get_rep_dir(creature_ptr, &dir, TRUE)) {
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         FEAT_IDX feat;
         y = creature_ptr->y + ddy[dir];
         x = creature_ptr->x + ddx[dir];
@@ -225,12 +227,15 @@ void do_cmd_disarm(player_type *creature_ptr)
         o_idx = chest_check(creature_ptr->current_floor_ptr, y, x, TRUE);
         if (!is_trap(creature_ptr, feat) && !o_idx) {
             msg_print(_("そこには解除するものが見当たらない。", "You see nothing there to disarm."));
-        } else if (g_ptr->m_idx && creature_ptr->riding != g_ptr->m_idx) {
+        }
+        else if (g_ptr->m_idx && creature_ptr->riding != g_ptr->m_idx) {
             msg_print(_("モンスターが立ちふさがっている！", "There is a monster in the way!"));
             do_cmd_attack(creature_ptr, y, x, combat_options(0));
-        } else if (o_idx) {
+        }
+        else if (o_idx) {
             more = exe_disarm_chest(creature_ptr, y, x, o_idx);
-        } else {
+        }
+        else {
             more = exe_disarm(creature_ptr, y, x, dir);
         }
     }
@@ -257,11 +262,10 @@ void do_cmd_disarm(player_type *creature_ptr)
  * Creatures can also open or bash doors, see elsewhere.
  * </pre>
  */
-void do_cmd_bash(player_type *creature_ptr)
-{
+void do_cmd_bash(player_type* creature_ptr) {
     POSITION y, x;
     DIRECTION dir;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     bool more = FALSE;
     if (creature_ptr->wild_mode)
         return;
@@ -283,11 +287,13 @@ void do_cmd_bash(player_type *creature_ptr)
         feat = get_feat_mimic(g_ptr);
         if (!has_flag(f_info[feat].flags, FF_BASH)) {
             msg_print(_("そこには体当たりするものが見当たらない。", "You see nothing there to bash."));
-        } else if (g_ptr->m_idx) {
+        }
+        else if (g_ptr->m_idx) {
             take_turn(creature_ptr, 100);
             msg_print(_("モンスターが立ちふさがっている！", "There is a monster in the way!"));
             do_cmd_attack(creature_ptr, y, x, combat_options(0));
-        } else {
+        }
+        else {
             more = exe_bash(creature_ptr, y, x, dir);
         }
     }
@@ -306,10 +312,9 @@ void do_cmd_bash(player_type *creature_ptr)
  * Let user choose a pile of spikes, perhaps?
  * </pre>
  */
-static bool get_spike(player_type *creature_ptr, INVENTORY_IDX *ip)
-{
+static bool get_spike(player_type* creature_ptr, INVENTORY_IDX* ip) {
     for (INVENTORY_IDX i = 0; i < INVEN_PACK; i++) {
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
 
@@ -332,8 +337,7 @@ static bool get_spike(player_type *creature_ptr, INVENTORY_IDX *ip)
  * This command may NOT be repeated
  * </pre>
  */
-void do_cmd_spike(player_type *creature_ptr)
-{
+void do_cmd_spike(player_type* creature_ptr) {
     DIRECTION dir;
     if (creature_ptr->wild_mode)
         return;
@@ -346,19 +350,22 @@ void do_cmd_spike(player_type *creature_ptr)
 
     POSITION y = creature_ptr->y + ddy[dir];
     POSITION x = creature_ptr->x + ddx[dir];
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
     FEAT_IDX feat = get_feat_mimic(g_ptr);
     INVENTORY_IDX item;
     if (!has_flag(f_info[feat].flags, FF_SPIKE)) {
         msg_print(_("そこにはくさびを打てるものが見当たらない。", "You see nothing there to spike."));
-    } else if (!get_spike(creature_ptr, &item)) {
+    }
+    else if (!get_spike(creature_ptr, &item)) {
         msg_print(_("くさびを持っていない！", "You have no spikes!"));
-    } else if (g_ptr->m_idx) {
+    }
+    else if (g_ptr->m_idx) {
         take_turn(creature_ptr, 100);
         msg_print(_("モンスターが立ちふさがっている！", "There is a monster in the way!"));
         do_cmd_attack(creature_ptr, y, x, combat_options(0));
-    } else {
+    }
+    else {
         take_turn(creature_ptr, 100);
         msg_format(_("%sにくさびを打ち込んだ。", "You jam the %s with a spike."), f_name + f_info[feat].name);
         cave_alter_feat(creature_ptr, y, x, FF_SPIKE);

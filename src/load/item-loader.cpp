@@ -21,8 +21,7 @@
  * @param o_ptr アイテムオブジェクト保存先ポインタ
  * @return なし
  */
-void rd_item(player_type *player_ptr, object_type *o_ptr)
-{
+void rd_item(player_type* player_ptr, object_type* o_ptr) {
     if (h_older_than(1, 5, 0, 0)) {
         rd_item_old(player_ptr, o_ptr);
         return;
@@ -38,7 +37,7 @@ void rd_item(player_type *player_ptr, object_type *o_ptr)
     rd_byte(&tmp8u);
     o_ptr->ix = (POSITION)tmp8u;
 
-    object_kind *k_ptr;
+    object_kind* k_ptr;
     k_ptr = &k_info[o_ptr->k_idx];
     o_ptr->tval = k_ptr->tval;
     o_ptr->sval = k_ptr->sval;
@@ -55,7 +54,8 @@ void rd_item(player_type *player_ptr, object_type *o_ptr)
     if (flags & SAVE_ITEM_NUMBER) {
         rd_byte(&tmp8u);
         o_ptr->number = tmp8u;
-    } else
+    }
+    else
         o_ptr->number = 1;
 
     s16b tmp16s;
@@ -65,13 +65,15 @@ void rd_item(player_type *player_ptr, object_type *o_ptr)
     if (flags & SAVE_ITEM_NAME1) {
         rd_byte(&tmp8u);
         o_ptr->name1 = tmp8u;
-    } else
+    }
+    else
         o_ptr->name1 = 0;
 
     if (flags & SAVE_ITEM_NAME2) {
         rd_byte(&tmp8u);
         o_ptr->name2 = tmp8u;
-    } else
+    }
+    else
         o_ptr->name2 = 0;
 
     if (flags & SAVE_ITEM_TIMEOUT)
@@ -87,7 +89,8 @@ void rd_item(player_type *player_ptr, object_type *o_ptr)
     if (flags & SAVE_ITEM_TO_D) {
         rd_s16b(&tmp16s);
         o_ptr->to_d = tmp16s;
-    } else
+    }
+    else
         o_ptr->to_d = 0;
 
     if (flags & SAVE_ITEM_TO_A)
@@ -103,13 +106,15 @@ void rd_item(player_type *player_ptr, object_type *o_ptr)
     if (flags & SAVE_ITEM_DD) {
         rd_byte(&tmp8u);
         o_ptr->dd = tmp8u;
-    } else
+    }
+    else
         o_ptr->dd = 0;
 
     if (flags & SAVE_ITEM_DS) {
         rd_byte(&tmp8u);
         o_ptr->ds = tmp8u;
-    } else
+    }
+    else
         o_ptr->ds = 0;
 
     if (flags & SAVE_ITEM_IDENT)
@@ -194,14 +199,16 @@ void rd_item(player_type *player_ptr, object_type *o_ptr)
         char buf[128];
         rd_string(buf, sizeof(buf));
         o_ptr->inscription = quark_add(buf);
-    } else
+    }
+    else
         o_ptr->inscription = 0;
 
     if (flags & SAVE_ITEM_ART_NAME) {
         char buf[128];
         rd_string(buf, sizeof(buf));
         o_ptr->art_name = quark_add(buf);
-    } else {
+    }
+    else {
         o_ptr->art_name = 0;
     }
 
@@ -227,9 +234,11 @@ void rd_item(player_type *player_ptr, object_type *o_ptr)
 
         if (o_ptr->sval == SV_LITE_TORCH) {
             add_flag(o_ptr->art_flags, TR_LITE_M1);
-        } else if (o_ptr->sval == SV_LITE_LANTERN) {
+        }
+        else if (o_ptr->sval == SV_LITE_LANTERN) {
             add_flag(o_ptr->art_flags, TR_LITE_M2);
-        } else if (o_ptr->sval == SV_LITE_FEANOR) {
+        }
+        else if (o_ptr->sval == SV_LITE_FEANOR) {
             add_flag(o_ptr->art_flags, TR_LITE_M3);
         }
 
@@ -261,8 +270,7 @@ void rd_item(player_type *player_ptr, object_type *o_ptr)
     }
 }
 
-errr load_item(void)
-{
+errr load_item(void) {
     u16b tmp16u;
     rd_u16b(&tmp16u);
     if (tmp16u > max_k_idx) {
@@ -272,7 +280,7 @@ errr load_item(void)
 
     byte tmp8u;
     for (int i = 0; i < tmp16u; i++) {
-        object_kind *k_ptr = &k_info[i];
+        object_kind* k_ptr = &k_info[i];
         rd_byte(&tmp8u);
         k_ptr->aware = (tmp8u & 0x01) ? TRUE : FALSE;
         k_ptr->tried = (tmp8u & 0x02) ? TRUE : FALSE;
@@ -284,8 +292,7 @@ errr load_item(void)
     return 0;
 }
 
-errr load_artifact(void)
-{
+errr load_artifact(void) {
     u16b tmp16u;
     rd_u16b(&tmp16u);
     if (tmp16u > max_a_idx) {
@@ -295,7 +302,7 @@ errr load_artifact(void)
 
     byte tmp8u;
     for (int i = 0; i < tmp16u; i++) {
-        artifact_type *a_ptr = &a_info[i];
+        artifact_type* a_ptr = &a_info[i];
         rd_byte(&tmp8u);
         a_ptr->cur_num = tmp8u;
         if (h_older_than(1, 5, 0, 0)) {
@@ -303,7 +310,8 @@ errr load_artifact(void)
             rd_byte(&tmp8u);
             rd_byte(&tmp8u);
             rd_byte(&tmp8u);
-        } else {
+        }
+        else {
             rd_s16b(&a_ptr->floor_id);
         }
     }

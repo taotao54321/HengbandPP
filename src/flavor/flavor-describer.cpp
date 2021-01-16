@@ -32,8 +32,7 @@
 #include "util/string-processor.h"
 #include "window/display-sub-window-items.h"
 
-static void describe_chest_trap(flavor_type *flavor_ptr)
-{
+static void describe_chest_trap(flavor_type* flavor_ptr) {
     switch (chest_traps[flavor_ptr->o_ptr->pval]) {
     case 0:
         flavor_ptr->t = object_desc_str(flavor_ptr->t, _("(施錠)", " (Locked)"));
@@ -71,8 +70,7 @@ static void describe_chest_trap(flavor_type *flavor_ptr)
     }
 }
 
-static void describe_chest(flavor_type *flavor_ptr)
-{
+static void describe_chest(flavor_type* flavor_ptr) {
     if (flavor_ptr->o_ptr->tval != TV_CHEST)
         return;
 
@@ -96,8 +94,7 @@ static void describe_chest(flavor_type *flavor_ptr)
     describe_chest_trap(flavor_ptr);
 }
 
-static void decide_tval_show(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+static void decide_tval_show(player_type* player_ptr, flavor_type* flavor_ptr) {
     if (has_flag(flavor_ptr->tr_flags, TR_SHOW_MODS))
         flavor_ptr->show_weapon = TRUE;
 
@@ -111,8 +108,7 @@ static void decide_tval_show(player_type *player_ptr, flavor_type *flavor_ptr)
         flavor_ptr->show_armour = TRUE;
 }
 
-static void describe_digging(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+static void describe_digging(player_type* player_ptr, flavor_type* flavor_ptr) {
     if (object_is_quest_target(player_ptr, flavor_ptr->o_ptr) && !flavor_ptr->known)
         return;
 
@@ -124,8 +120,7 @@ static void describe_digging(player_type *player_ptr, flavor_type *flavor_ptr)
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->p2);
 }
 
-static void describe_bow(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+static void describe_bow(player_type* player_ptr, flavor_type* flavor_ptr) {
     flavor_ptr->power = bow_tmul(flavor_ptr->o_ptr->sval);
     if (has_flag(flavor_ptr->tr_flags, TR_XTRA_MIGHT))
         flavor_ptr->power++;
@@ -149,8 +144,7 @@ static void describe_bow(player_type *player_ptr, flavor_type *flavor_ptr)
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->p2);
 }
 
-static void describe_tval(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+static void describe_tval(player_type* player_ptr, flavor_type* flavor_ptr) {
     switch (flavor_ptr->o_ptr->tval) {
     case TV_SHOT:
     case TV_BOLT:
@@ -167,8 +161,7 @@ static void describe_tval(player_type *player_ptr, flavor_type *flavor_ptr)
     }
 }
 
-static void describe_named_item_tval(flavor_type *flavor_ptr)
-{
+static void describe_named_item_tval(flavor_type* flavor_ptr) {
     if (!flavor_ptr->known)
         return;
 
@@ -198,8 +191,7 @@ static void describe_named_item_tval(flavor_type *flavor_ptr)
     }
 }
 
-static void describe_fire_energy(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+static void describe_fire_energy(player_type* player_ptr, flavor_type* flavor_ptr) {
     ENERGY energy_fire = bow_energy(flavor_ptr->bow_ptr->sval);
     if (player_ptr->num_fire == 0) {
         flavor_ptr->t = object_desc_chr(flavor_ptr->t, '0');
@@ -224,8 +216,7 @@ static void describe_fire_energy(player_type *player_ptr, flavor_type *flavor_pt
     flavor_ptr->t = object_desc_str(flavor_ptr->t, show_ammo_detail ? "% crit" : "%");
 }
 
-static void describe_bow_power(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+static void describe_bow_power(player_type* player_ptr, flavor_type* flavor_ptr) {
     flavor_ptr->avgdam = flavor_ptr->o_ptr->dd * (flavor_ptr->o_ptr->ds + 1) * 10 / 2;
     int tmul = bow_tmul(flavor_ptr->bow_ptr->sval);
     if (object_is_known(flavor_ptr->bow_ptr))
@@ -261,8 +252,7 @@ static void describe_bow_power(player_type *player_ptr, flavor_type *flavor_ptr)
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->p2);
 }
 
-static void describe_spike_power(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+static void describe_spike_power(player_type* player_ptr, flavor_type* flavor_ptr) {
     int avgdam = player_ptr->mighty_throw ? (1 + 3) : 1;
     s16b energy_fire = 100 - player_ptr->lev;
     avgdam += ((player_ptr->lev + 30) * (player_ptr->lev + 30) - 900) / 55;
@@ -275,8 +265,7 @@ static void describe_spike_power(player_type *player_ptr, flavor_type *flavor_pt
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->p2);
 }
 
-static void describe_known_item_ac(flavor_type *flavor_ptr)
-{
+static void describe_known_item_ac(flavor_type* flavor_ptr) {
     if (flavor_ptr->show_armour) {
         flavor_ptr->t = object_desc_chr(flavor_ptr->t, ' ');
         flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->b1);
@@ -296,8 +285,7 @@ static void describe_known_item_ac(flavor_type *flavor_ptr)
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->b2);
 }
 
-static void describe_ac(flavor_type *flavor_ptr)
-{
+static void describe_ac(flavor_type* flavor_ptr) {
     if (flavor_ptr->known) {
         describe_known_item_ac(flavor_ptr);
         return;
@@ -312,8 +300,7 @@ static void describe_ac(flavor_type *flavor_ptr)
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->b2);
 }
 
-static void describe_charges_staff_wand(flavor_type *flavor_ptr)
-{
+static void describe_charges_staff_wand(flavor_type* flavor_ptr) {
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, ' ');
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->p1);
     if ((flavor_ptr->o_ptr->tval == TV_STAFF) && (flavor_ptr->o_ptr->number > 1)) {
@@ -332,8 +319,7 @@ static void describe_charges_staff_wand(flavor_type *flavor_ptr)
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->p2);
 }
 
-static void describe_charges_rod(flavor_type *flavor_ptr)
-{
+static void describe_charges_rod(flavor_type* flavor_ptr) {
     if (flavor_ptr->o_ptr->timeout == 0)
         return;
 
@@ -354,8 +340,7 @@ static void describe_charges_rod(flavor_type *flavor_ptr)
     flavor_ptr->t = object_desc_str(flavor_ptr->t, _("本 充填中)", " charging)"));
 }
 
-static void describe_specific_pval(flavor_type *flavor_ptr)
-{
+static void describe_specific_pval(flavor_type* flavor_ptr) {
     if (has_flag(flavor_ptr->tr_flags, TR_SPEED)) {
         flavor_ptr->t = object_desc_str(flavor_ptr->t, _("加速", " to speed"));
         return;
@@ -384,8 +369,7 @@ static void describe_specific_pval(flavor_type *flavor_ptr)
         flavor_ptr->t = object_desc_str(flavor_ptr->t, _("赤外線視力", " to infravision"));
 }
 
-static void describe_pval(flavor_type *flavor_ptr)
-{
+static void describe_pval(flavor_type* flavor_ptr) {
     if (!has_pval_flags(flavor_ptr->tr_flags))
         return;
 
@@ -401,8 +385,7 @@ static void describe_pval(flavor_type *flavor_ptr)
     flavor_ptr->t = object_desc_chr(flavor_ptr->t, flavor_ptr->p2);
 }
 
-static void describe_lamp_life(flavor_type *flavor_ptr)
-{
+static void describe_lamp_life(flavor_type* flavor_ptr) {
     if ((flavor_ptr->o_ptr->tval != TV_LITE) || (object_is_fixed_artifact(flavor_ptr->o_ptr) || (flavor_ptr->o_ptr->sval == SV_LITE_FEANOR)))
         return;
 
@@ -420,8 +403,7 @@ static void describe_lamp_life(flavor_type *flavor_ptr)
  * @param アイテム表記への参照ポインタ
  * @return なし
  */
-static void describe_remaining(flavor_type *flavor_ptr)
-{
+static void describe_remaining(flavor_type* flavor_ptr) {
     if (!flavor_ptr->known)
         return;
 
@@ -436,31 +418,30 @@ static void describe_remaining(flavor_type *flavor_ptr)
         flavor_ptr->t = object_desc_str(flavor_ptr->t, _("(充填中)", " (charging)"));
 }
 
-static void decide_item_feeling(flavor_type *flavor_ptr)
-{
+static void decide_item_feeling(flavor_type* flavor_ptr) {
     flavor_ptr->fake_insc_buf[0] = '\0';
     if (flavor_ptr->o_ptr->feeling) {
         strcpy(flavor_ptr->fake_insc_buf, game_inscriptions[flavor_ptr->o_ptr->feeling]);
         return;
     }
-    
+
     if (object_is_cursed(flavor_ptr->o_ptr) && (flavor_ptr->known || (flavor_ptr->o_ptr->ident & IDENT_SENSE))) {
         strcpy(flavor_ptr->fake_insc_buf, _("呪われている", "cursed"));
         return;
     }
-    
+
     if (((flavor_ptr->o_ptr->tval == TV_RING) || (flavor_ptr->o_ptr->tval == TV_AMULET) || (flavor_ptr->o_ptr->tval == TV_LITE)
-                 || (flavor_ptr->o_ptr->tval == TV_FIGURINE))
+            || (flavor_ptr->o_ptr->tval == TV_FIGURINE))
         && flavor_ptr->aware && !flavor_ptr->known && !(flavor_ptr->o_ptr->ident & IDENT_SENSE)) {
         strcpy(flavor_ptr->fake_insc_buf, _("未鑑定", "unidentified"));
         return;
     }
-    
+
     if (!flavor_ptr->known && (flavor_ptr->o_ptr->ident & IDENT_EMPTY)) {
         strcpy(flavor_ptr->fake_insc_buf, _("空", "empty"));
         return;
     }
-    
+
     if (!flavor_ptr->aware && object_is_tried(flavor_ptr->o_ptr))
         strcpy(flavor_ptr->fake_insc_buf, _("未判明", "tried"));
 }
@@ -473,10 +454,9 @@ static void decide_item_feeling(flavor_type *flavor_ptr)
  * @param mode 表記に関するオプション指定
  * @return 現在クエスト達成目的のアイテムならばTRUEを返す
  */
-void describe_flavor(player_type *player_ptr, char *buf, object_type *o_ptr, BIT_FLAGS mode)
-{
+void describe_flavor(player_type* player_ptr, char* buf, object_type* o_ptr, BIT_FLAGS mode) {
     flavor_type tmp_flavor;
-    flavor_type *flavor_ptr = initialize_flavor_type(&tmp_flavor, buf, o_ptr, mode);
+    flavor_type* flavor_ptr = initialize_flavor_type(&tmp_flavor, buf, o_ptr, mode);
     describe_named_item(player_ptr, flavor_ptr);
     if (flavor_ptr->mode & OD_NAME_ONLY) {
         angband_strcpy(flavor_ptr->buf, flavor_ptr->tmp_val, MAX_NLEN);

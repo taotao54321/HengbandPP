@@ -26,9 +26,8 @@
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-void spell_RF5_CAUSE(player_type *target_ptr, int GF_TYPE, HIT_POINT dam, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1,
-    concptr msg2, concptr msg3, int MS_TYPE, int TARGET_TYPE)
-{
+void spell_RF5_CAUSE(player_type* target_ptr, int GF_TYPE, HIT_POINT dam, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1,
+    concptr msg2, concptr msg3, int MS_TYPE, int TARGET_TYPE) {
     GAME_TEXT m_name[MAX_NLEN], t_name[MAX_NLEN];
     monster_name(target_ptr, m_idx, m_name);
     monster_name(target_ptr, t_idx, t_name);
@@ -46,7 +45,8 @@ void spell_RF5_CAUSE(player_type *target_ptr, int GF_TYPE, HIT_POINT dam, POSITI
     if (TARGET_TYPE == MONSTER_TO_MONSTER) {
         if (see_monster(target_ptr, m_idx)) {
             msg_format(msg3, m_name, t_name);
-        } else {
+        }
+        else {
             target_ptr->current_floor_ptr->monster_noise = TRUE;
         }
     }
@@ -64,8 +64,7 @@ void spell_RF5_CAUSE(player_type *target_ptr, int GF_TYPE, HIT_POINT dam, POSITI
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-HIT_POINT spell_RF5_CAUSE_1(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+HIT_POINT spell_RF5_CAUSE_1(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
     concptr msg1, msg2, msg3;
     HIT_POINT dam;
     dam = monspell_damage(target_ptr, (MS_CAUSE_1), m_idx, DAM_ROLL);
@@ -88,8 +87,7 @@ HIT_POINT spell_RF5_CAUSE_1(player_type *target_ptr, POSITION y, POSITION x, MON
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-HIT_POINT spell_RF5_CAUSE_2(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+HIT_POINT spell_RF5_CAUSE_2(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
     concptr msg1, msg2, msg3;
     HIT_POINT dam;
     dam = monspell_damage(target_ptr, (MS_CAUSE_2), m_idx, DAM_ROLL);
@@ -112,8 +110,7 @@ HIT_POINT spell_RF5_CAUSE_2(player_type *target_ptr, POSITION y, POSITION x, MON
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-HIT_POINT spell_RF5_CAUSE_3(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+HIT_POINT spell_RF5_CAUSE_3(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
     concptr msg1, msg2, msg3;
     HIT_POINT dam;
     dam = monspell_damage(target_ptr, (MS_CAUSE_3), m_idx, DAM_ROLL);
@@ -136,8 +133,7 @@ HIT_POINT spell_RF5_CAUSE_3(player_type *target_ptr, POSITION y, POSITION x, MON
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-HIT_POINT spell_RF5_CAUSE_4(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+HIT_POINT spell_RF5_CAUSE_4(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
     concptr msg1, msg2, msg3;
     HIT_POINT dam;
     dam = monspell_damage(target_ptr, (MS_CAUSE_4), m_idx, DAM_ROLL);

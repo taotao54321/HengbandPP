@@ -10,8 +10,7 @@
 #include "monster-attack/insults-moans.h"
 #include "monster-race/race-indice-types.h"
 
-static void show_jaian_song(monap_type *monap_ptr)
-{
+static void show_jaian_song(monap_type* monap_ptr) {
 #ifdef JP
     switch (randint1(15)) {
     case 1:
@@ -61,14 +60,14 @@ static void show_jaian_song(monap_type *monap_ptr)
 #endif
 }
 
-static void monster_attack_show(monap_type *monap_ptr)
-{
+static void monster_attack_show(monap_type* monap_ptr) {
 #ifdef JP
     monap_ptr->abbreviate = -1;
 #endif
     if (monap_ptr->m_ptr->r_idx == MON_JAIAN) {
         show_jaian_song(monap_ptr);
-    } else {
+    }
+    else {
         if (one_in_(3))
             monap_ptr->act = _("は♪僕らは楽しい家族♪と歌っている。", "sings 'We are a happy family.'");
         else
@@ -78,8 +77,7 @@ static void monster_attack_show(monap_type *monap_ptr)
     sound(SOUND_SHOW);
 }
 
-void describe_monster_attack_method(monap_type *monap_ptr)
-{
+void describe_monster_attack_method(monap_type* monap_ptr) {
     switch (monap_ptr->method) {
     case RBM_HIT: {
         monap_ptr->act = _("殴られた。", "hits you.");

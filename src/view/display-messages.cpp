@@ -25,10 +25,10 @@ u32b message__head;
 u32b message__tail;
 
 /* The array of offsets, by index [MESSAGE_MAX] */
-u32b *message__ptr;
+u32b* message__ptr;
 
 /* The array of chars, by offset [MESSAGE_BUF] */
-char *message__buf;
+char* message__buf;
 
 /* Used in msg_print() for "buffering" */
 bool msg_flag;
@@ -39,8 +39,7 @@ COMMAND_CODE now_message;
  * @brief 保存中の過去ゲームメッセージの数を返す。 / How many messages are "available"?
  * @return 残っているメッセージの数
  */
-s32b message_num(void)
-{
+s32b message_num(void) {
     int n;
     int last = message__last;
     int next = message__next;
@@ -57,8 +56,7 @@ s32b message_num(void)
  * @params age メッセージの世代
  * @return メッセージの文字列ポインタ
  */
-concptr message_str(int age)
-{
+concptr message_str(int age) {
     if ((age < 0) || (age >= message_num()))
         return ("");
 
@@ -73,8 +71,7 @@ concptr message_str(int age)
  * @params str 保存したいメッセージ
  * @return なし
  */
-void message_add(concptr str)
-{
+void message_add(concptr str) {
     u32b i;
     int x, m;
     char u[4096];
@@ -112,7 +109,8 @@ void message_add(concptr str)
         strncpy(splitted1, str, n);
         splitted1[n] = '\0';
         str = splitted1;
-    } else {
+    }
+    else {
         splitted2 = NULL;
     }
 
@@ -123,7 +121,7 @@ void message_add(concptr str)
     for (i = message__next; m; m--) {
         int j = 1;
         char buf[1024];
-        char *t;
+        char* t;
         concptr old;
         if (i-- == 0)
             i = MESSAGE_MAX - 1;
@@ -157,7 +155,8 @@ void message_add(concptr str)
             n = strlen(str);
             if (!now_message)
                 now_message++;
-        } else {
+        }
+        else {
             /*流れた行の数を数えておく */
             num_more++;
             now_message++;
@@ -258,8 +257,7 @@ void message_add(concptr str)
 /*
  * Hack -- flush
  */
-static void msg_flush(player_type *player_ptr, int x)
-{
+static void msg_flush(player_type* player_ptr, int x) {
     byte a = TERM_L_BLUE;
     bool nagasu = FALSE;
     if ((auto_more && !player_ptr->now_damaged) || num_more < 0) {
@@ -271,7 +269,8 @@ static void msg_flush(player_type *player_ptr, int x)
         if (i < 8) {
             if (num_more < angband_term[i]->hgt)
                 nagasu = TRUE;
-        } else {
+        }
+        else {
             nagasu = TRUE;
         }
     }
@@ -285,11 +284,13 @@ static void msg_flush(player_type *player_ptr, int x)
                 /* auto_moreのとき、全て流す */
                 num_more = -9999;
                 break;
-            } else if (cmd == ' ') {
+            }
+            else if (cmd == ' ') {
                 /* 1画面だけ流す */
                 num_more = 0;
                 break;
-            } else if ((cmd == '\n') || (cmd == '\r')) {
+            }
+            else if ((cmd == '\n') || (cmd == '\r')) {
                 /* 1行だけ流す */
                 num_more--;
                 break;
@@ -332,10 +333,9 @@ void msg_erase(void) { msg_print(NULL); }
  * Note that "msg_print(NULL)" will clear the top line
  * even if no messages are pending.  This is probably a hack.
  */
-void msg_print(concptr msg)
-{
+void msg_print(concptr msg) {
     static int p = 0;
-    char *t;
+    char* t;
     char buf[1024];
 
     if (current_world_ptr->timewalk_m_idx)
@@ -360,7 +360,8 @@ void msg_print(concptr msg)
 
     if (!cheat_turn) {
         strcpy(buf, msg);
-    } else {
+    }
+    else {
         sprintf(buf, ("T:%d - %s"), (int)current_world_ptr->game_turn, msg);
     }
 
@@ -383,10 +384,12 @@ void msg_print(concptr msg)
             if (iskanji(t[check])) {
                 k_flag = TRUE;
                 split = check;
-            } else if (t[check] == ' ') {
+            }
+            else if (t[check] == ' ') {
                 split = check;
                 wordlen = 0;
-            } else {
+            }
+            else {
                 wordlen++;
                 if (wordlen > 20)
                     split = check;
@@ -428,8 +431,7 @@ void msg_print(concptr msg)
 /*
  * Display a formatted message, using "vstrnfmt()" and "msg_print()".
  */
-void msg_format(concptr fmt, ...)
-{
+void msg_format(concptr fmt, ...) {
     va_list vp;
     char buf[1024];
     va_start(vp, fmt);

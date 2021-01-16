@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool get_player_race(player_type *creature_ptr);
+bool get_player_race(player_type* creature_ptr);

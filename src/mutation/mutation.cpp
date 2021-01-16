@@ -69,8 +69,7 @@
 #include "target/target-getter.h"
 #include "view/display-messages.h"
 
-static void race_dependent_mutation(player_type *creature_ptr, gm_type *gm_ptr)
-{
+static void race_dependent_mutation(player_type* creature_ptr, gm_type* gm_ptr) {
     if (gm_ptr->choose_mut != 0)
         return;
 
@@ -80,28 +79,28 @@ static void race_dependent_mutation(player_type *creature_ptr, gm_type *gm_ptr)
         gm_ptr->muta_desc = _("眼が幻惑的になった...", "Your eyes look mesmerizing...");
         return;
     }
-    
+
     if (creature_ptr->prace == RACE_IMP && !(creature_ptr->muta2 & MUT2_HORNS) && (randint1(10) < 7)) {
         gm_ptr->muta_class = &(creature_ptr->muta2);
         gm_ptr->muta_which = MUT2_HORNS;
         gm_ptr->muta_desc = _("角が額から生えてきた！", "Horns pop forth into your forehead!");
         return;
     }
-    
+
     if (creature_ptr->prace == RACE_YEEK && !(creature_ptr->muta1 & MUT1_SHRIEK) && (randint1(10) < 7)) {
         gm_ptr->muta_class = &(creature_ptr->muta1);
         gm_ptr->muta_which = MUT1_SHRIEK;
         gm_ptr->muta_desc = _("声質がかなり強くなった。", "Your vocal cords get much tougher.");
         return;
     }
-    
+
     if (creature_ptr->prace == RACE_BEASTMAN && !(creature_ptr->muta1 & MUT1_POLYMORPH) && (randint1(10) < 2)) {
         gm_ptr->muta_class = &(creature_ptr->muta1);
         gm_ptr->muta_which = MUT1_POLYMORPH;
         gm_ptr->muta_desc = _("あなたの肉体は変化できるようになった、", "Your body seems mutable.");
         return;
     }
-    
+
     if (creature_ptr->prace == RACE_MIND_FLAYER && !(creature_ptr->muta2 & MUT2_TENTACLES) && (randint1(10) < 7)) {
         gm_ptr->muta_class = &(creature_ptr->muta2);
         gm_ptr->muta_which = MUT2_TENTACLES;
@@ -114,14 +113,13 @@ static void race_dependent_mutation(player_type *creature_ptr, gm_type *gm_ptr)
  * @param choose_mut 与えたい突然変異のID、0ならばランダムに選択
  * @return なし
  */
-bool gain_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
-{
+bool gain_mutation(player_type* creature_ptr, MUTATION_IDX choose_mut) {
     int attempts_left = 20;
     if (choose_mut)
         attempts_left = 1;
 
     gm_type tmp_gm;
-    gm_type *gm_ptr = initialize_gm_type(&tmp_gm, choose_mut);
+    gm_type* gm_ptr = initialize_gm_type(&tmp_gm, choose_mut);
     while (attempts_left--) {
         switch_gain_mutation(creature_ptr, gm_ptr);
         if ((gm_ptr->muta_class != NULL) && (gm_ptr->muta_which != 0) && ((*gm_ptr->muta_class & gm_ptr->muta_which) == 0))
@@ -147,22 +145,26 @@ bool gain_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
                 msg_print(_("あなたはもう超人的に強くはない！", "You no longer feel super-strong!"));
                 creature_ptr->muta3 &= ~(MUT3_HYPER_STR);
             }
-        } else if (gm_ptr->muta_which == MUT3_HYPER_STR) {
+        }
+        else if (gm_ptr->muta_which == MUT3_HYPER_STR) {
             if (creature_ptr->muta3 & MUT3_PUNY) {
                 msg_print(_("あなたはもう虚弱ではない！", "You no longer feel puny!"));
                 creature_ptr->muta3 &= ~(MUT3_PUNY);
             }
-        } else if (gm_ptr->muta_which == MUT3_MORONIC) {
+        }
+        else if (gm_ptr->muta_which == MUT3_MORONIC) {
             if (creature_ptr->muta3 & MUT3_HYPER_INT) {
                 msg_print(_("あなたの脳はもう生体コンピュータではない。", "Your brain is no longer a living computer."));
                 creature_ptr->muta3 &= ~(MUT3_HYPER_INT);
             }
-        } else if (gm_ptr->muta_which == MUT3_HYPER_INT) {
+        }
+        else if (gm_ptr->muta_which == MUT3_HYPER_INT) {
             if (creature_ptr->muta3 & MUT3_MORONIC) {
                 msg_print(_("あなたはもう精神薄弱ではない。", "You are no longer moronic."));
                 creature_ptr->muta3 &= ~(MUT3_MORONIC);
             }
-        } else if (gm_ptr->muta_which == MUT3_IRON_SKIN) {
+        }
+        else if (gm_ptr->muta_which == MUT3_IRON_SKIN) {
             if (creature_ptr->muta3 & MUT3_SCALES) {
                 msg_print(_("鱗がなくなった。", "You lose your scales."));
                 creature_ptr->muta3 &= ~(MUT3_SCALES);
@@ -175,38 +177,45 @@ bool gain_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
                 msg_print(_("肌のイボイボがなくなった。", "You lose your warts."));
                 creature_ptr->muta3 &= ~(MUT3_WART_SKIN);
             }
-        } else if (gm_ptr->muta_which == MUT3_WART_SKIN || gm_ptr->muta_which == MUT3_SCALES || gm_ptr->muta_which == MUT3_FLESH_ROT) {
+        }
+        else if (gm_ptr->muta_which == MUT3_WART_SKIN || gm_ptr->muta_which == MUT3_SCALES || gm_ptr->muta_which == MUT3_FLESH_ROT) {
             if (creature_ptr->muta3 & MUT3_IRON_SKIN) {
                 msg_print(_("あなたの肌はもう鉄ではない。", "Your skin is no longer made of steel."));
                 creature_ptr->muta3 &= ~(MUT3_IRON_SKIN);
             }
-        } else if (gm_ptr->muta_which == MUT3_FEARLESS) {
+        }
+        else if (gm_ptr->muta_which == MUT3_FEARLESS) {
             if (creature_ptr->muta2 & MUT2_COWARDICE) {
                 msg_print(_("臆病でなくなった。", "You are no longer cowardly."));
                 creature_ptr->muta2 &= ~(MUT2_COWARDICE);
             }
-        } else if (gm_ptr->muta_which == MUT3_FLESH_ROT) {
+        }
+        else if (gm_ptr->muta_which == MUT3_FLESH_ROT) {
             if (creature_ptr->muta3 & MUT3_REGEN) {
                 msg_print(_("急速に回復しなくなった。", "You stop regenerating."));
                 creature_ptr->muta3 &= ~(MUT3_REGEN);
             }
-        } else if (gm_ptr->muta_which == MUT3_REGEN) {
+        }
+        else if (gm_ptr->muta_which == MUT3_REGEN) {
             if (creature_ptr->muta3 & MUT3_FLESH_ROT) {
                 msg_print(_("肉体が腐乱しなくなった。", "Your flesh stops rotting."));
                 creature_ptr->muta3 &= ~(MUT3_FLESH_ROT);
             }
-        } else if (gm_ptr->muta_which == MUT3_LIMBER) {
+        }
+        else if (gm_ptr->muta_which == MUT3_LIMBER) {
             if (creature_ptr->muta3 & MUT3_ARTHRITIS) {
                 msg_print(_("関節が痛くなくなった。", "Your joints stop hurting."));
                 creature_ptr->muta3 &= ~(MUT3_ARTHRITIS);
             }
-        } else if (gm_ptr->muta_which == MUT3_ARTHRITIS) {
+        }
+        else if (gm_ptr->muta_which == MUT3_ARTHRITIS) {
             if (creature_ptr->muta3 & MUT3_LIMBER) {
                 msg_print(_("あなたはしなやかでなくなった。", "You no longer feel limber."));
                 creature_ptr->muta3 &= ~(MUT3_LIMBER);
             }
         }
-    } else if (gm_ptr->muta_class == &(creature_ptr->muta2)) {
+    }
+    else if (gm_ptr->muta_class == &(creature_ptr->muta2)) {
         if (gm_ptr->muta_which == MUT2_COWARDICE) {
             if (creature_ptr->muta3 & MUT3_FEARLESS) {
                 msg_print(_("恐れ知らずでなくなった。", "You no longer feel fearless."));
@@ -240,13 +249,12 @@ bool gain_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
  * @param choose_mut 取り除きたい突然変異のID、0ならばランダムに消去
  * @return なし
  */
-bool lose_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
-{
+bool lose_mutation(player_type* creature_ptr, MUTATION_IDX choose_mut) {
     int attempts_left = 20;
     concptr muta_desc = "";
     bool muta_chosen = FALSE;
     int muta_which = 0; // mutation_flag_type_1 とmutation_flag_type_2 の両対応とするため、敢えてint型で定義する
-    BIT_FLAGS *muta_class = NULL;
+    BIT_FLAGS* muta_class = NULL;
     if (choose_mut)
         attempts_left = 1;
 
@@ -858,8 +866,7 @@ bool lose_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
     return TRUE;
 }
 
-void lose_all_mutations(player_type *creature_ptr)
-{
+void lose_all_mutations(player_type* creature_ptr) {
     if (creature_ptr->muta1 || creature_ptr->muta2 || creature_ptr->muta3) {
         chg_virtue(creature_ptr, V_CHANCE, -5);
         msg_print(_("全ての突然変異が治った。", "You are cured of all mutations."));
@@ -874,8 +881,7 @@ void lose_all_mutations(player_type *creature_ptr)
  * @brief 現在プレイヤー得ている突然変異の数を返す。
  * @return 現在得ている突然変異の数
  */
-static int count_mutations(player_type *creature_ptr)
-{
+static int count_mutations(player_type* creature_ptr) {
     return count_bits(creature_ptr->muta1) + count_bits(creature_ptr->muta2) + count_bits(creature_ptr->muta3);
 }
 
@@ -887,8 +893,7 @@ static int count_mutations(player_type *creature_ptr)
  * Beastman get 10 "free" mutations and only 5% decrease per additional mutation.
  * Max 90% decrease in regeneration speed.
  */
-int calc_mutant_regenerate_mod(player_type *creature_ptr)
-{
+int calc_mutant_regenerate_mod(player_type* creature_ptr) {
     int regen;
     int mod = 10;
     int count = count_mutations(creature_ptr);
@@ -916,8 +921,7 @@ int calc_mutant_regenerate_mod(player_type *creature_ptr)
  * @param power 発動させる突然変異レイシャルのID
  * @return レイシャルを実行した場合TRUE、キャンセルした場合FALSEを返す
  */
-bool exe_mutation_power(player_type *creature_ptr, int power)
-{
+bool exe_mutation_power(player_type* creature_ptr, int power) {
     DIRECTION dir = 0;
     PLAYER_LEVEL lvl = creature_ptr->lev;
     switch (power) {
@@ -1002,7 +1006,7 @@ bool exe_mutation_power(player_type *creature_ptr, int power)
         return TRUE;
     case MUT1_DET_CURSE:
         for (int i = 0; i < INVEN_TOTAL; i++) {
-            object_type *o_ptr = &creature_ptr->inventory_list[i];
+            object_type* o_ptr = &creature_ptr->inventory_list[i];
             if ((o_ptr->k_idx == 0) || !object_is_cursed(o_ptr))
                 continue;
 
@@ -1090,7 +1094,7 @@ bool exe_mutation_power(player_type *creature_ptr, int power)
 
         POSITION y = creature_ptr->y + ddy[dir];
         POSITION x = creature_ptr->x + ddx[dir];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
 
         if (!g_ptr->m_idx) {
@@ -1098,9 +1102,9 @@ bool exe_mutation_power(player_type *creature_ptr, int power)
             return TRUE;
         }
 
-        monster_type *m_ptr;
+        monster_type* m_ptr;
         m_ptr = &creature_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         r_ptr = &r_info[m_ptr->r_idx];
         if ((r_ptr->flags3 & RF3_EVIL) && !(r_ptr->flags1 & RF1_QUESTOR) && !(r_ptr->flags1 & RF1_UNIQUE) && !creature_ptr->current_floor_ptr->inside_arena
             && !creature_ptr->current_floor_ptr->inside_quest && (r_ptr->level < randint1(creature_ptr->lev + 50)) && !(m_ptr->mflag2 & MFLAG2_NOGENO)) {
@@ -1127,7 +1131,7 @@ bool exe_mutation_power(player_type *creature_ptr, int power)
 
         POSITION y = creature_ptr->y + ddy[dir];
         POSITION x = creature_ptr->x + ddx[dir];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
         if (!g_ptr->m_idx) {
             msg_print(_("あなたは何もない場所で手を振った。", "You wave your hands in the air."));
@@ -1146,16 +1150,14 @@ bool exe_mutation_power(player_type *creature_ptr, int power)
     }
 }
 
-void become_living_trump(player_type *creature_ptr)
-{
+void become_living_trump(player_type* creature_ptr) {
     /* 1/7 Teleport control and 6/7 Random teleportation (uncontrolled) */
     MUTATION_IDX mutation = one_in_(7) ? 12 : 77;
     if (gain_mutation(creature_ptr, mutation))
         msg_print(_("あなたは生きているカードに変わった。", "You have turned into a Living Trump."));
 }
 
-void set_mutation_flags(player_type *creature_ptr)
-{
+void set_mutation_flags(player_type* creature_ptr) {
     if (creature_ptr->muta3 == 0)
         return;
 

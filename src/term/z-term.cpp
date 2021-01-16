@@ -29,26 +29,25 @@
 #endif
 
 /* The current "term" */
-term_type *Term = NULL;
+term_type* Term = NULL;
 
 /*** Local routines ***/
 
 /*
  * Nuke a term_win (see below)
  */
-errr term_win_nuke(term_win *s, TERM_LEN w, TERM_LEN h)
-{
+errr term_win_nuke(term_win* s, TERM_LEN w, TERM_LEN h) {
     /* Free the window access arrays */
-    C_KILL(s->a, h, TERM_COLOR *);
-    C_KILL(s->c, h, char *);
+    C_KILL(s->a, h, TERM_COLOR*);
+    C_KILL(s->c, h, char*);
 
     /* Free the window content arrays */
     C_KILL(s->va, h * w, TERM_COLOR);
     C_KILL(s->vc, h * w, char);
 
     /* Free the terrain access arrays */
-    C_KILL(s->ta, h, TERM_COLOR *);
-    C_KILL(s->tc, h, char *);
+    C_KILL(s->ta, h, TERM_COLOR*);
+    C_KILL(s->tc, h, char*);
 
     /* Free the terrain content arrays */
     C_KILL(s->vta, h * w, TERM_COLOR);
@@ -60,19 +59,18 @@ errr term_win_nuke(term_win *s, TERM_LEN w, TERM_LEN h)
 /*
  * Initialize a "term_win" (using the given window size)
  */
-static errr term_win_init(term_win *s, TERM_LEN w, TERM_LEN h)
-{
+static errr term_win_init(term_win* s, TERM_LEN w, TERM_LEN h) {
     /* Make the window access arrays */
-    C_MAKE(s->a, h, TERM_COLOR *);
-    C_MAKE(s->c, h, char *);
+    C_MAKE(s->a, h, TERM_COLOR*);
+    C_MAKE(s->c, h, char*);
 
     /* Make the window content arrays */
     C_MAKE(s->va, h * w, TERM_COLOR);
     C_MAKE(s->vc, h * w, char);
 
     /* Make the terrain access arrays */
-    C_MAKE(s->ta, h, TERM_COLOR *);
-    C_MAKE(s->tc, h, char *);
+    C_MAKE(s->ta, h, TERM_COLOR*);
+    C_MAKE(s->tc, h, char*);
 
     /* Make the terrain content arrays */
     C_MAKE(s->vta, h * w, TERM_COLOR);
@@ -93,21 +91,20 @@ static errr term_win_init(term_win *s, TERM_LEN w, TERM_LEN h)
 /*
  * Copy a "term_win" from another
  */
-static errr term_win_copy(term_win *s, term_win *f, TERM_LEN w, TERM_LEN h)
-{
+static errr term_win_copy(term_win* s, term_win* f, TERM_LEN w, TERM_LEN h) {
     /* Copy contents */
     for (TERM_LEN y = 0; y < h; y++) {
-        TERM_COLOR *f_aa = f->a[y];
-        char *f_cc = f->c[y];
+        TERM_COLOR* f_aa = f->a[y];
+        char* f_cc = f->c[y];
 
-        TERM_COLOR *s_aa = s->a[y];
-        char *s_cc = s->c[y];
+        TERM_COLOR* s_aa = s->a[y];
+        char* s_cc = s->c[y];
 
-        TERM_COLOR *f_taa = f->ta[y];
-        char *f_tcc = f->tc[y];
+        TERM_COLOR* f_taa = f->ta[y];
+        char* f_tcc = f->tc[y];
 
-        TERM_COLOR *s_taa = s->ta[y];
-        char *s_tcc = s->tc[y];
+        TERM_COLOR* s_taa = s->ta[y];
+        char* s_tcc = s->tc[y];
 
         for (TERM_LEN x = 0; x < w; x++) {
             *s_aa++ = *f_aa++;
@@ -131,8 +128,7 @@ static errr term_win_copy(term_win *s, term_win *f, TERM_LEN w, TERM_LEN h)
 /*
  * Execute the "Term->user_hook" hook, if available (see above).
  */
-errr term_user(int n)
-{
+errr term_user(int n) {
     /* Verify the hook */
     if (!Term->user_hook)
         return -1;
@@ -144,8 +140,7 @@ errr term_user(int n)
 /*
  * Execute the "Term->xtra_hook" hook, if available (see above).
  */
-errr term_xtra(int n, int v)
-{
+errr term_xtra(int n, int v) {
     /* Verify the hook */
     if (!Term->xtra_hook)
         return -1;
@@ -159,8 +154,7 @@ errr term_xtra(int n, int v)
 /*
  * Fake hook for "term_curs()" (see above)
  */
-static errr term_curs_hack(TERM_LEN x, TERM_LEN y)
-{
+static errr term_curs_hack(TERM_LEN x, TERM_LEN y) {
     /* Unused */
     (void)x;
     (void)y;
@@ -176,8 +170,7 @@ static errr term_bigcurs_hack(TERM_LEN x, TERM_LEN y) { return (*Term->curs_hook
 /*
  * Fake hook for "term_wipe()" (see above)
  */
-static errr term_wipe_hack(TERM_LEN x, TERM_LEN y, int n)
-{
+static errr term_wipe_hack(TERM_LEN x, TERM_LEN y, int n) {
     /* Unused */
     (void)x;
     (void)y;
@@ -189,8 +182,7 @@ static errr term_wipe_hack(TERM_LEN x, TERM_LEN y, int n)
 /*
  * Fake hook for "term_text()" (see above)
  */
-static errr term_text_hack(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr cp)
-{
+static errr term_text_hack(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr cp) {
     /* Unused */
     (void)x;
     (void)y;
@@ -204,8 +196,7 @@ static errr term_text_hack(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr 
 /*
  * Fake hook for "term_pict()" (see above)
  */
-static errr term_pict_hack(TERM_LEN x, TERM_LEN y, int n, const TERM_COLOR *ap, concptr cp, const TERM_COLOR *tap, concptr tcp)
-{
+static errr term_pict_hack(TERM_LEN x, TERM_LEN y, int n, const TERM_COLOR* ap, concptr cp, const TERM_COLOR* tap, concptr tcp) {
     /* Unused */
     (void)x;
     (void)y;
@@ -224,15 +215,14 @@ static errr term_pict_hack(TERM_LEN x, TERM_LEN y, int n, const TERM_COLOR *ap, 
  * Mentally draw an attr/char at a given location
  * Assumes given location and values are valid.
  */
-void term_queue_char(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c, TERM_COLOR ta, char tc)
-{
-    term_win *scrn = Term->scr;
+void term_queue_char(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c, TERM_COLOR ta, char tc) {
+    term_win* scrn = Term->scr;
 
-    TERM_COLOR *scr_aa = &scrn->a[y][x];
-    char *scr_cc = &scrn->c[y][x];
+    TERM_COLOR* scr_aa = &scrn->a[y][x];
+    char* scr_cc = &scrn->c[y][x];
 
-    TERM_COLOR *scr_taa = &scrn->ta[y][x];
-    char *scr_tcc = &scrn->tc[y][x];
+    TERM_COLOR* scr_taa = &scrn->ta[y][x];
+    char* scr_tcc = &scrn->tc[y][x];
 
     /* Ignore non-changes */
     if ((*scr_aa == a) && (*scr_cc == c) && (*scr_taa == ta) && (*scr_tcc == tc))
@@ -272,8 +262,7 @@ void term_queue_char(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c, TERM_COLOR ta
  * Otherwise, mentally draw a pair of attr/char at a given location.
  * Assumes given location and values are valid.
  */
-void term_queue_bigchar(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c, TERM_COLOR ta, char tc)
-{
+void term_queue_bigchar(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c, TERM_COLOR ta, char tc) {
 
 #ifdef JP
     /*
@@ -346,18 +335,17 @@ void term_queue_bigchar(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c, TERM_COLOR
  * This function is designed to be fast, with no consistancy checking.
  * It is used to update the map in the game.
  */
-void term_queue_line(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR *a, char *c, TERM_COLOR *ta, char *tc)
-{
-    term_win *scrn = Term->scr;
+void term_queue_line(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR* a, char* c, TERM_COLOR* ta, char* tc) {
+    term_win* scrn = Term->scr;
 
     TERM_LEN x1 = -1;
     TERM_LEN x2 = -1;
 
-    TERM_COLOR *scr_aa = &scrn->a[y][x];
-    char *scr_cc = &scrn->c[y][x];
+    TERM_COLOR* scr_aa = &scrn->a[y][x];
+    char* scr_cc = &scrn->c[y][x];
 
-    TERM_COLOR *scr_taa = &scrn->ta[y][x];
-    char *scr_tcc = &scrn->tc[y][x];
+    TERM_COLOR* scr_taa = &scrn->ta[y][x];
+    char* scr_tcc = &scrn->tc[y][x];
 
     while (n--) {
         /* Ignore non-changes */
@@ -416,21 +404,20 @@ void term_queue_line(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR *a, char *c, TERM
  * a valid location, so the first "n" characters of "s" can all be added
  * starting at (x,y) without causing any illegal operations.
  */
-static void term_queue_chars(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr s)
-{
+static void term_queue_chars(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr s) {
     TERM_LEN x1 = -1, x2 = -1;
 
-    TERM_COLOR *scr_aa = Term->scr->a[y];
+    TERM_COLOR* scr_aa = Term->scr->a[y];
 #ifdef JP
-    char *scr_cc = Term->scr->c[y];
+    char* scr_cc = Term->scr->c[y];
 
-    TERM_COLOR *scr_taa = Term->scr->ta[y];
-    char *scr_tcc = Term->scr->tc[y];
+    TERM_COLOR* scr_taa = Term->scr->ta[y];
+    char* scr_tcc = Term->scr->tc[y];
 #else
-    char *scr_cc = Term->scr->c[y];
+    char* scr_cc = Term->scr->c[y];
 
-    TERM_COLOR *scr_taa = Term->scr->ta[y];
-    char *scr_tcc = Term->scr->tc[y];
+    TERM_COLOR* scr_taa = Term->scr->ta[y];
+    char* scr_tcc = Term->scr->tc[y];
 #endif
 
 #ifdef JP
@@ -476,7 +463,8 @@ static void term_queue_chars(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concpt
             if (x1 < 0)
                 x1 = x - 1;
             x2 = x;
-        } else {
+        }
+        else {
 #endif
             TERM_COLOR oa = scr_aa[x];
             char oc = scr_cc[x];
@@ -545,19 +533,18 @@ static void term_queue_chars(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concpt
  * Flush a row of the current window (see "term_fresh")
  * Display text using "term_pict()"
  */
-static void term_fresh_row_pict(TERM_LEN y, TERM_LEN x1, TERM_LEN x2)
-{
-    TERM_COLOR *old_aa = Term->old->a[y];
-    char *old_cc = Term->old->c[y];
+static void term_fresh_row_pict(TERM_LEN y, TERM_LEN x1, TERM_LEN x2) {
+    TERM_COLOR* old_aa = Term->old->a[y];
+    char* old_cc = Term->old->c[y];
 
-    TERM_COLOR *scr_aa = Term->scr->a[y];
-    char *scr_cc = Term->scr->c[y];
+    TERM_COLOR* scr_aa = Term->scr->a[y];
+    char* scr_cc = Term->scr->c[y];
 
-    TERM_COLOR *old_taa = Term->old->ta[y];
-    char *old_tcc = Term->old->tc[y];
+    TERM_COLOR* old_taa = Term->old->ta[y];
+    char* old_tcc = Term->old->tc[y];
 
-    TERM_COLOR *scr_taa = Term->scr->ta[y];
-    char *scr_tcc = Term->scr->tc[y];
+    TERM_COLOR* scr_taa = Term->scr->ta[y];
+    char* scr_tcc = Term->scr->tc[y];
 
     TERM_COLOR ota;
     char otc;
@@ -666,18 +653,17 @@ static void term_fresh_row_pict(TERM_LEN y, TERM_LEN x1, TERM_LEN x2)
  * Display text using "term_text()" and "term_wipe()",
  * but use "term_pict()" for high-bit attr/char pairs
  */
-static void term_fresh_row_both(TERM_LEN y, int x1, int x2)
-{
-    TERM_COLOR *old_aa = Term->old->a[y];
-    char *old_cc = Term->old->c[y];
+static void term_fresh_row_both(TERM_LEN y, int x1, int x2) {
+    TERM_COLOR* old_aa = Term->old->a[y];
+    char* old_cc = Term->old->c[y];
 
-    TERM_COLOR *scr_aa = Term->scr->a[y];
-    char *scr_cc = Term->scr->c[y];
+    TERM_COLOR* scr_aa = Term->scr->a[y];
+    char* scr_cc = Term->scr->c[y];
 
-    TERM_COLOR *old_taa = Term->old->ta[y];
-    char *old_tcc = Term->old->tc[y];
-    TERM_COLOR *scr_taa = Term->scr->ta[y];
-    char *scr_tcc = Term->scr->tc[y];
+    TERM_COLOR* old_taa = Term->old->ta[y];
+    char* old_tcc = Term->old->tc[y];
+    TERM_COLOR* scr_taa = Term->scr->ta[y];
+    char* scr_tcc = Term->scr->tc[y];
 
     TERM_COLOR ota;
     char otc;
@@ -867,13 +853,12 @@ static void term_fresh_row_both(TERM_LEN y, int x1, int x2)
  *
  * Display text using "term_text()" and "term_wipe()"
  */
-static void term_fresh_row_text(TERM_LEN y, TERM_LEN x1, TERM_LEN x2)
-{
-    TERM_COLOR *old_aa = Term->old->a[y];
-    char *old_cc = Term->old->c[y];
+static void term_fresh_row_text(TERM_LEN y, TERM_LEN x1, TERM_LEN x2) {
+    TERM_COLOR* old_aa = Term->old->a[y];
+    char* old_cc = Term->old->c[y];
 
-    TERM_COLOR *scr_aa = Term->scr->a[y];
-    char *scr_cc = Term->scr->c[y];
+    TERM_COLOR* scr_aa = Term->scr->a[y];
+    char* scr_cc = Term->scr->c[y];
 
     /* The "always_text" flag */
     int always_text = Term->always_text;
@@ -902,7 +887,8 @@ static void term_fresh_row_text(TERM_LEN y, TERM_LEN x1, TERM_LEN x2)
             if (x == x1 - 1) {
                 x1--;
                 break;
-            } else
+            }
+            else
                 x++;
         }
 #endif
@@ -1024,16 +1010,15 @@ static void term_fresh_row_text(TERM_LEN y, TERM_LEN x1, TERM_LEN x2)
 /*
  * @brief Actually perform all requested changes to the window
  */
-errr term_fresh(void)
-{
+errr term_fresh(void) {
     int w = Term->wid;
     int h = Term->hgt;
 
     int y1 = Term->y1;
     int y2 = Term->y2;
 
-    term_win *old = Term->old;
-    term_win *scr = Term->scr;
+    term_win* old = Term->old;
+    term_win* scr = Term->scr;
 
     /* Before initialize (Advice from Mr.shimitei)*/
     if (!old || !scr)
@@ -1062,11 +1047,11 @@ errr term_fresh(void)
 
         /* Wipe each row */
         for (TERM_LEN y = 0; y < h; y++) {
-            TERM_COLOR *aa = old->a[y];
-            char *cc = old->c[y];
+            TERM_COLOR* aa = old->a[y];
+            char* cc = old->c[y];
 
-            TERM_COLOR *taa = old->ta[y];
-            char *tcc = old->tc[y];
+            TERM_COLOR* taa = old->ta[y];
+            char* tcc = old->tc[y];
 
             /* Wipe each column */
             for (TERM_LEN x = 0; x < w; x++) {
@@ -1101,11 +1086,11 @@ errr term_fresh(void)
             TERM_LEN tx = old->cx;
             TERM_LEN ty = old->cy;
 
-            TERM_COLOR *old_aa = old->a[ty];
-            char *old_cc = old->c[ty];
+            TERM_COLOR* old_aa = old->a[ty];
+            char* old_cc = old->c[ty];
 
-            TERM_COLOR *old_taa = old->ta[ty];
-            char *old_tcc = old->tc[ty];
+            TERM_COLOR* old_taa = old->ta[ty];
+            char* old_tcc = old->tc[ty];
 
             TERM_COLOR ota = old_taa[tx];
             char otc = old_tcc[tx];
@@ -1216,7 +1201,8 @@ errr term_fresh(void)
             {
                 /* Double width cursor for the Bigtile mode */
                 (void)((*Term->bigcurs_hook)(scr->cx, scr->cy));
-            } else {
+            }
+            else {
                 /* Call the cursor display routine */
                 (void)((*Term->curs_hook)(scr->cx, scr->cy));
             }
@@ -1269,8 +1255,7 @@ errr term_fresh(void)
 /*
  * Set the cursor visibility
  */
-errr term_set_cursor(int v)
-{
+errr term_set_cursor(int v) {
     /* Already done */
     if (Term->scr->cv == v)
         return 1;
@@ -1285,8 +1270,7 @@ errr term_set_cursor(int v)
  *
  * Note -- "illegal" requests do not move the cursor.
  */
-errr term_gotoxy(TERM_LEN x, TERM_LEN y)
-{
+errr term_gotoxy(TERM_LEN x, TERM_LEN y) {
     int w = Term->wid;
     int h = Term->hgt;
 
@@ -1310,8 +1294,7 @@ errr term_gotoxy(TERM_LEN x, TERM_LEN y)
  * Do not change the cursor position
  * No visual changes until "term_fresh()".
  */
-errr term_draw(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c)
-{
+errr term_draw(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c) {
     int w = Term->wid;
     int h = Term->hgt;
 
@@ -1345,8 +1328,7 @@ errr term_draw(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c)
  * positive value, future calls to either function will
  * return negative ones.
  */
-errr term_addch(TERM_COLOR a, char c)
-{
+errr term_addch(TERM_COLOR a, char c) {
     TERM_LEN w = Term->wid;
 
     /* Handle "unusable" cursor */
@@ -1382,8 +1364,7 @@ errr term_addch(TERM_COLOR a, char c)
  * Otherwise, queue a pair of attr/char for display at the current
  * cursor location, and advance the cursor to the right by two.
  */
-errr term_add_bigch(TERM_COLOR a, char c)
-{
+errr term_add_bigch(TERM_COLOR a, char c) {
     if (!use_bigtile)
         return term_addch(a, c);
 
@@ -1431,8 +1412,7 @@ errr term_add_bigch(TERM_COLOR a, char c)
  * positive value, future calls to either function will
  * return negative ones.
  */
-errr term_addstr(int n, TERM_COLOR a, concptr s)
-{
+errr term_addstr(int n, TERM_COLOR a, concptr s) {
     int k;
     TERM_LEN w = Term->wid;
     errr res = 0;
@@ -1468,8 +1448,7 @@ errr term_addstr(int n, TERM_COLOR a, concptr s)
 /*
  * Move to a location and, using an attr, add a char
  */
-errr term_putch(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c)
-{
+errr term_putch(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c) {
     errr res;
 
     /* Move first */
@@ -1486,8 +1465,7 @@ errr term_putch(TERM_LEN x, TERM_LEN y, TERM_COLOR a, char c)
 /*
  * Move to a location and, using an attr, add a string
  */
-errr term_putstr(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr s)
-{
+errr term_putstr(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr s) {
     errr res;
 
     /* Move first */
@@ -1504,8 +1482,7 @@ errr term_putstr(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr s)
 /*
  * Place cursor at (x,y), and clear the next "n" chars
  */
-errr term_erase(TERM_LEN x, TERM_LEN y, int n)
-{
+errr term_erase(TERM_LEN x, TERM_LEN y, int n) {
     TERM_LEN w = Term->wid;
     /* int h = Term->hgt; */
 
@@ -1515,11 +1492,11 @@ errr term_erase(TERM_LEN x, TERM_LEN y, int n)
     int na = Term->attr_blank;
     int nc = Term->char_blank;
 
-    TERM_COLOR *scr_aa;
-    char *scr_cc;
+    TERM_COLOR* scr_aa;
+    char* scr_cc;
 
-    TERM_COLOR *scr_taa;
-    char *scr_tcc;
+    TERM_COLOR* scr_taa;
+    char* scr_tcc;
 
     /* Place cursor */
     if (term_gotoxy(x, y))
@@ -1608,8 +1585,7 @@ errr term_erase(TERM_LEN x, TERM_LEN y, int n)
  *
  * Note the use of the special "total_erase" code
  */
-errr term_clear(void)
-{
+errr term_clear(void) {
     TERM_LEN w = Term->wid;
     TERM_LEN h = Term->hgt;
 
@@ -1624,11 +1600,11 @@ errr term_clear(void)
 
     /* Wipe each row */
     for (TERM_LEN y = 0; y < h; y++) {
-        TERM_COLOR *scr_aa = Term->scr->a[y];
-        char *scr_cc = Term->scr->c[y];
+        TERM_COLOR* scr_aa = Term->scr->a[y];
+        char* scr_cc = Term->scr->c[y];
 
-        TERM_COLOR *scr_taa = Term->scr->ta[y];
-        char *scr_tcc = Term->scr->tc[y];
+        TERM_COLOR* scr_taa = Term->scr->ta[y];
+        char* scr_tcc = Term->scr->tc[y];
 
         /* Wipe each column */
         for (TERM_LEN x = 0; x < w; x++) {
@@ -1656,8 +1632,7 @@ errr term_clear(void)
 /*
  * Redraw (and refresh) the whole window.
  */
-errr term_redraw(void)
-{
+errr term_redraw(void) {
     /* Force "total erase" */
     Term->total_erase = TRUE;
     term_fresh();
@@ -1667,9 +1642,8 @@ errr term_redraw(void)
 /*
  * Redraw part of a window.
  */
-errr term_redraw_section(TERM_LEN x1, TERM_LEN y1, TERM_LEN x2, TERM_LEN y2)
-{
-    char *g_ptr;
+errr term_redraw_section(TERM_LEN x1, TERM_LEN y1, TERM_LEN x2, TERM_LEN y2) {
+    char* g_ptr;
 
     /* Bounds checking */
     if (y2 >= Term->hgt)
@@ -1734,8 +1708,7 @@ errr term_redraw_section(TERM_LEN x1, TERM_LEN y1, TERM_LEN x2, TERM_LEN y2)
 /*
  * Extract the cursor visibility
  */
-errr term_get_cursor(int *v)
-{
+errr term_get_cursor(int* v) {
     /* Extract visibility */
     (*v) = Term->scr->cv;
     return 0;
@@ -1744,8 +1717,7 @@ errr term_get_cursor(int *v)
 /*
  * Extract the current window size
  */
-errr term_get_size(TERM_LEN *w, TERM_LEN *h)
-{
+errr term_get_size(TERM_LEN* w, TERM_LEN* h) {
     /* Access the cursor */
     (*w) = Term->wid;
     (*h) = Term->hgt;
@@ -1755,8 +1727,7 @@ errr term_get_size(TERM_LEN *w, TERM_LEN *h)
 /*
  * Extract the current cursor location
  */
-errr term_locate(TERM_LEN *x, TERM_LEN *y)
-{
+errr term_locate(TERM_LEN* x, TERM_LEN* y) {
     /* Access the cursor */
     (*x) = Term->scr->cx;
     (*y) = Term->scr->cy;
@@ -1773,8 +1744,7 @@ errr term_locate(TERM_LEN *x, TERM_LEN *y)
  * Note that this refers to what will be on the window after the
  * next call to "term_fresh()".  It may or may not already be there.
  */
-errr term_what(TERM_LEN x, TERM_LEN y, TERM_COLOR *a, char *c)
-{
+errr term_what(TERM_LEN x, TERM_LEN y, TERM_COLOR* a, char* c) {
     TERM_LEN w = Term->wid;
     TERM_LEN h = Term->hgt;
 
@@ -1794,8 +1764,7 @@ errr term_what(TERM_LEN x, TERM_LEN y, TERM_COLOR *a, char *c)
 /*
  * Flush and forget the input
  */
-errr term_flush(void)
-{
+errr term_flush(void) {
     /* Flush all events */
     term_xtra(TERM_XTRA_FLUSH, 0);
 
@@ -1807,8 +1776,7 @@ errr term_flush(void)
 /*
  * Add a keypress to the FRONT of the "queue"
  */
-errr term_key_push(int k)
-{
+errr term_key_push(int k) {
     /* Refuse to enqueue non-keys */
     if (!k)
         return -1;
@@ -1836,8 +1804,7 @@ errr term_key_push(int k)
  *
  * Remove the keypress if "take" is true.
  */
-errr term_inkey(char *ch, bool wait, bool take)
-{
+errr term_inkey(char* ch, bool wait, bool take) {
     /* Assume no key */
     (*ch) = '\0';
 
@@ -1886,8 +1853,7 @@ errr term_inkey(char *ch, bool wait, bool take)
  *
  * Every "term_save()" should match exactly one "term_load()"
  */
-errr term_save(void)
-{
+errr term_save(void) {
     TERM_LEN w = Term->wid;
     TERM_LEN h = Term->hgt;
 
@@ -1910,8 +1876,7 @@ errr term_save(void)
  *
  * Every "term_save()" should match exactly one "term_load()"
  */
-errr term_load(void)
-{
+errr term_load(void) {
     TERM_LEN w = Term->wid;
     TERM_LEN h = Term->hgt;
 
@@ -1943,12 +1908,11 @@ errr term_load(void)
 /*
  * Exchange the "requested" screen with the "tmp" screen
  */
-errr term_exchange(void)
-{
+errr term_exchange(void) {
     TERM_LEN w = Term->wid;
     TERM_LEN h = Term->hgt;
 
-    term_win *exchanger;
+    term_win* exchanger;
 
     /* Create */
     if (!Term->tmp) {
@@ -1980,17 +1944,16 @@ errr term_exchange(void)
 /*
  * React to a new physical window size.
  */
-errr term_resize(TERM_LEN w, TERM_LEN h)
-{
+errr term_resize(TERM_LEN w, TERM_LEN h) {
     TERM_LEN wid, hgt;
 
-    TERM_LEN *hold_x1;
-    TERM_LEN *hold_x2;
+    TERM_LEN* hold_x1;
+    TERM_LEN* hold_x2;
 
-    term_win *hold_old;
-    term_win *hold_scr;
-    term_win *hold_mem;
-    term_win *hold_tmp;
+    term_win* hold_old;
+    term_win* hold_scr;
+    term_win* hold_mem;
+    term_win* hold_tmp;
 
     /* Resizing is forbidden */
     if (Term->fixed_shape)
@@ -2164,8 +2127,7 @@ errr term_resize(TERM_LEN w, TERM_LEN h)
  * To "create" a valid "term", one should do "term_init(t)", then
  * set the various flags and hooks, and then do "term_activate(t)".
  */
-errr term_activate(term_type *t)
-{
+errr term_activate(term_type* t) {
     /* already done */
     if (Term == t)
         return 1;
@@ -2203,8 +2165,7 @@ errr term_activate(term_type *t)
  * By default, the cursor starts out "invisible"
  * By default, we "erase" using "black spaces"
  */
-errr term_init(term_type *t, TERM_LEN w, TERM_LEN h, int k)
-{
+errr term_init(term_type* t, TERM_LEN w, TERM_LEN h, int k) {
     /* Wipe it */
     (void)WIPE(t, term_type);
 
@@ -2268,8 +2229,7 @@ errr term_init(term_type *t, TERM_LEN w, TERM_LEN h, int k)
 /*
  * Move to a location and, using an attr, add a string vertically
  */
-errr term_putstr_v(TERM_LEN x, TERM_LEN y, int n, byte a, concptr s)
-{
+errr term_putstr_v(TERM_LEN x, TERM_LEN y, int n, byte a, concptr s) {
     errr res;
     int y0 = y;
 
@@ -2285,7 +2245,8 @@ errr term_putstr_v(TERM_LEN x, TERM_LEN y, int n, byte a, concptr s)
             y0++;
             if (s[i] == 0)
                 break;
-        } else {
+        }
+        else {
             if ((res = term_addstr(1, a, &s[i])) != 0)
                 return (res);
             y0++;
@@ -2297,8 +2258,7 @@ errr term_putstr_v(TERM_LEN x, TERM_LEN y, int n, byte a, concptr s)
 #endif
 
 #ifndef WINDOWS
-errr term_nuke(term_type *t)
-{
+errr term_nuke(term_type* t) {
     TERM_LEN w = t->wid;
     TERM_LEN h = t->hgt;
     if (t->active_flag) {

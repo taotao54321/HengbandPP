@@ -30,8 +30,7 @@
  * A function for Auto-picker/destroyer
  * Examine whether the object matches to the list of keywords or not.
  */
-int find_autopick_list(player_type *player_ptr, object_type *o_ptr)
-{
+int find_autopick_list(player_type* player_ptr, object_type* o_ptr) {
     GAME_TEXT o_name[MAX_NLEN];
     if (o_ptr->tval == TV_GOLD)
         return -1;
@@ -39,7 +38,7 @@ int find_autopick_list(player_type *player_ptr, object_type *o_ptr)
     describe_flavor(player_ptr, o_name, o_ptr, (OD_NO_FLAVOR | OD_OMIT_PREFIX | OD_NO_PLURAL));
     str_tolower(o_name);
     for (int i = 0; i < max_autopick; i++) {
-        autopick_type *entry = &autopick_list[i];
+        autopick_type* entry = &autopick_list[i];
         if (is_autopick_match(player_ptr, o_ptr, entry, o_name))
             return i;
     }
@@ -50,11 +49,10 @@ int find_autopick_list(player_type *player_ptr, object_type *o_ptr)
 /*
  * Choose an item for search
  */
-bool get_object_for_search(player_type *player_ptr, object_type **o_handle, concptr *search_strp)
-{
+bool get_object_for_search(player_type* player_ptr, object_type** o_handle, concptr* search_strp) {
     concptr q = _("どのアイテムを検索しますか? ", "Enter which item? ");
     concptr s = _("アイテムを持っていない。", "You have nothing to enter.");
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(player_ptr, NULL, q, s, USE_INVEN | USE_FLOOR | USE_EQUIP, TV_NONE);
     if (!o_ptr)
         return FALSE;
@@ -70,8 +68,7 @@ bool get_object_for_search(player_type *player_ptr, object_type **o_handle, conc
 /*
  * Prepare for search by destroyed object
  */
-bool get_destroyed_object_for_search(player_type *player_ptr, object_type **o_handle, concptr *search_strp)
-{
+bool get_destroyed_object_for_search(player_type* player_ptr, object_type** o_handle, concptr* search_strp) {
     if (!autopick_last_destroyed_object.k_idx)
         return FALSE;
 
@@ -86,8 +83,7 @@ bool get_destroyed_object_for_search(player_type *player_ptr, object_type **o_ha
 /*
  * Choose an item or string for search
  */
-byte get_string_for_search(player_type *player_ptr, object_type **o_handle, concptr *search_strp)
-{
+byte get_string_for_search(player_type* player_ptr, object_type** o_handle, concptr* search_strp) {
     /*
      * Text color
      * TERM_YELLOW : Overwrite mode
@@ -250,10 +246,12 @@ byte get_string_for_search(player_type *player_ptr, object_type **o_handle, conc
                 if (pos + 1 < len) {
                     buf[pos++] = c;
                     buf[pos++] = next;
-                } else {
+                }
+                else {
                     bell();
                 }
-            } else
+            }
+            else
 #endif
 #ifdef JP
                 if (pos < len && (isprint(c) || iskana(c)))
@@ -262,7 +260,8 @@ byte get_string_for_search(player_type *player_ptr, object_type **o_handle, conc
 #endif
             {
                 buf[pos++] = c;
-            } else {
+            }
+            else {
                 bell();
             }
 
@@ -286,8 +285,7 @@ byte get_string_for_search(player_type *player_ptr, object_type **o_handle, conc
 /*
  * Search next line matches for o_ptr
  */
-void search_for_object(player_type *player_ptr, text_body_type *tb, object_type *o_ptr, bool forward)
-{
+void search_for_object(player_type* player_ptr, text_body_type* tb, object_type* o_ptr, bool forward) {
     autopick_type an_entry, *entry = &an_entry;
     GAME_TEXT o_name[MAX_NLEN];
     int bypassed_cy = -1;
@@ -300,7 +298,8 @@ void search_for_object(player_type *player_ptr, text_body_type *tb, object_type 
         if (forward) {
             if (!tb->lines_list[++i])
                 break;
-        } else {
+        }
+        else {
             if (--i < 0)
                 break;
         }
@@ -341,8 +340,7 @@ void search_for_object(player_type *player_ptr, text_body_type *tb, object_type 
 /*
  * Search next line matches to the string
  */
-void search_for_string(text_body_type *tb, concptr search_str, bool forward)
-{
+void search_for_string(text_body_type* tb, concptr search_str, bool forward) {
     int bypassed_cy = -1;
     int bypassed_cx = 0;
 
@@ -352,7 +350,8 @@ void search_for_string(text_body_type *tb, concptr search_str, bool forward)
         if (forward) {
             if (!tb->lines_list[++i])
                 break;
-        } else {
+        }
+        else {
             if (--i < 0)
                 break;
         }

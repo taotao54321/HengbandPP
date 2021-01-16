@@ -23,8 +23,7 @@ typedef struct birth_realm_type {
     int os;
 } birth_realm_type;
 
-static byte count_realm_selection(s32b choices, int *count)
-{
+static byte count_realm_selection(s32b choices, int* count) {
     byte auto_select = REALM_NONE;
     if (choices & CH_LIFE) {
         (*count)++;
@@ -94,8 +93,7 @@ static byte count_realm_selection(s32b choices, int *count)
     return auto_select;
 }
 
-static birth_realm_type *initialize_birth_realm_type(birth_realm_type *birth_realm_ptr)
-{
+static birth_realm_type* initialize_birth_realm_type(birth_realm_type* birth_realm_ptr) {
     birth_realm_ptr->cs = 0;
     birth_realm_ptr->n = 0;
     birth_realm_ptr->p2 = ')';
@@ -106,8 +104,7 @@ static birth_realm_type *initialize_birth_realm_type(birth_realm_type *birth_rea
     return birth_realm_ptr;
 }
 
-static void impose_first_realm(player_type *creature_ptr, s32b choices)
-{
+static void impose_first_realm(player_type* creature_ptr, s32b choices) {
     if (creature_ptr->realm2 == REALM_SELECT_CANCEL)
         return;
 
@@ -116,13 +113,13 @@ static void impose_first_realm(player_type *creature_ptr, s32b choices)
 
     if (is_good_realm(creature_ptr->realm1)) {
         choices &= ~(CH_DEATH | CH_DAEMON);
-    } else {
+    }
+    else {
         choices &= ~(CH_LIFE | CH_CRUSADE);
     }
 }
 
-static void analyze_realms(player_type *creature_ptr, s32b choices, birth_realm_type *birth_realm_ptr)
-{
+static void analyze_realms(player_type* creature_ptr, s32b choices, birth_realm_type* birth_realm_ptr) {
     for (int i = 0; i < 32; i++) {
         if ((choices & (1L << i)) == 0)
             continue;
@@ -145,8 +142,7 @@ static void analyze_realms(player_type *creature_ptr, s32b choices, birth_realm_
     }
 }
 
-static void move_birth_realm_cursor(birth_realm_type *birth_realm_ptr)
-{
+static void move_birth_realm_cursor(birth_realm_type* birth_realm_ptr) {
     if (birth_realm_ptr->cs == birth_realm_ptr->os)
         return;
 
@@ -154,7 +150,8 @@ static void move_birth_realm_cursor(birth_realm_type *birth_realm_ptr)
 
     if (birth_realm_ptr->cs == birth_realm_ptr->n) {
         sprintf(birth_realm_ptr->cur, "%c%c %s", '*', birth_realm_ptr->p2, _("ランダム", "Random"));
-    } else {
+    }
+    else {
         sprintf(birth_realm_ptr->cur, "%c%c %s", birth_realm_ptr->sym[birth_realm_ptr->cs], birth_realm_ptr->p2,
             realm_names[birth_realm_ptr->picks[birth_realm_ptr->cs]]);
         sprintf(birth_realm_ptr->buf, "%s", realm_names[birth_realm_ptr->picks[birth_realm_ptr->cs]]);
@@ -167,8 +164,7 @@ static void move_birth_realm_cursor(birth_realm_type *birth_realm_ptr)
     birth_realm_ptr->os = birth_realm_ptr->cs;
 }
 
-static void interpret_realm_select_key(birth_realm_type *birth_realm_ptr, char c)
-{
+static void interpret_realm_select_key(birth_realm_type* birth_realm_ptr, char c) {
     if (c == 'Q')
         birth_quit();
 
@@ -193,8 +189,7 @@ static void interpret_realm_select_key(birth_realm_type *birth_realm_ptr, char c
     }
 }
 
-static bool get_a_realm(player_type *creature_ptr, birth_realm_type *birth_realm_ptr)
-{
+static bool get_a_realm(player_type* creature_ptr, birth_realm_type* birth_realm_ptr) {
     birth_realm_ptr->os = birth_realm_ptr->n;
     while (TRUE) {
         move_birth_realm_cursor(birth_realm_ptr);
@@ -214,7 +209,8 @@ static bool get_a_realm(player_type *creature_ptr, birth_realm_type *birth_realm
             if (birth_realm_ptr->cs == birth_realm_ptr->n) {
                 birth_realm_ptr->k = randint0(birth_realm_ptr->n);
                 break;
-            } else {
+            }
+            else {
                 birth_realm_ptr->k = birth_realm_ptr->cs;
                 break;
             }
@@ -235,7 +231,8 @@ static bool get_a_realm(player_type *creature_ptr, birth_realm_type *birth_realm
         if ((birth_realm_ptr->k >= 26) && (birth_realm_ptr->k < birth_realm_ptr->n)) {
             birth_realm_ptr->cs = birth_realm_ptr->k;
             continue;
-        } else
+        }
+        else
             birth_realm_ptr->k = -1;
 
         birth_help_option(creature_ptr, c, BK_REALM);
@@ -251,8 +248,7 @@ static bool get_a_realm(player_type *creature_ptr, birth_realm_type *birth_realm
  * @return 選択した魔法領域のID
  * @details 領域数が0 (戦士等)or 1 (観光客等)なら自動での値を返す
  */
-static byte select_realm(player_type *creature_ptr, s32b choices, int *count)
-{
+static byte select_realm(player_type* creature_ptr, s32b choices, int* count) {
     byte auto_select = count_realm_selection(choices, count);
     clear_from(10);
     if ((*count) < 2)
@@ -263,7 +259,7 @@ static byte select_realm(player_type *creature_ptr, s32b choices, int *count)
         23, 5);
 
     birth_realm_type tmp_birth_realm;
-    birth_realm_type *birth_realm_ptr = initialize_birth_realm_type(&tmp_birth_realm);
+    birth_realm_type* birth_realm_ptr = initialize_birth_realm_type(&tmp_birth_realm);
     analyze_realms(creature_ptr, choices, birth_realm_ptr);
     sprintf(birth_realm_ptr->cur, "%c%c %s", '*', birth_realm_ptr->p2, _("ランダム", "Random"));
     if (get_a_realm(creature_ptr, birth_realm_ptr))
@@ -273,8 +269,7 @@ static byte select_realm(player_type *creature_ptr, s32b choices, int *count)
     return (byte)(birth_realm_ptr->picks[birth_realm_ptr->k]);
 }
 
-static void cleanup_realm_selection_window(void)
-{
+static void cleanup_realm_selection_window(void) {
     clear_from(10);
     put_str("                                   ", 3, 40);
     put_str("                                   ", 4, 40);
@@ -286,14 +281,14 @@ static void cleanup_realm_selection_window(void)
  * @param count 魔法領域の数
  * @return 選んだ魔法領域で良ければTRUE、再選択ならばFALSE
  */
-static bool check_realm_selection(player_type *creature_ptr, int count)
-{
+static bool check_realm_selection(player_type* creature_ptr, int count) {
     if (count < 2) {
         prt(_("何かキーを押してください", "Hit any key."), 0, 0);
         (void)inkey();
         prt("", 0, 0);
         return TRUE;
-    } else if (get_check_strict(creature_ptr, _("よろしいですか？", "Are you sure? "), CHECK_DEFAULT_Y))
+    }
+    else if (get_check_strict(creature_ptr, _("よろしいですか？", "Are you sure? "), CHECK_DEFAULT_Y))
         return TRUE;
 
     return FALSE;
@@ -303,8 +298,7 @@ static bool check_realm_selection(player_type *creature_ptr, int count)
  * @brief 選択した魔法領域の解説を表示する / Choose the magical realms
  * @return ユーザが魔法領域の確定を選んだらTRUEを返す。
  */
-bool get_player_realms(player_type *creature_ptr)
-{
+bool get_player_realms(player_type* creature_ptr) {
     /* Clean up infomation of modifications */
     put_str("                                   ", 3, 40);
     put_str("                                   ", 4, 40);

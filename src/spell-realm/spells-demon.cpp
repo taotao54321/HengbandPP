@@ -12,10 +12,10 @@
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_tim_sh_fire(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_tim_sh_fire(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -24,11 +24,13 @@ bool set_tim_sh_fire(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tim_sh_fire && !do_dec) {
             if (creature_ptr->tim_sh_fire > v)
                 return FALSE;
-        } else if (!creature_ptr->tim_sh_fire) {
+        }
+        else if (!creature_ptr->tim_sh_fire) {
             msg_print(_("体が炎のオーラで覆われた。", "You are enveloped by a fiery aura!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tim_sh_fire) {
             msg_print(_("炎のオーラが消えた。", "The fiery aura disappeared."));
             notice = TRUE;

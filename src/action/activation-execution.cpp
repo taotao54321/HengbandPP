@@ -1,7 +1,7 @@
 ﻿#include "action/activation-execution.h"
 #include "action/action-limited.h"
-#include "artifact/random-art-effects.h"
 #include "artifact/artifact-info.h"
+#include "artifact/random-art-effects.h"
 #include "core/window-redrawer.h"
 #include "effect/spells-effect-util.h"
 #include "floor/geometry.h"
@@ -39,15 +39,14 @@
 #include "view/display-messages.h"
 #include "world/world.h"
 
-static void decide_activation_level(player_type *user_ptr, ae_type *ae_ptr)
-{
+static void decide_activation_level(player_type* user_ptr, ae_type* ae_ptr) {
     if (object_is_fixed_artifact(ae_ptr->o_ptr)) {
         ae_ptr->lev = a_info[ae_ptr->o_ptr->name1].level;
         return;
     }
 
     if (object_is_random_artifact(ae_ptr->o_ptr)) {
-        const activation_type *const act_ptr = find_activation_info(user_ptr, ae_ptr->o_ptr);
+        const activation_type* const act_ptr = find_activation_info(user_ptr, ae_ptr->o_ptr);
         if (act_ptr != NULL)
             ae_ptr->lev = act_ptr->level;
 
@@ -58,8 +57,7 @@ static void decide_activation_level(player_type *user_ptr, ae_type *ae_ptr)
         ae_ptr->lev = e_info[ae_ptr->o_ptr->name2].level;
 }
 
-static void decide_chance_fail(player_type *user_ptr, ae_type *ae_ptr)
-{
+static void decide_chance_fail(player_type* user_ptr, ae_type* ae_ptr) {
     ae_ptr->chance = user_ptr->skill_dev;
     if (user_ptr->confused)
         ae_ptr->chance = ae_ptr->chance / 2;
@@ -77,8 +75,7 @@ static void decide_chance_fail(player_type *user_ptr, ae_type *ae_ptr)
         ae_ptr->chance = USE_DEVICE;
 }
 
-static void decide_activation_success(player_type *user_ptr, ae_type *ae_ptr)
-{
+static void decide_activation_success(player_type* user_ptr, ae_type* ae_ptr) {
     if (user_ptr->pclass == CLASS_BERSERKER) {
         ae_ptr->success = FALSE;
         return;
@@ -92,8 +89,7 @@ static void decide_activation_success(player_type *user_ptr, ae_type *ae_ptr)
     ae_ptr->success = randint0(ae_ptr->fail * 2) < ae_ptr->chance;
 }
 
-static bool check_activation_success(ae_type *ae_ptr)
-{
+static bool check_activation_success(ae_type* ae_ptr) {
     if (ae_ptr->success)
         return TRUE;
 
@@ -105,8 +101,7 @@ static bool check_activation_success(ae_type *ae_ptr)
     return FALSE;
 }
 
-static bool check_activation_conditions(player_type *user_ptr, ae_type *ae_ptr)
-{
+static bool check_activation_conditions(player_type* user_ptr, ae_type* ae_ptr) {
     if (!check_activation_success(ae_ptr))
         return FALSE;
 
@@ -130,10 +125,9 @@ static bool check_activation_conditions(player_type *user_ptr, ae_type *ae_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return 発動実行の是非を返す。
  */
-static bool activate_artifact(player_type *user_ptr, object_type *o_ptr)
-{
+static bool activate_artifact(player_type* user_ptr, object_type* o_ptr) {
     concptr name = k_name + k_info[o_ptr->k_idx].name;
-    const activation_type *const act_ptr = find_activation_info(user_ptr, o_ptr);
+    const activation_type* const act_ptr = find_activation_info(user_ptr, o_ptr);
     if (!act_ptr) {
         msg_print("Activation information is not found.");
         return FALSE;
@@ -168,8 +162,7 @@ static bool activate_artifact(player_type *user_ptr, object_type *o_ptr)
     }
 }
 
-static bool activate_whistle(player_type *user_ptr, ae_type *ae_ptr)
-{
+static bool activate_whistle(player_type* user_ptr, ae_type* ae_ptr) {
     if (ae_ptr->o_ptr->tval != TV_WHISTLE)
         return FALSE;
 
@@ -180,7 +173,7 @@ static bool activate_whistle(player_type *user_ptr, ae_type *ae_ptr)
         stop_hex_spell_all(user_ptr);
 
     MONSTER_IDX pet_ctr;
-    MONSTER_IDX *who;
+    MONSTER_IDX* who;
     int max_pet = 0;
     C_MAKE(who, current_world_ptr->max_m_idx, MONSTER_IDX);
     for (pet_ctr = user_ptr->current_floor_ptr->m_max - 1; pet_ctr >= 1; pet_ctr--)
@@ -213,11 +206,10 @@ static bool activate_whistle(player_type *user_ptr, ae_type *ae_ptr)
  * the user hits "escape" at the "direction" prompt.
  * </pre>
  */
-void exe_activate(player_type *user_ptr, INVENTORY_IDX item)
-{
+void exe_activate(player_type* user_ptr, INVENTORY_IDX item) {
     take_turn(user_ptr, 100);
     ae_type tmp_ae;
-    ae_type *ae_ptr = initialize_ae_type(user_ptr, &tmp_ae, item);
+    ae_type* ae_ptr = initialize_ae_type(user_ptr, &tmp_ae, item);
     decide_activation_level(user_ptr, ae_ptr);
     decide_chance_fail(user_ptr, ae_ptr);
     if (cmd_limit_time_walk(user_ptr))

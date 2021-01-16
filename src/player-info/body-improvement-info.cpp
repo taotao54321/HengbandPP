@@ -3,8 +3,7 @@
 #include "player/player-status-flags.h"
 
 /* todo 並び順の都合で連番を付ける。まとめても良いならまとめてしまう予定 */
-void set_body_improvement_info_1(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void set_body_improvement_info_1(player_type* creature_ptr, self_info_type* self_ptr) {
     if (is_blessed(creature_ptr))
         self_ptr->info[self_ptr->line++] = _("あなたは高潔さを感じている。", "You feel rightous.");
 
@@ -28,8 +27,7 @@ void set_body_improvement_info_1(player_type *creature_ptr, self_info_type *self
 }
 
 /* todo 並び順の都合で連番を付ける。まとめても良いならまとめてしまう予定 */
-void set_body_improvement_info_2(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void set_body_improvement_info_2(player_type* creature_ptr, self_info_type* self_ptr) {
     if (creature_ptr->new_spells)
         self_ptr->info[self_ptr->line++] = _("あなたは呪文や祈りを学ぶことができる。", "You can learn some spells/prayers.");
 
@@ -59,8 +57,7 @@ void set_body_improvement_info_2(player_type *creature_ptr, self_info_type *self
 }
 
 /* todo 並び順の都合で連番を付ける。まとめても良いならまとめてしまう予定 */
-void set_body_improvement_info_3(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void set_body_improvement_info_3(player_type* creature_ptr, self_info_type* self_ptr) {
     if (creature_ptr->hold_exp)
         self_ptr->info[self_ptr->line++] = _("あなたは自己の経験値をしっかりと維持する。", "You have a firm hold on your experience.");
 
@@ -108,14 +105,13 @@ void set_body_improvement_info_3(player_type *creature_ptr, self_info_type *self
 }
 
 /* todo 並び順の都合で連番を付ける。まとめても良いならまとめてしまう予定 */
-void set_body_improvement_info_4(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void set_body_improvement_info_4(player_type* creature_ptr, self_info_type* self_ptr) {
     if (has_resist_fear(creature_ptr))
         self_ptr->info[self_ptr->line++] = _("あなたは全く恐怖を感じない。", "You are completely fearless.");
-    
+
     if (has_resist_blind(creature_ptr))
         self_ptr->info[self_ptr->line++] = _("あなたの目は盲目への耐性を持っている。", "Your eyes are resistant to blindness.");
-    
+
     if (has_resist_time(creature_ptr))
         self_ptr->info[self_ptr->line++] = _("あなたは時間逆転への耐性を持っている。", "You are resistant to time.");
 }

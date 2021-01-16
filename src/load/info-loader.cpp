@@ -7,8 +7,7 @@
 #include "view/display-messages.h"
 #include "world/world.h"
 
-void rd_version_info(void)
-{
+void rd_version_info(void) {
     strip_bytes(4);
     load_xor_byte = current_world_ptr->sf_extra;
     v_check = 0L;
@@ -34,8 +33,7 @@ void rd_version_info(void)
  * @brief 乱数状態を読み込む / Read RNG state (added in 2.8.0)
  * @return なし
  */
-void rd_randomizer(void)
-{
+void rd_randomizer(void) {
     u16b tmp16u;
     rd_u16b(&tmp16u);
     rd_u16b(&Rand_place);
@@ -47,8 +45,7 @@ void rd_randomizer(void)
  * @brief メッセージログを読み込む / Read the saved messages
  * @return なし
  */
-void rd_messages(void)
-{
+void rd_messages(void) {
     if (h_older_than(2, 2, 0, 75)) {
         u16b num;
         rd_u16b(&num);
@@ -72,8 +69,7 @@ void rd_messages(void)
     }
 }
 
-void rd_system_info(void)
-{
+void rd_system_info(void) {
     rd_byte(&kanji_code);
     rd_randomizer();
     if (arg_fiddle)

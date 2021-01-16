@@ -36,23 +36,23 @@
  * @return 死んだらTRUE、生きていたらFALSE
  * @return なし
  */
-static void attack_confuse(player_type *attacker_ptr, player_attack_type *pa_ptr)
-{
+static void attack_confuse(player_type* attacker_ptr, player_attack_type* pa_ptr) {
     if (attacker_ptr->special_attack & ATTACK_CONFUSE) {
         attacker_ptr->special_attack &= ~(ATTACK_CONFUSE);
         msg_print(_("手の輝きがなくなった。", "Your hands stop glowing."));
         attacker_ptr->redraw |= (PR_STATUS);
     }
 
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if (r_ptr->flags3 & RF3_NO_CONF) {
         if (is_original_ap_and_seen(attacker_ptr, pa_ptr->m_ptr))
             r_ptr->r_flags3 |= RF3_NO_CONF;
         msg_format(_("%^sには効果がなかった。", "%^s is unaffected."), pa_ptr->m_name);
-
-    } else if (randint0(100) < r_ptr->level) {
+    }
+    else if (randint0(100) < r_ptr->level) {
         msg_format(_("%^sには効果がなかった。", "%^s is unaffected."), pa_ptr->m_name);
-    } else {
+    }
+    else {
         msg_format(_("%^sは混乱したようだ。", "%^s appears confused."), pa_ptr->m_name);
         (void)set_monster_confused(attacker_ptr, pa_ptr->g_ptr->m_idx, monster_confused_remaining(pa_ptr->m_ptr) + 10 + randint0(attacker_ptr->lev) / 5);
     }
@@ -64,9 +64,8 @@ static void attack_confuse(player_type *attacker_ptr, player_attack_type *pa_ptr
  * @param pa_ptr 直接攻撃構造体への参照ポインタ
  * @return 抵抗されたらTRUE、アウェイされるならFALSE
  */
-static bool judge_tereprt_resistance(player_type *attacker_ptr, player_attack_type *pa_ptr)
-{
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+static bool judge_tereprt_resistance(player_type* attacker_ptr, player_attack_type* pa_ptr) {
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if ((r_ptr->flagsr & RFR_RES_TELE) == 0)
         return FALSE;
 
@@ -96,8 +95,7 @@ static bool judge_tereprt_resistance(player_type *attacker_ptr, player_attack_ty
  * @param num 現在の攻撃回数 (テレポートしてしまったら追加攻撃できないのでその補正)
  * @return なし
  */
-static void attack_teleport_away(player_type *attacker_ptr, player_attack_type *pa_ptr, int *num)
-{
+static void attack_teleport_away(player_type* attacker_ptr, player_attack_type* pa_ptr, int* num) {
     if (judge_tereprt_resistance(attacker_ptr, pa_ptr))
         return;
 
@@ -115,9 +113,8 @@ static void attack_teleport_away(player_type *attacker_ptr, player_attack_type *
  * @param x モンスターのX座標
  * @return なし
  */
-static void attack_polymorph(player_type *attacker_ptr, player_attack_type *pa_ptr, POSITION y, POSITION x)
-{
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+static void attack_polymorph(player_type* attacker_ptr, player_attack_type* pa_ptr, POSITION y, POSITION x) {
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if (((r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) != 0) || ((r_ptr->flagsr & RFR_EFF_RES_CHAO_MASK) != 0))
         return;
 
@@ -125,7 +122,8 @@ static void attack_polymorph(player_type *attacker_ptr, player_attack_type *pa_p
         msg_format(_("%^sは変化した！", "%^s changes!"), pa_ptr->m_name);
         *(pa_ptr->fear) = FALSE;
         pa_ptr->weak = FALSE;
-    } else
+    }
+    else
         msg_format(_("%^sには効果がなかった。", "%^s is unaffected."), pa_ptr->m_name);
 
     pa_ptr->m_ptr = &attacker_ptr->current_floor_ptr->m_list[pa_ptr->g_ptr->m_idx];
@@ -138,14 +136,13 @@ static void attack_polymorph(player_type *attacker_ptr, player_attack_type *pa_p
  * @param pa_ptr 直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void attack_golden_hammer(player_type *attacker_ptr, player_attack_type *pa_ptr)
-{
-    floor_type *floor_ptr = attacker_ptr->current_floor_ptr;
-    monster_type *target_ptr = &floor_ptr->m_list[pa_ptr->g_ptr->m_idx];
+static void attack_golden_hammer(player_type* attacker_ptr, player_attack_type* pa_ptr) {
+    floor_type* floor_ptr = attacker_ptr->current_floor_ptr;
+    monster_type* target_ptr = &floor_ptr->m_list[pa_ptr->g_ptr->m_idx];
     if (target_ptr->hold_o_idx == 0)
         return;
 
-    object_type *q_ptr = &floor_ptr->o_list[target_ptr->hold_o_idx];
+    object_type* q_ptr = &floor_ptr->o_list[target_ptr->hold_o_idx];
     GAME_TEXT o_name[MAX_NLEN];
     describe_flavor(attacker_ptr, o_name, q_ptr, OD_NAME_ONLY);
     q_ptr->held_m_idx = 0;
@@ -165,10 +162,9 @@ static void attack_golden_hammer(player_type *attacker_ptr, player_attack_type *
  * @param num 現在の攻撃回数
  * @return なし
  */
-void change_monster_stat(player_type *attacker_ptr, player_attack_type *pa_ptr, const POSITION y, const POSITION x, int *num)
-{
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
-    object_type *o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
+void change_monster_stat(player_type* attacker_ptr, player_attack_type* pa_ptr, const POSITION y, const POSITION x, int* num) {
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+    object_type* o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
     if ((attacker_ptr->special_attack & ATTACK_CONFUSE) || (pa_ptr->chaos_effect == CE_CONFUSION) || (pa_ptr->mode == HISSATSU_CONF)
         || hex_spelling(attacker_ptr, HEX_CONFUSION))
         attack_confuse(attacker_ptr, pa_ptr);

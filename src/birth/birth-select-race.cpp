@@ -9,8 +9,7 @@
 
 static const char p2 = ')';
 
-static void enumerate_race_list(char *sym)
-{
+static void enumerate_race_list(char* sym) {
     char buf[80];
     for (int n = 0; n < MAX_RACES; n++) {
         rp_ptr = &race_info[n];
@@ -25,8 +24,7 @@ static void enumerate_race_list(char *sym)
     }
 }
 
-static void display_race_stat(int cs, int *os, char *cur, char *sym)
-{
+static void display_race_stat(int cs, int* os, char* cur, char* sym) {
     char buf[80];
     if (cs == *os)
         return;
@@ -37,7 +35,8 @@ static void display_race_stat(int cs, int *os, char *cur, char *sym)
         sprintf(cur, "%c%c%s", '*', p2, _("ランダム", "Random"));
         put_str("                                   ", 4, 40);
         put_str("                                   ", 5, 40);
-    } else {
+    }
+    else {
         rp_ptr = &race_info[cs];
         concptr str = rp_ptr->title;
         sprintf(cur, "%c%c%s", sym[cs], p2, str);
@@ -54,8 +53,7 @@ static void display_race_stat(int cs, int *os, char *cur, char *sym)
     *os = cs;
 }
 
-static void interpret_race_select_key_move(char c, int *cs)
-{
+static void interpret_race_select_key_move(char c, int* cs) {
     if (c == '8') {
         if (*cs >= 5)
             *cs -= 5;
@@ -77,8 +75,7 @@ static void interpret_race_select_key_move(char c, int *cs)
     }
 }
 
-static bool select_race(player_type *creature_ptr, char *sym, int *k)
-{
+static bool select_race(player_type* creature_ptr, char* sym, int* k) {
     char cur[80];
     sprintf(cur, "%c%c%s", '*', p2, _("ランダム", "Random"));
     int cs = creature_ptr->prace;
@@ -103,7 +100,8 @@ static bool select_race(player_type *creature_ptr, char *sym, int *k)
                 *k = randint0(MAX_RACES);
                 cs = *k;
                 continue;
-            } else {
+            }
+            else {
                 *k = cs;
                 break;
             }
@@ -126,7 +124,8 @@ static bool select_race(player_type *creature_ptr, char *sym, int *k)
         if ((*k >= 26) && (*k < MAX_RACES)) {
             cs = *k;
             continue;
-        } else
+        }
+        else
             *k = -1;
 
         birth_help_option(creature_ptr, c, BK_RACE);
@@ -139,8 +138,7 @@ static bool select_race(player_type *creature_ptr, char *sym, int *k)
  * @brief プレイヤーの種族選択を行う / Player race
  * @return なし
  */
-bool get_player_race(player_type *creature_ptr)
-{
+bool get_player_race(player_type* creature_ptr) {
     clear_from(10);
     put_str(
         _("注意：《種族》によってキャラクターの先天的な資質やボーナスが変化します。", "Note: Your 'race' determines various intrinsic factors and bonuses."),

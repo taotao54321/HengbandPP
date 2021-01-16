@@ -27,8 +27,7 @@ s32b autoroll_chance;
  * @breif オートローラーで指定した能力値以上が出る確率を計算する。
  * @return 確率 / 100
  */
-static s32b get_autoroller_prob(int *minval)
-{
+static s32b get_autoroller_prob(int* minval) {
     /* 1 percent of the valid random space (60^6 && 72<sum<87) */
     s32b tot_rand_1p = 320669745;
     int i, j, tmp;
@@ -102,8 +101,7 @@ static s32b get_autoroller_prob(int *minval)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-bool get_stat_limits(player_type *creature_ptr)
-{
+bool get_stat_limits(player_type* creature_ptr) {
     int col_stat = 25;
 
     clear_from(10);
@@ -152,12 +150,14 @@ bool get_stat_limits(player_type *creature_ptr)
             }
             else if (os == 6) {
                 c_put_str(TERM_WHITE, _("決定する", "Accept"), 21, 35);
-            } else if (os < A_MAX) {
+            }
+            else if (os < A_MAX) {
                 c_put_str(TERM_WHITE, cur, 14 + os, 10);
             }
             if (cs == 6) {
                 c_put_str(TERM_YELLOW, _("決定する", "Accept"), 21, 35);
-            } else {
+            }
+            else {
                 int j = rp_ptr->r_adj[cs] + cp_ptr->c_adj[cs] + ap_ptr->a_adj[cs];
                 int m = adjust_stat(cval[cs], j);
                 if (m > 18)
@@ -206,10 +206,12 @@ bool get_stat_limits(player_type *creature_ptr)
                 if (cval[cs] == 3) {
                     cval[cs] = 17;
                     os = 7;
-                } else if (cval[cs] > 3) {
+                }
+                else if (cval[cs] > 3) {
                     cval[cs]--;
                     os = 7;
-                } else
+                }
+                else
                     return FALSE;
             }
 
@@ -220,10 +222,12 @@ bool get_stat_limits(player_type *creature_ptr)
                 if (cval[cs] == 17) {
                     cval[cs] = 3;
                     os = 7;
-                } else if (cval[cs] < 17) {
+                }
+                else if (cval[cs] < 17) {
                     cval[cs]++;
                     os = 7;
-                } else
+                }
+                else
                     return FALSE;
             }
 
@@ -274,8 +278,7 @@ bool get_stat_limits(player_type *creature_ptr)
     return TRUE;
 }
 
-void initialize_chara_limit(chara_limit_type *chara_limit_ptr)
-{
+void initialize_chara_limit(chara_limit_type* chara_limit_ptr) {
     chara_limit_ptr->agemin = 0;
     chara_limit_ptr->agemax = 0;
     chara_limit_ptr->htmin = 0;
@@ -290,8 +293,7 @@ void initialize_chara_limit(chara_limit_type *chara_limit_ptr)
  * @brief オートローラで得たい年齢、身長、体重、社会的地位の基準を決める。
  * @return なし
  */
-bool get_chara_limits(player_type *creature_ptr, chara_limit_type *chara_limit_ptr)
-{
+bool get_chara_limits(player_type* creature_ptr, chara_limit_type* chara_limit_ptr) {
 #define MAXITEMS 8
 
     char buf[80], cur[80];
@@ -306,7 +308,8 @@ bool get_chara_limits(player_type *creature_ptr, chara_limit_type *chara_limit_p
     if (creature_ptr->psex == SEX_MALE) {
         max_percent = (int)(rp_ptr->m_b_ht + rp_ptr->m_m_ht * 4 - 1) * 100 / (int)(rp_ptr->m_b_ht);
         min_percent = (int)(rp_ptr->m_b_ht - rp_ptr->m_m_ht * 4 + 1) * 100 / (int)(rp_ptr->m_b_ht);
-    } else {
+    }
+    else {
         max_percent = (int)(rp_ptr->f_b_ht + rp_ptr->f_m_ht * 4 - 1) * 100 / (int)(rp_ptr->f_b_ht);
         min_percent = (int)(rp_ptr->f_b_ht - rp_ptr->f_m_ht * 4 + 1) * 100 / (int)(rp_ptr->f_b_ht);
     }
@@ -385,7 +388,8 @@ bool get_chara_limits(player_type *creature_ptr, chara_limit_type *chara_limit_p
 
             if (cs == MAXITEMS) {
                 c_put_str(TERM_YELLOW, accept, 19, 35);
-            } else {
+            }
+            else {
                 sprintf(cur, "     %3d", cval[cs]);
                 c_put_str(TERM_YELLOW, cur, 14 + cs / 2, 45 + 8 * (cs % 2));
             }
@@ -440,7 +444,8 @@ bool get_chara_limits(player_type *creature_ptr, chara_limit_type *chara_limit_p
                         cval[cs]--;
                         os = 127;
                     }
-                } else {
+                }
+                else {
                     if (cval[cs] > mval[cs]) {
                         cval[cs]--;
                         os = 127;
@@ -457,7 +462,8 @@ bool get_chara_limits(player_type *creature_ptr, chara_limit_type *chara_limit_p
                         cval[cs]++;
                         os = 127;
                     }
-                } else {
+                }
+                else {
                     if (cval[cs] < cval[cs + 1]) {
                         cval[cs]++;
                         os = 127;
@@ -473,7 +479,8 @@ bool get_chara_limits(player_type *creature_ptr, chara_limit_type *chara_limit_p
                         cval[cs] = mval[cs];
                         os = 127;
                     }
-                } else {
+                }
+                else {
                     if (cval[cs] < cval[cs + 1]) {
                         cval[cs] = cval[cs + 1];
                         os = 127;
@@ -489,7 +496,8 @@ bool get_chara_limits(player_type *creature_ptr, chara_limit_type *chara_limit_p
                         cval[cs] = cval[cs - 1];
                         os = 255;
                     }
-                } else {
+                }
+                else {
                     if (cval[cs] > mval[cs]) {
                         cval[cs] = mval[cs];
                         os = 255;

@@ -11,7 +11,7 @@
 #define QUARK_MAX 768
 
 extern STR_OFFSET quark__num;
-extern concptr *quark__str;
+extern concptr* quark__str;
 
 concptr quark_str(STR_OFFSET num);
 void quark_init(void);

@@ -90,15 +90,14 @@ static amuse_type amuse_info[]
  * @param known TRUEならばオブジェクトが必ず＊鑑定＊済になる
  * @return なし
  */
-void amusement(player_type *creature_ptr, POSITION y1, POSITION x1, int num, bool known)
-{
+void amusement(player_type* creature_ptr, POSITION y1, POSITION x1, int num, bool known) {
     int t = 0;
     for (int n = 0; amuse_info[n].tval != 0; n++) {
         t += amuse_info[n].prob;
     }
 
     /* Acquirement */
-    object_type *i_ptr;
+    object_type* i_ptr;
     object_type object_type_body;
     while (num) {
         int i;
@@ -184,9 +183,8 @@ void amusement(player_type *creature_ptr, POSITION y1, POSITION x1, int num, boo
  * @param known TRUEならばオブジェクトが必ず＊鑑定＊済になる
  * @return なし
  */
-void acquirement(player_type *caster_ptr, POSITION y1, POSITION x1, int num, bool great, bool special, bool known)
-{
-    object_type *i_ptr;
+void acquirement(player_type* caster_ptr, POSITION y1, POSITION x1, int num, bool great, bool special, bool known) {
+    object_type* i_ptr;
     object_type object_type_body;
     BIT_FLAGS mode = AM_GOOD | (great || special ? AM_GREAT : 0L) | (special ? AM_SPECIAL : 0L);
 
@@ -214,10 +212,9 @@ void acquirement(player_type *caster_ptr, POSITION y1, POSITION x1, int num, boo
  * Curse the players armor
  * @return 何も持っていない場合を除き、常にTRUEを返す
  */
-bool curse_armor(player_type *owner_ptr)
-{
+bool curse_armor(player_type* owner_ptr) {
     /* Curse the body armor */
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &owner_ptr->inventory_list[INVEN_BODY];
 
     if (!o_ptr->k_idx)
@@ -273,8 +270,7 @@ bool curse_armor(player_type *owner_ptr)
  * @param o_ptr 呪縛する武器のアイテム情報参照ポインタ
  * @return 何も持っていない場合を除き、常にTRUEを返す
  */
-bool curse_weapon_object(player_type *owner_ptr, bool force, object_type *o_ptr)
-{
+bool curse_weapon_object(player_type* owner_ptr, bool force, object_type* o_ptr) {
     if (!o_ptr->k_idx)
         return FALSE;
 
@@ -325,11 +321,10 @@ bool curse_weapon_object(player_type *owner_ptr, bool force, object_type *o_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void brand_bolts(player_type *caster_ptr)
-{
+void brand_bolts(player_type* caster_ptr) {
     /* Use the first acceptable bolts */
     for (int i = 0; i < INVEN_PACK; i++) {
-        object_type *o_ptr = &caster_ptr->inventory_list[i];
+        object_type* o_ptr = &caster_ptr->inventory_list[i];
 
         /* Skip non-bolts */
         if (o_ptr->tval != TV_BOLT)
@@ -360,8 +355,7 @@ void brand_bolts(player_type *caster_ptr)
     msg_print(_("炎で強化するのに失敗した。", "The fiery enchantment failed."));
 }
 
-bool perilous_secrets(player_type *user_ptr)
-{
+bool perilous_secrets(player_type* user_ptr) {
     if (!ident_spell(user_ptr, FALSE, TV_NONE))
         return FALSE;
 
@@ -408,8 +402,7 @@ bool perilous_secrets(player_type *user_ptr)
  * @param o_ptr 呪い装備情報の参照ポインタ
  * @return なし
  */
-static void break_curse(object_type *o_ptr)
-{
+static void break_curse(object_type* o_ptr) {
     BIT_FLAGS is_curse_broken
         = object_is_cursed(o_ptr) && !(o_ptr->curse_flags & TRC_PERMA_CURSE) && !(o_ptr->curse_flags & TRC_HEAVY_CURSE) && (randint0(100) < 25);
     if (!is_curse_broken) {
@@ -446,8 +439,7 @@ static void break_curse(object_type *o_ptr)
  * the larger the pile, the lower the chance of success.
  * </pre>
  */
-bool enchant(player_type *caster_ptr, object_type *o_ptr, int n, int eflag)
-{
+bool enchant(player_type* caster_ptr, object_type* o_ptr, int n, int eflag) {
     /* Large piles resist enchantment */
     int prob = o_ptr->number * 100;
 
@@ -550,8 +542,7 @@ bool enchant(player_type *caster_ptr, object_type *o_ptr, int n, int eflag)
  * Note that "num_ac" requires armour, else weapon
  * Returns TRUE if attempted, FALSE if cancelled
  */
-bool enchant_spell(player_type *caster_ptr, HIT_PROB num_hit, HIT_POINT num_dam, ARMOUR_CLASS num_ac)
-{
+bool enchant_spell(player_type* caster_ptr, HIT_PROB num_hit, HIT_POINT num_dam, ARMOUR_CLASS num_ac) {
     /* Assume enchant weapon */
     item_tester_hook = object_allow_enchant_weapon;
 
@@ -563,7 +554,7 @@ bool enchant_spell(player_type *caster_ptr, HIT_PROB num_hit, HIT_POINT num_dam,
     concptr s = _("強化できるアイテムがない。", "You have nothing to enchant.");
 
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(caster_ptr, &item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT), TV_NONE);
     if (!o_ptr)
         return FALSE;
@@ -591,7 +582,8 @@ bool enchant_spell(player_type *caster_ptr, HIT_PROB num_hit, HIT_POINT num_dam,
         msg_print(_("強化に失敗した。", "The enchantment failed."));
         if (one_in_(3))
             chg_virtue(caster_ptr, V_ENCHANT, -1);
-    } else
+    }
+    else
         chg_virtue(caster_ptr, V_ENCHANT, 1);
 
     calc_android_exp(caster_ptr);
@@ -607,8 +599,7 @@ bool enchant_spell(player_type *caster_ptr, HIT_PROB num_hit, HIT_POINT num_dam,
  * @param brand_type エゴ化ID(e_info.txtとは連動していない)
  * @return なし
  */
-void brand_weapon(player_type *caster_ptr, int brand_type)
-{
+void brand_weapon(player_type* caster_ptr, int brand_type) {
     /* Assume enchant weapon */
     item_tester_hook = object_allow_enchant_melee_weapon;
 
@@ -616,7 +607,7 @@ void brand_weapon(player_type *caster_ptr, int brand_type)
     concptr s = _("強化できる武器がない。", "You have nothing to enchant.");
 
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(caster_ptr, &item, q, s, USE_EQUIP | IGNORE_BOTHHAND_SLOT, TV_NONE);
     if (!o_ptr)
         return;
@@ -648,7 +639,8 @@ void brand_weapon(player_type *caster_ptr, int brand_type)
 
             if ((o_ptr->sval == SV_HAYABUSA) && (o_ptr->pval > 2))
                 o_ptr->pval = 2;
-        } else {
+        }
+        else {
             act = _("は破壊力を増した！", "seems very powerful.");
             o_ptr->name2 = EGO_EARTHQUAKES;
             o_ptr->pval = (PARAMETER_VALUE)m_bonus(3, caster_ptr->current_floor_ptr->dun_level);

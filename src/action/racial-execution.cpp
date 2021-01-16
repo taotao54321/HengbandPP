@@ -13,8 +13,7 @@
  * @param command 発動するレイシャルのID
  * @return 処理を実際に実行した場合はTRUE、キャンセルした場合FALSEを返す。
  */
-bool exe_racial_power(player_type *creature_ptr, const s32b command)
-{
+bool exe_racial_power(player_type* creature_ptr, const s32b command) {
     if (command <= -3)
         return switch_class_racial_execution(creature_ptr, command);
 
@@ -29,8 +28,7 @@ bool exe_racial_power(player_type *creature_ptr, const s32b command)
  * @param rpi_ptr 発動したいレイシャル・パワー情報の構造体参照ポインタ
  * @return 成功率(%)を返す
  */
-PERCENTAGE racial_chance(player_type *creature_ptr, rpi_type *rpi_ptr)
-{
+PERCENTAGE racial_chance(player_type* creature_ptr, rpi_type* rpi_ptr) {
     if ((creature_ptr->lev < rpi_ptr->min_level) || creature_ptr->confused)
         return 0;
 
@@ -40,7 +38,8 @@ PERCENTAGE racial_chance(player_type *creature_ptr, rpi_type *rpi_ptr)
 
     if (creature_ptr->stun) {
         difficulty += (PERCENTAGE)creature_ptr->stun;
-    } else if (creature_ptr->lev > rpi_ptr->min_level) {
+    }
+    else if (creature_ptr->lev > rpi_ptr->min_level) {
         PERCENTAGE lev_adj = (PERCENTAGE)((creature_ptr->lev - rpi_ptr->min_level) / 3);
         if (lev_adj > 10)
             lev_adj = 10;
@@ -66,14 +65,14 @@ PERCENTAGE racial_chance(player_type *creature_ptr, rpi_type *rpi_ptr)
         return ((sum * 100) / difficulty) / stat;
 }
 
-static void adjust_racial_power_difficulty(player_type *creature_ptr, rpi_type *rpi_ptr, int *difficulty)
-{
+static void adjust_racial_power_difficulty(player_type* creature_ptr, rpi_type* rpi_ptr, int* difficulty) {
     if (*difficulty == 0)
         return;
 
     if (creature_ptr->stun) {
         *difficulty += creature_ptr->stun;
-    } else if (creature_ptr->lev > rpi_ptr->min_level) {
+    }
+    else if (creature_ptr->lev > rpi_ptr->min_level) {
         int lev_adj = ((creature_ptr->lev - rpi_ptr->min_level) / 3);
         if (lev_adj > 10)
             lev_adj = 10;
@@ -89,8 +88,7 @@ static void adjust_racial_power_difficulty(player_type *creature_ptr, rpi_type *
  * @param rpi_ptr 発動したいレイシャル・パワー情報の構造体参照ポインタ
  * @return racial_level_check_result
  */
-racial_level_check_result check_racial_level(player_type *creature_ptr, rpi_type *rpi_ptr)
-{
+racial_level_check_result check_racial_level(player_type* creature_ptr, rpi_type* rpi_ptr) {
     PLAYER_LEVEL min_level = rpi_ptr->min_level;
     int use_stat = rpi_ptr->stat;
     int difficulty = rpi_ptr->fail;
@@ -108,7 +106,8 @@ racial_level_check_result check_racial_level(player_type *creature_ptr, rpi_type
     if (cmd_limit_confused(creature_ptr)) {
         free_turn(creature_ptr);
         return RACIAL_CANCEL;
-    } else if (creature_ptr->chp < use_hp) {
+    }
+    else if (creature_ptr->chp < use_hp) {
         if (!get_check(_("本当に今の衰弱した状態でこの能力を使いますか？", "Really use the power in your weakened state? "))) {
             free_turn(creature_ptr);
             return RACIAL_CANCEL;

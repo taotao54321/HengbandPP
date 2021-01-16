@@ -54,10 +54,9 @@
  * @param success 判定成功上の処理ならばTRUE
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool kawarimi(player_type *caster_ptr, bool success)
-{
+bool kawarimi(player_type* caster_ptr, bool success) {
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
 
     if (caster_ptr->is_dead)
         return FALSE;
@@ -100,8 +99,7 @@ bool kawarimi(player_type *caster_ptr, bool success)
  * @param mdeath 目標モンスターが死亡したかを返す
  * @return 作用が実際にあった場合TRUEを返す /  Return value is for checking "done"
  */
-bool rush_attack(player_type *attacker_ptr, bool *mdeath)
-{
+bool rush_attack(player_type* attacker_ptr, bool* mdeath) {
     if (mdeath)
         *mdeath = FALSE;
 
@@ -119,7 +117,7 @@ bool rush_attack(player_type *attacker_ptr, bool *mdeath)
     }
 
     int tm_idx = 0;
-    floor_type *floor_ptr = attacker_ptr->current_floor_ptr;
+    floor_type* floor_ptr = attacker_ptr->current_floor_ptr;
     if (in_bounds(floor_ptr, ty, tx))
         tm_idx = floor_ptr->grid_array[ty][tx].m_idx;
 
@@ -134,7 +132,7 @@ bool rush_attack(player_type *attacker_ptr, bool *mdeath)
     bool tmp_mdeath = FALSE;
     bool moved = FALSE;
     for (int i = 0; i < path_n; i++) {
-        monster_type *m_ptr;
+        monster_type* m_ptr;
 
         int ny = get_grid_y(path_g[i]);
         int nx = get_grid_x(path_g[i]);
@@ -148,7 +146,8 @@ bool rush_attack(player_type *attacker_ptr, bool *mdeath)
         if (!floor_ptr->grid_array[ny][nx].m_idx) {
             if (tm_idx) {
                 msg_print(_("失敗！", "Failed!"));
-            } else {
+            }
+            else {
                 msg_print(_("ここには入身では入れない。", "You can't move to that place."));
             }
 
@@ -166,7 +165,8 @@ bool rush_attack(player_type *attacker_ptr, bool *mdeath)
 #else
             msg_format("There is %s in the way!", m_ptr->ml ? (tm_idx ? "another monster" : "a monster") : "someone");
 #endif
-        } else if (!player_bold(attacker_ptr, ty, tx)) {
+        }
+        else if (!player_bold(attacker_ptr, ty, tx)) {
             GAME_TEXT m_name[MAX_NLEN];
             monster_desc(attacker_ptr, m_name, m_ptr, 0);
             msg_format(_("素早く%sの懐に入り込んだ！", "You quickly jump in and attack %s!"), m_name);
@@ -194,9 +194,8 @@ bool rush_attack(player_type *attacker_ptr, bool *mdeath)
  * @param pa_ptr 直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void process_surprise_attack(player_type *attacker_ptr, player_attack_type *pa_ptr)
-{
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+void process_surprise_attack(player_type* attacker_ptr, player_attack_type* pa_ptr) {
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if (!has_melee_weapon(attacker_ptr, INVEN_RARM + pa_ptr->hand) || attacker_ptr->icky_wield[pa_ptr->hand])
         return;
 
@@ -210,16 +209,17 @@ void process_surprise_attack(player_type *attacker_ptr, player_attack_type *pa_p
     if (monster_csleep_remaining(pa_ptr->m_ptr) && pa_ptr->m_ptr->ml) {
         /* Can't backstab creatures that we can't see, right? */
         pa_ptr->backstab = TRUE;
-    } else if ((attacker_ptr->special_defense & NINJA_S_STEALTH) && (randint0(tmp) > (r_ptr->level + 20)) && pa_ptr->m_ptr->ml
+    }
+    else if ((attacker_ptr->special_defense & NINJA_S_STEALTH) && (randint0(tmp) > (r_ptr->level + 20)) && pa_ptr->m_ptr->ml
         && !(r_ptr->flagsr & RFR_RES_ALL)) {
         pa_ptr->surprise_attack = TRUE;
-    } else if (monster_fear_remaining(pa_ptr->m_ptr) && pa_ptr->m_ptr->ml) {
+    }
+    else if (monster_fear_remaining(pa_ptr->m_ptr) && pa_ptr->m_ptr->ml) {
         pa_ptr->stab_fleeing = TRUE;
     }
 }
 
-void print_surprise_attack(player_attack_type *pa_ptr)
-{
+void print_surprise_attack(player_attack_type* pa_ptr) {
     if (pa_ptr->backstab)
         msg_format(_("あなたは冷酷にも眠っている無力な%sを突き刺した！", "You cruelly stab the helpless, sleeping %s!"), pa_ptr->m_name);
     else if (pa_ptr->surprise_attack)
@@ -236,8 +236,7 @@ void print_surprise_attack(player_attack_type *pa_ptr)
  * @param pa_ptr 直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void calc_surprise_attack_damage(player_type *attacker_ptr, player_attack_type *pa_ptr)
-{
+void calc_surprise_attack_damage(player_type* attacker_ptr, player_attack_type* pa_ptr) {
     if (pa_ptr->backstab) {
         pa_ptr->attack_damage *= (3 + (attacker_ptr->lev / 20));
         return;
@@ -257,20 +256,20 @@ void calc_surprise_attack_damage(player_type *attacker_ptr, player_attack_type *
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return 常にTRUE
  */
-bool hayagake(player_type *creature_ptr)
-{
+bool hayagake(player_type* creature_ptr) {
     if (creature_ptr->action == ACTION_HAYAGAKE) {
         set_action(creature_ptr, ACTION_NONE);
         creature_ptr->energy_use = 0;
         return TRUE;
     }
 
-    grid_type *g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
-    feature_type *f_ptr = &f_info[g_ptr->feat];
+    grid_type* g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
+    feature_type* f_ptr = &f_info[g_ptr->feat];
 
     if (!has_flag(f_ptr->flags, FF_PROJECT) || (!creature_ptr->levitation && has_flag(f_ptr->flags, FF_DEEP))) {
         msg_print(_("ここでは素早く動けない。", "You cannot run in here."));
-    } else {
+    }
+    else {
         set_action(creature_ptr, ACTION_HAYAGAKE);
     }
 
@@ -283,8 +282,7 @@ bool hayagake(player_type *creature_ptr)
  * @param set TRUEならば超隠密状態になる。
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_superstealth(player_type *creature_ptr, bool set)
-{
+bool set_superstealth(player_type* creature_ptr, bool set) {
     bool notice = FALSE;
 
     if (creature_ptr->is_dead)
@@ -295,7 +293,8 @@ bool set_superstealth(player_type *creature_ptr, bool set)
             if (creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].info & CAVE_MNLT) {
                 msg_print(_("敵の目から薄い影の中に覆い隠された。", "You are mantled in weak shadow from ordinary eyes."));
                 creature_ptr->monlite = creature_ptr->old_monlite = TRUE;
-            } else {
+            }
+            else {
                 msg_print(_("敵の目から影の中に覆い隠された！", "You are mantled in shadow from ordinary eyes!"));
                 creature_ptr->monlite = creature_ptr->old_monlite = FALSE;
             }
@@ -303,7 +302,8 @@ bool set_superstealth(player_type *creature_ptr, bool set)
             notice = TRUE;
             creature_ptr->special_defense |= NINJA_S_STEALTH;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->special_defense & NINJA_S_STEALTH) {
             msg_print(_("再び敵の目にさらされるようになった。", "You are exposed to common sight once more."));
             notice = TRUE;
@@ -327,8 +327,7 @@ bool set_superstealth(player_type *creature_ptr, bool set)
  * @param spell 発動する特殊技能のID
  * @return 処理を実行したらTRUE、キャンセルした場合FALSEを返す。
  */
-bool cast_ninja_spell(player_type *caster_ptr, mind_ninja_type spell)
-{
+bool cast_ninja_spell(player_type* caster_ptr, mind_ninja_type spell) {
     POSITION x = 0, y = 0;
     DIRECTION dir;
     PLAYER_LEVEL plev = caster_ptr->lev;
@@ -447,7 +446,8 @@ bool cast_ninja_spell(player_type *caster_ptr, mind_ninja_type spell)
     case PURGATORY_FLAME: {
         int num = damroll(3, 9);
         for (int k = 0; k < num; k++) {
-            EFFECT_ID typ = one_in_(2) ? GF_FIRE : one_in_(3) ? GF_NETHER : GF_PLASMA;
+            EFFECT_ID typ = one_in_(2) ? GF_FIRE : one_in_(3) ? GF_NETHER
+                                                              : GF_PLASMA;
             int attempts = 1000;
             while (attempts--) {
                 scatter(caster_ptr, &y, &x, caster_ptr->y, caster_ptr->x, 4, PROJECT_NONE);

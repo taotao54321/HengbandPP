@@ -52,11 +52,10 @@
  * @param mdeath 攻撃を受けたモンスターが死亡したかを返す参照ポインタ
  * @return なし
  */
-static void natural_attack(player_type *attacker_ptr, MONSTER_IDX m_idx, int attack, bool *fear, bool *mdeath)
-{
+static void natural_attack(player_type* attacker_ptr, MONSTER_IDX m_idx, int attack, bool* fear, bool* mdeath) {
     WEIGHT n_weight = 0;
-    monster_type *m_ptr = &attacker_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    monster_type* m_ptr = &attacker_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     int dice_num, dice_side;
     concptr atk_desc;
@@ -158,11 +157,10 @@ static void natural_attack(player_type *attacker_ptr, MONSTER_IDX m_idx, int att
  * @details
  * If no "weapon" is available, then "punch" the monster one time.
  */
-bool do_cmd_attack(player_type *attacker_ptr, POSITION y, POSITION x, combat_options mode)
-{
-    grid_type *g_ptr = &attacker_ptr->current_floor_ptr->grid_array[y][x];
-    monster_type *m_ptr = &attacker_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+bool do_cmd_attack(player_type* attacker_ptr, POSITION y, POSITION x, combat_options mode) {
+    grid_type* g_ptr = &attacker_ptr->current_floor_ptr->grid_array[y][x];
+    monster_type* m_ptr = &attacker_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     GAME_TEXT m_name[MAX_NLEN];
 
     disturb(attacker_ptr, FALSE, TRUE);
@@ -208,13 +206,15 @@ bool do_cmd_attack(player_type *attacker_ptr, POSITION y, POSITION x, combat_opt
             chg_virtue(attacker_ptr, V_HONOUR, -1);
             chg_virtue(attacker_ptr, V_JUSTICE, -1);
             chg_virtue(attacker_ptr, V_COMPASSION, -1);
-        } else if (attacker_ptr->pclass != CLASS_BERSERKER) {
+        }
+        else if (attacker_ptr->pclass != CLASS_BERSERKER) {
             if (get_check(_("本当に攻撃しますか？", "Really hit it? "))) {
                 chg_virtue(attacker_ptr, V_INDIVIDUALISM, 1);
                 chg_virtue(attacker_ptr, V_HONOUR, -1);
                 chg_virtue(attacker_ptr, V_JUSTICE, -1);
                 chg_virtue(attacker_ptr, V_COMPASSION, -1);
-            } else {
+            }
+            else {
                 msg_format(_("%sを攻撃するのを止めた。", "You stop to avoid hitting %s."), m_name);
                 return FALSE;
             }

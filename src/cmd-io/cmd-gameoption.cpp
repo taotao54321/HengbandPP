@@ -55,8 +55,7 @@ static opts option_fields[OPT_NUM] = {
  * @param current 現在のセーブ頻度ターン値
  * @return 次のセーブ頻度ターン値
  */
-static s16b toggle_frequency(s16b current)
-{
+static s16b toggle_frequency(s16b current) {
     switch (current) {
     case 0:
         return 50;
@@ -86,8 +85,7 @@ static s16b toggle_frequency(s16b current)
  * @param info 表示メッセージ
  * @return なし
  */
-static void do_cmd_options_autosave(player_type *player_ptr, concptr info)
-{
+static void do_cmd_options_autosave(player_type* player_ptr, concptr info) {
     char ch;
     int i, k = 0, n = 2;
     char buf[80];
@@ -171,8 +169,7 @@ static void do_cmd_options_autosave(player_type *player_ptr, concptr info)
  * Modify the "window" options
  * @return なし
  */
-static void do_cmd_options_win(player_type *player_ptr)
-{
+static void do_cmd_options_win(player_type* player_ptr) {
     int i, j, d;
     TERM_LEN y = 0;
     TERM_LEN x = 0;
@@ -266,7 +263,7 @@ static void do_cmd_options_win(player_type *player_ptr)
     }
 
     for (j = 0; j < 8; j++) {
-        term_type *old = Term;
+        term_type* old = Term;
         if (!angband_term[j])
             continue;
 
@@ -286,8 +283,7 @@ static void do_cmd_options_win(player_type *player_ptr)
  * @param info 表示メッセージ
  * @return なし
  */
-static void do_cmd_options_cheat(player_type *player_ptr, concptr info)
-{
+static void do_cmd_options_cheat(player_type* player_ptr, concptr info) {
     char ch;
     int i, k = 0, n = MAX_CHEAT_OPTIONS;
     char buf[80];
@@ -372,15 +368,15 @@ static void do_cmd_options_cheat(player_type *player_ptr, concptr info)
  * @brief ビットセットからゲームオプションを展開する / Extract option variables from bit sets
  * @return なし
  */
-void extract_option_vars(void)
-{
+void extract_option_vars(void) {
     for (int i = 0; option_info[i].o_desc; i++) {
         int os = option_info[i].o_set;
         int ob = option_info[i].o_bit;
         if (option_info[i].o_var) {
             if (option_flag[os] & (1L << ob)) {
                 (*option_info[i].o_var) = TRUE;
-            } else {
+            }
+            else {
                 (*option_info[i].o_var) = FALSE;
             }
         }
@@ -397,8 +393,7 @@ void extract_option_vars(void)
  * in any options which control "visual" aspects of the game.
  * </pre>
  */
-void do_cmd_options(player_type *player_ptr)
-{
+void do_cmd_options(player_type* player_ptr) {
     char k;
     int d, skey;
     TERM_LEN i, y = 0;
@@ -534,7 +529,8 @@ void do_cmd_options(player_type *player_ptr)
                 else if (k == '?') {
                     (void)show_file(player_ptr, TRUE, _("joption.txt#BaseDelay", "option.txt#BaseDelay"), NULL, 0, 0);
                     term_clear();
-                } else if (isdigit(k))
+                }
+                else if (isdigit(k))
                     delay_factor = D2I(k);
                 else
                     bell();
@@ -555,7 +551,8 @@ void do_cmd_options(player_type *player_ptr)
                 else if (k == '?') {
                     (void)show_file(player_ptr, TRUE, _("joption.txt#Hitpoint", "option.txt#Hitpoint"), NULL, 0, 0);
                     term_clear();
-                } else if (isdigit(k))
+                }
+                else if (isdigit(k))
                     hitpoint_warn = D2I(k);
                 else
                     bell();
@@ -576,7 +573,8 @@ void do_cmd_options(player_type *player_ptr)
                 else if (k == '?') {
                     (void)show_file(player_ptr, TRUE, _("joption.txt#Manapoint", "option.txt#Manapoint"), NULL, 0, 0);
                     term_clear();
-                } else if (isdigit(k))
+                }
+                else if (isdigit(k))
                     mana_warn = D2I(k);
                 else
                     bell();
@@ -608,8 +606,7 @@ void do_cmd_options(player_type *player_ptr)
  * @param info 表示メッセージ
  * @return なし
  */
-void do_cmd_options_aux(player_type *player_ptr, int page, concptr info)
-{
+void do_cmd_options_aux(player_type* player_ptr, int page, concptr info) {
     char ch;
     int i, k = 0, n = 0, l;
     int opt[24];

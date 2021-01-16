@@ -38,12 +38,12 @@ typedef struct high_score {
 
 extern int highscore_fd;
 
-void display_scores_aux(int from, int to, int note, high_score *score);
+void display_scores_aux(int from, int to, int note, high_score* score);
 void display_scores(int from, int to);
-void kingly(player_type *winner_ptr);
-errr top_twenty(player_type *current_player_ptr);
-errr predict_score(player_type *current_player_ptr);
-void race_legends(player_type *current_player_ptr);
-void race_score(player_type *current_player_ptr, int race_num);
-void show_highclass(player_type *current_player_ptr);
-bool check_score(player_type *current_player_ptr);
+void kingly(player_type* winner_ptr);
+errr top_twenty(player_type* current_player_ptr);
+errr predict_score(player_type* current_player_ptr);
+void race_legends(player_type* current_player_ptr);
+void race_score(player_type* current_player_ptr, int race_num);
+void show_highclass(player_type* current_player_ptr);
+bool check_score(player_type* current_player_ptr);

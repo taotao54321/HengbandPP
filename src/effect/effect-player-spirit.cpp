@@ -10,8 +10,7 @@
 #include "view/display-messages.h"
 #include "world/world.h"
 
-void effect_player_drain_mana(player_type *target_ptr, effect_player_type *ep_ptr)
-{
+void effect_player_drain_mana(player_type* target_ptr, effect_player_type* ep_ptr) {
     if (check_multishadow(target_ptr)) {
         msg_print(_("攻撃は幻影に命中し、あなたには届かなかった。", "The attack hits Shadow, but you are unharmed!"));
         ep_ptr->dam = 0;
@@ -32,7 +31,8 @@ void effect_player_drain_mana(player_type *target_ptr, effect_player_type *ep_pt
         ep_ptr->dam = target_ptr->csp;
         target_ptr->csp = 0;
         target_ptr->csp_frac = 0;
-    } else {
+    }
+    else {
         target_ptr->csp -= ep_ptr->dam;
     }
 
@@ -61,8 +61,7 @@ void effect_player_drain_mana(player_type *target_ptr, effect_player_type *ep_pt
     ep_ptr->dam = 0;
 }
 
-void effect_player_mind_blast(player_type *target_ptr, effect_player_type *ep_ptr)
-{
+void effect_player_mind_blast(player_type* target_ptr, effect_player_type* ep_ptr) {
     if ((randint0(100 + ep_ptr->rlev / 2) < MAX(5, target_ptr->skill_sav)) && !check_multishadow(target_ptr)) {
         msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
         learn_spell(target_ptr, ep_ptr->monspell);
@@ -93,8 +92,7 @@ void effect_player_mind_blast(player_type *target_ptr, effect_player_type *ep_pt
     ep_ptr->get_damage = take_hit(target_ptr, DAMAGE_ATTACK, ep_ptr->dam, ep_ptr->killer, ep_ptr->monspell);
 }
 
-void effect_player_brain_smash(player_type *target_ptr, effect_player_type *ep_ptr)
-{
+void effect_player_brain_smash(player_type* target_ptr, effect_player_type* ep_ptr) {
     if ((randint0(100 + ep_ptr->rlev / 2) < MAX(5, target_ptr->skill_sav)) && !check_multishadow(target_ptr)) {
         msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
         learn_spell(target_ptr, ep_ptr->monspell);

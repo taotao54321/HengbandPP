@@ -27,7 +27,7 @@ POSITION panel_col_prt;
 POSITION panel_row_prt;
 
 int match_autopick;
-object_type *autopick_obj; /*!< 各種自動拾い処理時に使うオブジェクトポインタ */
+object_type* autopick_obj; /*!< 各種自動拾い処理時に使うオブジェクトポインタ */
 int feat_priority; /*!< マップ縮小表示時に表示すべき地形の優先度を保管する */
 
 static concptr simplify_list[][2] = {
@@ -48,8 +48,7 @@ static concptr simplify_list[][2] = {
  * @param col 描画行
  * @return なし
  */
-void print_field(concptr info, TERM_LEN row, TERM_LEN col)
-{
+void print_field(concptr info, TERM_LEN row, TERM_LEN col) {
     c_put_str(TERM_WHITE, "             ", row, col);
     c_put_str(TERM_L_BLUE, info, row, col);
 }
@@ -61,8 +60,7 @@ void print_field(concptr info, TERM_LEN row, TERM_LEN col)
  * of both "lite_spot()" and "print_rel()", and that we use the
  * "lite_spot()" function to display the player grid, if needed.
  */
-void print_map(player_type *player_ptr)
-{
+void print_map(player_type* player_ptr) {
     TERM_LEN wid, hgt;
     term_get_size(&wid, &hgt);
 
@@ -74,7 +72,7 @@ void print_map(player_type *player_ptr)
 
     (void)term_set_cursor(0);
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     POSITION xmin = (0 < panel_col_min) ? panel_col_min : 0;
     POSITION xmax = (floor_ptr->width - 1 > panel_col_max) ? panel_col_max : floor_ptr->width - 1;
     POSITION ymin = (0 < panel_row_min) ? panel_row_min : 0;
@@ -112,8 +110,7 @@ void print_map(player_type *player_ptr)
     (void)term_set_cursor(v);
 }
 
-static void display_shortened_item_name(player_type *player_ptr, object_type *o_ptr, int y)
-{
+static void display_shortened_item_name(player_type* player_ptr, object_type* o_ptr, int y) {
     char buf[MAX_NLEN];
     describe_flavor(player_ptr, buf, o_ptr, (OD_NO_FLAVOR | OD_OMIT_PREFIX | OD_NAME_ONLY));
     TERM_COLOR attr = tval_to_attr[o_ptr->tval % 128];
@@ -123,7 +120,7 @@ static void display_shortened_item_name(player_type *player_ptr, object_type *o_
         strcpy(buf, _("何か奇妙な物", "something strange"));
     }
 
-    char *c = buf;
+    char* c = buf;
     for (c = buf; *c; c++) {
         for (int i = 0; simplify_list[i][1]; i++) {
             concptr org_w = simplify_list[i][0];
@@ -138,7 +135,7 @@ static void display_shortened_item_name(player_type *player_ptr, object_type *o_
             if (strncmp(c, org_w, strlen(org_w)))
                 continue;
 
-            char *s = c;
+            char* s = c;
             concptr tmp = simplify_list[i][1];
             while (*tmp)
                 *s++ = *tmp++;
@@ -159,7 +156,8 @@ static void display_shortened_item_name(player_type *player_ptr, object_type *o_
                 break;
             c += 2;
             len += 2;
-        } else
+        }
+        else
 #endif
         {
             if (len + 1 > 12)
@@ -176,8 +174,7 @@ static void display_shortened_item_name(player_type *player_ptr, object_type *o_
 /*
  * Display a "small-scale" map of the dungeon in the active Term
  */
-void display_map(player_type *player_ptr, int *cy, int *cx)
-{
+void display_map(player_type* player_ptr, int* cy, int* cx) {
     int i, j, x, y;
 
     TERM_COLOR ta;
@@ -185,42 +182,42 @@ void display_map(player_type *player_ptr, int *cy, int *cx)
 
     byte tp;
 
-    TERM_COLOR **bigma;
-    SYMBOL_CODE **bigmc;
-    byte **bigmp;
+    TERM_COLOR** bigma;
+    SYMBOL_CODE** bigmc;
+    byte** bigmp;
 
-    TERM_COLOR **ma;
-    SYMBOL_CODE **mc;
-    byte **mp;
+    TERM_COLOR** ma;
+    SYMBOL_CODE** mc;
+    byte** mp;
 
     bool old_view_special_lite = view_special_lite;
     bool old_view_granite_lite = view_granite_lite;
     TERM_LEN hgt, wid, yrat, xrat;
-    int **match_autopick_yx;
-    object_type ***object_autopick_yx;
+    int** match_autopick_yx;
+    object_type*** object_autopick_yx;
     term_get_size(&wid, &hgt);
     hgt -= 2;
     wid -= 14;
     if (use_bigtile)
         wid /= 2;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     yrat = (floor_ptr->height + hgt - 1) / hgt;
     xrat = (floor_ptr->width + wid - 1) / wid;
     view_special_lite = FALSE;
     view_granite_lite = FALSE;
 
-    C_MAKE(ma, (hgt + 2), TERM_COLOR *);
+    C_MAKE(ma, (hgt + 2), TERM_COLOR*);
     C_MAKE(mc, (hgt + 2), char_ptr);
     C_MAKE(mp, (hgt + 2), byte_ptr);
-    C_MAKE(match_autopick_yx, (hgt + 2), int *);
-    C_MAKE(object_autopick_yx, (hgt + 2), object_type **);
+    C_MAKE(match_autopick_yx, (hgt + 2), int*);
+    C_MAKE(object_autopick_yx, (hgt + 2), object_type**);
     for (y = 0; y < (hgt + 2); y++) {
         C_MAKE(ma[y], (wid + 2), TERM_COLOR);
         C_MAKE(mc[y], (wid + 2), char);
         C_MAKE(mp[y], (wid + 2), byte);
         C_MAKE(match_autopick_yx[y], (wid + 2), int);
-        C_MAKE(object_autopick_yx[y], (wid + 2), object_type *);
+        C_MAKE(object_autopick_yx[y], (wid + 2), object_type*);
         for (x = 0; x < wid + 2; ++x) {
             match_autopick_yx[y][x] = -1;
             object_autopick_yx[y][x] = NULL;
@@ -230,7 +227,7 @@ void display_map(player_type *player_ptr, int *cy, int *cx)
         }
     }
 
-    C_MAKE(bigma, (floor_ptr->height + 2), TERM_COLOR *);
+    C_MAKE(bigma, (floor_ptr->height + 2), TERM_COLOR*);
     C_MAKE(bigmc, (floor_ptr->height + 2), char_ptr);
     C_MAKE(bigmp, (floor_ptr->height + 2), byte_ptr);
     for (y = 0; y < (floor_ptr->height + 2); y++) {
@@ -350,31 +347,30 @@ void display_map(player_type *player_ptr, int *cy, int *cx)
         C_KILL(mc[y], (wid + 2), SYMBOL_CODE);
         C_KILL(mp[y], (wid + 2), byte);
         C_KILL(match_autopick_yx[y], (wid + 2), int);
-        C_KILL(object_autopick_yx[y], (wid + 2), object_type *);
+        C_KILL(object_autopick_yx[y], (wid + 2), object_type*);
     }
 
-    C_KILL(ma, (hgt + 2), TERM_COLOR *);
+    C_KILL(ma, (hgt + 2), TERM_COLOR*);
     C_KILL(mc, (hgt + 2), char_ptr);
     C_KILL(mp, (hgt + 2), byte_ptr);
-    C_KILL(match_autopick_yx, (hgt + 2), int *);
-    C_KILL(object_autopick_yx, (hgt + 2), object_type **);
+    C_KILL(match_autopick_yx, (hgt + 2), int*);
+    C_KILL(object_autopick_yx, (hgt + 2), object_type**);
     for (y = 0; y < (floor_ptr->height + 2); y++) {
         C_KILL(bigma[y], (floor_ptr->width + 2), TERM_COLOR);
         C_KILL(bigmc[y], (floor_ptr->width + 2), SYMBOL_CODE);
         C_KILL(bigmp[y], (floor_ptr->width + 2), byte);
     }
 
-    C_KILL(bigma, (floor_ptr->height + 2), TERM_COLOR *);
+    C_KILL(bigma, (floor_ptr->height + 2), TERM_COLOR*);
     C_KILL(bigmc, (floor_ptr->height + 2), char_ptr);
     C_KILL(bigmp, (floor_ptr->height + 2), byte_ptr);
 }
 
-void set_term_color(player_type *player_ptr, POSITION y, POSITION x, TERM_COLOR *ap, SYMBOL_CODE *cp)
-{
+void set_term_color(player_type* player_ptr, POSITION y, POSITION x, TERM_COLOR* ap, SYMBOL_CODE* cp) {
     if (!player_bold(player_ptr, y, x))
         return;
 
-    monster_race *r_ptr = &r_info[0];
+    monster_race* r_ptr = &r_info[0];
     *ap = r_ptr->x_attr;
     *cp = r_ptr->x_char;
     feat_priority = 31;
@@ -383,8 +379,7 @@ void set_term_color(player_type *player_ptr, POSITION y, POSITION x, TERM_COLOR 
 /*
  * Calculate panel colum of a location in the map
  */
-int panel_col_of(int col)
-{
+int panel_col_of(int col) {
     col -= panel_col_min;
     if (use_bigtile)
         col *= 2;

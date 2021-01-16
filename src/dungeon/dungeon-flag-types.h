@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum dungeon_flag_type {
-	DF1_WINNER = 0x00000001L,
+    DF1_WINNER = 0x00000001L,
     DF1_MAZE = 0x00000002L,
     DF1_SMALLEST = 0x00000004L,
     DF1_BEGINNER = 0x00000008L,

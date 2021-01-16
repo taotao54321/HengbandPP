@@ -19,9 +19,8 @@
  * @details There were moved from cave_gen().
  * @return なし
  */
-void gen_caverns_and_lakes(player_type *owner_ptr, dungeon_type *dungeon_ptr, dun_data_type *dd_ptr)
-{
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
+void gen_caverns_and_lakes(player_type* owner_ptr, dungeon_type* dungeon_ptr, dun_data_type* dd_ptr) {
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
     if ((floor_ptr->dun_level > 30) && one_in_(DUN_DEST * 2) && small_levels && (dungeon_ptr->flags1 & DF1_DESTROY)) {
         dd_ptr->destroyed = TRUE;
         build_lake(owner_ptr, one_in_(2) ? LAKE_T_CAVE : LAKE_T_EARTH_VAULT);
@@ -94,8 +93,7 @@ void gen_caverns_and_lakes(player_type *owner_ptr, dungeon_type *dungeon_ptr, du
         dd_ptr->destroyed = FALSE;
 }
 
-bool has_river_flag(dungeon_type *dungeon_ptr)
-{
+bool has_river_flag(dungeon_type* dungeon_ptr) {
     return (dungeon_ptr->flags1 & (DF1_WATER_RIVER | DF1_LAVA_RIVER | DF1_ACID_RIVER | DF1_POISONOUS_RIVER)) != 0;
 }
 
@@ -110,13 +108,12 @@ bool has_river_flag(dungeon_type *dungeon_ptr)
  * grids which are not in rooms.  We might want to also count stairs,\n
  * open doors, closed doors, etc.
  */
-static int next_to_corr(floor_type *floor_ptr, POSITION y1, POSITION x1)
-{
+static int next_to_corr(floor_type* floor_ptr, POSITION y1, POSITION x1) {
     int k = 0;
     for (int i = 0; i < 4; i++) {
         POSITION y = y1 + ddy_ddd[i];
         POSITION x = x1 + ddx_ddd[i];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[y][x];
         if (cave_has_flag_grid(g_ptr, FF_WALL) || !is_floor_grid(g_ptr) || ((g_ptr->info & CAVE_ROOM) != 0))
             continue;
@@ -134,8 +131,7 @@ static int next_to_corr(floor_type *floor_ptr, POSITION y1, POSITION x1)
  * @return ドアを設置可能ならばTRUEを返す
  * @details まず垂直方向に、次に水平方向に調べる
  */
-static bool possible_doorway(floor_type *floor_ptr, POSITION y, POSITION x)
-{
+static bool possible_doorway(floor_type* floor_ptr, POSITION y, POSITION x) {
     if (next_to_corr(floor_ptr, y, x) < 2)
         return FALSE;
 
@@ -155,9 +151,8 @@ static bool possible_doorway(floor_type *floor_ptr, POSITION y, POSITION x)
  * @param x 設置を行いたいマスのX座標
  * @return なし
  */
-void try_door(player_type *player_ptr, dt_type *dt_ptr, POSITION y, POSITION x)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void try_door(player_type* player_ptr, dt_type* dt_ptr, POSITION y, POSITION x) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!in_bounds(floor_ptr, y, x) || cave_has_flag_bold(floor_ptr, y, x, FF_WALL) || ((floor_ptr->grid_array[y][x].info & CAVE_ROOM) != 0))
         return;
 

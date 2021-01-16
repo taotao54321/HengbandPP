@@ -10,8 +10,7 @@
 #include "target/target-getter.h"
 #include "view/display-messages.h"
 
-bool activate_teleport_away(player_type *user_ptr)
-{
+bool activate_teleport_away(player_type* user_ptr) {
     DIRECTION dir;
     if (!get_aim_dir(user_ptr, &dir))
         return FALSE;
@@ -20,8 +19,7 @@ bool activate_teleport_away(player_type *user_ptr)
     return TRUE;
 }
 
-bool activate_escape(player_type *user_ptr)
-{
+bool activate_escape(player_type* user_ptr) {
     switch (randint1(13)) {
     case 1:
     case 2:
@@ -53,8 +51,7 @@ bool activate_escape(player_type *user_ptr)
     }
 }
 
-bool activate_teleport_level(player_type *user_ptr)
-{
+bool activate_teleport_level(player_type* user_ptr) {
     if (!get_check(_("本当に他の階にテレポートしますか？", "Are you sure? (Teleport Level)")))
         return FALSE;
 
@@ -62,21 +59,18 @@ bool activate_teleport_level(player_type *user_ptr)
     return TRUE;
 }
 
-bool activate_dimension_door(player_type *user_ptr)
-{
+bool activate_dimension_door(player_type* user_ptr) {
     msg_print(_("次元の扉が開いた。目的地を選んで下さい。", "You open a dimensional gate. Choose a destination."));
     return dimension_door(user_ptr);
 }
 
-bool activate_teleport(player_type *user_ptr)
-{
+bool activate_teleport(player_type* user_ptr) {
     msg_print(_("周りの空間が歪んでいる...", "It twists space around you..."));
     teleport_player(user_ptr, 100, TELEPORT_SPONTANEOUS);
     return TRUE;
 }
 
-bool activate_phase_door(player_type *user_ptr)
-{
+bool activate_phase_door(player_type* user_ptr) {
     teleport_player(user_ptr, 10, TELEPORT_SPONTANEOUS);
     return TRUE;
 }

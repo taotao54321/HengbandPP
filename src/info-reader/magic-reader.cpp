@@ -10,9 +10,8 @@
  * @param head ヘッダ構造体
  * @return エラーコード
  */
-errr parse_m_info(char *buf, angband_header *head)
-{
-    static player_magic *m_ptr = NULL;
+errr parse_m_info(char* buf, angband_header* head) {
+    static player_magic* m_ptr = NULL;
     static int realm, magic_idx = 0, readable = 0;
 
     if (buf[0] == 'N') {
@@ -25,12 +24,14 @@ errr parse_m_info(char *buf, angband_header *head)
 
         error_idx = i;
         m_ptr = &m_info[i];
-    } else if (!m_ptr) {
+    }
+    else if (!m_ptr) {
         return 3;
-    } else if (buf[0] == 'I') {
+    }
+    else if (buf[0] == 'I') {
         char *book, *stat;
         int xtra, type, first, weight;
-        char *s;
+        char* s;
         s = angband_strchr(buf + 2, ':');
 
         /* Verify that colon */
@@ -76,19 +77,21 @@ errr parse_m_info(char *buf, angband_header *head)
         else
             return 5;
 
-        if (4 != sscanf(s, "%x:%d:%d:%d", (uint *)&xtra, &type, &first, &weight))
+        if (4 != sscanf(s, "%x:%d:%d:%d", (uint*)&xtra, &type, &first, &weight))
             return 1;
 
         m_ptr->spell_xtra = xtra;
         m_ptr->spell_type = type;
         m_ptr->spell_first = first;
         m_ptr->spell_weight = weight;
-    } else if (buf[0] == 'R') {
+    }
+    else if (buf[0] == 'R') {
         if (2 != sscanf(buf + 2, "%d:%d", &realm, &readable))
             return 1;
 
         magic_idx = 0;
-    } else if (buf[0] == 'T') {
+    }
+    else if (buf[0] == 'T') {
         int level, mana, fail, exp;
 
         if (!readable)
@@ -101,7 +104,8 @@ errr parse_m_info(char *buf, angband_header *head)
         m_ptr->info[realm][magic_idx].sfail = (PERCENTAGE)fail;
         m_ptr->info[realm][magic_idx].sexp = (EXP)exp;
         magic_idx++;
-    } else
+    }
+    else
         return 6;
 
     return 0;

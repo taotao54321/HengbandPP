@@ -62,15 +62,14 @@ int total_friends = 0;
  * @brief ペットを開放するコマンドのメインルーチン
  * @return なし
  */
-void do_cmd_pet_dismiss(player_type *creature_ptr)
-{
-    monster_type *m_ptr;
+void do_cmd_pet_dismiss(player_type* creature_ptr) {
+    monster_type* m_ptr;
     bool all_pets = FALSE;
     MONSTER_IDX pet_ctr;
     int i;
     int Dismissed = 0;
 
-    MONSTER_IDX *who;
+    MONSTER_IDX* who;
     u16b dummy_why;
     int max_pet = 0;
     bool cu, cv;
@@ -190,12 +189,11 @@ void do_cmd_pet_dismiss(player_type *creature_ptr)
  * @param force 強制的に騎乗/下馬するならばTRUE
  * @return 騎乗/下馬できたらTRUE
  */
-bool do_cmd_riding(player_type *creature_ptr, bool force)
-{
+bool do_cmd_riding(player_type* creature_ptr, bool force) {
     POSITION x, y;
     DIRECTION dir = 0;
-    grid_type *g_ptr;
-    monster_type *m_ptr;
+    grid_type* g_ptr;
+    monster_type* m_ptr;
 
     if (!get_direction(creature_ptr, &dir, FALSE, FALSE))
         return FALSE;
@@ -228,7 +226,8 @@ bool do_cmd_riding(player_type *creature_ptr, bool force)
         creature_ptr->riding = 0;
         creature_ptr->pet_extra_flags &= ~(PF_TWO_HANDS);
         creature_ptr->riding_ryoute = creature_ptr->old_riding_ryoute = FALSE;
-    } else {
+    }
+    else {
         if (cmd_limit_confused(creature_ptr))
             return FALSE;
 
@@ -252,7 +251,7 @@ bool do_cmd_riding(player_type *creature_ptr, bool force)
 
         if (!can_player_ride_pet(creature_ptr, g_ptr, TRUE)) {
             /* Feature code (applying "mimic" field) */
-            feature_type *f_ptr = &f_info[get_feat_mimic(g_ptr)];
+            feature_type* f_ptr = &f_info[get_feat_mimic(g_ptr)];
 #ifdef JP
             msg_format("そのモンスターは%sの%sにいる。", f_name + f_ptr->name,
                 ((!has_flag(f_ptr->flags, FF_MOVE) && !has_flag(f_ptr->flags, FF_CAN_FLY))
@@ -310,9 +309,8 @@ bool do_cmd_riding(player_type *creature_ptr, bool force)
  * @brief ペットに名前をつけるコマンドのメインルーチン
  * @return なし
  */
-static void do_name_pet(player_type *creature_ptr)
-{
-    monster_type *m_ptr;
+static void do_name_pet(player_type* creature_ptr) {
+    monster_type* m_ptr;
     char out_val[20];
     GAME_TEXT m_name[MAX_NLEN];
     bool old_name = FALSE;
@@ -361,7 +359,8 @@ static void do_name_pet(player_type *creature_ptr)
                     monster_desc(creature_ptr, m_name, m_ptr, MD_INDEF_VISIBLE);
                     exe_write_diary(creature_ptr, DIARY_NAMED_PET, RECORD_NAMED_PET_NAME, m_name);
                 }
-            } else {
+            }
+            else {
                 if (record_named_pet && old_name) {
                     monster_desc(creature_ptr, m_name, m_ptr, MD_INDEF_VISIBLE);
                     exe_write_diary(creature_ptr, DIARY_NAMED_PET, RECORD_NAMED_PET_UNNAME, m_name);
@@ -377,8 +376,7 @@ static void do_name_pet(player_type *creature_ptr)
  * Issue a pet command
  * @return なし
  */
-void do_cmd_pet(player_type *creature_ptr)
-{
+void do_cmd_pet(player_type* creature_ptr) {
     COMMAND_CODE i = 0;
     int num;
     int powers[36];
@@ -387,7 +385,7 @@ void do_cmd_pet(player_type *creature_ptr)
     char choice;
     char out_val[160];
     int pet_ctr;
-    monster_type *m_ptr;
+    monster_type* m_ptr;
 
     PET_COMMAND_IDX mode = 0;
 
@@ -445,49 +443,56 @@ void do_cmd_pet(player_type *creature_ptr)
 
     if (creature_ptr->pet_extra_flags & PF_OPEN_DOORS) {
         power_desc[num] = _("ドアを開ける (現在:ON)", "pets open doors (now On)");
-    } else {
+    }
+    else {
         power_desc[num] = _("ドアを開ける (現在:OFF)", "pets open doors (now Off)");
     }
     powers[num++] = PET_OPEN_DOORS;
 
     if (creature_ptr->pet_extra_flags & PF_PICKUP_ITEMS) {
         power_desc[num] = _("アイテムを拾う (現在:ON)", "pets pick up items (now On)");
-    } else {
+    }
+    else {
         power_desc[num] = _("アイテムを拾う (現在:OFF)", "pets pick up items (now Off)");
     }
     powers[num++] = PET_TAKE_ITEMS;
 
     if (creature_ptr->pet_extra_flags & PF_TELEPORT) {
         power_desc[num] = _("テレポート系魔法を使う (現在:ON)", "allow teleport (now On)");
-    } else {
+    }
+    else {
         power_desc[num] = _("テレポート系魔法を使う (現在:OFF)", "allow teleport (now Off)");
     }
     powers[num++] = PET_TELEPORT;
 
     if (creature_ptr->pet_extra_flags & PF_ATTACK_SPELL) {
         power_desc[num] = _("攻撃魔法を使う (現在:ON)", "allow cast attack spell (now On)");
-    } else {
+    }
+    else {
         power_desc[num] = _("攻撃魔法を使う (現在:OFF)", "allow cast attack spell (now Off)");
     }
     powers[num++] = PET_ATTACK_SPELL;
 
     if (creature_ptr->pet_extra_flags & PF_SUMMON_SPELL) {
         power_desc[num] = _("召喚魔法を使う (現在:ON)", "allow cast summon spell (now On)");
-    } else {
+    }
+    else {
         power_desc[num] = _("召喚魔法を使う (現在:OFF)", "allow cast summon spell (now Off)");
     }
     powers[num++] = PET_SUMMON_SPELL;
 
     if (creature_ptr->pet_extra_flags & PF_BALL_SPELL) {
         power_desc[num] = _("プレイヤーを巻き込む範囲魔法を使う (現在:ON)", "allow involve player in area spell (now On)");
-    } else {
+    }
+    else {
         power_desc[num] = _("プレイヤーを巻き込む範囲魔法を使う (現在:OFF)", "allow involve player in area spell (now Off)");
     }
     powers[num++] = PET_BALL_SPELL;
 
     if (creature_ptr->riding) {
         power_desc[num] = _("ペットから降りる", "get off a pet");
-    } else {
+    }
+    else {
         power_desc[num] = _("ペットに乗る", "ride a pet");
     }
     powers[num++] = PET_RIDING;
@@ -501,12 +506,14 @@ void do_cmd_pet(player_type *creature_ptr)
                 && object_allow_two_hands_wielding(&creature_ptr->inventory_list[INVEN_LARM]))) {
             if (creature_ptr->pet_extra_flags & PF_TWO_HANDS) {
                 power_desc[num] = _("武器を片手で持つ", "use one hand to control the pet you are riding");
-            } else {
+            }
+            else {
                 power_desc[num] = _("武器を両手で持つ", "use both hands for a weapon");
             }
 
             powers[num++] = PET_TWO_HANDS;
-        } else {
+        }
+        else {
             switch (creature_ptr->pclass) {
             case CLASS_MONK:
             case CLASS_FORCETRAINER:
@@ -514,16 +521,19 @@ void do_cmd_pet(player_type *creature_ptr)
                 if (empty_hands(creature_ptr, FALSE) == (EMPTY_HAND_RARM | EMPTY_HAND_LARM)) {
                     if (creature_ptr->pet_extra_flags & PF_TWO_HANDS) {
                         power_desc[num] = _("片手で格闘する", "use one hand to control the pet you are riding");
-                    } else {
+                    }
+                    else {
                         power_desc[num] = _("両手で格闘する", "use both hands for melee");
                     }
 
                     powers[num++] = PET_TWO_HANDS;
-                } else if ((empty_hands(creature_ptr, FALSE) != EMPTY_HAND_NONE) && !has_melee_weapon(creature_ptr, INVEN_RARM)
+                }
+                else if ((empty_hands(creature_ptr, FALSE) != EMPTY_HAND_NONE) && !has_melee_weapon(creature_ptr, INVEN_RARM)
                     && !has_melee_weapon(creature_ptr, INVEN_LARM)) {
                     if (creature_ptr->pet_extra_flags & PF_TWO_HANDS) {
                         power_desc[num] = _("格闘を行わない", "use one hand to control the pet you are riding");
-                    } else {
+                    }
+                    else {
                         power_desc[num] = _("格闘を行う", "use one hand for melee");
                     }
 
@@ -541,7 +551,8 @@ void do_cmd_pet(player_type *creature_ptr)
         if (use_menu) {
             screen_save();
             strnfmt(out_val, 78, _("(コマンド、ESC=終了) コマンドを選んでください:", "(Command, ESC=exit) Choose command from menu."));
-        } else {
+        }
+        else {
             strnfmt(out_val, 78, _("(コマンド %c-%c、'*'=一覧、ESC=終了) コマンドを選んでください:", "(Command %c-%c, *=List, ESC=exit) Select a command: "),
                 I2A(0), I2A(num - 1));
         }
@@ -703,11 +714,12 @@ void do_cmd_pet(player_type *creature_ptr)
         if (!target_set(creature_ptr, TARGET_KILL))
             creature_ptr->pet_t_m_idx = 0;
         else {
-            grid_type *g_ptr = &creature_ptr->current_floor_ptr->grid_array[target_row][target_col];
+            grid_type* g_ptr = &creature_ptr->current_floor_ptr->grid_array[target_row][target_col];
             if (g_ptr->m_idx && (creature_ptr->current_floor_ptr->m_list[g_ptr->m_idx].ml)) {
                 creature_ptr->pet_t_m_idx = creature_ptr->current_floor_ptr->grid_array[target_row][target_col].m_idx;
                 creature_ptr->pet_follow_distance = PET_DESTROY_DIST;
-            } else
+            }
+            else
                 creature_ptr->pet_t_m_idx = 0;
         }
         project_length = 0;
@@ -760,7 +772,8 @@ void do_cmd_pet(player_type *creature_ptr)
                     monster_drop_carried_objects(creature_ptr, m_ptr);
                 }
             }
-        } else
+        }
+        else
             creature_ptr->pet_extra_flags |= (PF_PICKUP_ITEMS);
 
         break;

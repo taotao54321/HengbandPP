@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void dump_mutations(player_type *creature_ptr, FILE *out_file);
+void dump_mutations(player_type* creature_ptr, FILE* out_file);

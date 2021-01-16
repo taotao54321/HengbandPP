@@ -365,7 +365,7 @@ typedef struct {
 #define MAX_TERM_DATA 8 //!< Maximum number of windows
 
 static term_data data[MAX_TERM_DATA]; //!< An array of term_data's
-static term_data *my_td; //!< Hack -- global "window creation" pointer
+static term_data* my_td; //!< Hack -- global "window creation" pointer
 POINT normsize; //!< Remember normal size of main window when maxmized
 
 /*
@@ -559,17 +559,15 @@ static byte ignore_key_list[] = {
 static bool is_already_running(void);
 
 /* bg */
-static void delete_bg(void)
-{
+static void delete_bg(void) {
     if (hBG != NULL) {
         DeleteObject(hBG);
         hBG = NULL;
     }
 }
 
-static int init_bg(void)
-{
-    char *bmfile = bg_bitmap_file;
+static int init_bg(void) {
+    char* bmfile = bg_bitmap_file;
     delete_bg();
     if (use_bg == 0)
         return 0;
@@ -585,8 +583,7 @@ static int init_bg(void)
     return 1;
 }
 
-static void DrawBG(HDC hdc, RECT *r)
-{
+static void DrawBG(HDC hdc, RECT* r) {
     if (!use_bg || !hBG)
         return;
 
@@ -622,8 +619,7 @@ static void DrawBG(HDC hdc, RECT *r)
 /*
  * Check for existance of a file
  */
-static bool check_file(concptr s)
-{
+static bool check_file(concptr s) {
     char path[1024];
     strcpy(path, s);
     DWORD attrib = GetFileAttributes(path);
@@ -638,8 +634,7 @@ static bool check_file(concptr s)
 /*
  * Check for existance of a directory
  */
-static bool check_dir(concptr s)
-{
+static bool check_dir(concptr s) {
     char path[1024];
     strcpy(path, s);
     int i = strlen(path);
@@ -658,8 +653,7 @@ static bool check_dir(concptr s)
 /*
  * Validate a file
  */
-static void validate_file(concptr s)
-{
+static void validate_file(concptr s) {
     if (check_file(s))
         return;
 
@@ -669,14 +663,14 @@ static void validate_file(concptr s)
 /*
  * Validate a directory
  */
-static void validate_dir(concptr s, bool vital)
-{
+static void validate_dir(concptr s, bool vital) {
     if (check_dir(s))
         return;
 
     if (vital) {
         quit_fmt(_("必要なディレクトリ[%s]が見あたりません。", "Cannot find required directory:\n%s"), s);
-    } else if (mkdir(s)) {
+    }
+    else if (mkdir(s)) {
         quit_fmt("Unable to create directory:\n%s", s);
     }
 }
@@ -684,8 +678,7 @@ static void validate_dir(concptr s, bool vital)
 /*!
  * @brief (Windows版固有実装)Get the "size" for a window
  */
-static void term_getsize(term_data *td)
-{
+static void term_getsize(term_data* td) {
     if (td->cols < 1)
         td->cols = 1;
     if (td->rows < 1)
@@ -704,7 +697,8 @@ static void term_getsize(term_data *td)
 
         td->pos_x = rw.left;
         td->pos_y = rw.top;
-    } else {
+    }
+    else {
         /* Tempolary calculation */
         rc.left = 0;
         rc.right = wid;
@@ -719,9 +713,8 @@ static void term_getsize(term_data *td)
 /*
  * Write the "prefs" for a single term
  */
-static void save_prefs_aux(int i)
-{
-    term_data *td = &data[i];
+static void save_prefs_aux(int i) {
+    term_data* td = &data[i];
     GAME_TEXT sec_name[128];
     char buf[1024];
 
@@ -798,8 +791,7 @@ static void save_prefs_aux(int i)
  * Write the "prefs"
  * We assume that the windows have all been initialized
  */
-static void save_prefs(void)
-{
+static void save_prefs(void) {
     char buf[128];
     sprintf(buf, "%d", arg_graphics);
     WritePrivateProfileString("Angband", "Graphics", buf, ini_file);
@@ -825,9 +817,8 @@ static void save_prefs(void)
 /*
  * Load the "prefs" for a single term
  */
-static void load_prefs_aux(int i)
-{
-    term_data *td = &data[i];
+static void load_prefs_aux(int i) {
+    term_data* td = &data[i];
     GAME_TEXT sec_name[128];
     char tmp[1024];
 
@@ -882,8 +873,7 @@ static void load_prefs_aux(int i)
 /*
  * Load the "prefs"
  */
-static void load_prefs(void)
-{
+static void load_prefs(void) {
     arg_graphics = (byte)GetPrivateProfileInt("Angband", "Graphics", GRAPHICS_NONE, ini_file);
     arg_bigtile = (GetPrivateProfileInt("Angband", "Bigtile", FALSE, ini_file) != 0);
     use_bigtile = arg_bigtile;
@@ -911,13 +901,12 @@ static void load_prefs(void)
  *
  * We save pointers to the tokens in "tokens", and return the number found.
  */
-static s16b tokenize_whitespace(char *buf, s16b num, char **tokens)
-{
+static s16b tokenize_whitespace(char* buf, s16b num, char** tokens) {
     s16b k = 0;
-    char *s = buf;
+    char* s = buf;
 
     while (k < num) {
-        char *t;
+        char* t;
         for (; *s && iswspace(*s); ++s) /* loop */
             ;
 
@@ -937,12 +926,11 @@ static s16b tokenize_whitespace(char *buf, s16b num, char **tokens)
     return k;
 }
 
-static void load_sound_prefs(void)
-{
+static void load_sound_prefs(void) {
     char tmp[1024];
     char ini_path[1024];
     char wav_path[1024];
-    char *zz[SAMPLE_SOUND_MAX];
+    char* zz[SAMPLE_SOUND_MAX];
 
     path_build(ini_path, 1024, ANGBAND_DIR_XTRA_SOUND, "sound.cfg");
     for (int i = 0; i < SOUND_MAX; i++) {
@@ -959,12 +947,11 @@ static void load_sound_prefs(void)
     }
 }
 
-static void load_music_prefs(void)
-{
+static void load_music_prefs(void) {
     char tmp[1024];
     char ini_path[1024];
     char wav_path[1024];
-    char *zz[SAMPLE_MUSIC_MAX];
+    char* zz[SAMPLE_MUSIC_MAX];
     char key[80];
 
     path_build(ini_path, 1024, ANGBAND_DIR_XTRA_MUSIC, "music.cfg");
@@ -1026,14 +1013,13 @@ static void load_music_prefs(void)
  *
  * Note that only some machines actually use a "palette".
  */
-static int new_palette(void)
-{
+static int new_palette(void) {
     int i, nEntries;
     int pLogPalSize;
     int lppeSize;
     LPLOGPALETTE pLogPal;
     LPPALETTEENTRY lppe;
-    term_data *td;
+    term_data* td;
     if (!paletted)
         return TRUE;
 
@@ -1108,8 +1094,7 @@ static int new_palette(void)
  * <li>呼び出されるタイミングはロード時、及び同メニューで「なし」以外に変更される毎になる。</li>
  * </ul>
  */
-static bool init_graphics(void)
-{
+static bool init_graphics(void) {
     char buf[1024];
     BYTE wid, hgt, twid, thgt, ox, oy;
     concptr name;
@@ -1124,7 +1109,8 @@ static bool init_graphics(void)
         name = "16X16.BMP";
 
         ANGBAND_GRAF = "new";
-    } else if (arg_graphics == GRAPHICS_HENGBAND) {
+    }
+    else if (arg_graphics == GRAPHICS_HENGBAND) {
         wid = 32;
         hgt = 32;
         twid = 32;
@@ -1134,7 +1120,8 @@ static bool init_graphics(void)
         name = "32X32.BMP";
 
         ANGBAND_GRAF = "ne2";
-    } else {
+    }
+    else {
         wid = 8;
         hgt = 8;
         twid = 8;
@@ -1186,8 +1173,7 @@ static bool init_graphics(void)
 /*
  * Initialize music
  */
-static void init_music(void)
-{
+static void init_music(void) {
     if (!can_use_music) {
         load_music_prefs();
         can_use_music = TRUE;
@@ -1197,8 +1183,7 @@ static void init_music(void)
 /*
  * Hack -- Stop a music
  */
-static void stop_music(void)
-{
+static void stop_music(void) {
     mciSendCommand(mop.wDeviceID, MCI_STOP, 0, 0);
     mciSendCommand(mop.wDeviceID, MCI_CLOSE, 0, 0);
 }
@@ -1206,8 +1191,7 @@ static void stop_music(void)
 /*
  * Initialize sound
  */
-static void init_sound(void)
-{
+static void init_sound(void) {
     if (!can_use_sound) {
         load_sound_prefs();
         can_use_sound = TRUE;
@@ -1217,8 +1201,7 @@ static void init_sound(void)
 /*
  * Resize a window
  */
-static void term_window_resize(term_data *td)
-{
+static void term_window_resize(term_data* td) {
     if (!td->w)
         return;
 
@@ -1233,8 +1216,7 @@ static void term_window_resize(term_data *td)
  * This function returns zero only if everything succeeds.
  * Note that the "font name" must be capitalized!!!
  */
-static errr term_force_font(term_data *td, concptr path)
-{
+static errr term_force_font(term_data* td, concptr path) {
     if (td->font_id)
         DeleteObject(td->font_id);
 
@@ -1269,8 +1251,7 @@ static errr term_force_font(term_data *td, concptr path)
 /*
  * Allow the user to change the font for this window.
  */
-static void term_change_font(term_data *td)
-{
+static void term_change_font(term_data* td) {
     CHOOSEFONT cf;
     memset(&cf, 0, sizeof(cf));
     cf.lStructSize = sizeof(cf);
@@ -1291,15 +1272,14 @@ static void term_change_font(term_data *td)
 /*
  * Allow the user to lock this window.
  */
-static void term_window_pos(term_data *td, HWND hWnd) { SetWindowPos(td->w, hWnd, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE); }
+static void term_window_pos(term_data* td, HWND hWnd) { SetWindowPos(td->w, hWnd, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE); }
 
-static void windows_map(player_type *player_ptr);
+static void windows_map(player_type* player_ptr);
 
 /*
  * Hack -- redraw a term_data
  */
-static void term_data_redraw(player_type *player_ptr, term_data *td)
-{
+static void term_data_redraw(player_type* player_ptr, term_data* td) {
     if (td->map_active) {
         windows_map(player_ptr);
         return;
@@ -1310,9 +1290,8 @@ static void term_data_redraw(player_type *player_ptr, term_data *td)
     term_activate(term_screen);
 }
 
-void term_inversed_area(HWND hWnd, int x, int y, int w, int h)
-{
-    term_data *td = (term_data *)GetWindowLong(hWnd, 0);
+void term_inversed_area(HWND hWnd, int x, int y, int w, int h) {
+    term_data* td = (term_data*)GetWindowLong(hWnd, 0);
     int tx = td->size_ow1 + x * td->tile_wid;
     int ty = td->size_oh1 + y * td->tile_hgt;
     int tw = w * td->tile_wid - 1;
@@ -1332,8 +1311,7 @@ void term_inversed_area(HWND hWnd, int x, int y, int w, int h)
 /*!
  * @brief //!< Windows版ユーザ設定項目実装部(実装必須) /Interact with the User
  */
-static errr term_user_win(int n)
-{
+static errr term_user_win(int n) {
     (void)n;
     return 0;
 }
@@ -1341,13 +1319,13 @@ static errr term_user_win(int n)
 /*
  * React to global changes
  */
-static errr term_xtra_win_react(player_type *player_ptr)
-{
+static errr term_xtra_win_react(player_type* player_ptr) {
     if (colors16) {
         for (int i = 0; i < 256; i++) {
             win_pal[i] = angband_color_table[i][0];
         }
-    } else {
+    }
+    else {
         COLORREF code;
         byte rv, gv, bv;
         bool change = FALSE;
@@ -1391,8 +1369,8 @@ static errr term_xtra_win_react(player_type *player_ptr)
     }
 
     for (int i = 0; i < MAX_TERM_DATA; i++) {
-        term_type *old = Term;
-        term_data *td = &data[i];
+        term_type* old = Term;
+        term_data* td = &data[i];
         if ((td->cols != td->t.wid) || (td->rows != td->t.hgt)) {
             term_activate(&td->t);
             term_resize(td->cols, td->rows);
@@ -1407,15 +1385,15 @@ static errr term_xtra_win_react(player_type *player_ptr)
 /*
  * Process at least one event
  */
-static errr term_xtra_win_event(int v)
-{
+static errr term_xtra_win_event(int v) {
     MSG msg;
     if (v) {
         if (GetMessage(&msg, NULL, 0, 0)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-    } else {
+    }
+    else {
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
@@ -1428,8 +1406,7 @@ static errr term_xtra_win_event(int v)
 /*
  * Process all pending events
  */
-static errr term_xtra_win_flush(void)
-{
+static errr term_xtra_win_flush(void) {
     MSG msg;
     while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
         TranslateMessage(&msg);
@@ -1444,9 +1421,8 @@ static errr term_xtra_win_flush(void)
  *
  * Make this more efficient
  */
-static errr term_xtra_win_clear(void)
-{
-    term_data *td = (term_data *)(Term->data);
+static errr term_xtra_win_clear(void) {
+    term_data* td = (term_data*)(Term->data);
 
     RECT rc;
     rc.left = td->size_ow1;
@@ -1472,8 +1448,7 @@ static errr term_xtra_win_clear(void)
 /*
  * Hack -- make a noise
  */
-static errr term_xtra_win_noise(void)
-{
+static errr term_xtra_win_noise(void) {
     MessageBeep(MB_ICONASTERISK);
     return 0;
 }
@@ -1481,8 +1456,7 @@ static errr term_xtra_win_noise(void)
 /*
  * Hack -- make a sound
  */
-static errr term_xtra_win_sound(int v)
-{
+static errr term_xtra_win_sound(int v) {
     char buf[1024];
     if (!use_sound)
         return 1;
@@ -1505,8 +1479,7 @@ static errr term_xtra_win_sound(int v)
 /*
  * Hack -- play a music
  */
-static errr term_xtra_win_music(int n, int v)
-{
+static errr term_xtra_win_music(int n, int v) {
     int i = 0;
     char buf[1024];
     if (n == TERM_XTRA_MUSIC_MUTE) {
@@ -1583,8 +1556,7 @@ static errr term_xtra_win_music(int n, int v)
 /*
  * Delay for "x" milliseconds
  */
-static int term_xtra_win_delay(int v)
-{
+static int term_xtra_win_delay(int v) {
     Sleep(v);
     return 0;
 }
@@ -1593,8 +1565,7 @@ static int term_xtra_win_delay(int v)
  * todo z-termに影響があるのでplayer_typeの追加は保留
  * Do a "special thing"
  */
-static errr term_xtra_win(int n, int v)
-{
+static errr term_xtra_win(int n, int v) {
     switch (n) {
     case TERM_XTRA_NOISE: {
         return (term_xtra_win_noise());
@@ -1636,14 +1607,14 @@ static errr term_xtra_win(int n, int v)
  *
  * Draw a "cursor" at (x,y), using a "yellow box".
  */
-static errr term_curs_win(int x, int y)
-{
-    term_data *td = (term_data *)(Term->data);
+static errr term_curs_win(int x, int y) {
+    term_data* td = (term_data*)(Term->data);
     int tile_wid, tile_hgt;
     if (td->map_active) {
         tile_wid = td->map_tile_wid;
         tile_hgt = td->map_tile_hgt;
-    } else {
+    }
+    else {
         tile_wid = td->tile_wid;
         tile_hgt = td->tile_hgt;
     }
@@ -1665,14 +1636,14 @@ static errr term_curs_win(int x, int y)
  *
  * Draw a "big cursor" at (x,y), using a "yellow box".
  */
-static errr term_bigcurs_win(int x, int y)
-{
-    term_data *td = (term_data *)(Term->data);
+static errr term_bigcurs_win(int x, int y) {
+    term_data* td = (term_data*)(Term->data);
     int tile_wid, tile_hgt;
     if (td->map_active) {
         term_curs_win(x, y);
         return 0;
-    } else {
+    }
+    else {
         tile_wid = td->tile_wid;
         tile_hgt = td->tile_hgt;
     }
@@ -1694,9 +1665,8 @@ static errr term_bigcurs_win(int x, int y)
  *
  * Erase a "block" of "n" characters starting at (x,y).
  */
-static errr term_wipe_win(int x, int y, int n)
-{
-    term_data *td = (term_data *)(Term->data);
+static errr term_wipe_win(int x, int y, int n) {
+    term_data* td = (term_data*)(Term->data);
     RECT rc;
     rc.left = x * td->tile_wid + td->size_ow1;
     rc.right = rc.left + n * td->tile_wid;
@@ -1726,9 +1696,8 @@ static errr term_wipe_win(int x, int y, int n)
  * what color it should be using to draw with, but perhaps simply changing
  * it every time is not too inefficient.
  */
-static errr term_text_win(int x, int y, int n, TERM_COLOR a, concptr s)
-{
-    term_data *td = (term_data *)(Term->data);
+static errr term_text_win(int x, int y, int n, TERM_COLOR a, concptr s) {
+    term_data* td = (term_data*)(Term->data);
     static HBITMAP WALL;
     static HBRUSH myBrush, oldBrush;
     static HPEN oldPen;
@@ -1750,9 +1719,11 @@ static errr term_text_win(int x, int y, int n, TERM_COLOR a, concptr s)
     SetBkColor(hdc, RGB(0, 0, 0));
     if (colors16) {
         SetTextColor(hdc, PALETTEINDEX(win_pal[a]));
-    } else if (paletted) {
+    }
+    else if (paletted) {
         SetTextColor(hdc, win_clr[a & 0x0F]);
-    } else {
+    }
+    else {
         SetTextColor(hdc, win_clr[a]);
     }
 
@@ -1783,7 +1754,8 @@ static errr term_text_win(int x, int y, int n, TERM_COLOR a, concptr s)
                 i++;
                 rc.left += 2 * td->tile_wid;
                 rc.right += 2 * td->tile_wid;
-            } else if (iskanji(*(s + i))) /* 2バイト文字 */
+            }
+            else if (iskanji(*(s + i))) /* 2バイト文字 */
             {
                 rc.right += td->font_wid;
                 ExtTextOut(hdc, rc.left, rc.top, ETO_CLIPPED, &rc, s + i, 2, NULL);
@@ -1791,7 +1763,8 @@ static errr term_text_win(int x, int y, int n, TERM_COLOR a, concptr s)
                 i++;
                 rc.left += 2 * td->tile_wid;
                 rc.right += 2 * td->tile_wid;
-            } else if (*(s + i) == 127) {
+            }
+            else if (*(s + i) == 127) {
                 oldBrush = SelectObject(hdc, myBrush);
                 oldPen = SelectObject(hdc, GetStockObject(NULL_PEN));
                 Rectangle(hdc, rc.left, rc.top, rc.right + 1, rc.bottom + 1);
@@ -1799,7 +1772,8 @@ static errr term_text_win(int x, int y, int n, TERM_COLOR a, concptr s)
                 SelectObject(hdc, oldPen);
                 rc.left += td->tile_wid;
                 rc.right += td->tile_wid;
-            } else {
+            }
+            else {
                 ExtTextOut(hdc, rc.left, rc.top, ETO_CLIPPED, &rc, s + i, 1, NULL);
                 rc.left += td->tile_wid;
                 rc.right += td->tile_wid;
@@ -1813,14 +1787,16 @@ static errr term_text_win(int x, int y, int n, TERM_COLOR a, concptr s)
                 SelectObject(hdc, oldPen);
                 rc.left += td->tile_wid;
                 rc.right += td->tile_wid;
-            } else {
+            }
+            else {
                 ExtTextOut(hdc, rc.left, rc.top, ETO_CLIPPED, &rc, s + i, 1, NULL);
                 rc.left += td->tile_wid;
                 rc.right += td->tile_wid;
             }
 #endif
         }
-    } else {
+    }
+    else {
         ExtTextOut(hdc, rc.left, rc.top, ETO_OPAQUE | ETO_CLIPPED, &rc, s, n, NULL);
     }
 
@@ -1841,9 +1817,8 @@ static errr term_text_win(int x, int y, int n, TERM_COLOR a, concptr s)
  *
  * If "graphics" is not available, we simply "wipe" the given grids.
  */
-static errr term_pict_win(TERM_LEN x, TERM_LEN y, int n, const TERM_COLOR *ap, concptr cp, const TERM_COLOR *tap, concptr tcp)
-{
-    term_data *td = (term_data *)(Term->data);
+static errr term_pict_win(TERM_LEN x, TERM_LEN y, int n, const TERM_COLOR* ap, concptr cp, const TERM_COLOR* tap, concptr tcp) {
+    term_data* td = (term_data*)(Term->data);
     int i;
     HDC hdcMask = NULL;
     if (!use_graphics) {
@@ -1858,7 +1833,8 @@ static errr term_pict_win(TERM_LEN x, TERM_LEN y, int n, const TERM_COLOR *ap, c
     if (td->map_active) {
         w2 = td->map_tile_wid;
         h2 = td->map_tile_hgt;
-    } else {
+    }
+    else {
         w2 = td->tile_wid;
         h2 = td->tile_hgt;
         tw2 = w2;
@@ -1928,9 +1904,8 @@ static errr term_pict_win(TERM_LEN x, TERM_LEN y, int n, const TERM_COLOR *ap, c
     return 0;
 }
 
-static void windows_map(player_type *player_ptr)
-{
-    term_data *td = &data[0];
+static void windows_map(player_type* player_ptr) {
+    term_data* td = &data[0];
     TERM_COLOR ta;
     if (!use_graphics)
         return;
@@ -1950,7 +1925,7 @@ static void windows_map(player_type *player_ptr)
         for (TERM_LEN y = min_y; y < max_y; y++) {
             TERM_COLOR a;
             char tc;
-            map_info(player_ptr, y, x, &a, (char *)&c, &ta, (char *)&tc);
+            map_info(player_ptr, y, x, &a, (char*)&c, &ta, (char*)&tc);
             if ((a & 0x80) && (c & 0x80)) {
                 term_pict_win(x - min_x, y - min_y, 1, &a, &c, &ta, &tc);
             }
@@ -1968,9 +1943,8 @@ static void windows_map(player_type *player_ptr)
 /*
  * Create and initialize a "term_data" given a title
  */
-static void term_data_link(term_data *td)
-{
-    term_type *t = &td->t;
+static void term_data_link(term_data* td) {
+    term_type* t = &td->t;
     term_init(t, td->cols, td->rows, td->keys);
     t->soft_cursor = TRUE;
     t->higher_pict = TRUE;
@@ -1995,9 +1969,8 @@ static void term_data_link(term_data *td)
  * Must use SW_SHOW not SW_SHOWNA, since on 256 color display
  * must make active to realize the palette.
  */
-static void init_windows(void)
-{
-    term_data *td;
+static void init_windows(void) {
+    term_data* td;
     td = &data[0];
     WIPE(td, term_data);
 #ifdef JP
@@ -2098,7 +2071,8 @@ static void init_windows(void)
 
         if (td->posfix) {
             term_window_pos(td, HWND_TOPMOST);
-        } else {
+        }
+        else {
             term_window_pos(td, td->w);
         }
     }
@@ -2137,8 +2111,7 @@ static void init_windows(void)
 /*
  * Prepare the menus
  */
-static void setup_menus(void)
-{
+static void setup_menus(void) {
     HMENU hm = GetMenu(data[0].w);
     EnableMenuItem(hm, IDM_FILE_NEW, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
     EnableMenuItem(hm, IDM_FILE_OPEN, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
@@ -2259,9 +2232,8 @@ static void setup_menus(void)
  * piece of the "command line string".  Perhaps we should extract
  * the "basename" of that filename and append it to the "save" dir.
  */
-static void check_for_save_file(player_type *player_ptr, LPSTR cmd_line)
-{
-    char *s;
+static void check_for_save_file(player_type* player_ptr, LPSTR cmd_line) {
+    char* s;
     s = cmd_line;
     if (!*s)
         return;
@@ -2275,17 +2247,18 @@ static void check_for_save_file(player_type *player_ptr, LPSTR cmd_line)
 /*
  * Process a menu command
  */
-static void process_menus(player_type *player_ptr, WORD wCmd)
-{
-    term_data *td;
+static void process_menus(player_type* player_ptr, WORD wCmd) {
+    term_data* td;
     OPENFILENAME ofn;
     switch (wCmd) {
     case IDM_FILE_NEW: {
         if (!initialized) {
             plog(_("まだ初期化中です...", "You cannot do that yet..."));
-        } else if (game_in_progress) {
+        }
+        else if (game_in_progress) {
             plog(_("プレイ中は新しいゲームを始めることができません！", "You can't start a new game while you're still playing!"));
-        } else {
+        }
+        else {
             game_in_progress = TRUE;
             term_flush();
             play_game(player_ptr, TRUE, FALSE);
@@ -2297,9 +2270,11 @@ static void process_menus(player_type *player_ptr, WORD wCmd)
     case IDM_FILE_OPEN: {
         if (!initialized) {
             plog(_("まだ初期化中です...", "You cannot do that yet..."));
-        } else if (game_in_progress) {
+        }
+        else if (game_in_progress) {
             plog(_("プレイ中はゲームをロードすることができません！", "You can't open a new game while you're still playing!"));
-        } else {
+        }
+        else {
             memset(&ofn, 0, sizeof(ofn));
             ofn.lStructSize = sizeof(ofn);
             ofn.hwndOwner = data[0].w;
@@ -2330,7 +2305,8 @@ static void process_menus(player_type *player_ptr, WORD wCmd)
 
             msg_flag = FALSE;
             do_cmd_save_game(player_ptr, FALSE);
-        } else {
+        }
+        else {
             plog(_("今、セーブすることは出来ません。", "You may not do that right now."));
         }
 
@@ -2361,7 +2337,8 @@ static void process_menus(player_type *player_ptr, WORD wCmd)
         highscore_fd = fd_open(buf, O_RDONLY);
         if (highscore_fd < 0) {
             msg_print("Score file unavailable.");
-        } else {
+        }
+        else {
             screen_save();
             term_clear();
             display_scores_aux(0, MAX_HISCORES, -1, NULL);
@@ -2376,9 +2353,11 @@ static void process_menus(player_type *player_ptr, WORD wCmd)
     case IDM_FILE_MOVIE: {
         if (!initialized) {
             plog(_("まだ初期化中です...", "You cannot do that yet..."));
-        } else if (game_in_progress) {
+        }
+        else if (game_in_progress) {
             plog(_("プレイ中はムービーをロードすることができません！", "You can't open a movie while you're playing!"));
-        } else {
+        }
+        else {
             memset(&ofn, 0, sizeof(ofn));
             ofn.lStructSize = sizeof(ofn);
             ofn.hwndOwner = data[0].w;
@@ -2419,7 +2398,8 @@ static void process_menus(player_type *player_ptr, WORD wCmd)
             td->visible = TRUE;
             ShowWindow(td->w, SW_SHOW);
             term_data_redraw(player_ptr, td);
-        } else {
+        }
+        else {
             td->visible = FALSE;
             td->posfix = FALSE;
             ShowWindow(td->w, SW_HIDE);
@@ -2458,7 +2438,8 @@ static void process_menus(player_type *player_ptr, WORD wCmd)
         if (!td->posfix && td->visible) {
             td->posfix = TRUE;
             term_window_pos(td, HWND_TOPMOST);
-        } else {
+        }
+        else {
             td->posfix = FALSE;
             term_window_pos(td, data[0].w);
         }
@@ -2716,7 +2697,8 @@ static void process_menus(player_type *player_ptr, WORD wCmd)
 
         if (hwndSaver) {
             SetWindowPos(hwndSaver, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-        } else {
+        }
+        else {
             plog(_("ウィンドウを作成出来ません", "Failed to create saver window"));
         }
 
@@ -2747,8 +2729,7 @@ static void process_menus(player_type *player_ptr, WORD wCmd)
 /*
  * Add a keypress to the "queue"
  */
-static errr term_keypress(int k)
-{
+static errr term_keypress(int k) {
     /* Refuse to enqueue non-keys */
     if (!k)
         return -1;
@@ -2766,8 +2747,7 @@ static errr term_keypress(int k)
     return 1;
 }
 
-static bool process_keydown(WPARAM wParam, LPARAM lParam)
-{
+static bool process_keydown(WPARAM wParam, LPARAM lParam) {
     bool mc = FALSE;
     bool ms = FALSE;
     bool ma = FALSE;
@@ -2846,11 +2826,10 @@ static bool process_keydown(WPARAM wParam, LPARAM lParam)
 /*!
  * todo WNDCLASSに影響があるのでplayer_type*の追加は保留
  */
-LRESULT PASCAL AngbandWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
+LRESULT PASCAL AngbandWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     PAINTSTRUCT ps;
-    term_data *td;
-    td = (term_data *)GetWindowLong(hWnd, 0);
+    term_data* td;
+    td = (term_data*)GetWindowLong(hWnd, 0);
 
     switch (uMsg) {
     case WM_NCCREATE: {
@@ -2862,10 +2841,10 @@ LRESULT PASCAL AngbandWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         return 0;
     }
     case WM_GETMINMAXINFO: {
-        MINMAXINFO *lpmmi;
+        MINMAXINFO* lpmmi;
         RECT rc;
 
-        lpmmi = (MINMAXINFO *)lParam;
+        lpmmi = (MINMAXINFO*)lParam;
         if (!td)
             return 1;
 
@@ -2940,8 +2919,8 @@ LRESULT PASCAL AngbandWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
         for (int i = 0; i < dy; i++) {
 #ifdef JP
-            char *s;
-            char **scr = data[0].t.scr->c;
+            char* s;
+            char** scr = data[0].t.scr->c;
 
             C_MAKE(s, (dx + 1), char);
             strncpy(s, &scr[oy + i][ox], dx);
@@ -2999,7 +2978,8 @@ LRESULT PASCAL AngbandWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             ox = (oldx > mousex) ? mousex : oldx;
             oy = (oldy > mousey) ? mousey : oldy;
             term_inversed_area(hWnd, ox, oy, dx, dy);
-        } else {
+        }
+        else {
             paint_rect = TRUE;
         }
 
@@ -3147,7 +3127,8 @@ LRESULT PASCAL AngbandWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             if (data[i].visible) {
                 if (wParam == TRUE) {
                     ShowWindow(data[i].w, SW_SHOW);
-                } else {
+                }
+                else {
                     ShowWindow(data[i].w, SW_HIDE);
                 }
             }
@@ -3161,11 +3142,10 @@ LRESULT PASCAL AngbandWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 /*!
  * todo WNDCLASSに影響があるのでplayer_type*の追加は保留
  */
-LRESULT PASCAL AngbandListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    term_data *td;
+LRESULT PASCAL AngbandListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    term_data* td;
     PAINTSTRUCT ps;
-    td = (term_data *)GetWindowLong(hWnd, 0);
+    td = (term_data*)GetWindowLong(hWnd, 0);
 
     switch (uMsg) {
     case WM_NCCREATE: {
@@ -3176,10 +3156,10 @@ LRESULT PASCAL AngbandListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
         return 0;
     }
     case WM_GETMINMAXINFO: {
-        MINMAXINFO *lpmmi;
+        MINMAXINFO* lpmmi;
         RECT rc;
 
-        lpmmi = (MINMAXINFO *)lParam;
+        lpmmi = (MINMAXINFO*)lParam;
         if (!td)
             return 1;
 
@@ -3205,7 +3185,7 @@ LRESULT PASCAL AngbandListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
         TERM_LEN cols = (LOWORD(lParam) - td->size_ow1) / td->tile_wid;
         TERM_LEN rows = (HIWORD(lParam) - td->size_oh1) / td->tile_hgt;
         if ((td->cols != cols) || (td->rows != rows)) {
-            term_type *old_term = Term;
+            term_type* old_term = Term;
             td->cols = cols;
             td->rows = rows;
             term_activate(&td->t);
@@ -3277,8 +3257,7 @@ LRESULT PASCAL AngbandListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
     return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-LRESULT PASCAL AngbandSaverProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
+LRESULT PASCAL AngbandSaverProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     static int iMouse = 0;
     static WORD xMouse = 0;
     static WORD yMouse = 0;
@@ -3334,8 +3313,7 @@ LRESULT PASCAL AngbandSaverProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 /*
  * Display warning message (see "z-util.c")
  */
-static void hack_plog(concptr str)
-{
+static void hack_plog(concptr str) {
     if (str) {
 #ifdef JP
         MessageBox(NULL, str, "警告！", MB_ICONEXCLAMATION | MB_OK);
@@ -3348,8 +3326,7 @@ static void hack_plog(concptr str)
 /*
  * Display error message and quit (see "z-util.c")
  */
-static void hack_quit(concptr str)
-{
+static void hack_quit(concptr str) {
     if (str) {
 #ifdef JP
         MessageBox(NULL, str, "エラー！", MB_ICONEXCLAMATION | MB_OK | MB_ICONSTOP);
@@ -3368,8 +3345,7 @@ static void hack_quit(concptr str)
 /*
  * Display warning message (see "z-util.c")
  */
-static void hook_plog(concptr str)
-{
+static void hook_plog(concptr str) {
     if (str) {
 #ifdef JP
         MessageBox(data[0].w, str, "警告！", MB_ICONEXCLAMATION | MB_OK);
@@ -3382,8 +3358,7 @@ static void hook_plog(concptr str)
 /*
  * Display error message and quit (see "z-util.c")
  */
-static void hook_quit(concptr str)
-{
+static void hook_quit(concptr str) {
     if (str) {
 #ifdef JP
         MessageBox(data[0].w, str, "エラー！", MB_ICONEXCLAMATION | MB_OK | MB_ICONSTOP);
@@ -3427,8 +3402,7 @@ static void hook_quit(concptr str)
 /*
  * Init some stuff
  */
-static void init_stuff(void)
-{
+static void init_stuff(void) {
     char path[1024];
     GetModuleFileName(hInstance, path, 512);
     argv0 = path;
@@ -3449,7 +3423,8 @@ static void init_stuff(void)
     validate_dir(ANGBAND_DIR_BONE, FALSE);
     if (!check_dir(ANGBAND_DIR_EDIT)) {
         validate_dir(ANGBAND_DIR_DATA, TRUE);
-    } else {
+    }
+    else {
         validate_dir(ANGBAND_DIR_DATA, FALSE);
     }
 
@@ -3483,8 +3458,7 @@ static void init_stuff(void)
  * todo よく見るとhMutexはちゃんと使われていない……？
  * @brief (Windows固有)変愚蛮怒が起動済かどうかのチェック
  */
-static bool is_already_running(void)
-{
+static bool is_already_running(void) {
     HANDLE hMutex;
     hMutex = CreateMutex(NULL, TRUE, VERSION_NAME);
     if (GetLastError() == ERROR_ALREADY_EXISTS) {
@@ -3497,8 +3471,7 @@ static bool is_already_running(void)
 /*!
  * @brief (Windows固有)Windowsアプリケーションとしてのエントリポイント
  */
-int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
-{
+int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow) {
     WNDCLASS wc;
     HDC hdc;
     MSG msg;

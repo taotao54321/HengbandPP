@@ -62,10 +62,10 @@
 #include "game-option/input-options.h"
 #include "game-option/runtime-arguments.h"
 #include "io-dump/random-art-info-dumper.h"
-#include "io/record-play-movie.h"
 #include "io/command-repeater.h"
 #include "io/files-util.h"
 #include "io/input-key-requester.h" // todo 相互依存している、後で何とかする.
+#include "io/record-play-movie.h"
 #include "io/write-diary.h"
 #include "knowledge/knowledge-autopick.h"
 #include "knowledge/knowledge-quests.h"
@@ -95,8 +95,7 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return 実際にウィザードモードへ移行したらTRUEを返す。
  */
-bool enter_wizard_mode(player_type *player_ptr)
-{
+bool enter_wizard_mode(player_type* player_ptr) {
     if (!current_world_ptr->noscore) {
         if (!allow_debug_opts || arg_wizard) {
             msg_print(_("ウィザードモードは許可されていません。 ", "Wizard mode is not permitted."));
@@ -124,8 +123,7 @@ bool enter_wizard_mode(player_type *player_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return 実際にデバッグコマンドへ移行したらTRUEを返す。
  */
-static bool enter_debug_mode(player_type *player_ptr)
-{
+static bool enter_debug_mode(player_type* player_ptr) {
     if (!current_world_ptr->noscore) {
         if (!allow_debug_opts) {
             msg_print(_("デバッグコマンドは許可されていません。 ", "Use of debug command is not permitted."));
@@ -153,15 +151,14 @@ static bool enter_debug_mode(player_type *player_ptr)
  * @todo Make some "blocks"
  * @return なし
  */
-void process_command(player_type *creature_ptr)
-{
+void process_command(player_type* creature_ptr) {
     COMMAND_CODE old_now_message = now_message;
     repeat_check();
     now_message = 0;
     if ((creature_ptr->pclass == CLASS_SNIPER) && (creature_ptr->concent))
         creature_ptr->reset_concent = TRUE;
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     switch (command_cmd) {
     case ESCAPE:
     case ' ':
@@ -174,7 +171,8 @@ void process_command(player_type *creature_ptr)
         if (current_world_ptr->wizard) {
             current_world_ptr->wizard = FALSE;
             msg_print(_("ウィザードモード解除。", "Wizard mode off."));
-        } else if (enter_wizard_mode(creature_ptr)) {
+        }
+        else if (enter_wizard_mode(creature_ptr)) {
             current_world_ptr->wizard = TRUE;
             msg_print(_("ウィザードモード突入。", "Wizard mode on."));
         }
@@ -307,7 +305,8 @@ void process_command(player_type *creature_ptr)
             }
 
             change_wild_mode(creature_ptr, FALSE);
-        } else
+        }
+        else
             do_cmd_go_up(creature_ptr);
 
         break;
@@ -371,11 +370,13 @@ void process_command(player_type *creature_ptr)
         if (!creature_ptr->wild_mode) {
             if ((creature_ptr->pclass == CLASS_WARRIOR) || (creature_ptr->pclass == CLASS_ARCHER) || (creature_ptr->pclass == CLASS_CAVALRY)) {
                 msg_print(_("呪文を唱えられない！", "You cannot cast spells!"));
-            } else if (floor_ptr->dun_level && (d_info[creature_ptr->dungeon_idx].flags1 & DF1_NO_MAGIC) && (creature_ptr->pclass != CLASS_BERSERKER)
+            }
+            else if (floor_ptr->dun_level && (d_info[creature_ptr->dungeon_idx].flags1 & DF1_NO_MAGIC) && (creature_ptr->pclass != CLASS_BERSERKER)
                 && (creature_ptr->pclass != CLASS_SMITH)) {
                 msg_print(_("ダンジョンが魔法を吸収した！", "The dungeon absorbs all attempted magic!"));
                 msg_print(NULL);
-            } else if (creature_ptr->anti_magic && (creature_ptr->pclass != CLASS_BERSERKER) && (creature_ptr->pclass != CLASS_SMITH)) {
+            }
+            else if (creature_ptr->anti_magic && (creature_ptr->pclass != CLASS_BERSERKER) && (creature_ptr->pclass != CLASS_SMITH)) {
                 concptr which_power = _("魔法", "magic");
                 if (creature_ptr->pclass == CLASS_MINDCRAFTER)
                     which_power = _("超能力", "psionic powers");
@@ -392,10 +393,12 @@ void process_command(player_type *creature_ptr)
 
                 msg_format(_("反魔法バリアが%sを邪魔した！", "An anti-magic shell disrupts your %s!"), which_power);
                 free_turn(creature_ptr);
-            } else if (is_shero(creature_ptr) && (creature_ptr->pclass != CLASS_BERSERKER)) {
+            }
+            else if (is_shero(creature_ptr) && (creature_ptr->pclass != CLASS_BERSERKER)) {
                 msg_format(_("狂戦士化していて頭が回らない！", "You cannot think directly!"));
                 free_turn(creature_ptr);
-            } else {
+            }
+            else {
                 if ((creature_ptr->pclass == CLASS_MINDCRAFTER) || (creature_ptr->pclass == CLASS_BERSERKER) || (creature_ptr->pclass == CLASS_NINJA)
                     || (creature_ptr->pclass == CLASS_MIRROR_MASTER))
                     do_cmd_mind(creature_ptr);
@@ -457,7 +460,8 @@ void process_command(player_type *creature_ptr)
     case 'z': {
         if (use_command && rogue_like_commands) {
             do_cmd_use(creature_ptr);
-        } else {
+        }
+        else {
             do_cmd_zap_rod(creature_ptr);
         }
 
@@ -634,7 +638,8 @@ void process_command(player_type *creature_ptr)
             sound(SOUND_ILLEGAL);
             if (!get_rnd_line(_("error_j.txt", "error.txt"), 0, error_m))
                 msg_print(error_m);
-        } else {
+        }
+        else {
             prt(_(" '?' でヘルプが表示されます。", "Type '?' for help."), 0, 0);
         }
 

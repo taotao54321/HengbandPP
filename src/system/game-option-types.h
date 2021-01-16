@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum game_option_types {
-	OPT_PAGE_INPUT = 1,
+    OPT_PAGE_INPUT = 1,
     OPT_PAGE_MAPSCREEN = 2,
     OPT_PAGE_TEXT = 3,
     OPT_PAGE_GAMEPLAY = 4,

@@ -8,9 +8,9 @@
 #include "io/uid-checker.h"
 #include "load/angband-version-comparer.h"
 #include "load/item-loader.h"
-#include "load/monster-loader.h"
 #include "load/load-util.h"
 #include "load/load-v1-5-0.h"
+#include "load/monster-loader.h"
 #include "load/old-feature-types.h"
 #include "monster-race/monster-race.h"
 #include "monster/monster-info.h"
@@ -39,10 +39,9 @@
  * The monsters/objects must be loaded in the same order
  * that they were stored, since the actual indexes matter.
  */
-errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
-{
-    grid_template_type *templates;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+errr rd_saved_floor(player_type* player_ptr, saved_floor_type* sf_ptr) {
+    grid_template_type* templates;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     clear_cave(player_ptr);
     player_ptr->x = player_ptr->y = 0;
 
@@ -51,7 +50,8 @@ errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
         rd_s16b(&tmp16s);
         floor_ptr->dun_level = (DEPTH)tmp16s;
         floor_ptr->base_level = floor_ptr->dun_level;
-    } else {
+    }
+    else {
         s16b tmp16s;
         rd_s16b(&tmp16s);
         if (tmp16s != sf_ptr->floor_id)
@@ -111,7 +111,7 @@ errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
     C_MAKE(templates, limit, grid_template_type);
 
     for (int i = 0; i < limit; i++) {
-        grid_template_type *ct_ptr = &templates[i];
+        grid_template_type* ct_ptr = &templates[i];
         rd_u16b(&tmp16u);
         ct_ptr->info = (BIT_FLAGS)tmp16u;
         if (h_older_than(1, 7, 0, 2)) {
@@ -120,7 +120,8 @@ errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
             ct_ptr->feat = (s16b)tmp8u;
             rd_byte(&tmp8u);
             ct_ptr->mimic = (s16b)tmp8u;
-        } else {
+        }
+        else {
             rd_s16b(&ct_ptr->feat);
             rd_s16b(&ct_ptr->mimic);
         }
@@ -142,7 +143,7 @@ errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
         } while (tmp8u == MAX_UCHAR);
 
         for (int i = count; i > 0; i--) {
-            grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+            grid_type* g_ptr = &floor_ptr->grid_array[y][x];
             g_ptr->info = templates[id].info;
             g_ptr->feat = templates[id].feat;
             g_ptr->mimic = templates[id].mimic;
@@ -160,16 +161,18 @@ errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
     if (h_older_than(1, 7, 0, 6) && !vanilla_town) {
         for (POSITION y = 0; y < ymax; y++) {
             for (POSITION x = 0; x < xmax; x++) {
-                grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+                grid_type* g_ptr = &floor_ptr->grid_array[y][x];
 
                 if ((g_ptr->special == OLD_QUEST_WATER_CAVE) && !floor_ptr->dun_level) {
                     if (g_ptr->feat == OLD_FEAT_QUEST_ENTER) {
                         g_ptr->feat = feat_tree;
                         g_ptr->special = 0;
-                    } else if (g_ptr->feat == OLD_FEAT_BLDG_1) {
+                    }
+                    else if (g_ptr->feat == OLD_FEAT_BLDG_1) {
                         g_ptr->special = lite_town ? QUEST_OLD_CASTLE : QUEST_ROYAL_CRYPT;
                     }
-                } else if ((g_ptr->feat == OLD_FEAT_QUEST_EXIT) && (floor_ptr->inside_quest == OLD_QUEST_WATER_CAVE)) {
+                }
+                else if ((g_ptr->feat == OLD_FEAT_QUEST_EXIT) && (floor_ptr->inside_quest == OLD_QUEST_WATER_CAVE)) {
                     g_ptr->feat = feat_up_stair;
                     g_ptr->special = 0;
                 }
@@ -183,7 +186,7 @@ errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
         return 151;
     for (int i = 1; i < limit; i++) {
         OBJECT_IDX o_idx;
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_idx = o_pop(floor_ptr);
         if (i != o_idx)
             return 152;
@@ -192,12 +195,13 @@ errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
         rd_item(player_ptr, o_ptr);
 
         if (object_is_held_monster(o_ptr)) {
-            monster_type *m_ptr;
+            monster_type* m_ptr;
             m_ptr = &floor_ptr->m_list[o_ptr->held_m_idx];
             o_ptr->next_o_idx = m_ptr->hold_o_idx;
             m_ptr->hold_o_idx = o_idx;
-        } else {
-            grid_type *g_ptr = &floor_ptr->grid_array[o_ptr->iy][o_ptr->ix];
+        }
+        else {
+            grid_type* g_ptr = &floor_ptr->grid_array[o_ptr->iy][o_ptr->ix];
             o_ptr->next_o_idx = g_ptr->o_idx;
             g_ptr->o_idx = o_idx;
         }
@@ -208,9 +212,9 @@ errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
         return 161;
 
     for (int i = 1; i < limit; i++) {
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         MONSTER_IDX m_idx;
-        monster_type *m_ptr;
+        monster_type* m_ptr;
         m_idx = m_pop(floor_ptr);
         if (i != m_idx)
             return 162;
@@ -231,8 +235,7 @@ errr rd_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
  * @param sf_ptr 保存フロア読み込み先
  * @return 成功したらtrue
  */
-static bool load_floor_aux(player_type *player_ptr, saved_floor_type *sf_ptr)
-{
+static bool load_floor_aux(player_type* player_ptr, saved_floor_type* sf_ptr) {
     u32b n_x_check, n_v_check;
     u32b o_x_check, o_v_check;
 
@@ -277,8 +280,7 @@ static bool load_floor_aux(player_type *player_ptr, saved_floor_type *sf_ptr)
  * @param mode オプション
  * @return 成功したらtrue
  */
-bool load_floor(player_type *player_ptr, saved_floor_type *sf_ptr, BIT_FLAGS mode)
-{
+bool load_floor(player_type* player_ptr, saved_floor_type* sf_ptr, BIT_FLAGS mode) {
     /*
      * Temporary files are always written in system depended kanji
      * code.
@@ -294,7 +296,7 @@ bool load_floor(player_type *player_ptr, saved_floor_type *sf_ptr, BIT_FLAGS mod
     kanji_code = 1;
 #endif
 
-    FILE *old_fff = NULL;
+    FILE* old_fff = NULL;
     byte old_xor_byte = 0;
     u32b old_v_check = 0;
     u32b old_x_check = 0;

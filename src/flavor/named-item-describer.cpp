@@ -21,8 +21,7 @@
 #include "monster-race/race-flags1.h"
 #endif
 
-static void check_object_known_aware(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+static void check_object_known_aware(player_type* player_ptr, flavor_type* flavor_ptr) {
     object_flags(player_ptr, flavor_ptr->o_ptr, flavor_ptr->tr_flags);
     if (object_is_aware(flavor_ptr->o_ptr))
         flavor_ptr->aware = TRUE;
@@ -47,8 +46,7 @@ static void check_object_known_aware(player_type *player_ptr, flavor_type *flavo
     }
 }
 
-static void set_base_name(flavor_type *flavor_ptr)
-{
+static void set_base_name(flavor_type* flavor_ptr) {
     if (!flavor_ptr->aware || !has_flag(flavor_ptr->tr_flags, TR_FULL_NAME))
         return;
 
@@ -56,8 +54,7 @@ static void set_base_name(flavor_type *flavor_ptr)
 }
 
 #ifdef JP
-static void describe_prefix_ja(flavor_type *flavor_ptr)
-{
+static void describe_prefix_ja(flavor_type* flavor_ptr) {
     flavor_ptr->s = flavor_ptr->basenm[0] == '&' ? flavor_ptr->basenm + 2 : flavor_ptr->basenm;
     if (flavor_ptr->mode & OD_OMIT_PREFIX)
         return;
@@ -74,8 +71,7 @@ static void describe_prefix_ja(flavor_type *flavor_ptr)
  * @return なし
  * @details 英語の場合アーティファクトは The が付くので分かるが、日本語では分からないのでマークをつける.
  */
-static void describe_artifact_prefix_ja(flavor_type *flavor_ptr)
-{
+static void describe_artifact_prefix_ja(flavor_type* flavor_ptr) {
     if (!flavor_ptr->known)
         return;
 
@@ -91,8 +87,7 @@ static void describe_artifact_prefix_ja(flavor_type *flavor_ptr)
  * @return なし
  * @details ランダムアーティファクト、固定アーティファクト、エゴの順に評価する
  */
-static void describe_artifact_ja(flavor_type *flavor_ptr)
-{
+static void describe_artifact_ja(flavor_type* flavor_ptr) {
     if (!flavor_ptr->known)
         return;
 
@@ -104,14 +99,15 @@ static void describe_artifact_ja(flavor_type *flavor_ptr)
         if (strncmp(temp, "of ", 3) == 0) {
             flavor_ptr->t = object_desc_str(flavor_ptr->t, &temp[3]);
             flavor_ptr->t = object_desc_str(flavor_ptr->t, "の");
-        } else if ((strncmp(temp, "『", 2) != 0) && (strncmp(temp, "《", 2) != 0) && (temp[0] != '\''))
+        }
+        else if ((strncmp(temp, "『", 2) != 0) && (strncmp(temp, "《", 2) != 0) && (temp[0] != '\''))
             flavor_ptr->t = object_desc_str(flavor_ptr->t, temp);
 
         return;
     }
 
     if (flavor_ptr->o_ptr->name1 && !has_flag(flavor_ptr->tr_flags, TR_FULL_NAME)) {
-        artifact_type *a_ptr = &a_info[flavor_ptr->o_ptr->name1];
+        artifact_type* a_ptr = &a_info[flavor_ptr->o_ptr->name1];
         /* '『' から始まらない伝説のアイテムの名前は最初に付加する */
         if (strncmp(a_name + a_ptr->name, "『", 2) != 0)
             flavor_ptr->t = object_desc_str(flavor_ptr->t, a_name + a_ptr->name);
@@ -120,7 +116,7 @@ static void describe_artifact_ja(flavor_type *flavor_ptr)
     }
 
     if (object_is_ego(flavor_ptr->o_ptr)) {
-        ego_item_type *e_ptr = &e_info[flavor_ptr->o_ptr->name2];
+        ego_item_type* e_ptr = &e_info[flavor_ptr->o_ptr->name2];
         flavor_ptr->t = object_desc_str(flavor_ptr->t, e_name + e_ptr->name);
     }
 }
@@ -131,8 +127,7 @@ static void describe_artifact_ja(flavor_type *flavor_ptr)
  * @return ランダムアーティファクトならTRUE、違うならFALSE
  * @details ランダムアーティファクトの名前はセーブファイルに記録されるので、英語版の名前もそれらしく変換する.
  */
-static bool describe_random_artifact_body_ja(flavor_type *flavor_ptr)
-{
+static bool describe_random_artifact_body_ja(flavor_type* flavor_ptr) {
     if (flavor_ptr->o_ptr->art_name == 0)
         return FALSE;
 
@@ -155,8 +150,7 @@ static bool describe_random_artifact_body_ja(flavor_type *flavor_ptr)
     return TRUE;
 }
 
-static void describe_ego_body_ja(flavor_type *flavor_ptr)
-{
+static void describe_ego_body_ja(flavor_type* flavor_ptr) {
     if (!flavor_ptr->o_ptr->inscription)
         return;
 
@@ -188,8 +182,7 @@ static void describe_ego_body_ja(flavor_type *flavor_ptr)
  * @return なし
  * @details '『'から始まる伝説のアイテムの名前は最後に付加する
  */
-static void describe_artifact_body_ja(flavor_type *flavor_ptr)
-{
+static void describe_artifact_body_ja(flavor_type* flavor_ptr) {
     if (!flavor_ptr->known)
         return;
 
@@ -197,7 +190,7 @@ static void describe_artifact_body_ja(flavor_type *flavor_ptr)
         return;
 
     if (object_is_fixed_artifact(flavor_ptr->o_ptr)) {
-        artifact_type *a_ptr = &a_info[flavor_ptr->o_ptr->name1];
+        artifact_type* a_ptr = &a_info[flavor_ptr->o_ptr->name1];
         if (strncmp(a_name + a_ptr->name, "『", 2) == 0)
             flavor_ptr->t = object_desc_str(flavor_ptr->t, a_name + a_ptr->name);
 
@@ -208,8 +201,7 @@ static void describe_artifact_body_ja(flavor_type *flavor_ptr)
 }
 #else
 
-static void describe_vowel(flavor_type *flavor_ptr)
-{
+static void describe_vowel(flavor_type* flavor_ptr) {
     bool vowel;
     switch (*flavor_ptr->s) {
     case '#':
@@ -235,8 +227,7 @@ static void describe_vowel(flavor_type *flavor_ptr)
  * @return 1個ならFALSE、0または2個以上ならTRUE / If the number of items is 1, then FALE is returned, and if 0 or 2 or more, then TRUE is returned
  * @details 1個なら後続処理実行 / If the number of items is 1, then the continuous process will be run.
  */
-static bool describe_prefix_en(flavor_type *flavor_ptr)
-{
+static bool describe_prefix_en(flavor_type* flavor_ptr) {
     if (flavor_ptr->o_ptr->number <= 0) {
         flavor_ptr->t = object_desc_str(flavor_ptr->t, "no more ");
         return TRUE;
@@ -250,8 +241,7 @@ static bool describe_prefix_en(flavor_type *flavor_ptr)
     return TRUE;
 }
 
-static void describe_artifact_prefix_en(flavor_type *flavor_ptr)
-{
+static void describe_artifact_prefix_en(flavor_type* flavor_ptr) {
     flavor_ptr->s = flavor_ptr->basenm + 2;
     if (flavor_ptr->mode & OD_OMIT_PREFIX)
         return;
@@ -268,8 +258,7 @@ static void describe_artifact_prefix_en(flavor_type *flavor_ptr)
     describe_vowel(flavor_ptr);
 }
 
-static void describe_basename_en(flavor_type *flavor_ptr)
-{
+static void describe_basename_en(flavor_type* flavor_ptr) {
     flavor_ptr->s = flavor_ptr->basenm;
     if (flavor_ptr->mode & OD_OMIT_PREFIX)
         return;
@@ -281,8 +270,7 @@ static void describe_basename_en(flavor_type *flavor_ptr)
         flavor_ptr->t = object_desc_str(flavor_ptr->t, "The ");
 }
 
-static void describe_artifact_body_en(flavor_type *flavor_ptr)
-{
+static void describe_artifact_body_en(flavor_type* flavor_ptr) {
     if (!flavor_ptr->known || has_flag(flavor_ptr->tr_flags, TR_FULL_NAME))
         return;
 
@@ -293,14 +281,14 @@ static void describe_artifact_body_en(flavor_type *flavor_ptr)
     }
 
     if (object_is_fixed_artifact(flavor_ptr->o_ptr)) {
-        artifact_type *a_ptr = &a_info[flavor_ptr->o_ptr->name1];
+        artifact_type* a_ptr = &a_info[flavor_ptr->o_ptr->name1];
         flavor_ptr->t = object_desc_chr(flavor_ptr->t, ' ');
         flavor_ptr->t = object_desc_str(flavor_ptr->t, a_name + a_ptr->name);
         return;
     }
 
     if (object_is_ego(flavor_ptr->o_ptr)) {
-        ego_item_type *e_ptr = &e_info[flavor_ptr->o_ptr->name2];
+        ego_item_type* e_ptr = &e_info[flavor_ptr->o_ptr->name2];
         flavor_ptr->t = object_desc_chr(flavor_ptr->t, ' ');
         flavor_ptr->t = object_desc_str(flavor_ptr->t, e_name + e_ptr->name);
     }
@@ -319,17 +307,18 @@ static void describe_artifact_body_en(flavor_type *flavor_ptr)
  * @return なし
  * @details ランダムアーティファクト、固定アーティファクト、エゴの順に評価する
  */
-static void describe_inscription(flavor_type *flavor_ptr)
-{
+static void describe_inscription(flavor_type* flavor_ptr) {
     for (flavor_ptr->s0 = NULL; *flavor_ptr->s || flavor_ptr->s0;) {
         if (!*flavor_ptr->s) {
             flavor_ptr->s = flavor_ptr->s0 + 1;
             flavor_ptr->s0 = NULL;
-        } else if ((*flavor_ptr->s == '#') && !flavor_ptr->s0) {
+        }
+        else if ((*flavor_ptr->s == '#') && !flavor_ptr->s0) {
             flavor_ptr->s0 = flavor_ptr->s;
             flavor_ptr->s = flavor_ptr->modstr;
             flavor_ptr->modstr = "";
-        } else if ((*flavor_ptr->s == '%') && !flavor_ptr->s0) {
+        }
+        else if ((*flavor_ptr->s == '%') && !flavor_ptr->s0) {
             flavor_ptr->s0 = flavor_ptr->s;
             flavor_ptr->s = flavor_ptr->kindname;
             flavor_ptr->kindname = "";
@@ -354,8 +343,7 @@ static void describe_inscription(flavor_type *flavor_ptr)
     }
 }
 
-void describe_named_item(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+void describe_named_item(player_type* player_ptr, flavor_type* flavor_ptr) {
     check_object_known_aware(player_ptr, flavor_ptr);
     switch_tval_description(flavor_ptr);
     set_base_name(flavor_ptr);

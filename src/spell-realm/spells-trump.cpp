@@ -26,8 +26,7 @@
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void cast_shuffle(player_type *caster_ptr)
-{
+void cast_shuffle(player_type* caster_ptr) {
     PLAYER_LEVEL plev = caster_ptr->lev;
     DIRECTION dir;
     int die;
@@ -43,7 +42,8 @@ void cast_shuffle(player_type *caster_ptr)
         if (caster_ptr->virtues[vir - 1] > 0) {
             while (randint1(400) < caster_ptr->virtues[vir - 1])
                 die++;
-        } else {
+        }
+        else {
             while (randint1(400) < (0 - caster_ptr->virtues[vir - 1]))
                 die--;
         }
@@ -55,7 +55,7 @@ void cast_shuffle(player_type *caster_ptr)
         chg_virtue(caster_ptr, V_CHANCE, 1);
     }
 
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
     if (die < 7) {
         msg_print(_("なんてこった！《死》だ！", "Oh no! It's Death!"));
 
@@ -220,8 +220,7 @@ void cast_shuffle(player_type *caster_ptr)
     gain_exp(caster_ptr, ee);
 }
 
-void become_living_trump(player_type *creature_ptr)
-{
+void become_living_trump(player_type* creature_ptr) {
     /* 1/7 Teleport control and 6/7 Random teleportation (uncontrolled) */
     MUTATION_IDX mutation = one_in_(7) ? 12 : 77;
     if (gain_mutation(creature_ptr, mutation))

@@ -18,8 +18,7 @@
 #include "view/display-player.h"
 #include "world/world.h"
 
-static void clear_floor(player_type *player_ptr)
-{
+static void clear_floor(player_type* player_ptr) {
     (void)fd_close(highscore_fd);
     highscore_fd = -1;
     clear_saved_floor_files(player_ptr);
@@ -31,8 +30,7 @@ static void clear_floor(player_type *player_ptr)
  * @param player_ptr プレイヤー構造体参照ポインタ。
  * @return 死亡していればTRUE, まだ生きているならば各処理を済ませた上ででFALSE。
  */
-static bool check_death(player_type *player_ptr)
-{
+static bool check_death(player_type* player_ptr) {
     if (player_ptr->is_dead)
         return TRUE;
 
@@ -56,8 +54,7 @@ static bool check_death(player_type *player_ptr)
  * This function is called only from "main.c" and "signals.c".
  * </pre>
  */
-void close_game(player_type *player_ptr)
-{
+void close_game(player_type* player_ptr) {
     bool do_send = TRUE;
     handle_stuff(player_ptr);
     msg_print(NULL);
@@ -80,7 +77,8 @@ void close_game(player_type *player_ptr)
     if (!cheat_save || get_check(_("死んだデータをセーブしますか？ ", "Save death? "))) {
         if (!save_player(player_ptr))
             msg_print(_("セーブ失敗！", "death save failed!"));
-    } else
+    }
+    else
         do_send = FALSE;
 
     print_tomb(player_ptr);
@@ -90,7 +88,8 @@ void close_game(player_type *player_ptr)
     if (check_score(player_ptr)) {
         if (!player_ptr->wait_report_score)
             (void)top_twenty(player_ptr);
-    } else if (highscore_fd >= 0) {
+    }
+    else if (highscore_fd >= 0) {
         display_scores_aux(0, 10, -1, NULL);
     }
 

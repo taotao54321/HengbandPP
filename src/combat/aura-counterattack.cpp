@@ -25,12 +25,11 @@
 #include "system/object-type-definition.h"
 #include "view/display-messages.h"
 
-static void aura_fire_by_monster_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void aura_fire_by_monster_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (!has_sh_fire(target_ptr) || !monap_ptr->alive || target_ptr->is_dead)
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if ((r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK) != 0) {
         if (is_original_ap_and_seen(target_ptr, monap_ptr->m_ptr))
             r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK);
@@ -47,12 +46,11 @@ static void aura_fire_by_monster_attack(player_type *target_ptr, monap_type *mon
     }
 }
 
-static void aura_elec_by_monster_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void aura_elec_by_monster_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (!has_sh_elec(target_ptr) || !monap_ptr->alive || target_ptr->is_dead)
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if ((r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK) != 0) {
         if (is_original_ap_and_seen(target_ptr, monap_ptr->m_ptr))
             r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK);
@@ -69,12 +67,11 @@ static void aura_elec_by_monster_attack(player_type *target_ptr, monap_type *mon
     }
 }
 
-static void aura_cold_by_monster_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void aura_cold_by_monster_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (!has_sh_cold(target_ptr) || !monap_ptr->alive || target_ptr->is_dead)
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if ((r_ptr->flagsr & RFR_EFF_IM_COLD_MASK) != 0) {
         if (is_original_ap_and_seen(target_ptr, monap_ptr->m_ptr))
             r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_COLD_MASK);
@@ -91,16 +88,16 @@ static void aura_cold_by_monster_attack(player_type *target_ptr, monap_type *mon
     }
 }
 
-static void aura_shards_by_monster_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void aura_shards_by_monster_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (!target_ptr->dustrobe || !monap_ptr->alive || target_ptr->is_dead)
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if ((r_ptr->flagsr & RFR_EFF_RES_SHAR_MASK) != 0) {
         if (is_original_ap_and_seen(target_ptr, monap_ptr->m_ptr))
             r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_RES_SHAR_MASK);
-    } else {
+    }
+    else {
         HIT_POINT dam = damroll(2, 6);
         dam = mon_damage_mod(target_ptr, monap_ptr->m_ptr, dam, FALSE);
         msg_format(_("%^sは鏡の破片をくらった！", "%^s gets sliced!"), monap_ptr->m_name);
@@ -114,12 +111,11 @@ static void aura_shards_by_monster_attack(player_type *target_ptr, monap_type *m
         teleport_player(target_ptr, 10, TELEPORT_SPONTANEOUS);
 }
 
-static void aura_holy_by_monster_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void aura_holy_by_monster_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (!target_ptr->tim_sh_holy || !monap_ptr->alive || target_ptr->is_dead)
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if ((r_ptr->flags3 & RF3_EVIL) == 0)
         return;
 
@@ -142,12 +138,11 @@ static void aura_holy_by_monster_attack(player_type *target_ptr, monap_type *mon
         r_ptr->r_flags3 |= RF3_EVIL;
 }
 
-static void aura_force_by_monster_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void aura_force_by_monster_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (!target_ptr->tim_sh_touki || !monap_ptr->alive || target_ptr->is_dead)
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if ((r_ptr->flagsr & RFR_RES_ALL) != 0) {
         if (is_original_ap_and_seen(target_ptr, monap_ptr->m_ptr))
             r_ptr->r_flagsr |= RFR_RES_ALL;
@@ -164,14 +159,13 @@ static void aura_force_by_monster_attack(player_type *target_ptr, monap_type *mo
     }
 }
 
-static void aura_shadow_by_monster_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void aura_shadow_by_monster_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (!hex_spelling(target_ptr, HEX_SHADOW_CLOAK) || !monap_ptr->alive || target_ptr->is_dead)
         return;
 
     HIT_POINT dam = 1;
-    object_type *o_armed_ptr = &target_ptr->inventory_list[INVEN_RARM];
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    object_type* o_armed_ptr = &target_ptr->inventory_list[INVEN_RARM];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if (((r_ptr->flagsr & RFR_RES_ALL) != 0) || ((r_ptr->flagsr & RFR_RES_DARK) != 0)) {
         if (is_original_ap_and_seen(target_ptr, monap_ptr->m_ptr))
             r_ptr->r_flagsr |= (RFR_RES_ALL | RFR_RES_DARK);
@@ -207,8 +201,7 @@ static void aura_shadow_by_monster_attack(player_type *target_ptr, monap_type *m
     }
 }
 
-void process_aura_counterattack(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_aura_counterattack(player_type* target_ptr, monap_type* monap_ptr) {
     if (!monap_ptr->touched)
         return;
 

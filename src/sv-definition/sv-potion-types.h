@@ -2,21 +2,21 @@
 
 /* The "sval" codes for TV_POTION */
 typedef enum sv_potion_type {
-	SV_POTION_WATER = 0,
+    SV_POTION_WATER = 0,
     SV_POTION_APPLE_JUICE = 1,
     SV_POTION_SLIME_MOLD = 2,
-	/* xxx (fixed color) */
+    /* xxx (fixed color) */
     SV_POTION_SLOWNESS = 4,
     SV_POTION_SALT_WATER = 5,
     SV_POTION_POISON = 6,
     SV_POTION_BLINDNESS = 7,
-	/* xxx */
+    /* xxx */
     SV_POTION_BOOZE = 9,
-	/* xxx */
+    /* xxx */
     SV_POTION_SLEEP = 11,
-	/* xxx */
+    /* xxx */
     SV_POTION_LOSE_MEMORIES = 13,
-	/* xxx */
+    /* xxx */
     SV_POTION_RUINATION = 15,
     SV_POTION_DEC_STR = 16,
     SV_POTION_DEC_INT = 17,
@@ -56,7 +56,7 @@ typedef enum sv_potion_type {
     SV_POTION_INC_DEX = 51,
     SV_POTION_INC_CON = 52,
     SV_POTION_INC_CHR = 53,
-	/* xxx */
+    /* xxx */
     SV_POTION_AUGMENTATION = 55,
     SV_POTION_ENLIGHTENMENT = 56,
     SV_POTION_STAR_ENLIGHTENMENT = 57,

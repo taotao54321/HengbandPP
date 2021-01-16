@@ -46,8 +46,7 @@
  * @details
  * This routine should almost never fail, but it *can* happen.
  */
-MONSTER_IDX m_pop(floor_type *floor_ptr)
-{
+MONSTER_IDX m_pop(floor_type* floor_ptr) {
     /* Normal allocation */
     if (floor_ptr->m_max < current_world_ptr->max_m_idx) {
         MONSTER_IDX i = floor_ptr->m_max;
@@ -58,7 +57,7 @@ MONSTER_IDX m_pop(floor_type *floor_ptr)
 
     /* Recycle dead monsters */
     for (MONSTER_IDX i = 1; i < floor_ptr->m_max; i++) {
-        monster_type *m_ptr;
+        monster_type* m_ptr;
         m_ptr = &floor_ptr->m_list[i];
         if (m_ptr->r_idx)
             continue;
@@ -77,13 +76,12 @@ MONSTER_IDX m_pop(floor_type *floor_ptr)
  * @param level 生成階
  * @return 選択されたモンスター生成種族
  */
-MONRACE_IDX get_mon_num(player_type *player_ptr, DEPTH level, BIT_FLAGS option)
-{
+MONRACE_IDX get_mon_num(player_type* player_ptr, DEPTH level, BIT_FLAGS option) {
     int i, j, p;
     int r_idx;
     long value, total;
-    monster_race *r_ptr;
-    alloc_entry *table = alloc_race_table;
+    monster_race* r_ptr;
+    alloc_entry* table = alloc_race_table;
 
     int pls_kakuritu, pls_level, over_days;
     int delay = mysqrt(level * 10000L) + (level * 5);
@@ -118,7 +116,8 @@ MONRACE_IDX get_mon_num(player_type *player_ptr, DEPTH level, BIT_FLAGS option)
         if (ironman_nightmare && !randint0(pls_kakuritu)) {
             /* What a bizarre calculation */
             level = 1 + (level * MAX_DEPTH / randint1(MAX_DEPTH));
-        } else {
+        }
+        else {
             /* Occasional "nasty" monster */
             if (!randint0(pls_kakuritu)) {
                 /* Pick a level bonus */
@@ -210,12 +209,11 @@ MONRACE_IDX get_mon_num(player_type *player_ptr, DEPTH level, BIT_FLAGS option)
  * @param r_idx モンスター種族ID
  * @return 対象にできるならtrueを返す
  */
-static bool monster_hook_chameleon_lord(player_type *player_ptr, MONRACE_IDX r_idx)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    monster_race *r_ptr = &r_info[r_idx];
-    monster_type *m_ptr = &floor_ptr->m_list[chameleon_change_m_idx];
-    monster_race *old_r_ptr = &r_info[m_ptr->r_idx];
+static bool monster_hook_chameleon_lord(player_type* player_ptr, MONRACE_IDX r_idx) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    monster_race* r_ptr = &r_info[r_idx];
+    monster_type* m_ptr = &floor_ptr->m_list[chameleon_change_m_idx];
+    monster_race* old_r_ptr = &r_info[m_ptr->r_idx];
 
     if (!(r_ptr->flags1 & (RF1_UNIQUE)))
         return FALSE;
@@ -235,7 +233,8 @@ static bool monster_hook_chameleon_lord(player_type *player_ptr, MONRACE_IDX r_i
     if (!(old_r_ptr->flags7 & RF7_CHAMELEON)) {
         if (monster_has_hostile_align(player_ptr, m_ptr, 0, 0, r_ptr))
             return FALSE;
-    } else if (summon_specific_who > 0) {
+    }
+    else if (summon_specific_who > 0) {
         if (monster_has_hostile_align(player_ptr, &floor_ptr->m_list[summon_specific_who], 0, 0, r_ptr))
             return FALSE;
     }
@@ -249,12 +248,11 @@ static bool monster_hook_chameleon_lord(player_type *player_ptr, MONRACE_IDX r_i
  * @return 対象にできるならtrueを返す
  * @todo グローバル変数対策の上 monster_hook.cへ移す。
  */
-static bool monster_hook_chameleon(player_type *player_ptr, MONRACE_IDX r_idx)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    monster_race *r_ptr = &r_info[r_idx];
-    monster_type *m_ptr = &floor_ptr->m_list[chameleon_change_m_idx];
-    monster_race *old_r_ptr = &r_info[m_ptr->r_idx];
+static bool monster_hook_chameleon(player_type* player_ptr, MONRACE_IDX r_idx) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    monster_race* r_ptr = &r_info[r_idx];
+    monster_type* m_ptr = &floor_ptr->m_list[chameleon_change_m_idx];
+    monster_race* old_r_ptr = &r_info[m_ptr->r_idx];
 
     if (r_ptr->flags1 & (RF1_UNIQUE))
         return FALSE;
@@ -277,7 +275,8 @@ static bool monster_hook_chameleon(player_type *player_ptr, MONRACE_IDX r_idx)
             return FALSE;
         if (!(old_r_ptr->flags3 & (RF3_GOOD | RF3_EVIL)) && (r_ptr->flags3 & (RF3_GOOD | RF3_EVIL)))
             return FALSE;
-    } else if (summon_specific_who > 0) {
+    }
+    else if (summon_specific_who > 0) {
         if (monster_has_hostile_align(player_ptr, &floor_ptr->m_list[summon_specific_who], 0, 0, r_ptr))
             return FALSE;
     }
@@ -293,11 +292,10 @@ static bool monster_hook_chameleon(player_type *player_ptr, MONRACE_IDX r_idx)
  * @param r_idx 旧モンスター種族のID
  * @return なし
  */
-void choose_new_monster(player_type *player_ptr, MONSTER_IDX m_idx, bool born, MONRACE_IDX r_idx)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
-    monster_race *r_ptr;
+void choose_new_monster(player_type* player_ptr, MONSTER_IDX m_idx, bool born, MONRACE_IDX r_idx) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
+    monster_race* r_ptr;
 
     bool old_unique = FALSE;
     if (r_info[m_ptr->r_idx].flags1 & RF1_UNIQUE)
@@ -371,7 +369,8 @@ void choose_new_monster(player_type *player_ptr, MONSTER_IDX m_idx, bool born, M
     int oldmaxhp = m_ptr->max_maxhp;
     if (r_ptr->flags1 & RF1_FORCE_MAXHP) {
         m_ptr->max_maxhp = maxroll(r_ptr->hdice, r_ptr->hside);
-    } else {
+    }
+    else {
         m_ptr->max_maxhp = damroll(r_ptr->hdice, r_ptr->hside);
     }
 
@@ -392,8 +391,7 @@ void choose_new_monster(player_type *player_ptr, MONSTER_IDX m_idx, bool born, M
  * @param r_ptr モンスター種族の参照ポインタ
  * @return 加速値
  */
-SPEED get_mspeed(floor_type *floor_ptr, monster_race *r_ptr)
-{
+SPEED get_mspeed(floor_type* floor_ptr, monster_race* r_ptr) {
     SPEED mspeed = r_ptr->speed;
     if (!(r_ptr->flags1 & RF1_UNIQUE) && !floor_ptr->inside_arena) {
         /* Allow some small variation per monster */
@@ -415,9 +413,8 @@ SPEED get_mspeed(floor_type *floor_ptr, monster_race *r_ptr)
  * @param m_idx 隣接数を調べたいモンスターのID
  * @return 隣接しているモンスターの数
  */
-int get_monster_crowd_number(floor_type *floor_ptr, MONSTER_IDX m_idx)
-{
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+int get_monster_crowd_number(floor_type* floor_ptr, MONSTER_IDX m_idx) {
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     POSITION my = m_ptr->fy;
     POSITION mx = m_ptr->fx;
     int count = 0;

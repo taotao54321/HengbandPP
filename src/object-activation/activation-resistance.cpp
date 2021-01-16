@@ -11,8 +11,7 @@
 #include "target/target-getter.h"
 #include "view/display-messages.h"
 
-bool activate_resistance_elements(player_type *user_ptr)
-{
+bool activate_resistance_elements(player_type* user_ptr) {
     msg_print(_("様々な色に輝いている...", "It glows many colours..."));
     (void)set_oppose_acid(user_ptr, randint1(40) + 40, FALSE);
     (void)set_oppose_elec(user_ptr, randint1(40) + 40, FALSE);
@@ -29,8 +28,7 @@ bool activate_resistance_elements(player_type *user_ptr)
  * @param name アイテム名
  * @return アシッド・ボールの発動をキャンセルした場合FALSE、それ以外はTRUEを返す
  */
-bool activate_resistance_acid(player_type *user_ptr, object_type *o_ptr, concptr name)
-{
+bool activate_resistance_acid(player_type* user_ptr, object_type* o_ptr, concptr name) {
     msg_format(_("%sが黒く輝いた...", "The %s grows black."), name);
     (void)set_oppose_acid(user_ptr, randint1(20) + 20, FALSE);
 
@@ -53,8 +51,7 @@ bool activate_resistance_acid(player_type *user_ptr, object_type *o_ptr, concptr
  * @param name アイテム名
  * @return サンダー・ボールの発動をキャンセルした場合FALSE、それ以外はTRUEを返す
  */
-bool activate_resistance_elec(player_type *user_ptr, object_type *o_ptr, concptr name)
-{
+bool activate_resistance_elec(player_type* user_ptr, object_type* o_ptr, concptr name) {
     msg_format(_("%sが青く輝いた...", "The %s grows blue."), name);
     (void)set_oppose_elec(user_ptr, randint1(20) + 20, FALSE);
 
@@ -77,8 +74,7 @@ bool activate_resistance_elec(player_type *user_ptr, object_type *o_ptr, concptr
  * @param name アイテム名
  * @return ファイア・ボールの発動をキャンセルした場合FALSE、それ以外はTRUEを返す
  */
-bool activate_resistance_fire(player_type *user_ptr, object_type *o_ptr, concptr name)
-{
+bool activate_resistance_fire(player_type* user_ptr, object_type* o_ptr, concptr name) {
     msg_format(_("%sが赤く輝いた...", "The %s grows red."), name);
     (void)set_oppose_fire(user_ptr, randint1(20) + 20, FALSE);
 
@@ -101,8 +97,7 @@ bool activate_resistance_fire(player_type *user_ptr, object_type *o_ptr, concptr
  * @param name アイテム名
  * @return アイス・ボールの発動をキャンセルした場合FALSE、それ以外はTRUEを返す
  */
-bool activate_resistance_cold(player_type *user_ptr, object_type *o_ptr, concptr name)
-{
+bool activate_resistance_cold(player_type* user_ptr, object_type* o_ptr, concptr name) {
     msg_format(_("%sが白く輝いた...", "The %s grows white."), name);
     (void)set_oppose_cold(user_ptr, randint1(20) + 20, FALSE);
 
@@ -125,15 +120,13 @@ bool activate_resistance_cold(player_type *user_ptr, object_type *o_ptr, concptr
  * @param name アイテム名
  * @return 常にTRUE
  */
-bool activate_resistance_pois(player_type *user_ptr, concptr name)
-{
+bool activate_resistance_pois(player_type* user_ptr, concptr name) {
     msg_format(_("%sが緑に輝いた...", "The %s grows green."), name);
     (void)set_oppose_pois(user_ptr, randint1(20) + 20, FALSE);
     return TRUE;
 }
 
-bool activate_ultimate_resistance(player_type *user_ptr)
-{
+bool activate_ultimate_resistance(player_type* user_ptr) {
     TIME_EFFECT v = randint1(25) + 25;
     (void)set_afraid(user_ptr, 0);
     (void)set_hero(user_ptr, v, FALSE);

@@ -28,9 +28,8 @@
  * @details
  * Sorry, it becomes not (void)...
  */
-void call_the_void(player_type *caster_ptr)
-{
-    grid_type *g_ptr;
+void call_the_void(player_type* caster_ptr) {
+    grid_type* g_ptr;
     bool do_call = TRUE;
     for (int i = 0; i < 9; i++) {
         g_ptr = &caster_ptr->current_floor_ptr->grid_array[caster_ptr->y + ddy_ddd[i]][caster_ptr->x + ddx_ddd[i]];
@@ -98,16 +97,15 @@ void call_the_void(player_type *caster_ptr)
  * @params caster_ptr 術者の参照ポインタ
  * @return 実際に処理が反映された場合TRUE
  */
-bool vanish_dungeon(player_type *caster_ptr)
-{
+bool vanish_dungeon(player_type* caster_ptr) {
     bool is_special_floor = caster_ptr->current_floor_ptr->inside_quest && is_fixed_quest_idx(caster_ptr->current_floor_ptr->inside_quest);
     is_special_floor |= !caster_ptr->current_floor_ptr->dun_level;
     if (is_special_floor)
         return FALSE;
 
-    grid_type *g_ptr;
-    feature_type *f_ptr;
-    monster_type *m_ptr;
+    grid_type* g_ptr;
+    feature_type* f_ptr;
+    monster_type* m_ptr;
     GAME_TEXT m_name[MAX_NLEN];
     for (POSITION y = 1; y < caster_ptr->current_floor_ptr->height - 1; y++) {
         for (POSITION x = 1; x < caster_ptr->current_floor_ptr->width - 1; x++) {
@@ -189,8 +187,7 @@ bool vanish_dungeon(player_type *caster_ptr)
  * @return なし
  * @details このファイルにいるのは、spells-trump.c と比べて行数が少なかったため。それ以上の意図はない
  */
-void cast_meteor(player_type *caster_ptr, HIT_POINT dam, POSITION rad)
-{
+void cast_meteor(player_type* caster_ptr, HIT_POINT dam, POSITION rad) {
     int b = 10 + randint1(10);
     for (int i = 0; i < b; i++) {
         POSITION y = 0, x = 0;
@@ -208,7 +205,7 @@ void cast_meteor(player_type *caster_ptr, HIT_POINT dam, POSITION rad)
             if (d >= 9)
                 continue;
 
-            floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+            floor_type* floor_ptr = caster_ptr->current_floor_ptr;
             if (!in_bounds(floor_ptr, y, x) || !projectable(caster_ptr, caster_ptr->y, caster_ptr->x, y, x)
                 || !cave_has_flag_bold(floor_ptr, y, x, FF_PROJECT))
                 continue;

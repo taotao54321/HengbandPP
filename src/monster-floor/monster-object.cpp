@@ -6,8 +6,8 @@
 
 #include "monster-floor/monster-object.h"
 #include "flavor/flavor-describer.h"
-#include "floor/floor-object.h"
 #include "floor/cave.h"
+#include "floor/floor-object.h"
 #include "grid/grid.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-flags-resistance.h"
@@ -29,8 +29,7 @@
 /*!
  * @brief オブジェクトのフラグを更新する
  */
-static void update_object_flags(BIT_FLAGS *flgs, BIT_FLAGS *flg2, BIT_FLAGS *flg3, BIT_FLAGS *flgr)
-{
+static void update_object_flags(BIT_FLAGS* flgs, BIT_FLAGS* flg2, BIT_FLAGS* flg3, BIT_FLAGS* flgr) {
     if (has_flag(flgs, TR_SLAY_DRAGON))
         *flg3 |= (RF3_DRAGON);
     if (has_flag(flgs, TR_KILL_DRAGON))
@@ -93,11 +92,10 @@ static void update_object_flags(BIT_FLAGS *flgs, BIT_FLAGS *flg2, BIT_FLAGS *flg
  * @param this_o_idx モンスターが乗ったオブジェクトID
  * @return なし
  */
-static void monster_pickup_object(player_type *target_ptr, turn_flags *turn_flags_ptr, MONSTER_IDX m_idx, object_type *o_ptr, bool is_special_object,
-    POSITION ny, POSITION nx, GAME_TEXT *m_name, GAME_TEXT *o_name, OBJECT_IDX this_o_idx)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+static void monster_pickup_object(player_type* target_ptr, turn_flags* turn_flags_ptr, MONSTER_IDX m_idx, object_type* o_ptr, bool is_special_object,
+    POSITION ny, POSITION nx, GAME_TEXT* m_name, GAME_TEXT* o_name, OBJECT_IDX this_o_idx) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     if (is_special_object) {
         if (turn_flags_ptr->do_take && (r_ptr->flags2 & RF2_STUPID)) {
             turn_flags_ptr->did_take_item = TRUE;
@@ -143,11 +141,10 @@ static void monster_pickup_object(player_type *target_ptr, turn_flags *turn_flag
  * @param ny 移動後の、モンスターのY座標
  * @param nx 移動後の、モンスターのX座標
  */
-void update_object_by_monster_movement(player_type *target_ptr, turn_flags *turn_flags_ptr, MONSTER_IDX m_idx, POSITION ny, POSITION nx)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
-    grid_type *g_ptr;
+void update_object_by_monster_movement(player_type* target_ptr, turn_flags* turn_flags_ptr, MONSTER_IDX m_idx, POSITION ny, POSITION nx) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
+    grid_type* g_ptr;
     g_ptr = &target_ptr->current_floor_ptr->grid_array[ny][nx];
 
     turn_flags_ptr->do_take = (r_ptr->flags2 & RF2_TAKE_ITEM) != 0;
@@ -155,7 +152,7 @@ void update_object_by_monster_movement(player_type *target_ptr, turn_flags *turn
     for (OBJECT_IDX this_o_idx = g_ptr->o_idx; this_o_idx > 0; this_o_idx = next_o_idx) {
         BIT_FLAGS flgs[TR_FLAG_SIZE], flg2 = 0L, flg3 = 0L, flgr = 0L;
         GAME_TEXT m_name[MAX_NLEN], o_name[MAX_NLEN];
-        object_type *o_ptr = &target_ptr->current_floor_ptr->o_list[this_o_idx];
+        object_type* o_ptr = &target_ptr->current_floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
 
         if (turn_flags_ptr->do_take) {
@@ -181,13 +178,12 @@ void update_object_by_monster_movement(player_type *target_ptr, turn_flags *turn
  * @param m_ptr モンスター参照ポインタ
  * @return なし
  */
-void monster_drop_carried_objects(player_type *player_ptr, monster_type *m_ptr)
-{
+void monster_drop_carried_objects(player_type* player_ptr, monster_type* m_ptr) {
     OBJECT_IDX next_o_idx = 0;
     for (OBJECT_IDX this_o_idx = m_ptr->hold_o_idx; this_o_idx; this_o_idx = next_o_idx) {
         object_type forge;
-        object_type *o_ptr;
-        object_type *q_ptr;
+        object_type* o_ptr;
+        object_type* q_ptr;
         o_ptr = &player_ptr->current_floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         q_ptr = &forge;

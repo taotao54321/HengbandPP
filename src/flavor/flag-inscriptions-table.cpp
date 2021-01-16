@@ -19,8 +19,8 @@ const concptr game_inscriptions[MAX_GAME_INSCRIPTIONS] = {
 /*! オブジェクトの特性表示記号テーブルの定義(pval要素) */
 flag_insc_table flag_insc_plus[MAX_INSCRIPTIONS_PLUS]
     = { { "攻", "At", TR_BLOWS, -1 }, { "速", "Sp", TR_SPEED, -1 }, { "腕", "St", TR_STR, -1 }, { "知", "In", TR_INT, -1 },
-    { "賢", "Wi", TR_WIS, -1 }, { "器", "Dx", TR_DEX, -1 }, { "耐", "Cn", TR_CON, -1 }, { "魅", "Ch", TR_CHR, -1 }, { "道", "Md", TR_MAGIC_MASTERY, -1 },
-    { "隠", "Sl", TR_STEALTH, -1 }, { "探", "Sr", TR_SEARCH, -1 }, { "赤", "If", TR_INFRA, -1 }, { "掘", "Dg", TR_TUNNEL, -1 }, { NULL, NULL, 0, -1 } };
+          { "賢", "Wi", TR_WIS, -1 }, { "器", "Dx", TR_DEX, -1 }, { "耐", "Cn", TR_CON, -1 }, { "魅", "Ch", TR_CHR, -1 }, { "道", "Md", TR_MAGIC_MASTERY, -1 },
+          { "隠", "Sl", TR_STEALTH, -1 }, { "探", "Sr", TR_SEARCH, -1 }, { "赤", "If", TR_INFRA, -1 }, { "掘", "Dg", TR_TUNNEL, -1 }, { NULL, NULL, 0, -1 } };
 
 /*! オブジェクトの特性表示記号テーブルの定義(免疫) */
 flag_insc_table flag_insc_immune[MAX_INSCRIPTIONS_IMMUNE]

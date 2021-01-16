@@ -28,8 +28,7 @@ void flush(void) { inkey_xtra = TRUE; }
  *
  * This function must match exactly one call to "screen_load()".
  */
-void screen_save()
-{
+void screen_save() {
     msg_print(NULL);
     if (screen_depth++ == 0)
         term_save();
@@ -42,8 +41,7 @@ void screen_save()
  *
  * This function must match exactly one call to "screen_save()".
  */
-void screen_load()
-{
+void screen_load() {
     msg_print(NULL);
     if (--screen_depth == 0)
         term_load();
@@ -68,8 +66,7 @@ void put_str(concptr str, TERM_LEN row, TERM_LEN col) { term_putstr(col, row, -1
  * Display a string on the screen using an attribute, and clear
  * to the end of the line.
  */
-void c_prt(TERM_COLOR attr, concptr str, TERM_LEN row, TERM_LEN col)
-{
+void c_prt(TERM_COLOR attr, concptr str, TERM_LEN row, TERM_LEN col) {
     term_erase(col, row, 255);
     term_addstr(-1, attr, str);
 }
@@ -77,8 +74,7 @@ void c_prt(TERM_COLOR attr, concptr str, TERM_LEN row, TERM_LEN col)
 /*
  * As above, but in "white"
  */
-void prt(concptr str, TERM_LEN row, TERM_LEN col)
-{
+void prt(concptr str, TERM_LEN row, TERM_LEN col) {
     /* Spawn */
     c_prt(TERM_WHITE, str, row, col);
 }
@@ -97,8 +93,7 @@ void prt(concptr str, TERM_LEN row, TERM_LEN col)
  * This function will correctly handle any width up to the maximum legal
  * value of 256, though it works best for a standard 80 character width.
  */
-void c_roff(TERM_COLOR a, concptr str)
-{
+void c_roff(TERM_COLOR a, concptr str) {
     int w, h;
     (void)term_get_size(&w, &h);
 
@@ -216,8 +211,7 @@ void c_roff(TERM_COLOR a, concptr str)
 /*
  * As above, but in "white"
  */
-void roff(concptr str)
-{
+void roff(concptr str) {
     /* Spawn */
     c_roff(TERM_WHITE, str);
 }
@@ -225,8 +219,7 @@ void roff(concptr str)
 /*
  * Clear part of the screen
  */
-void clear_from(int row)
-{
+void clear_from(int row) {
     for (int y = row; y < Term->hgt; y++) {
         term_erase(0, y, 255);
     }

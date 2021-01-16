@@ -10,4 +10,4 @@ enum blue_magic_type {
     MONSPELL_TYPE_OTHER = 5,
 };
 
-bool do_cmd_cast_learned(player_type *caster_ptr);
+bool do_cmd_cast_learned(player_type* caster_ptr);

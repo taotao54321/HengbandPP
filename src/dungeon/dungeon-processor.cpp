@@ -52,9 +52,8 @@
  * the user dies, or the game is terminated.\n
  * </p>
  */
-void process_dungeon(player_type *player_ptr, bool load_game)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void process_dungeon(player_type* player_ptr, bool load_game) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     floor_ptr->base_level = floor_ptr->dun_level;
     current_world_ptr->is_loading_now = FALSE;
     player_ptr->leaving = FALSE;
@@ -112,7 +111,8 @@ void process_dungeon(player_type *player_ptr, bool load_game)
         if (load_game) {
             player_ptr->energy_need = 0;
             update_gambling_monsters(player_ptr);
-        } else {
+        }
+        else {
             msg_print(_("試合開始！", "Ready..Fight!"));
             msg_print(NULL);
         }

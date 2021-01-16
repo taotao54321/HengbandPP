@@ -17,8 +17,7 @@
  * This routine should almost never fail, but in case it does,
  * we must be sure to handle "failure" of this routine.
  */
-OBJECT_IDX o_pop(floor_type *floor_ptr)
-{
+OBJECT_IDX o_pop(floor_type* floor_ptr) {
     if (floor_ptr->o_max < current_world_ptr->max_o_idx) {
         OBJECT_IDX i = floor_ptr->o_max;
         floor_ptr->o_max++;
@@ -27,7 +26,7 @@ OBJECT_IDX o_pop(floor_type *floor_ptr)
     }
 
     for (OBJECT_IDX i = 1; i < floor_ptr->o_max; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[i];
         if (o_ptr->k_idx)
             continue;
@@ -61,13 +60,12 @@ OBJECT_IDX o_pop(floor_type *floor_ptr)
  * Note that if no objects are "appropriate", then this function will\n
  * fail, and return zero, but this should *almost* never happen.\n
  */
-OBJECT_IDX get_obj_num(player_type *owner_ptr, DEPTH level, BIT_FLAGS mode)
-{
+OBJECT_IDX get_obj_num(player_type* owner_ptr, DEPTH level, BIT_FLAGS mode) {
     int i, j, p;
     KIND_OBJECT_IDX k_idx;
     long value, total;
-    object_kind *k_ptr;
-    alloc_entry *table = alloc_kind_table;
+    object_kind* k_ptr;
+    alloc_entry* table = alloc_kind_table;
 
     if (level > MAX_DEPTH - 1)
         level = MAX_DEPTH - 1;

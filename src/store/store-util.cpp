@@ -19,7 +19,7 @@
 #include "world/world-object.h"
 
 int cur_store_num = 0;
-store_type *st_ptr = NULL;
+store_type* st_ptr = NULL;
 
 /*!
  * @brief 店舗のオブジェクト数を増やす /
@@ -34,9 +34,8 @@ store_type *st_ptr = NULL;
  * </pre>
  * @todo numは本来ITEM_NUMBER型にしたい。
  */
-void store_item_increase(INVENTORY_IDX item, int num)
-{
-    object_type *o_ptr;
+void store_item_increase(INVENTORY_IDX item, int num) {
+    object_type* o_ptr;
     o_ptr = &st_ptr->stock[item];
     int cnt = o_ptr->number + num;
     if (cnt > 255)
@@ -54,9 +53,8 @@ void store_item_increase(INVENTORY_IDX item, int num)
  * @param item 削除したいアイテムのID
  * @return なし
  */
-void store_item_optimize(INVENTORY_IDX item)
-{
-    object_type *o_ptr;
+void store_item_optimize(INVENTORY_IDX item) {
+    object_type* o_ptr;
     o_ptr = &st_ptr->stock[item];
     if ((o_ptr->k_idx == 0) || (o_ptr->number != 0))
         return;
@@ -77,8 +75,7 @@ void store_item_optimize(INVENTORY_IDX item)
  * Hack -- we attempt to "maintain" piles of items when possible.
  * </pre>
  */
-void store_delete(void)
-{
+void store_delete(void) {
     INVENTORY_IDX what = (INVENTORY_IDX)randint0(st_ptr->stock_num);
     int num = st_ptr->stock[what].number;
     if (randint0(100) < 50)
@@ -89,7 +86,7 @@ void store_delete(void)
 
     if ((st_ptr->stock[what].tval == TV_ROD) || (st_ptr->stock[what].tval == TV_WAND))
         st_ptr->stock[what].pval -= num * st_ptr->stock[what].pval / st_ptr->stock[what].number;
-    
+
     store_item_increase(what, -num);
     store_item_optimize(what);
 }
@@ -109,8 +106,7 @@ void store_delete(void)
  * Should we check for "permission" to have the given item?
  * </pre>
  */
-void store_create(player_type *player_ptr, black_market_crap_pf black_market_crap, store_will_buy_pf store_will_buy, mass_produce_pf mass_produce)
-{
+void store_create(player_type* player_ptr, black_market_crap_pf black_market_crap, store_will_buy_pf store_will_buy, mass_produce_pf mass_produce) {
     if (st_ptr->stock_num >= st_ptr->stock_size)
         return;
 
@@ -122,13 +118,14 @@ void store_create(player_type *player_ptr, black_market_crap_pf black_market_cra
             i = get_obj_num(player_ptr, level, 0x00000000);
             if (i == 0)
                 continue;
-        } else {
+        }
+        else {
             i = st_ptr->table[randint0(st_ptr->table_num)];
             level = rand_range(1, STORE_OBJ_LEVEL);
         }
 
         object_type forge;
-        object_type *q_ptr;
+        object_type* q_ptr;
         q_ptr = &forge;
         object_prep(player_ptr, q_ptr, i);
         apply_magic(player_ptr, q_ptr, level, AM_NO_FIXED_ART);
@@ -151,7 +148,8 @@ void store_create(player_type *player_ptr, black_market_crap_pf black_market_cra
         if (cur_store_num == STORE_BLACK) {
             if (black_market_crap(player_ptr, q_ptr) || (object_value(player_ptr, q_ptr) < 10))
                 continue;
-        } else {
+        }
+        else {
             if (object_value(player_ptr, q_ptr) <= 0)
                 continue;
         }
@@ -173,8 +171,7 @@ void store_create(player_type *player_ptr, black_market_crap_pf black_market_cra
  * See "object_similar()" for the same function for the "player"
  * </pre>
  */
-bool store_object_similar(object_type *o_ptr, object_type *j_ptr)
-{
+bool store_object_similar(object_type* o_ptr, object_type* j_ptr) {
     if (o_ptr == j_ptr)
         return FALSE;
 
@@ -244,8 +241,7 @@ bool store_object_similar(object_type *o_ptr, object_type *j_ptr)
  * See "object_similar()" for the same function for the "player"
  * </pre>
  */
-static void store_object_absorb(object_type *o_ptr, object_type *j_ptr)
-{
+static void store_object_absorb(object_type* o_ptr, object_type* j_ptr) {
     int max_num = (o_ptr->tval == TV_ROD) ? MIN(99, MAX_SHORT / k_info[o_ptr->k_idx].pval) : 99;
     int total = o_ptr->number + j_ptr->number;
     int diff = (total > max_num) ? total - max_num : 0;
@@ -267,8 +263,7 @@ static void store_object_absorb(object_type *o_ptr, object_type *j_ptr)
  * known, the player may have to pick stuff up and drop it again.
  * </pre>
  */
-int store_carry(player_type *player_ptr, object_type *o_ptr)
-{
+int store_carry(player_type* player_ptr, object_type* o_ptr) {
     PRICE value = object_value(player_ptr, o_ptr);
     if (value <= 0)
         return -1;
@@ -278,7 +273,7 @@ int store_carry(player_type *player_ptr, object_type *o_ptr)
     o_ptr->feeling = FEEL_NONE;
     int slot;
     for (slot = 0; slot < st_ptr->stock_num; slot++) {
-        object_type *j_ptr;
+        object_type* j_ptr;
         j_ptr = &st_ptr->stock[slot];
         if (store_object_similar(j_ptr, o_ptr)) {
             store_object_absorb(j_ptr, o_ptr);
@@ -290,7 +285,7 @@ int store_carry(player_type *player_ptr, object_type *o_ptr)
         return -1;
 
     for (slot = 0; slot < st_ptr->stock_num; slot++) {
-        object_type *j_ptr;
+        object_type* j_ptr;
         j_ptr = &st_ptr->stock[slot];
         if (o_ptr->tval > j_ptr->tval)
             break;

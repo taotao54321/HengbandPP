@@ -33,8 +33,7 @@ static TERM_COLOR likert_color = TERM_WHITE;
  * @param shot_frac 射撃速度
  * @return なし
  */
-static void calc_shot_params(player_type *creature_ptr, object_type *o_ptr, int *shots, int *shot_frac)
-{
+static void calc_shot_params(player_type* creature_ptr, object_type* o_ptr, int* shots, int* shot_frac) {
     if (o_ptr->k_idx == 0)
         return;
 
@@ -67,8 +66,7 @@ static void calc_shot_params(player_type *creature_ptr, object_type *o_ptr, int 
  * @param o_ptr 装備中の武器への参照ポインタ
  * @return 利き手ならTRUE、反対の手ならFALSE
  */
-static bool calc_weapon_damage_limit(player_type *creature_ptr, int hand, int *damage, int *basedam, object_type *o_ptr)
-{
+static bool calc_weapon_damage_limit(player_type* creature_ptr, int hand, int* damage, int* basedam, object_type* o_ptr) {
     PLAYER_LEVEL level = creature_ptr->lev;
     if (hand > 0) {
         damage[hand] = 0;
@@ -101,8 +99,7 @@ static bool calc_weapon_damage_limit(player_type *creature_ptr, int hand, int *d
  * @param basedam 素手における直接攻撃のダメージ
  * @return 素手ならFALSE、武器を持っていればTRUE
  */
-static bool calc_weapon_one_hand(object_type *o_ptr, int hand, int *damage, int *basedam)
-{
+static bool calc_weapon_one_hand(object_type* o_ptr, int hand, int* damage, int* basedam) {
     if (o_ptr->k_idx == 0)
         return FALSE;
 
@@ -125,13 +122,13 @@ static bool calc_weapon_one_hand(object_type *o_ptr, int hand, int *damage, int 
  * @param flgs オブジェクトフラグ群
  * @return 強化後の素手ダメージ
  */
-static int strengthen_basedam(player_type *creature_ptr, object_type *o_ptr, int basedam, BIT_FLAGS *flgs)
-{
+static int strengthen_basedam(player_type* creature_ptr, object_type* o_ptr, int basedam, BIT_FLAGS* flgs) {
     if (object_is_fully_known(o_ptr) && ((o_ptr->name1 == ART_VORPAL_BLADE) || (o_ptr->name1 == ART_CHAINSWORD))) {
         /* vorpal blade */
         basedam *= 5;
         basedam /= 3;
-    } else if (has_flag(flgs, TR_VORPAL)) {
+    }
+    else if (has_flag(flgs, TR_VORPAL)) {
         /* vorpal flag only */
         basedam *= 11;
         basedam /= 9;
@@ -154,8 +151,7 @@ static int strengthen_basedam(player_type *creature_ptr, object_type *o_ptr, int
  * @param y 技能値に対するランク基準比
  * @return なし
  */
-static concptr likert(int x, int y)
-{
+static concptr likert(int x, int y) {
     static char dummy[20] = "", dummy2[20] = "";
     memset(dummy, 0, strlen(dummy));
     memset(dummy2, 0, strlen(dummy2));
@@ -240,9 +236,8 @@ static concptr likert(int x, int y)
  * @param to_h 命中補正
  * @return なし
  */
-static void calc_two_hands(player_type *creature_ptr, int *damage, int *to_h)
-{
-    object_type *o_ptr;
+static void calc_two_hands(player_type* creature_ptr, int* damage, int* to_h) {
+    object_type* o_ptr;
     o_ptr = &creature_ptr->inventory_list[INVEN_BOW];
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     for (int i = 0; i < 2; i++) {
@@ -291,8 +286,7 @@ static void calc_two_hands(player_type *creature_ptr, int *damage, int *to_h)
  * @param display_player_one_line 1行表示用のコールバック関数
  * @return なし
  */
-static void display_first_page(player_type *creature_ptr, int xthb, int *damage, int shots, int shot_frac)
-{
+static void display_first_page(player_type* creature_ptr, int xthb, int* damage, int shots, int shot_frac) {
     int xthn = creature_ptr->skill_thn + (creature_ptr->to_h_m * BTH_PLUS_ADJ);
 
     int muta_att = 0;
@@ -372,9 +366,8 @@ static void display_first_page(player_type *creature_ptr, int xthb, int *damage,
  * @details
  * This code is "imitated" elsewhere to "dump" a character sheet.
  */
-void display_player_various(player_type *creature_ptr)
-{
-    object_type *o_ptr;
+void display_player_various(player_type* creature_ptr) {
+    object_type* o_ptr;
     o_ptr = &creature_ptr->inventory_list[INVEN_BOW];
     int tmp = creature_ptr->to_h_b + o_ptr->to_h;
     int xthb = creature_ptr->skill_thb + (tmp * BTH_PLUS_ADJ);

@@ -6,8 +6,8 @@
 
 #include "lore/lore-store.h"
 #include "core/window-redrawer.h"
-#include "monster-race/race-flags1.h"
 #include "monster-race/monster-race.h"
+#include "monster-race/race-flags1.h"
 #include "monster/monster-info.h"
 #include "system/floor-type-definition.h"
 #include "system/monster-type-definition.h" // todo 違和感、m_ptr は外から与えることとしたい.
@@ -20,10 +20,9 @@
  * @details
  * Return the number of new flags learnt.  -Mogami-
  */
-int lore_do_probe(player_type *player_ptr, MONRACE_IDX r_idx)
-{
+int lore_do_probe(player_type* player_ptr, MONRACE_IDX r_idx) {
     int n = 0;
-    monster_race *r_ptr = &r_info[r_idx];
+    monster_race* r_ptr = &r_info[r_idx];
     if (r_ptr->r_wake != MAX_UCHAR)
         n++;
     if (r_ptr->r_ignore != MAX_UCHAR)
@@ -100,10 +99,9 @@ int lore_do_probe(player_type *player_ptr, MONRACE_IDX r_idx)
  * @param num_gold 手に入れた財宝の単位数
  * @return なし
  */
-void lore_treasure(player_type *player_ptr, MONSTER_IDX m_idx, ITEM_NUMBER num_item, ITEM_NUMBER num_gold)
-{
-    monster_type *m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+void lore_treasure(player_type* player_ptr, MONSTER_IDX m_idx, ITEM_NUMBER num_item, ITEM_NUMBER num_gold) {
+    monster_type* m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     if (!is_original_ap(m_ptr))
         return;

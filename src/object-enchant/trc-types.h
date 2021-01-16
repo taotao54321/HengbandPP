@@ -2,7 +2,7 @@
 
 /* TRCが何の略かは分からない (type / ??? / curse)*/
 typedef enum trc_curse_type {
-	TRC_CURSED = 0x00000001L,
+    TRC_CURSED = 0x00000001L,
     TRC_HEAVY_CURSE = 0x00000002L,
     TRC_PERMA_CURSE = 0x00000004L,
     TRC_XXX1 = 0x00000008L,

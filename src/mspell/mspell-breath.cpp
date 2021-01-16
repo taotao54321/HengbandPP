@@ -24,13 +24,12 @@
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-HIT_POINT spell_RF4_BREATH(player_type *target_ptr, int GF_TYPE, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+HIT_POINT spell_RF4_BREATH(player_type* target_ptr, int GF_TYPE, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
     HIT_POINT dam, ms_type, drs_type = 0;
     concptr type_s;
     bool smart_learn_aux = TRUE;
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     bool known = monster_near_player(floor_ptr, m_idx, t_idx);
     bool see_either = see_monster(target_ptr, m_idx) || see_monster(target_ptr, t_idx);
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
@@ -186,15 +185,19 @@ HIT_POINT spell_RF4_BREATH(player_type *target_ptr, int GF_TYPE, POSITION y, POS
 
     if (m_ptr->r_idx == MON_JAIAN && GF_TYPE == GF_SOUND) {
         msg_format(_("「ボォエ～～～～～～」", "'Booooeeeeee'"));
-    } else if (m_ptr->r_idx == MON_BOTEI && GF_TYPE == GF_SHARDS) {
+    }
+    else if (m_ptr->r_idx == MON_BOTEI && GF_TYPE == GF_SHARDS) {
         msg_format(_("「ボ帝ビルカッター！！！」", "'Boty-Build cutter!!!'"));
-    } else if (target_ptr->blind) {
+    }
+    else if (target_ptr->blind) {
         if (mon_to_player || (mon_to_mon && known && see_either))
             msg_format(_("%^sが何かのブレスを吐いた。", "%^s breathes."), m_name);
-    } else {
+    }
+    else {
         if (mon_to_player) {
             msg_format(_("%^sが%^sのブレスを吐いた。", "%^s breathes %^s."), m_name, type_s);
-        } else if (mon_to_mon && known && see_either) {
+        }
+        else if (mon_to_mon && known && see_either) {
             _(msg_format("%^sが%^sに%^sのブレスを吐いた。", m_name, t_name, type_s), msg_format("%^s breathes %^s at %^s.", m_name, type_s, t_name));
         }
     }

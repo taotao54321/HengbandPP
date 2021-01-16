@@ -23,8 +23,7 @@
 #define RF5_SPELL_SIZE 32
 #define RF6_SPELL_SIZE 32
 
-static bool try_melee_spell(player_type *target_ptr, melee_spell_type *ms_ptr)
-{
+static bool try_melee_spell(player_type* target_ptr, melee_spell_type* ms_ptr) {
     if (spell_is_inate(ms_ptr->thrown_spell) || (!ms_ptr->in_no_magic_dungeon && (!monster_stunned_remaining(ms_ptr->m_ptr) || one_in_(2))))
         return FALSE;
 
@@ -35,8 +34,7 @@ static bool try_melee_spell(player_type *target_ptr, melee_spell_type *ms_ptr)
     return TRUE;
 }
 
-static bool disturb_melee_spell(player_type *target_ptr, melee_spell_type *ms_ptr)
-{
+static bool disturb_melee_spell(player_type* target_ptr, melee_spell_type* ms_ptr) {
     if (spell_is_inate(ms_ptr->thrown_spell) || !magic_barrier(target_ptr, ms_ptr->m_idx))
         return FALSE;
 
@@ -46,8 +44,7 @@ static bool disturb_melee_spell(player_type *target_ptr, melee_spell_type *ms_pt
     return TRUE;
 }
 
-static void process_special_melee_spell(player_type *target_ptr, melee_spell_type *ms_ptr)
-{
+static void process_special_melee_spell(player_type* target_ptr, melee_spell_type* ms_ptr) {
     bool is_special_magic = ms_ptr->m_ptr->ml;
     is_special_magic &= ms_ptr->maneable;
     is_special_magic &= current_world_ptr->timewalk_m_idx == 0;
@@ -73,8 +70,7 @@ static void process_special_melee_spell(player_type *target_ptr, melee_spell_typ
     target_ptr->redraw |= PR_IMITATION;
 }
 
-static void process_rememberance(melee_spell_type *ms_ptr)
-{
+static void process_rememberance(melee_spell_type* ms_ptr) {
     if (!ms_ptr->can_remember)
         return;
 
@@ -85,7 +81,7 @@ static void process_rememberance(melee_spell_type *ms_ptr)
 
         return;
     }
-    
+
     if (ms_ptr->thrown_spell < RF5_SPELL_START + RF5_SPELL_SIZE) {
         ms_ptr->r_ptr->r_flags5 |= (1L << (ms_ptr->thrown_spell - RF5_SPELL_START));
         if (ms_ptr->r_ptr->r_cast_spell < MAX_UCHAR)
@@ -93,7 +89,7 @@ static void process_rememberance(melee_spell_type *ms_ptr)
 
         return;
     }
-    
+
     if (ms_ptr->thrown_spell < RF6_SPELL_START + RF6_SPELL_SIZE) {
         ms_ptr->r_ptr->r_flags6 |= (1L << (ms_ptr->thrown_spell - RF6_SPELL_START));
         if (ms_ptr->r_ptr->r_cast_spell < MAX_UCHAR)
@@ -101,8 +97,7 @@ static void process_rememberance(melee_spell_type *ms_ptr)
     }
 }
 
-static void describe_melee_spell(player_type *target_ptr, melee_spell_type *ms_ptr)
-{
+static void describe_melee_spell(player_type* target_ptr, melee_spell_type* ms_ptr) {
     /* Get the monster name (or "it") */
     monster_desc(target_ptr, ms_ptr->m_name, ms_ptr->m_ptr, 0x00);
 #ifdef JP
@@ -125,10 +120,9 @@ static void describe_melee_spell(player_type *target_ptr, melee_spell_type *ms_p
  * @details
  * The player is only disturbed if able to be affected by the spell.
  */
-bool monst_spell_monst(player_type *target_ptr, MONSTER_IDX m_idx)
-{
+bool monst_spell_monst(player_type* target_ptr, MONSTER_IDX m_idx) {
     melee_spell_type tmp_ms;
-    melee_spell_type *ms_ptr = initialize_melee_spell_type(target_ptr, &tmp_ms, m_idx);
+    melee_spell_type* ms_ptr = initialize_melee_spell_type(target_ptr, &tmp_ms, m_idx);
     if (!check_melee_spell_set(target_ptr, ms_ptr))
         return FALSE;
 

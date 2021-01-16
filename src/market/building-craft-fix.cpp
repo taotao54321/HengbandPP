@@ -34,8 +34,7 @@
  * @param from_ptr 修復材料オブジェクトの構造体の参照ポインタ。
  * @return 修復対象になるならTRUEを返す。
  */
-static void give_one_ability_of_object(player_type *player_ptr, object_type *to_ptr, object_type *from_ptr)
-{
+static void give_one_ability_of_object(player_type* player_ptr, object_type* to_ptr, object_type* from_ptr) {
     BIT_FLAGS to_flgs[TR_FLAG_SIZE];
     BIT_FLAGS from_flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, to_ptr, to_flgs);
@@ -87,8 +86,7 @@ static void give_one_ability_of_object(player_type *player_ptr, object_type *to_
  * @param bcost 基本修復費用
  * @return 実際にかかった費用
  */
-static PRICE repair_broken_weapon_aux(player_type *player_ptr, PRICE bcost)
-{
+static PRICE repair_broken_weapon_aux(player_type* player_ptr, PRICE bcost) {
     clear_bldg(0, 22);
     int row = 7;
     prt(_("修復には材料となるもう1つの武器が必要です。", "Hand one material weapon to repair a broken weapon."), row, 2);
@@ -99,7 +97,7 @@ static PRICE repair_broken_weapon_aux(player_type *player_ptr, PRICE bcost)
     item_tester_hook = item_tester_hook_broken_weapon;
 
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(player_ptr, &item, q, s, (USE_INVEN | USE_EQUIP), TV_NONE);
     if (!o_ptr)
         return 0;
@@ -123,7 +121,7 @@ static PRICE repair_broken_weapon_aux(player_type *player_ptr, PRICE bcost)
 
     item_tester_hook = item_tester_hook_orthodox_melee_weapons;
     OBJECT_IDX mater;
-    object_type *mo_ptr;
+    object_type* mo_ptr;
     mo_ptr = choose_object(player_ptr, &mater, q, s, (USE_INVEN | USE_EQUIP), TV_NONE);
     if (!mo_ptr)
         return 0;
@@ -150,7 +148,7 @@ static PRICE repair_broken_weapon_aux(player_type *player_ptr, PRICE bcost)
         int n = 1;
         k_idx = 0;
         for (KIND_OBJECT_IDX j = 1; j < max_k_idx; j++) {
-            object_kind *k_aux_ptr = &k_info[j];
+            object_kind* k_aux_ptr = &k_info[j];
 
             if (k_aux_ptr->tval != TV_SWORD)
                 continue;
@@ -164,10 +162,11 @@ static PRICE repair_broken_weapon_aux(player_type *player_ptr, PRICE bcost)
                 n++;
             }
         }
-    } else {
+    }
+    else {
         tval_type tval = (one_in_(5) ? mo_ptr->tval : TV_SWORD);
         while (TRUE) {
-            object_kind *ck_ptr;
+            object_kind* ck_ptr;
             k_idx = lookup_kind(tval, SV_ANY);
             ck_ptr = &k_info[k_idx];
 
@@ -194,7 +193,7 @@ static PRICE repair_broken_weapon_aux(player_type *player_ptr, PRICE bcost)
     dd_bonus += mo_ptr->dd - k_info[mo_ptr->k_idx].dd;
     ds_bonus += mo_ptr->ds - k_info[mo_ptr->k_idx].ds;
 
-    object_kind *k_ptr;
+    object_kind* k_ptr;
     k_ptr = &k_info[k_idx];
     o_ptr->k_idx = k_idx;
     o_ptr->weight = k_ptr->weight;
@@ -279,8 +278,7 @@ static PRICE repair_broken_weapon_aux(player_type *player_ptr, PRICE bcost)
  * @param bcost 基本鑑定費用
  * @return 実際にかかった費用
  */
-int repair_broken_weapon(player_type *player_ptr, PRICE bcost)
-{
+int repair_broken_weapon(player_type* player_ptr, PRICE bcost) {
     PRICE cost;
     screen_save();
     cost = repair_broken_weapon_aux(player_ptr, bcost);

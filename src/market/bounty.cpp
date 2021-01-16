@@ -39,11 +39,10 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return 各種賞金首のいずれかでも換金が行われたか否か。
  */
-bool exchange_cash(player_type *player_ptr)
-{
+bool exchange_cash(player_type* player_ptr) {
     bool change = FALSE;
     GAME_TEXT o_name[MAX_NLEN];
-    object_type *o_ptr;
+    object_type* o_ptr;
 
     for (INVENTORY_IDX i = 0; i <= INVEN_LARM; i++) {
         o_ptr = &player_ptr->inventory_list[i];
@@ -192,10 +191,9 @@ bool exchange_cash(player_type *player_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void today_target(player_type *player_ptr)
-{
+void today_target(player_type* player_ptr) {
     char buf[160];
-    monster_race *r_ptr = &r_info[today_mon];
+    monster_race* r_ptr = &r_info[today_mon];
 
     clear_bldg(4, 18);
     c_put_str(TERM_YELLOW, _("本日の賞金首", "Wanted monster that changes from day to day"), 5, 10);
@@ -212,8 +210,7 @@ void today_target(player_type *player_ptr)
  * @brief ツチノコの賞金首情報を表示する。
  * @return なし
  */
-void tsuchinoko(void)
-{
+void tsuchinoko(void) {
     clear_bldg(4, 18);
     c_put_str(TERM_YELLOW, _("一獲千金の大チャンス！！！", "Big chance for quick money!!!"), 5, 10);
     c_put_str(TERM_YELLOW, _("ターゲット：幻の珍獣「ツチノコ」", "target: the rarest animal 'Tsuchinoko'"), 6, 10);
@@ -226,8 +223,7 @@ void tsuchinoko(void)
  * @brief 通常の賞金首情報を表示する。
  * @return なし
  */
-void show_bounty(void)
-{
+void show_bounty(void) {
     TERM_LEN y = 0;
 
     clear_bldg(4, 18);
@@ -237,13 +233,14 @@ void show_bounty(void)
     for (int i = 0; i < MAX_BOUNTY; i++) {
         byte color;
         concptr done_mark;
-        monster_race *r_ptr
+        monster_race* r_ptr
             = &r_info[(current_world_ptr->bounty_r_idx[i] > 10000 ? current_world_ptr->bounty_r_idx[i] - 10000 : current_world_ptr->bounty_r_idx[i])];
 
         if (current_world_ptr->bounty_r_idx[i] > 10000) {
             color = TERM_RED;
             done_mark = _("(済)", "(done)");
-        } else {
+        }
+        else {
             color = TERM_WHITE;
             done_mark = "";
         }
@@ -266,8 +263,7 @@ void show_bounty(void)
  * @return なし
  * @note conv_old is used if loaded 0.0.3 or older save file
  */
-void determine_daily_bounty(player_type *player_ptr, bool conv_old)
-{
+void determine_daily_bounty(player_type* player_ptr, bool conv_old) {
     int max_dl = 3, i;
     if (!conv_old) {
         for (i = 0; i < current_world_ptr->max_d_idx; i++) {
@@ -276,7 +272,8 @@ void determine_daily_bounty(player_type *player_ptr, bool conv_old)
             if (max_dl < max_dlv[i])
                 max_dl = max_dlv[i];
         }
-    } else {
+    }
+    else {
         max_dl = MAX(max_dlv[DUNGEON_ANGBAND], 3);
     }
 
@@ -284,7 +281,7 @@ void determine_daily_bounty(player_type *player_ptr, bool conv_old)
 
     while (TRUE) {
         today_mon = get_mon_num(player_ptr, max_dl, GMN_ARENA);
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         r_ptr = &r_info[today_mon];
 
         if (r_ptr->flags1 & RF1_UNIQUE)
@@ -308,13 +305,12 @@ void determine_daily_bounty(player_type *player_ptr, bool conv_old)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void determine_bounty_uniques(player_type *player_ptr)
-{
+void determine_bounty_uniques(player_type* player_ptr) {
     get_mon_num_prep(player_ptr, NULL, NULL);
     for (int i = 0; i < MAX_BOUNTY; i++) {
         while (TRUE) {
             current_world_ptr->bounty_r_idx[i] = get_mon_num(player_ptr, MAX_DEPTH - 1, GMN_ARENA);
-            monster_race *r_ptr;
+            monster_race* r_ptr;
             r_ptr = &r_info[current_world_ptr->bounty_r_idx[i]];
 
             if (!(r_ptr->flags1 & RF1_UNIQUE))

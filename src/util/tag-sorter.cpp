@@ -5,8 +5,7 @@
  * (should probably be coded inline
  * for speed increase)
  */
-static void swap(tag_type *a, tag_type *b)
-{
+static void swap(tag_type* a, tag_type* b) {
     tag_type temp;
 
     temp = *a;
@@ -18,8 +17,7 @@ static void swap(tag_type *a, tag_type *b)
  * Insertion-Sort algorithm
  * (used by the Quicksort algorithm)
  */
-static void insertion_sort(tag_type elements[], int number)
-{
+static void insertion_sort(tag_type elements[], int number) {
     tag_type tmp;
     for (int i = 1; i < number; i++) {
         tmp = elements[i];
@@ -33,8 +31,7 @@ static void insertion_sort(tag_type elements[], int number)
 /*
  * Helper function for Quicksort
  */
-static tag_type median3(tag_type elements[], int left, int right)
-{
+static tag_type median3(tag_type elements[], int left, int right) {
     int center = (left + right) / 2;
 
     if (elements[left].tag > elements[center].tag)
@@ -60,8 +57,7 @@ static tag_type median3(tag_type elements[], int left, int right)
  * For details see: "Data Structures and Algorithm
  * Analysis in C" by Mark Allen Weiss.
  */
-static void quicksort(tag_type elements[], int left, int right)
-{
+static void quicksort(tag_type elements[], int left, int right) {
     tag_type pivot;
     const int array_size_cutoff = 4;
     if (left + array_size_cutoff <= right) {
@@ -86,7 +82,8 @@ static void quicksort(tag_type elements[], int left, int right)
 
         quicksort(elements, left, i - 1);
         quicksort(elements, i + 1, right);
-    } else {
+    }
+    else {
         insertion_sort(elements + left, right - left + 1);
     }
 }

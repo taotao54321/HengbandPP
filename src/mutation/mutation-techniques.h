@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool eat_rock(player_type *caster_ptr);
+bool eat_rock(player_type* caster_ptr);

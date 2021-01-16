@@ -19,11 +19,10 @@
  * @brief ペット爆破処理 /
  * @return なし
  */
-void discharge_minion(player_type *caster_ptr)
-{
+void discharge_minion(player_type* caster_ptr) {
     bool okay = TRUE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
         if (!m_ptr->r_idx || !is_pet(m_ptr))
             continue;
         if (m_ptr->nickname)
@@ -36,11 +35,11 @@ void discharge_minion(player_type *caster_ptr)
     }
 
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
         if (!m_ptr->r_idx || !is_pet(m_ptr))
             continue;
 
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         r_ptr = &r_info[m_ptr->r_idx];
         if (r_ptr->flags1 & RF1_UNIQUE) {
             GAME_TEXT m_name[MAX_NLEN];

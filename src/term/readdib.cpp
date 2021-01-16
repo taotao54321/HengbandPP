@@ -34,9 +34,9 @@
 /*!
  * 一度にファイルから読み込むデータ量 / Number of bytes to be read during each read operation
  */
-#define MAXREAD  32768
+#define MAXREAD 32768
 
-void global_free(DIBINIT *pInfo, INT_PTR *fh, BOOL unlock_needed);
+void global_free(DIBINIT* pInfo, INT_PTR* fh, BOOL unlock_needed);
 
 /*!
  * todo コードが古すぎる。何とかしたい
@@ -49,23 +49,20 @@ void global_free(DIBINIT *pInfo, INT_PTR *fh, BOOL unlock_needed);
  * 取得できたデータ量をバイトで返す。0ならば何らかのエラー。
  * Returns number of bytes requested, or zero if something went wrong.
  */
-static DWORD PASCAL lread(int fh, void *pv, DWORD ul)
-{
-	DWORD ulT = ul;
-	BYTE *hp = pv;
+static DWORD PASCAL lread(int fh, void* pv, DWORD ul) {
+    DWORD ulT = ul;
+    BYTE* hp = pv;
 
-	while (ul > (DWORD)MAXREAD)
-	{
-		if (_lread(fh, (LPSTR)hp, (WORD)MAXREAD) != MAXREAD)
-				return 0;
-		ul -= MAXREAD;
-		hp += MAXREAD;
-	}
-	if (_lread(fh, (LPSTR)hp, (WORD)ul) != ul)
-		return 0;
-	return ulT;
+    while (ul > (DWORD)MAXREAD) {
+        if (_lread(fh, (LPSTR)hp, (WORD)MAXREAD) != MAXREAD)
+            return 0;
+        ul -= MAXREAD;
+        hp += MAXREAD;
+    }
+    if (_lread(fh, (LPSTR)hp, (WORD)ul) != ul)
+        return 0;
+    return ulT;
 }
-
 
 /*!
  * @brief BITMAPINFOHEADERを取得してカラーテーブルを基本としたパレットを作成する。
@@ -75,55 +72,49 @@ static DWORD PASCAL lread(int fh, void *pv, DWORD ul)
  * パレットの参照を返す。NULLならばエラー。
  * Returns the handle of a palette, or zero if something went wrong.
  */
-static HPALETTE PASCAL MakeDIBPalette(LPBITMAPINFOHEADER lpInfo)
-{
-	PLOGPALETTE npPal;
-	RGBQUAD *lpRGB;
-	HPALETTE hLogPal;
-	WORD i;
+static HPALETTE PASCAL MakeDIBPalette(LPBITMAPINFOHEADER lpInfo) {
+    PLOGPALETTE npPal;
+    RGBQUAD* lpRGB;
+    HPALETTE hLogPal;
+    WORD i;
 
-	/*
+    /*
 	 * since biClrUsed field was filled during the loading of the DIB,
 	 * we know it contains the number of colors in the color table.
 	 */
-	if (lpInfo->biClrUsed)
-	{
-		npPal = (PLOGPALETTE)LocalAlloc(LMEM_FIXED, sizeof(LOGPALETTE) +
-						 (WORD)lpInfo->biClrUsed * sizeof(PALETTEENTRY));
-		if (!npPal)
-			return(FALSE);
+    if (lpInfo->biClrUsed) {
+        npPal = (PLOGPALETTE)LocalAlloc(LMEM_FIXED, sizeof(LOGPALETTE) + (WORD)lpInfo->biClrUsed * sizeof(PALETTEENTRY));
+        if (!npPal)
+            return (FALSE);
 
-		npPal->palVersion = 0x300;
-		npPal->palNumEntries = (WORD)lpInfo->biClrUsed;
+        npPal->palVersion = 0x300;
+        npPal->palNumEntries = (WORD)lpInfo->biClrUsed;
 
-		/* get pointer to the color table */
-		lpRGB = (RGBQUAD*)((LPSTR)lpInfo + lpInfo->biSize);
+        /* get pointer to the color table */
+        lpRGB = (RGBQUAD*)((LPSTR)lpInfo + lpInfo->biSize);
 
-		/* copy colors from the color table to the LogPalette structure */
-		for (i = 0; i < (WORD)lpInfo->biClrUsed; i++, lpRGB++)
-		{
-			npPal->palPalEntry[i].peRed = lpRGB->rgbRed;
-			npPal->palPalEntry[i].peGreen = lpRGB->rgbGreen;
-			npPal->palPalEntry[i].peBlue = lpRGB->rgbBlue;
-			npPal->palPalEntry[i].peFlags = PC_NOCOLLAPSE;
-		}
+        /* copy colors from the color table to the LogPalette structure */
+        for (i = 0; i < (WORD)lpInfo->biClrUsed; i++, lpRGB++) {
+            npPal->palPalEntry[i].peRed = lpRGB->rgbRed;
+            npPal->palPalEntry[i].peGreen = lpRGB->rgbGreen;
+            npPal->palPalEntry[i].peBlue = lpRGB->rgbBlue;
+            npPal->palPalEntry[i].peFlags = PC_NOCOLLAPSE;
+        }
 
-		hLogPal = CreatePalette((LPLOGPALETTE)npPal);
-		LocalFree((HANDLE)npPal);
-		return(hLogPal);
-	}
+        hLogPal = CreatePalette((LPLOGPALETTE)npPal);
+        LocalFree((HANDLE)npPal);
+        return (hLogPal);
+    }
 
-	/*
+    /*
 	 * 24-bit DIB with no color table.  return default palette.  Another
 	 * option would be to create a 256 color "rainbow" palette to provide
 	 * some good color choices.
 	 */
-	else
-	{
-		return(GetStockObject(DEFAULT_PALETTE));
-	}
+    else {
+        return (GetStockObject(DEFAULT_PALETTE));
+    }
 }
-
 
 /*!
  * @brief
@@ -140,44 +131,37 @@ static HPALETTE PASCAL MakeDIBPalette(LPBITMAPINFOHEADER lpInfo)
  * handles.  Caller is responsible for freeing objects) and FALSE on failure
  * (unable to create objects, both pointer are invalid).
  */
-static BOOL PASCAL MakeBitmapAndPalette(HDC hDC, HANDLE hDIB, HPALETTE * phPal, HBITMAP * phBitmap)
-{
-	LPBITMAPINFOHEADER lpInfo;
-	BOOL result = FALSE;
-	HBITMAP hBitmap;
-	HPALETTE hPalette, hOldPal;
-	LPSTR lpBits;
+static BOOL PASCAL MakeBitmapAndPalette(HDC hDC, HANDLE hDIB, HPALETTE* phPal, HBITMAP* phBitmap) {
+    LPBITMAPINFOHEADER lpInfo;
+    BOOL result = FALSE;
+    HBITMAP hBitmap;
+    HPALETTE hPalette, hOldPal;
+    LPSTR lpBits;
 
-	lpInfo = (LPBITMAPINFOHEADER) GlobalLock(hDIB);
-	if ((hPalette = MakeDIBPalette(lpInfo)) != 0)
-	{
-		/* Need to realize palette for converting DIB to bitmap. */
-		hOldPal = SelectPalette(hDC, hPalette, TRUE);
-		RealizePalette(hDC);
+    lpInfo = (LPBITMAPINFOHEADER)GlobalLock(hDIB);
+    if ((hPalette = MakeDIBPalette(lpInfo)) != 0) {
+        /* Need to realize palette for converting DIB to bitmap. */
+        hOldPal = SelectPalette(hDC, hPalette, TRUE);
+        RealizePalette(hDC);
 
-		lpBits = ((LPSTR)lpInfo + (WORD)lpInfo->biSize +
-			  (WORD)lpInfo->biClrUsed * sizeof(RGBQUAD));
-		hBitmap = CreateDIBitmap(hDC, lpInfo, CBM_INIT, lpBits,
-					 (LPBITMAPINFO)lpInfo, DIB_RGB_COLORS);
+        lpBits = ((LPSTR)lpInfo + (WORD)lpInfo->biSize + (WORD)lpInfo->biClrUsed * sizeof(RGBQUAD));
+        hBitmap = CreateDIBitmap(hDC, lpInfo, CBM_INIT, lpBits,
+            (LPBITMAPINFO)lpInfo, DIB_RGB_COLORS);
 
-		SelectPalette(hDC, hOldPal, TRUE);
-		RealizePalette(hDC);
+        SelectPalette(hDC, hOldPal, TRUE);
+        RealizePalette(hDC);
 
-		if (!hBitmap)
-		{
-			DeleteObject(hPalette);
-		}
-		else
-		{
-			*phBitmap = hBitmap;
-			*phPal = hPalette;
-			result = TRUE;
-		}
-	}
-	return(result);
+        if (!hBitmap) {
+            DeleteObject(hPalette);
+        }
+        else {
+            *phBitmap = hBitmap;
+            *phPal = hPalette;
+            result = TRUE;
+        }
+    }
+    return (result);
 }
-
-
 
 /*!
  * @brief
@@ -198,172 +182,148 @@ static BOOL PASCAL MakeBitmapAndPalette(HDC hDC, HANDLE hDIB, HPALETTE * phPal, 
  * loads the DIB.  Once the DIB is loaded, the function also creates a bitmap
  * and palette out of the DIB for a device-dependent form.
  */
-BOOL ReadDIB(HWND hWnd, LPSTR lpFileName, DIBINIT *pInfo)
-{
-	LPBITMAPINFOHEADER lpbi;
-	OFSTRUCT of;
-	BITMAPFILEHEADER bf;
-	WORD nNumColors;
-	BOOL result = FALSE;
-	char str[128];
-	WORD offBits;
-	HDC hDC;
-	BOOL bCoreHead = FALSE;
+BOOL ReadDIB(HWND hWnd, LPSTR lpFileName, DIBINIT* pInfo) {
+    LPBITMAPINFOHEADER lpbi;
+    OFSTRUCT of;
+    BITMAPFILEHEADER bf;
+    WORD nNumColors;
+    BOOL result = FALSE;
+    char str[128];
+    WORD offBits;
+    HDC hDC;
+    BOOL bCoreHead = FALSE;
 
-	/* Open the file and get a handle to it's BITMAPINFO */
-	INT_PTR fh = OpenFile(lpFileName, &of, OF_READ);
-	if (fh == -1)
-	{
-		wsprintf(str, "Can't open file '%s'", (LPSTR)lpFileName);
-		MessageBox(NULL, str, "Error", MB_ICONSTOP | MB_OK);
-		return FALSE;
-	}
+    /* Open the file and get a handle to it's BITMAPINFO */
+    INT_PTR fh = OpenFile(lpFileName, &of, OF_READ);
+    if (fh == -1) {
+        wsprintf(str, "Can't open file '%s'", (LPSTR)lpFileName);
+        MessageBox(NULL, str, "Error", MB_ICONSTOP | MB_OK);
+        return FALSE;
+    }
 
-	pInfo->hDIB = GlobalAlloc(GHND, (DWORD)(sizeof(BITMAPINFOHEADER) +
-				  256 * sizeof(RGBQUAD)));
+    pInfo->hDIB = GlobalAlloc(GHND, (DWORD)(sizeof(BITMAPINFOHEADER) + 256 * sizeof(RGBQUAD)));
 
-	if (!pInfo->hDIB)
-		return FALSE;
+    if (!pInfo->hDIB)
+        return FALSE;
 
-	lpbi = (LPBITMAPINFOHEADER)GlobalLock(pInfo->hDIB);
+    lpbi = (LPBITMAPINFOHEADER)GlobalLock(pInfo->hDIB);
 
-	BOOL is_read_error = sizeof(bf) != _lread(fh, (LPSTR)&bf, sizeof(bf));
-	is_read_error |= bf.bfType != 0x4d42;
-	is_read_error |= sizeof(BITMAPCOREHEADER) != _lread(fh, (LPSTR)lpbi, sizeof(BITMAPCOREHEADER));
-	if (is_read_error)
-	{
-		global_free(pInfo, &fh, TRUE);
-		return result;
-	}
+    BOOL is_read_error = sizeof(bf) != _lread(fh, (LPSTR)&bf, sizeof(bf));
+    is_read_error |= bf.bfType != 0x4d42;
+    is_read_error |= sizeof(BITMAPCOREHEADER) != _lread(fh, (LPSTR)lpbi, sizeof(BITMAPCOREHEADER));
+    if (is_read_error) {
+        global_free(pInfo, &fh, TRUE);
+        return result;
+    }
 
-	if (lpbi->biSize == sizeof(BITMAPCOREHEADER))
-	{
-		lpbi->biSize = sizeof(BITMAPINFOHEADER);
-		lpbi->biBitCount = ((LPBITMAPCOREHEADER)lpbi)->bcBitCount;
-		lpbi->biPlanes = ((LPBITMAPCOREHEADER)lpbi)->bcPlanes;
-		lpbi->biHeight = ((LPBITMAPCOREHEADER)lpbi)->bcHeight;
-		lpbi->biWidth = ((LPBITMAPCOREHEADER)lpbi)->bcWidth;
-		bCoreHead = TRUE;
-	}
-	else
-	{
-		/* get to the start of the header and read INFOHEADER */
-		_llseek(fh, sizeof(BITMAPFILEHEADER), SEEK_SET);
-		if (sizeof(BITMAPINFOHEADER) != _lread(fh, (LPSTR)lpbi, sizeof(BITMAPINFOHEADER)))
-		{
-			global_free(pInfo, &fh, TRUE);
-			return result;
-		}
-	}
+    if (lpbi->biSize == sizeof(BITMAPCOREHEADER)) {
+        lpbi->biSize = sizeof(BITMAPINFOHEADER);
+        lpbi->biBitCount = ((LPBITMAPCOREHEADER)lpbi)->bcBitCount;
+        lpbi->biPlanes = ((LPBITMAPCOREHEADER)lpbi)->bcPlanes;
+        lpbi->biHeight = ((LPBITMAPCOREHEADER)lpbi)->bcHeight;
+        lpbi->biWidth = ((LPBITMAPCOREHEADER)lpbi)->bcWidth;
+        bCoreHead = TRUE;
+    }
+    else {
+        /* get to the start of the header and read INFOHEADER */
+        _llseek(fh, sizeof(BITMAPFILEHEADER), SEEK_SET);
+        if (sizeof(BITMAPINFOHEADER) != _lread(fh, (LPSTR)lpbi, sizeof(BITMAPINFOHEADER))) {
+            global_free(pInfo, &fh, TRUE);
+            return result;
+        }
+    }
 
-	nNumColors = (WORD)lpbi->biClrUsed;
-	if (!nNumColors)
-	{
-		/* no color table for 24-bit, default size otherwise */
-		if (lpbi->biBitCount != 24)
-			nNumColors = 1 << lpbi->biBitCount;
-	}
+    nNumColors = (WORD)lpbi->biClrUsed;
+    if (!nNumColors) {
+        /* no color table for 24-bit, default size otherwise */
+        if (lpbi->biBitCount != 24)
+            nNumColors = 1 << lpbi->biBitCount;
+    }
 
-	/* fill in some default values if they are zero */
-	if (lpbi->biClrUsed == 0)
-		lpbi->biClrUsed = nNumColors;
+    /* fill in some default values if they are zero */
+    if (lpbi->biClrUsed == 0)
+        lpbi->biClrUsed = nNumColors;
 
-	if (lpbi->biSizeImage == 0)
-	{
-		lpbi->biSizeImage = (((((lpbi->biWidth * (DWORD)lpbi->biBitCount) + 31) & ~31) >> 3)
-				     * lpbi->biHeight);
-	}
+    if (lpbi->biSizeImage == 0) {
+        lpbi->biSizeImage = (((((lpbi->biWidth * (DWORD)lpbi->biBitCount) + 31) & ~31) >> 3)
+            * lpbi->biHeight);
+    }
 
-	/* otherwise wouldn't work with 16 color bitmaps -- S.K. */
-	else if ((nNumColors == 16) && (lpbi->biSizeImage > bf.bfSize))
-	{
-		lpbi->biSizeImage /= 2;
-	}
+    /* otherwise wouldn't work with 16 color bitmaps -- S.K. */
+    else if ((nNumColors == 16) && (lpbi->biSizeImage > bf.bfSize)) {
+        lpbi->biSizeImage /= 2;
+    }
 
-	/* get a proper-sized buffer for header, color table and bits */
-	GlobalUnlock(pInfo->hDIB);
-	pInfo->hDIB = GlobalReAlloc(pInfo->hDIB, lpbi->biSize +
-										nNumColors * sizeof(RGBQUAD) +
-										lpbi->biSizeImage, 0);
+    /* get a proper-sized buffer for header, color table and bits */
+    GlobalUnlock(pInfo->hDIB);
+    pInfo->hDIB = GlobalReAlloc(pInfo->hDIB, lpbi->biSize + nNumColors * sizeof(RGBQUAD) + lpbi->biSizeImage, 0);
 
-	/* can't resize buffer for loading */
-	if (!pInfo->hDIB)
-	{
-		global_free(pInfo, &fh, FALSE);
-		return result;
-	}
+    /* can't resize buffer for loading */
+    if (!pInfo->hDIB) {
+        global_free(pInfo, &fh, FALSE);
+        return result;
+    }
 
-	lpbi = (LPBITMAPINFOHEADER)GlobalLock(pInfo->hDIB);
+    lpbi = (LPBITMAPINFOHEADER)GlobalLock(pInfo->hDIB);
 
-	/* read the color table */
-	if (!bCoreHead)
-	{
-		_lread(fh, (LPSTR)(lpbi) + lpbi->biSize, nNumColors * sizeof(RGBQUAD));
-	}
-	else
-	{
-		signed int i;
-		RGBQUAD *pQuad;
-		RGBTRIPLE *pTriple;
+    /* read the color table */
+    if (!bCoreHead) {
+        _lread(fh, (LPSTR)(lpbi) + lpbi->biSize, nNumColors * sizeof(RGBQUAD));
+    }
+    else {
+        signed int i;
+        RGBQUAD* pQuad;
+        RGBTRIPLE* pTriple;
 
-		_lread(fh, (LPSTR)(lpbi) + lpbi->biSize, nNumColors * sizeof(RGBTRIPLE));
+        _lread(fh, (LPSTR)(lpbi) + lpbi->biSize, nNumColors * sizeof(RGBTRIPLE));
 
-		pQuad = (RGBQUAD*)((LPSTR)lpbi + lpbi->biSize);
-		pTriple = (RGBTRIPLE*) pQuad;
-		for (i = nNumColors - 1; i >= 0; i--)
-		{
-			pQuad[i].rgbRed = pTriple[i].rgbtRed;
-			pQuad[i].rgbBlue = pTriple[i].rgbtBlue;
-			pQuad[i].rgbGreen = pTriple[i].rgbtGreen;
-			pQuad[i].rgbReserved = 0;
-		}
-	}
+        pQuad = (RGBQUAD*)((LPSTR)lpbi + lpbi->biSize);
+        pTriple = (RGBTRIPLE*)pQuad;
+        for (i = nNumColors - 1; i >= 0; i--) {
+            pQuad[i].rgbRed = pTriple[i].rgbtRed;
+            pQuad[i].rgbBlue = pTriple[i].rgbtBlue;
+            pQuad[i].rgbGreen = pTriple[i].rgbtGreen;
+            pQuad[i].rgbReserved = 0;
+        }
+    }
 
-	/* offset to the bits from start of DIB header */
-	offBits = (WORD)lpbi->biSize + nNumColors * sizeof(RGBQUAD);
+    /* offset to the bits from start of DIB header */
+    offBits = (WORD)lpbi->biSize + nNumColors * sizeof(RGBQUAD);
 
-	if (bf.bfOffBits != 0L)
-	{
-		_llseek(fh,bf.bfOffBits,SEEK_SET);
-	}
+    if (bf.bfOffBits != 0L) {
+        _llseek(fh, bf.bfOffBits, SEEK_SET);
+    }
 
-	/* Use local version of '_lread()' above */
-	if (lpbi->biSizeImage == lread(fh, (LPSTR)lpbi + offBits, lpbi->biSizeImage))
-	{
-		GlobalUnlock(pInfo->hDIB);
+    /* Use local version of '_lread()' above */
+    if (lpbi->biSizeImage == lread(fh, (LPSTR)lpbi + offBits, lpbi->biSizeImage)) {
+        GlobalUnlock(pInfo->hDIB);
 
-		hDC = GetDC(hWnd);
-		if (!MakeBitmapAndPalette(hDC, pInfo->hDIB, &((HPALETTE)pInfo->hPalette),
-					  &((HBITMAP)pInfo->hBitmap)))
-		{
-			ReleaseDC(hWnd,hDC);
-			global_free(pInfo, &fh, FALSE);
-			return result;
-		}
-		else
-		{
-			ReleaseDC(hWnd,hDC);
-			result = TRUE;
-		}
-	}
-	else
-	{
-		GlobalUnlock(pInfo->hDIB);
-		GlobalFree(pInfo->hDIB);
-	}
+        hDC = GetDC(hWnd);
+        if (!MakeBitmapAndPalette(hDC, pInfo->hDIB, &((HPALETTE)pInfo->hPalette),
+                &((HBITMAP)pInfo->hBitmap))) {
+            ReleaseDC(hWnd, hDC);
+            global_free(pInfo, &fh, FALSE);
+            return result;
+        }
+        else {
+            ReleaseDC(hWnd, hDC);
+            result = TRUE;
+        }
+    }
+    else {
+        GlobalUnlock(pInfo->hDIB);
+        GlobalFree(pInfo->hDIB);
+    }
 
-	_lclose(fh);
-	return result;
+    _lclose(fh);
+    return result;
 }
 
+void global_free(DIBINIT* pInfo, INT_PTR* fh, BOOL unlock_needed) {
+    if (unlock_needed) {
+        GlobalUnlock(pInfo->hDIB);
+    }
 
-void global_free(DIBINIT *pInfo, INT_PTR *fh, BOOL unlock_needed)
-{
-	if (unlock_needed)
-	{
-		GlobalUnlock(pInfo->hDIB);
-	}
-
-	GlobalFree(pInfo->hDIB);
-	_lclose(*fh);
+    GlobalFree(pInfo->hDIB);
+    _lclose(*fh);
 }

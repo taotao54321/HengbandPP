@@ -33,11 +33,10 @@
  * @brief 所持状態にあるアイテムの中から一部枠の装備可能なものを装備させる。
  * @return なし
  */
-void wield_all(player_type *creature_ptr)
-{
+void wield_all(player_type* creature_ptr) {
     object_type object_type_body;
     for (INVENTORY_IDX item = INVEN_PACK - 1; item >= 0; item--) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[item];
         if (!o_ptr->k_idx)
             continue;
@@ -50,7 +49,7 @@ void wield_all(player_type *creature_ptr)
         if (creature_ptr->inventory_list[slot].k_idx)
             continue;
 
-        object_type *i_ptr;
+        object_type* i_ptr;
         i_ptr = &object_type_body;
         object_copy(i_ptr, o_ptr);
         i_ptr->number = 1;
@@ -58,7 +57,8 @@ void wield_all(player_type *creature_ptr)
         if (item >= 0) {
             inven_item_increase(creature_ptr, item, -1);
             inven_item_optimize(creature_ptr, item);
-        } else {
+        }
+        else {
             floor_item_increase(creature_ptr->current_floor_ptr, 0 - item, -1);
             floor_item_optimize(creature_ptr, 0 - item);
         }
@@ -75,8 +75,7 @@ void wield_all(player_type *creature_ptr)
  * @param o_ptr 処理したいオブジェクト構造体の参照ポインタ
  * @return なし
  */
-void add_outfit(player_type *creature_ptr, object_type *o_ptr)
-{
+void add_outfit(player_type* creature_ptr, object_type* o_ptr) {
     object_aware(creature_ptr, o_ptr);
     object_known(o_ptr);
     s16b slot = store_item_to_inventory(creature_ptr, o_ptr);
@@ -84,8 +83,7 @@ void add_outfit(player_type *creature_ptr, object_type *o_ptr)
     wield_all(creature_ptr);
 }
 
-static void decide_initial_items(player_type *creature_ptr, object_type *q_ptr)
-{
+static void decide_initial_items(player_type* creature_ptr, object_type* q_ptr) {
     switch (creature_ptr->prace) {
     case RACE_VAMPIRE:
         /* Nothing! */
@@ -139,9 +137,8 @@ static void decide_initial_items(player_type *creature_ptr, object_type *q_ptr)
  * @details Having an item makes the player "aware" of its purpose.
  * @return なし
  */
-void player_outfit(player_type *creature_ptr)
-{
-    object_type *q_ptr;
+void player_outfit(player_type* creature_ptr) {
+    object_type* q_ptr;
     object_type forge;
     q_ptr = &forge;
 
@@ -152,7 +149,8 @@ void player_outfit(player_type *creature_ptr)
         object_prep(creature_ptr, q_ptr, lookup_kind(TV_SCROLL, SV_SCROLL_DARKNESS));
         q_ptr->number = (ITEM_NUMBER)rand_range(2, 5);
         add_outfit(creature_ptr, q_ptr);
-    } else if (creature_ptr->pclass != CLASS_NINJA) {
+    }
+    else if (creature_ptr->pclass != CLASS_NINJA) {
         object_prep(creature_ptr, q_ptr, lookup_kind(TV_LITE, SV_LITE_TORCH));
         q_ptr->number = (ITEM_NUMBER)rand_range(3, 7);
         q_ptr->xtra4 = rand_range(3, 7) * 500;
@@ -176,23 +174,27 @@ void player_outfit(player_type *creature_ptr)
     if (creature_ptr->pclass == CLASS_RANGER) {
         object_prep(creature_ptr, q_ptr, lookup_kind(TV_BOW, SV_SHORT_BOW));
         add_outfit(creature_ptr, q_ptr);
-    } else if (creature_ptr->pclass == CLASS_ARCHER) {
+    }
+    else if (creature_ptr->pclass == CLASS_ARCHER) {
         object_prep(creature_ptr, q_ptr, lookup_kind(TV_ARROW, SV_AMMO_NORMAL));
         q_ptr->number = (ITEM_NUMBER)rand_range(15, 20);
         add_outfit(creature_ptr, q_ptr);
-    } else if (creature_ptr->pclass == CLASS_HIGH_MAGE) {
+    }
+    else if (creature_ptr->pclass == CLASS_HIGH_MAGE) {
         object_prep(creature_ptr, q_ptr, lookup_kind(TV_WAND, SV_WAND_MAGIC_MISSILE));
         q_ptr->number = 1;
         q_ptr->pval = (PARAMETER_VALUE)rand_range(25, 30);
         add_outfit(creature_ptr, q_ptr);
-    } else if (creature_ptr->pclass == CLASS_SORCERER) {
+    }
+    else if (creature_ptr->pclass == CLASS_SORCERER) {
         tval_type book_tval;
         for (book_tval = TV_LIFE_BOOK; book_tval <= TV_LIFE_BOOK + MAX_MAGIC - 1; book_tval = tval_type(book_tval + 1)) {
             object_prep(creature_ptr, q_ptr, lookup_kind(book_tval, 0));
             q_ptr->number = 1;
             add_outfit(creature_ptr, q_ptr);
         }
-    } else if (creature_ptr->pclass == CLASS_TOURIST) {
+    }
+    else if (creature_ptr->pclass == CLASS_TOURIST) {
         if (creature_ptr->pseikaku != PERSONALITY_SEXY) {
             object_prep(creature_ptr, q_ptr, lookup_kind(TV_SHOT, SV_AMMO_LIGHT));
             q_ptr->number = rand_range(15, 20);
@@ -223,11 +225,13 @@ void player_outfit(player_type *creature_ptr)
         q_ptr->number = rand_range(2, 4);
 
         add_outfit(creature_ptr, q_ptr);
-    } else if (creature_ptr->pclass == CLASS_NINJA) {
+    }
+    else if (creature_ptr->pclass == CLASS_NINJA) {
         object_prep(creature_ptr, q_ptr, lookup_kind(TV_SPIKE, 0));
         q_ptr->number = rand_range(15, 20);
         add_outfit(creature_ptr, q_ptr);
-    } else if (creature_ptr->pclass == CLASS_SNIPER) {
+    }
+    else if (creature_ptr->pclass == CLASS_SNIPER) {
         object_prep(creature_ptr, q_ptr, lookup_kind(TV_BOLT, SV_AMMO_NORMAL));
         q_ptr->number = rand_range(15, 20);
         add_outfit(creature_ptr, q_ptr);

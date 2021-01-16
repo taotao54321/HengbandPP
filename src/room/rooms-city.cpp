@@ -11,20 +11,19 @@
 #include "util/bit-flags-calculator.h"
 #include "wizard/wizard-messages.h"
 
-static ugbldg_type *ugbldg;
+static ugbldg_type* ugbldg;
 
 /*
  * Precalculate buildings' location of underground arcade
  */
-static bool precalc_ugarcade(int town_hgt, int town_wid, int n)
-{
+static bool precalc_ugarcade(int town_hgt, int town_wid, int n) {
     POSITION i, y, x, center_y, center_x;
     int tmp, attempt = 10000;
     POSITION max_bldg_hgt = 3 * town_hgt / MAX_TOWN_HGT;
     POSITION max_bldg_wid = 5 * town_wid / MAX_TOWN_WID;
-    ugbldg_type *cur_ugbldg;
+    ugbldg_type* cur_ugbldg;
     bool **ugarcade_used, abort;
-    C_MAKE(ugarcade_used, town_hgt, bool *);
+    C_MAKE(ugarcade_used, town_hgt, bool*);
     C_MAKE(*ugarcade_used, town_hgt * town_wid, bool);
     for (y = 1; y < town_hgt; y++)
         ugarcade_used[y] = *ugarcade_used + y * town_wid;
@@ -66,14 +65,13 @@ static bool precalc_ugarcade(int town_hgt, int town_wid, int n)
     }
 
     C_KILL(*ugarcade_used, town_hgt * town_wid, bool);
-    C_KILL(ugarcade_used, town_hgt, bool *);
+    C_KILL(ugarcade_used, town_hgt, bool*);
     return i == n;
 }
 
 /* Create a new floor room with optional light */
-static void generate_room_floor(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, int light)
-{
-    grid_type *g_ptr;
+static void generate_room_floor(player_type* player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, int light) {
+    grid_type* g_ptr;
     for (POSITION y = y1; y <= y2; y++) {
         for (POSITION x = x1; x <= x2; x++) {
             g_ptr = &player_ptr->current_floor_ptr->grid_array[y][x];
@@ -85,8 +83,7 @@ static void generate_room_floor(player_type *player_ptr, POSITION y1, POSITION x
     }
 }
 
-static void generate_fill_perm_bold(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2)
-{
+static void generate_fill_perm_bold(player_type* player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2) {
     for (POSITION y = y1; y <= y2; y++)
         for (POSITION x = x1; x <= x2; x++)
             place_bold(player_ptr, y, x, GB_INNER_PERM);
@@ -103,12 +100,11 @@ static void generate_fill_perm_bold(player_type *player_ptr, POSITION y1, POSITI
  * @note
  * Note: ltcy and ltcx indicate "left top corner".
  */
-static void build_stores(player_type *player_ptr, POSITION ltcy, POSITION ltcx, int stores[], int n)
-{
+static void build_stores(player_type* player_ptr, POSITION ltcy, POSITION ltcx, int stores[], int n) {
     int i;
     POSITION y, x;
     FEAT_IDX j;
-    ugbldg_type *cur_ugbldg;
+    ugbldg_type* cur_ugbldg;
 
     for (i = 0; i < n; i++) {
         cur_ugbldg = &ugbldg[i];
@@ -174,8 +170,7 @@ static void build_stores(player_type *player_ptr, POSITION ltcy, POSITION ltcx, 
  * This function does NOT do anything about the owners of the stores,\n
  * nor the contents thereof.  It only handles the physical layout.\n
  */
-bool build_type16(player_type *player_ptr, dun_data_type *dd_ptr)
-{
+bool build_type16(player_type* player_ptr, dun_data_type* dd_ptr) {
     int stores[] = {
         STORE_GENERAL,
         STORE_ARMOURY,
@@ -191,7 +186,7 @@ bool build_type16(player_type *player_ptr, dun_data_type *dd_ptr)
     int town_hgt = rand_range(MIN_TOWN_HGT, MAX_TOWN_HGT);
     int town_wid = rand_range(MIN_TOWN_WID, MAX_TOWN_WID);
     bool prevent_bm = FALSE;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (y = 0; (y < floor_ptr->height) && !prevent_bm; y++) {
         for (x = 0; x < floor_ptr->width; x++) {
             if (floor_ptr->grid_array[y][x].feat == FF_STORE) {

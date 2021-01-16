@@ -14,8 +14,8 @@ typedef struct monster_type monster_type;
 typedef struct monster_race monster_race;
 typedef struct msa_type {
     MONSTER_IDX m_idx;
-    monster_type *m_ptr;
-    monster_race *r_ptr;
+    monster_type* m_ptr;
+    monster_race* r_ptr;
     bool no_inate;
     BIT_FLAGS f4;
     BIT_FLAGS f5;
@@ -36,4 +36,4 @@ typedef struct msa_type {
     DEPTH rlev;
 } msa_type;
 
-msa_type *initialize_msa_type(player_type *target_ptr, msa_type *msa_ptr, MONSTER_IDX m_idx);
+msa_type* initialize_msa_type(player_type* target_ptr, msa_type* msa_ptr, MONSTER_IDX m_idx);

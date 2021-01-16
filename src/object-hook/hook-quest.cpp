@@ -4,8 +4,8 @@
 #include "game-option/birth-options.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-indice-types.h"
-#include "system/artifact-type-definition.h"
 #include "object-enchant/trg-types.h"
+#include "system/artifact-type-definition.h"
 #include "system/floor-type-definition.h"
 #include "system/object-type-definition.h"
 #include "world/world.h"
@@ -15,8 +15,7 @@
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return オブジェクトが報酬対象になるならTRUEを返す
  */
-bool object_is_bounty(player_type *player_ptr, object_type *o_ptr)
-{
+bool object_is_bounty(player_type* player_ptr, object_type* o_ptr) {
     int i;
 
     if (o_ptr->tval != TV_CORPSE)
@@ -45,8 +44,7 @@ bool object_is_bounty(player_type *player_ptr, object_type *o_ptr)
  * @param o_ptr 特性短縮表記を得たいオブジェクト構造体の参照ポインタ
  * @return 現在クエスト達成目的のアイテムならばTRUEを返す。
  */
-bool object_is_quest_target(player_type *player_ptr, object_type *o_ptr)
-{
+bool object_is_quest_target(player_type* player_ptr, object_type* o_ptr) {
     if (player_ptr->current_floor_ptr->inside_quest == 0)
         return FALSE;
 
@@ -54,7 +52,7 @@ bool object_is_quest_target(player_type *player_ptr, object_type *o_ptr)
     if (a_idx == 0)
         return FALSE;
 
-    artifact_type *a_ptr = &a_info[a_idx];
+    artifact_type* a_ptr = &a_info[a_idx];
     if ((a_ptr->gen_flags & TRG_INSTA_ART) != 0)
         return FALSE;
 

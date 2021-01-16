@@ -53,8 +53,7 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return カオス耐性があるかその他の一部確率でFALSE、それ以外はTRUE
  */
-static bool booze(player_type *creature_ptr)
-{
+static bool booze(player_type* creature_ptr) {
     bool ident = FALSE;
     if (creature_ptr->pclass != CLASS_MONK)
         chg_virtue(creature_ptr, V_HARMONY, -1);
@@ -94,8 +93,7 @@ static bool booze(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return 常にTRUE
  */
-static bool detonation(player_type *creature_ptr)
-{
+static bool detonation(player_type* creature_ptr) {
     msg_print(_("体の中で激しい爆発が起きた！", "Massive explosions rupture your body!"));
     take_hit(creature_ptr, DAMAGE_NOESCAPE, damroll(50, 20), _("爆発の薬", "a potion of Detonation"), -1);
     (void)set_stun(creature_ptr, creature_ptr->stun + 75);
@@ -110,11 +108,10 @@ static bool detonation(player_type *creature_ptr)
  * @param item 飲む薬オブジェクトの所持品ID
  * @return なし
  */
-void exe_quaff_potion(player_type *creature_ptr, INVENTORY_IDX item)
-{
-    object_type *o_ptr;
+void exe_quaff_potion(player_type* creature_ptr, INVENTORY_IDX item) {
+    object_type* o_ptr;
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
 
     take_turn(creature_ptr, 100);
 
@@ -314,7 +311,8 @@ void exe_quaff_potion(player_type *creature_ptr, INVENTORY_IDX item)
             if (!creature_ptr->fast) {
                 if (set_fast(creature_ptr, randint1(25) + 15, FALSE))
                     ident = TRUE;
-            } else {
+            }
+            else {
                 (void)set_fast(creature_ptr, creature_ptr->fast + 5, FALSE);
             }
             break;
@@ -542,12 +540,14 @@ void exe_quaff_potion(player_type *creature_ptr, INVENTORY_IDX item)
         case SV_POTION_POLYMORPH:
             if ((creature_ptr->muta1 || creature_ptr->muta2 || creature_ptr->muta3) && one_in_(23)) {
                 lose_all_mutations(creature_ptr);
-            } else {
+            }
+            else {
                 do {
                     if (one_in_(2)) {
                         if (gain_mutation(creature_ptr, 0))
                             ident = TRUE;
-                    } else if (lose_mutation(creature_ptr, 0))
+                    }
+                    else if (lose_mutation(creature_ptr, 0))
                         ident = TRUE;
                 } while (!ident || one_in_(2));
             }
@@ -598,7 +598,8 @@ void exe_quaff_potion(player_type *creature_ptr, INVENTORY_IDX item)
             if (q_ptr->tval == TV_FLASK) {
                 msg_print(_("オイルを補給した。", "You replenish yourself with the oil."));
                 set_food(creature_ptr, creature_ptr->food + 5000);
-            } else {
+            }
+            else {
                 set_food(creature_ptr, creature_ptr->food + ((q_ptr->pval) / 20));
             }
             break;

@@ -8,10 +8,9 @@
 #include "system/floor-type-definition.h"
 #include "system/object-type-definition.h"
 
-void acquire_chaos_weapon(player_type *creature_ptr)
-{
+void acquire_chaos_weapon(player_type* creature_ptr) {
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     tval_type dummy = TV_SWORD;
     OBJECT_SUBTYPE_VALUE dummy2;
     switch (randint1(creature_ptr->lev)) {

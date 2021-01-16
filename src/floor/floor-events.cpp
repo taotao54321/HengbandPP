@@ -39,14 +39,13 @@
 #include "view/display-messages.h"
 #include "world/world.h"
 
-void day_break(player_type *subject_ptr)
-{
+void day_break(player_type* subject_ptr) {
     msg_print(_("夜が明けた。", "The sun has risen."));
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
     if (!subject_ptr->wild_mode) {
         for (POSITION y = 0; y < floor_ptr->height; y++) {
             for (POSITION x = 0; x < floor_ptr->width; x++) {
-                grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+                grid_type* g_ptr = &floor_ptr->grid_array[y][x];
                 g_ptr->info |= CAVE_GLOW;
                 if (view_perma_grids)
                     g_ptr->info |= CAVE_MARK;
@@ -63,15 +62,14 @@ void day_break(player_type *subject_ptr)
         set_superstealth(subject_ptr, FALSE);
 }
 
-void night_falls(player_type *subject_ptr)
-{
+void night_falls(player_type* subject_ptr) {
     msg_print(_("日が沈んだ。", "The sun has fallen."));
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
     if (!subject_ptr->wild_mode) {
         for (POSITION y = 0; y < floor_ptr->height; y++) {
             for (POSITION x = 0; x < floor_ptr->width; x++) {
-                grid_type *g_ptr = &floor_ptr->grid_array[y][x];
-                feature_type *f_ptr = &f_info[get_feat_mimic(g_ptr)];
+                grid_type* g_ptr = &floor_ptr->grid_array[y][x];
+                feature_type* f_ptr = &f_info[get_feat_mimic(g_ptr)];
                 if (is_mirror_grid(g_ptr) || has_flag(f_ptr->flags, FF_QUEST_ENTER) || has_flag(f_ptr->flags, FF_ENTRANCE))
                     continue;
 
@@ -104,17 +102,16 @@ static int rating_boost(int delta) { return delta * delta + 50 * delta; }
  * / Examine all monsters and unidentified objects, and get the feeling of current dungeon floor
  * @return 算出されたダンジョンの雰囲気ランク
  */
-static byte get_dungeon_feeling(player_type *subject_ptr)
-{
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
+static byte get_dungeon_feeling(player_type* subject_ptr) {
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
     if (!floor_ptr->dun_level)
         return 0;
 
     const int base = 10;
     int rating = 0;
     for (MONSTER_IDX i = 1; i < floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &floor_ptr->m_list[i];
-        monster_race *r_ptr;
+        monster_type* m_ptr = &floor_ptr->m_list[i];
+        monster_race* r_ptr;
         int delta = 0;
         if (!monster_is_valid(m_ptr) || is_pet(m_ptr))
             continue;
@@ -123,27 +120,29 @@ static byte get_dungeon_feeling(player_type *subject_ptr)
         if (r_ptr->flags1 & RF1_UNIQUE) {
             if (r_ptr->level + 10 > floor_ptr->dun_level)
                 delta += (r_ptr->level + 10 - floor_ptr->dun_level) * 2 * base;
-        } else if (r_ptr->level > floor_ptr->dun_level)
+        }
+        else if (r_ptr->level > floor_ptr->dun_level)
             delta += (r_ptr->level - floor_ptr->dun_level) * base;
 
         if (r_ptr->flags1 & RF1_FRIENDS) {
             if (5 <= get_monster_crowd_number(floor_ptr, i))
                 delta += 1;
-        } else if (2 <= get_monster_crowd_number(floor_ptr, i))
+        }
+        else if (2 <= get_monster_crowd_number(floor_ptr, i))
             delta += 1;
 
         rating += rating_boost(delta);
     }
 
     for (MONSTER_IDX i = 1; i < floor_ptr->o_max; i++) {
-        object_type *o_ptr = &floor_ptr->o_list[i];
-        object_kind *k_ptr = &k_info[o_ptr->k_idx];
+        object_type* o_ptr = &floor_ptr->o_list[i];
+        object_kind* k_ptr = &k_info[o_ptr->k_idx];
         int delta = 0;
         if (!object_is_valid(o_ptr) || (object_is_known(o_ptr) && ((o_ptr->marked & OM_TOUCHED) != 0)) || ((o_ptr->ident & IDENT_SENSE) != 0))
             continue;
 
         if (object_is_ego(o_ptr)) {
-            ego_item_type *e_ptr = &e_info[o_ptr->name2];
+            ego_item_type* e_ptr = &e_info[o_ptr->name2];
             delta += e_ptr->rating * base;
         }
 
@@ -225,9 +224,8 @@ static byte get_dungeon_feeling(player_type *subject_ptr)
  * / Update dungeon feeling, and announce it if changed
  * @return なし
  */
-void update_dungeon_feeling(player_type *subject_ptr)
-{
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
+void update_dungeon_feeling(player_type* subject_ptr) {
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
     if (!floor_ptr->dun_level)
         return;
 
@@ -259,15 +257,14 @@ void update_dungeon_feeling(player_type *subject_ptr)
 /*
  * Glow deep lava and building entrances in the floor
  */
-void glow_deep_lava_and_bldg(player_type *subject_ptr)
-{
+void glow_deep_lava_and_bldg(player_type* subject_ptr) {
     if (d_info[subject_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         return;
 
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
     for (POSITION y = 0; y < floor_ptr->height; y++) {
         for (POSITION x = 0; x < floor_ptr->width; x++) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[y][x];
             if (!has_flag(f_info[get_feat_mimic(g_ptr)].flags, FF_GLOW))
                 continue;
@@ -290,8 +287,7 @@ void glow_deep_lava_and_bldg(player_type *subject_ptr)
 /*
  * Actually erase the entire "lite" array, redrawing every grid
  */
-void forget_lite(floor_type *floor_ptr)
-{
+void forget_lite(floor_type* floor_ptr) {
     if (!floor_ptr->lite_n)
         return;
 
@@ -307,15 +303,14 @@ void forget_lite(floor_type *floor_ptr)
 /*
  * Clear the viewable space
  */
-void forget_view(floor_type *floor_ptr)
-{
+void forget_view(floor_type* floor_ptr) {
     if (!floor_ptr->view_n)
         return;
 
     for (int i = 0; i < floor_ptr->view_n; i++) {
         POSITION y = floor_ptr->view_y[i];
         POSITION x = floor_ptr->view_x[i];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[y][x];
         g_ptr->info &= ~(CAVE_VIEW);
     }

@@ -16,8 +16,7 @@
  * @param store_ptr 店舗情報の参照ポインタ
  * @return なし
  */
-void wr_store(store_type *store_ptr)
-{
+void wr_store(store_type* store_ptr) {
     wr_u32b(store_ptr->store_open);
     wr_s16b(store_ptr->insult_cur);
     wr_byte(store_ptr->owner);
@@ -34,8 +33,7 @@ void wr_store(store_type *store_ptr)
  * @param なし
  * @return なし
  */
-void wr_randomizer(void)
-{
+void wr_randomizer(void) {
     wr_u16b(0);
     wr_u16b(Rand_place);
     for (int i = 0; i < RAND_DEG; i++)
@@ -46,8 +44,7 @@ void wr_randomizer(void)
  * @brief ゲームオプション情報を書き込む / Write the "options"
  * @return なし
  */
-void wr_options(void)
-{
+void wr_options(void) {
     for (int i = 0; i < 4; i++)
         wr_u32b(0L);
 
@@ -125,8 +122,7 @@ void wr_options(void)
  * @brief ダミー情報スキップを書き込む / Hack -- Write the "ghost" info
  * @return なし
  */
-void wr_ghost(void)
-{
+void wr_ghost(void) {
     wr_string(_("不正なゴースト", "Broken Ghost"));
     for (int i = 0; i < 60; i++)
         wr_byte(0);
@@ -136,8 +132,7 @@ void wr_ghost(void)
  * @brief クイック・スタート情報を書き込む / Save quick start data
  * @return なし
  */
-void save_quick_start(void)
-{
+void save_quick_start(void) {
     wr_byte(previous_char.psex);
     wr_byte((byte)previous_char.prace);
     wr_byte((byte)previous_char.pclass);

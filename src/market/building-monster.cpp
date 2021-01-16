@@ -1,16 +1,16 @@
 ﻿#include "market/building-monster.h"
 #include "core/asking-player.h"
-#include "util/sort.h"
 #include "core/stuff-handler.h"
 #include "game-option/game-play-options.h"
 #include "io/input-key-acceptor.h"
+#include "lore/lore-store.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-flags1.h"
-#include "lore/lore-store.h"
 #include "term/gameterm.h"
 #include "term/screen-processor.h"
 #include "term/term-color-types.h"
 #include "util/int-char-converter.h"
+#include "util/sort.h"
 #include "util/string-processor.h"
 #include "view/display-lore.h"
 
@@ -20,13 +20,12 @@
  * @return 常にTRUEを返す。
  * @todo 返り値が意味不明なので直した方が良いかもしれない。
  */
-bool research_mon(player_type *player_ptr)
-{
+bool research_mon(player_type* player_ptr) {
     char buf[128];
     bool notpicked;
     bool recall = FALSE;
     u16b why = 0;
-    MONSTER_IDX *who;
+    MONSTER_IDX* who;
 
     bool all = FALSE;
     bool uniq = FALSE;
@@ -57,13 +56,16 @@ bool research_mon(player_type *player_ptr)
     if (sym == KTRL('A')) {
         all = TRUE;
         strcpy(buf, _("全モンスターのリスト", "Full monster list."));
-    } else if (sym == KTRL('U')) {
+    }
+    else if (sym == KTRL('U')) {
         all = uniq = TRUE;
         strcpy(buf, _("ユニーク・モンスターのリスト", "Unique monster list."));
-    } else if (sym == KTRL('N')) {
+    }
+    else if (sym == KTRL('N')) {
         all = norm = TRUE;
         strcpy(buf, _("ユニーク外モンスターのリスト", "Non-unique monster list."));
-    } else if (sym == KTRL('M')) {
+    }
+    else if (sym == KTRL('M')) {
         all = TRUE;
         if (!get_string(_("名前(英語の場合小文字で可)", "Enter name:"), temp, 70)) {
             temp[0] = 0;
@@ -73,9 +75,11 @@ bool research_mon(player_type *player_ptr)
         }
 
         sprintf(buf, _("名前:%sにマッチ", "Monsters with a name \"%s\""), temp);
-    } else if (ident_info[i]) {
+    }
+    else if (ident_info[i]) {
         sprintf(buf, "%c - %s.", sym, ident_info[i] + 2);
-    } else {
+    }
+    else {
         sprintf(buf, "%c - %s", sym, _("無効な文字", "Unknown Symbol"));
     }
 
@@ -88,7 +92,7 @@ bool research_mon(player_type *player_ptr)
     /* Collect matching monsters */
     int n = 0;
     for (i = 1; i < max_r_idx; i++) {
-        monster_race *r_ptr = &r_info[i];
+        monster_race* r_ptr = &r_info[i];
 
         /* Empty monster */
         if (!r_ptr->name)
@@ -133,7 +137,8 @@ bool research_mon(player_type *player_ptr)
             if (angband_strstr(temp2, temp))
 #endif
                 who[n++] = i;
-        } else if (all || (r_ptr->d_char == sym)) {
+        }
+        else if (all || (r_ptr->d_char == sym)) {
             who[n++] = i;
         }
     }

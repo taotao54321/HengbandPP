@@ -47,8 +47,7 @@
  * (cast magic) into "g" (get), and "s" (search) into "d" (drop).
  * </pre>
  */
-void do_cmd_store(player_type *player_ptr)
-{
+void do_cmd_store(player_type* player_ptr) {
     if (player_ptr->wild_mode)
         return;
     TERM_LEN w, h;
@@ -57,7 +56,7 @@ void do_cmd_store(player_type *player_ptr)
     xtra_stock = MIN(14 + 26, ((h > 24) ? (h - 24) : 0));
     store_bottom = MIN_STOCK + xtra_stock;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &player_ptr->current_floor_ptr->grid_array[player_ptr->y][player_ptr->x];
 
     if (!cave_has_flag_grid(g_ptr, FF_STORE)) {
@@ -118,11 +117,13 @@ void do_cmd_store(player_type *player_ptr)
             prt(_("g) アイテムを取る", "g) Get an item."), 21 + xtra_stock, 27);
             prt(_("d) アイテムを置く", "d) Drop an item."), 22 + xtra_stock, 27);
             prt(_("x) 家のアイテムを調べる", "x) eXamine an item in the home."), 23 + xtra_stock, 27);
-        } else if (cur_store_num == STORE_MUSEUM) {
+        }
+        else if (cur_store_num == STORE_MUSEUM) {
             prt(_("d) アイテムを置く", "d) Drop an item."), 21 + xtra_stock, 27);
             prt(_("r) アイテムの展示をやめる", "r) order to Remove an item."), 22 + xtra_stock, 27);
             prt(_("x) 博物館のアイテムを調べる", "x) eXamine an item in the museum."), 23 + xtra_stock, 27);
-        } else {
+        }
+        else {
             prt(_("p) 商品を買う", "p) Purchase an item."), 21 + xtra_stock, 30);
             prt(_("s) アイテムを売る", "s) Sell an item."), 22 + xtra_stock, 30);
             prt(_("x) 商品を調べる", "x) eXamine an item in the shop"), 23 + xtra_stock, 30);
@@ -143,7 +144,7 @@ void do_cmd_store(player_type *player_ptr)
         handle_stuff(player_ptr);
         if (player_ptr->inventory_list[INVEN_PACK].k_idx) {
             INVENTORY_IDX item = INVEN_PACK;
-            object_type *o_ptr = &player_ptr->inventory_list[item];
+            object_type* o_ptr = &player_ptr->inventory_list[item];
             if (cur_store_num != STORE_HOME) {
                 if (cur_store_num == STORE_MUSEUM)
                     msg_print(_("ザックからアイテムがあふれそうなので、あわてて博物館から出た...", "Your pack is so full that you flee the Museum..."));
@@ -151,13 +152,15 @@ void do_cmd_store(player_type *player_ptr)
                     msg_print(_("ザックからアイテムがあふれそうなので、あわてて店から出た...", "Your pack is so full that you flee the store..."));
 
                 leave_store = TRUE;
-            } else if (!store_check_num(o_ptr)) {
+            }
+            else if (!store_check_num(o_ptr)) {
                 msg_print(_("ザックからアイテムがあふれそうなので、あわてて家から出た...", "Your pack is so full that you flee your home..."));
                 leave_store = TRUE;
-            } else {
+            }
+            else {
                 int item_pos;
                 object_type forge;
-                object_type *q_ptr;
+                object_type* q_ptr;
                 GAME_TEXT o_name[MAX_NLEN];
                 msg_print(_("ザックからアイテムがあふれてしまった！", "Your pack overflows!"));
                 q_ptr = &forge;

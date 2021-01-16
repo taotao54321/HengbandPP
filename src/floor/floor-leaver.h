@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void leave_floor(player_type *creature_ptr);
+void leave_floor(player_type* creature_ptr);

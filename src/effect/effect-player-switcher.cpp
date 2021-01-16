@@ -13,8 +13,7 @@
  * @param em_ptr プレーヤー効果構造体への参照ポインタ
  * @return なし
  */
-void switch_effects_player(player_type *target_ptr, effect_player_type *ep_ptr)
-{
+void switch_effects_player(player_type* target_ptr, effect_player_type* ep_ptr) {
     switch (ep_ptr->effect_type) {
     case GF_ACID:
         effect_player_elements(target_ptr, ep_ptr, _("酸で攻撃された！", "You are hit by acid!"), acid_dam);

@@ -18,9 +18,8 @@
  * @param item 残量を表示したいプレイヤーのアイテム所持スロット
  * @return なし
  */
-void inven_item_charges(player_type *owner_ptr, INVENTORY_IDX item)
-{
-    object_type *o_ptr = &owner_ptr->inventory_list[item];
+void inven_item_charges(player_type* owner_ptr, INVENTORY_IDX item) {
+    object_type* o_ptr = &owner_ptr->inventory_list[item];
     if ((o_ptr->tval != TV_STAFF) && (o_ptr->tval != TV_WAND))
         return;
     if (!object_is_known(o_ptr))
@@ -29,7 +28,8 @@ void inven_item_charges(player_type *owner_ptr, INVENTORY_IDX item)
 #ifdef JP
     if (o_ptr->pval <= 0) {
         msg_print("もう魔力が残っていない。");
-    } else {
+    }
+    else {
         msg_format("あと %d 回分の魔力が残っている。", o_ptr->pval);
     }
 #else
@@ -50,15 +50,15 @@ void inven_item_charges(player_type *owner_ptr, INVENTORY_IDX item)
  * @param item 残量を表示したいプレイヤーのアイテム所持スロット
  * @return なし
  */
-void inven_item_describe(player_type *owner_ptr, INVENTORY_IDX item)
-{
-    object_type *o_ptr = &owner_ptr->inventory_list[item];
+void inven_item_describe(player_type* owner_ptr, INVENTORY_IDX item) {
+    object_type* o_ptr = &owner_ptr->inventory_list[item];
     GAME_TEXT o_name[MAX_NLEN];
     describe_flavor(owner_ptr, o_name, o_ptr, 0);
 #ifdef JP
     if (o_ptr->number <= 0) {
         msg_format("もう%sを持っていない。", o_name);
-    } else {
+    }
+    else {
         msg_format("まだ %sを持っている。", o_name);
     }
 #else
@@ -75,10 +75,9 @@ void inven_item_describe(player_type *owner_ptr, INVENTORY_IDX item)
  * @details
  * Include list of usable spells for readible books
  */
-void display_koff(player_type *owner_ptr, KIND_OBJECT_IDX k_idx)
-{
+void display_koff(player_type* owner_ptr, KIND_OBJECT_IDX k_idx) {
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
     int sval;
     REALM_IDX use_realm;
     GAME_TEXT o_name[MAX_NLEN];
@@ -100,7 +99,8 @@ void display_koff(player_type *owner_ptr, KIND_OBJECT_IDX k_idx)
     if (owner_ptr->realm1 || owner_ptr->realm2) {
         if ((use_realm != owner_ptr->realm1) && (use_realm != owner_ptr->realm2))
             return;
-    } else {
+    }
+    else {
         if ((owner_ptr->pclass != CLASS_SORCERER) && (owner_ptr->pclass != CLASS_RED_MAGE))
             return;
         if (!is_magic(use_realm))

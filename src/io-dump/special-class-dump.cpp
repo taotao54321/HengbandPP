@@ -25,8 +25,7 @@ typedef struct {
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_magic_eater(player_type *creature_ptr, FILE *fff)
-{
+static void dump_magic_eater(player_type* creature_ptr, FILE* fff) {
     char s[EATER_EXT][MAX_NLEN];
     fprintf(fff, _("\n\n  [取り込んだ魔法道具]\n", "\n\n  [Magic devices eaten]\n"));
 
@@ -86,8 +85,7 @@ static void dump_magic_eater(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_smith(player_type *creature_ptr, FILE *fff)
-{
+static void dump_smith(player_type* creature_ptr, FILE* fff) {
     int i, id[250], n = 0, row;
     fprintf(fff, _("\n\n  [手に入れたエッセンス]\n\n", "\n\n  [Get Essence]\n\n"));
     fprintf(fff, _("エッセンス   個数     エッセンス   個数     エッセンス   個数", "Essence      Num      Essence      Num      Essence      Num "));
@@ -119,8 +117,7 @@ static void dump_smith(player_type *creature_ptr, FILE *fff)
  * @param learnt_spell_ptr 学習済魔法のテーブル
  * @return なし
  */
-static void add_monster_spell_type(char p[][80], int col, blue_magic_type spell_type, learnt_spell_table *learnt_spell_ptr)
-{
+static void add_monster_spell_type(char p[][80], int col, blue_magic_type spell_type, learnt_spell_table* learnt_spell_ptr) {
     learnt_spell_ptr->f4 = 0;
     learnt_spell_ptr->f5 = 0;
     learnt_spell_ptr->f6 = 0;
@@ -154,8 +151,7 @@ static void add_monster_spell_type(char p[][80], int col, blue_magic_type spell_
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_blue_mage(player_type *creature_ptr, FILE *fff)
-{
+static void dump_blue_mage(player_type* creature_ptr, FILE* fff) {
     char p[60][80];
     for (int i = 0; i < 60; i++) {
         p[i][0] = '\0';
@@ -215,7 +211,8 @@ static void dump_blue_mage(player_type *creature_ptr, FILE *fff)
 
         if (p[col][strlen(p[col]) - 2] == ',') {
             p[col][strlen(p[col]) - 2] = '\0';
-        } else {
+        }
+        else {
             p[col][strlen(p[col]) - 10] = '\0';
         }
 
@@ -233,8 +230,7 @@ static void dump_blue_mage(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-void dump_aux_class_special(player_type *creature_ptr, FILE *fff)
-{
+void dump_aux_class_special(player_type* creature_ptr, FILE* fff) {
     switch (creature_ptr->pclass) {
     case CLASS_MAGIC_EATER: {
         dump_magic_eater(creature_ptr, fff);

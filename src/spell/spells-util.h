@@ -5,7 +5,13 @@
 #define DETECT_RAD_ALL 255
 #define MAX_SPELLS 108
 
-typedef enum spell_type { SPELL_NAME = 0, SPELL_DESC = 1, SPELL_INFO = 2, SPELL_CAST = 3, SPELL_FAIL = 4, SPELL_STOP = 5, SPELL_CONT = 6 } spell_type;
+typedef enum spell_type { SPELL_NAME = 0,
+    SPELL_DESC = 1,
+    SPELL_INFO = 2,
+    SPELL_CAST = 3,
+    SPELL_FAIL = 4,
+    SPELL_STOP = 5,
+    SPELL_CONT = 6 } spell_type;
 
 typedef enum spell_operation {
     SPOP_DISPLAY_MES = 0x0001, // !< スペル処理オプション … メッセージを表示する

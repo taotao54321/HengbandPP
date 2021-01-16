@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void update_view(player_type *subject_ptr);
+void update_view(player_type* subject_ptr);

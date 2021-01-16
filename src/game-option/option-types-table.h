@@ -13,7 +13,7 @@
  *	- Textual description
  */
 typedef struct option_type {
-    bool *o_var;
+    bool* o_var;
     byte o_norm;
     byte o_page;
     byte o_set;

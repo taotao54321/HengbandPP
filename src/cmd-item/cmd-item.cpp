@@ -65,8 +65,7 @@
  * @brief 持ち物一覧を表示するコマンドのメインルーチン / Display inventory_list
  * @return なし
  */
-void do_cmd_inven(player_type *creature_ptr)
-{
+void do_cmd_inven(player_type* creature_ptr) {
     char out_val[160];
     command_wrk = FALSE;
     if (easy_floor)
@@ -101,11 +100,10 @@ void do_cmd_inven(player_type *creature_ptr)
  * @brief アイテムを落とすコマンドのメインルーチン / Drop an item
  * @return なし
  */
-void do_cmd_drop(player_type *creature_ptr)
-{
+void do_cmd_drop(player_type* creature_ptr) {
     OBJECT_IDX item;
     int amt = 1;
-    object_type *o_ptr;
+    object_type* o_ptr;
     if (creature_ptr->special_defense & KATA_MUSOU)
         set_action(creature_ptr, ACTION_NONE);
 
@@ -140,10 +138,9 @@ void do_cmd_drop(player_type *creature_ptr)
  * @brief アイテムを調査するコマンドのメインルーチン / Observe an item which has been *identify*-ed
  * @return なし
  */
-void do_cmd_observe(player_type *creature_ptr)
-{
+void do_cmd_observe(player_type* creature_ptr) {
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     GAME_TEXT o_name[MAX_NLEN];
     concptr q = _("どのアイテムを調べますか? ", "Examine which item? ");
     concptr s = _("調べられるアイテムがない。", "You have nothing to examine.");
@@ -167,10 +164,9 @@ void do_cmd_observe(player_type *creature_ptr)
  * Remove the inscription from an object XXX Mention item (when done)?
  * @return なし
  */
-void do_cmd_uninscribe(player_type *creature_ptr)
-{
+void do_cmd_uninscribe(player_type* creature_ptr) {
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     concptr q = _("どのアイテムの銘を消しますか? ", "Un-inscribe which item? ");
     concptr s = _("銘を消せるアイテムがない。", "You have nothing to un-inscribe.");
     o_ptr = choose_object(creature_ptr, &item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT), TV_NONE);
@@ -194,10 +190,9 @@ void do_cmd_uninscribe(player_type *creature_ptr)
  * Inscribe an object with a comment
  * @return なし
  */
-void do_cmd_inscribe(player_type *creature_ptr)
-{
+void do_cmd_inscribe(player_type* creature_ptr) {
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     GAME_TEXT o_name[MAX_NLEN];
     char out_val[80];
     concptr q = _("どのアイテムに銘を刻みますか? ", "Inscribe which item? ");
@@ -228,10 +223,9 @@ void do_cmd_inscribe(player_type *creature_ptr)
  * @details
  * XXX - Add actions for other item types
  */
-void do_cmd_use(player_type *creature_ptr)
-{
+void do_cmd_use(player_type* creature_ptr) {
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     if (creature_ptr->wild_mode || cmd_limit_arena(creature_ptr))
         return;
 
@@ -286,8 +280,7 @@ void do_cmd_use(player_type *creature_ptr)
  * @param user_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_activate(player_type *user_ptr)
-{
+void do_cmd_activate(player_type* user_ptr) {
     OBJECT_IDX item;
     if (user_ptr->wild_mode || cmd_limit_arena(user_ptr))
         return;

@@ -33,21 +33,23 @@
  * @param o_ptr アイテムへの参照ポインタ
  * @return 特別なクラス、かつそのクラス特有のアイテムであればFALSE、それ以外はTRUE
  */
-static bool is_leave_special_item(player_type *player_ptr, object_type *o_ptr)
-{
+static bool is_leave_special_item(player_type* player_ptr, object_type* o_ptr) {
     if (!leave_special)
         return TRUE;
 
     if (player_ptr->prace == RACE_BALROG) {
         if (o_ptr->tval == TV_CORPSE && o_ptr->sval == SV_CORPSE && angband_strchr("pht", r_info[o_ptr->pval].d_char))
             return FALSE;
-    } else if (player_ptr->pclass == CLASS_ARCHER) {
+    }
+    else if (player_ptr->pclass == CLASS_ARCHER) {
         if (o_ptr->tval == TV_SKELETON || (o_ptr->tval == TV_CORPSE && o_ptr->sval == SV_SKELETON))
             return FALSE;
-    } else if (player_ptr->pclass == CLASS_NINJA) {
+    }
+    else if (player_ptr->pclass == CLASS_NINJA) {
         if (o_ptr->tval == TV_LITE && o_ptr->name2 == EGO_LITE_DARKNESS && object_is_known(o_ptr))
             return FALSE;
-    } else if (player_ptr->pclass == CLASS_BEASTMASTER || player_ptr->pclass == CLASS_CAVALRY) {
+    }
+    else if (player_ptr->pclass == CLASS_BEASTMASTER || player_ptr->pclass == CLASS_CAVALRY) {
         if (o_ptr->tval == TV_WAND && o_ptr->sval == SV_WAND_HEAL_MONSTER && object_is_aware(o_ptr))
             return FALSE;
     }
@@ -58,8 +60,7 @@ static bool is_leave_special_item(player_type *player_ptr, object_type *o_ptr)
 /*
  * Automatically destroy items in this grid.
  */
-static bool is_opt_confirm_destroy(player_type *player_ptr, object_type *o_ptr)
-{
+static bool is_opt_confirm_destroy(player_type* player_ptr, object_type* o_ptr) {
     if (!destroy_items)
         return FALSE;
 
@@ -96,8 +97,7 @@ static bool is_opt_confirm_destroy(player_type *player_ptr, object_type *o_ptr)
     return TRUE;
 }
 
-void auto_destroy_item(player_type *player_ptr, object_type *o_ptr, int autopick_idx)
-{
+void auto_destroy_item(player_type* player_ptr, object_type* o_ptr, int autopick_idx) {
     bool destroy = FALSE;
     if (is_opt_confirm_destroy(player_ptr, o_ptr))
         destroy = TRUE;

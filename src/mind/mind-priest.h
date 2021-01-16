@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool bless_weapon(player_type *caster_ptr);
+bool bless_weapon(player_type* caster_ptr);

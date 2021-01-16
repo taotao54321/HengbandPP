@@ -9,8 +9,8 @@
  * 2014 Deskull rearranged comment for Doxygen.\n
  */
 
-#include "cmd-action/cmd-spell.h"
 #include "action/action-limited.h"
+#include "cmd-action/cmd-spell.h"
 #include "core/asking-player.h"
 #include "core/player-redraw-types.h"
 #include "core/player-update-types.h"
@@ -56,8 +56,7 @@
  * when you run it. It's probably easy to fix but I haven't tried,\n
  * sorry.\n
  */
-static int get_hissatsu_power(player_type *creature_ptr, SPELL_IDX *sn)
-{
+static int get_hissatsu_power(player_type* creature_ptr, SPELL_IDX* sn) {
     SPELL_IDX i;
     int j = 0;
     int num = 0;
@@ -152,14 +151,16 @@ static int get_hissatsu_power(player_type *creature_ptr, SPELL_IDX *sn)
                 if (menu_line > 16) {
                     menu_line -= 16;
                     reverse = TRUE;
-                } else
+                }
+                else
                     menu_line += 16;
                 while (!(creature_ptr->spell_learned1 & (1L << (menu_line - 1)))) {
                     if (reverse) {
                         menu_line--;
                         if (menu_line < 2)
                             reverse = FALSE;
-                    } else {
+                    }
+                    else {
                         menu_line++;
                         if (menu_line > 31)
                             reverse = TRUE;
@@ -212,8 +213,8 @@ static int get_hissatsu_power(player_type *creature_ptr, SPELL_IDX *sn)
                             strcpy(psi_desc, _("  》", "  > "));
                         else
                             strcpy(psi_desc, "    ");
-
-                    } else {
+                    }
+                    else {
                         char letter;
                         if (line <= 26)
                             letter = I2A(line - 1);
@@ -251,7 +252,8 @@ static int get_hissatsu_power(player_type *creature_ptr, SPELL_IDX *sn)
 
                 /* Extract request */
                 i = (islower(choice) ? A2I(choice) : -1);
-            } else {
+            }
+            else {
                 ask = FALSE; /* Can't uppercase digits */
 
                 i = choice - '0' + 26;
@@ -304,8 +306,7 @@ static int get_hissatsu_power(player_type *creature_ptr, SPELL_IDX *sn)
  * @brief 剣術コマンドのメインルーチン
  * @return なし
  */
-void do_cmd_hissatsu(player_type *creature_ptr)
-{
+void do_cmd_hissatsu(player_type* creature_ptr) {
     SPELL_IDX n = 0;
     magic_type spell;
 
@@ -362,12 +363,11 @@ void do_cmd_hissatsu(player_type *creature_ptr)
  * @brief 剣術コマンドの学習
  * @return なし
  */
-void do_cmd_gain_hissatsu(player_type *creature_ptr)
-{
+void do_cmd_gain_hissatsu(player_type* creature_ptr) {
     OBJECT_IDX item;
     int i, j;
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     concptr q, s;
 
     bool gain = FALSE;
@@ -419,7 +419,8 @@ void do_cmd_gain_hissatsu(player_type *creature_ptr)
 
     if (!gain) {
         msg_print(_("何も覚えられなかった。", "You were not able to learn any special attacks."));
-    } else {
+    }
+    else {
         take_turn(creature_ptr, 100);
     }
 

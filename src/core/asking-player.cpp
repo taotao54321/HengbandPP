@@ -30,8 +30,7 @@
  * ESCAPE clears the buffer and the window and returns FALSE.
  * RETURN accepts the current buffer contents and returns TRUE.
  */
-bool askfor_aux(char *buf, int len, bool numpad_cursor)
-{
+bool askfor_aux(char* buf, int len, bool numpad_cursor) {
     /*
      * Text color
      * TERM_YELLOW : Overwrite mode
@@ -163,10 +162,12 @@ bool askfor_aux(char *buf, int len, bool numpad_cursor)
                 if (pos + 1 < len) {
                     buf[pos++] = c;
                     buf[pos++] = next;
-                } else {
+                }
+                else {
                     bell();
                 }
-            } else
+            }
+            else
 #endif
             {
 #ifdef JP
@@ -176,7 +177,8 @@ bool askfor_aux(char *buf, int len, bool numpad_cursor)
 #endif
                 {
                     buf[pos++] = c;
-                } else {
+                }
+                else {
                     bell();
                 }
             }
@@ -195,7 +197,7 @@ bool askfor_aux(char *buf, int len, bool numpad_cursor)
  *
  * Allow to use numpad keys as cursor keys.
  */
-bool askfor(char *buf, int len) { return askfor_aux(buf, len, TRUE); }
+bool askfor(char* buf, int len) { return askfor_aux(buf, len, TRUE); }
 
 /*
  * Get a string from the user
@@ -207,8 +209,7 @@ bool askfor(char *buf, int len) { return askfor_aux(buf, len, TRUE); }
  *
  * We clear the input, and return FALSE, on "ESCAPE".
  */
-bool get_string(concptr prompt, char *buf, int len)
-{
+bool get_string(concptr prompt, char* buf, int len) {
     bool res;
     msg_print(NULL);
     prt(prompt, 0, 0);
@@ -234,8 +235,7 @@ bool get_check(concptr prompt) { return get_check_strict(p_ptr, prompt, 0); }
  * mode & CHECK_NO_HISTORY  : no message_add
  * mode & CHECK_DEFAULT_Y   : accept any key as y, except n and Esc.
  */
-bool get_check_strict(player_type *player_ptr, concptr prompt, BIT_FLAGS mode)
-{
+bool get_check_strict(player_type* player_ptr, concptr prompt, BIT_FLAGS mode) {
     char buf[80];
     if (auto_more) {
         player_ptr->window |= PW_MESSAGE;
@@ -250,10 +250,12 @@ bool get_check_strict(player_type *player_ptr, concptr prompt, BIT_FLAGS mode)
     if (mode & CHECK_OKAY_CANCEL) {
         angband_strcpy(buf, prompt, sizeof(buf) - 15);
         strcat(buf, "[(O)k/(C)ancel]");
-    } else if (mode & CHECK_DEFAULT_Y) {
+    }
+    else if (mode & CHECK_DEFAULT_Y) {
         angband_strcpy(buf, prompt, sizeof(buf) - 5);
         strcat(buf, "[Y/n]");
-    } else {
+    }
+    else {
         angband_strcpy(buf, prompt, sizeof(buf) - 5);
         strcat(buf, "[y/n]");
     }
@@ -280,15 +282,18 @@ bool get_check_strict(player_type *player_ptr, concptr prompt, BIT_FLAGS mode)
             if (i == 'o' || i == 'O') {
                 flag = TRUE;
                 break;
-            } else if (i == 'c' || i == 'C') {
+            }
+            else if (i == 'c' || i == 'C') {
                 flag = FALSE;
                 break;
             }
-        } else {
+        }
+        else {
             if (i == 'y' || i == 'Y') {
                 flag = TRUE;
                 break;
-            } else if (i == 'n' || i == 'N') {
+            }
+            else if (i == 'n' || i == 'N') {
                 flag = FALSE;
                 break;
             }
@@ -313,8 +318,7 @@ bool get_check_strict(player_type *player_ptr, concptr prompt, BIT_FLAGS mode)
  *
  * Returns TRUE unless the character is "Escape"
  */
-bool get_com(concptr prompt, char *command, bool z_escape)
-{
+bool get_com(concptr prompt, char* command, bool z_escape) {
     msg_print(NULL);
     prt(prompt, 0, 0);
     if (get_com_no_macros)
@@ -336,8 +340,7 @@ bool get_com(concptr prompt, char *command, bool z_escape)
  *
  * Hack -- allow "command_arg" to specify a quantity
  */
-QUANTITY get_quantity(concptr prompt, QUANTITY max)
-{
+QUANTITY get_quantity(concptr prompt, QUANTITY max) {
     bool res;
     char tmp[80];
     char buf[80];
@@ -400,8 +403,7 @@ QUANTITY get_quantity(concptr prompt, QUANTITY max)
 /*
  * Pause for user response
  */
-void pause_line(int row)
-{
+void pause_line(int row) {
     prt("", row, 0);
     put_str(_("[ 何かキーを押して下さい ]", "[Press any key to continue]"), row, _(26, 23));
 

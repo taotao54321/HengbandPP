@@ -28,8 +28,7 @@
  * @return 基礎値
  * @details 最大が18になるのはD&D由来
  */
-static int calc_basic_stat(player_type *creature_ptr, int stat_num)
-{
+static int calc_basic_stat(player_type* creature_ptr, int stat_num) {
     int e_adj = 0;
     if ((creature_ptr->stat_max[stat_num] > 18) && (creature_ptr->stat_top[stat_num] > 18))
         e_adj = (creature_ptr->stat_top[stat_num] - creature_ptr->stat_max[stat_num]) / 10;
@@ -52,8 +51,7 @@ static int calc_basic_stat(player_type *creature_ptr, int stat_num)
  * @param stat_num 能力値番号
  * @return 補正後の基礎パラメータ
  */
-static int compensate_special_race(player_type *creature_ptr, int stat_num)
-{
+static int compensate_special_race(player_type* creature_ptr, int stat_num) {
     if (!is_specific_player_race(creature_ptr, RACE_ENT))
         return 0;
 
@@ -89,8 +87,7 @@ static int compensate_special_race(player_type *creature_ptr, int stat_num)
  * @param stat_col 列数
  * @return なし
  */
-static void display_basic_stat_name(player_type *creature_ptr, int stat_num, int row, int stat_col)
-{
+static void display_basic_stat_name(player_type* creature_ptr, int stat_num, int row, int stat_col) {
     if (creature_ptr->stat_cur[stat_num] < creature_ptr->stat_max[stat_num])
         c_put_str(TERM_WHITE, stat_names_reduced[stat_num], row + stat_num + 1, stat_col + 1);
     else
@@ -108,8 +105,7 @@ static void display_basic_stat_name(player_type *creature_ptr, int stat_num, int
  * @param buf 能力値の数値
  * @return なし
  */
-static void display_basic_stat_value(player_type *creature_ptr, int stat_num, int r_adj, int e_adj, int row, int stat_col, char *buf)
-{
+static void display_basic_stat_value(player_type* creature_ptr, int stat_num, int r_adj, int e_adj, int row, int stat_col, char* buf) {
     (void)sprintf(buf, "%3d", r_adj);
     c_put_str(TERM_L_BLUE, buf, row + stat_num + 1, stat_col + 13);
 
@@ -138,8 +134,7 @@ static void display_basic_stat_value(player_type *creature_ptr, int stat_num, in
  * @param stat_col 列数
  * @return なし
  */
-static void process_stats(player_type *creature_ptr, int row, int stat_col)
-{
+static void process_stats(player_type* creature_ptr, int row, int stat_col) {
     char buf[80];
     for (int i = 0; i < A_MAX; i++) {
         int r_adj = creature_ptr->mimic_form ? mimic_info[creature_ptr->mimic_form].r_adj[i] : rp_ptr->r_adj[i];
@@ -169,8 +164,7 @@ static void process_stats(player_type *creature_ptr, int row, int stat_col)
  * @param flags 装備品に立っているフラグ
  * @return なし
  */
-static void compensate_stat_by_weapon(char *c, TERM_COLOR *a, object_type *o_ptr, int stat, BIT_FLAGS *flags)
-{
+static void compensate_stat_by_weapon(char* c, TERM_COLOR* a, object_type* o_ptr, int stat, BIT_FLAGS* flags) {
     *c = '*';
 
     if (o_ptr->pval > 0) {
@@ -198,10 +192,9 @@ static void compensate_stat_by_weapon(char *c, TERM_COLOR *a, object_type *o_ptr
  * @param col 列数
  * @return なし
  */
-static void display_equipments_compensation(player_type *creature_ptr, BIT_FLAGS *flags, int row, int *col)
-{
+static void display_equipments_compensation(player_type* creature_ptr, BIT_FLAGS* flags, int row, int* col) {
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[i];
         object_flags_known(creature_ptr, o_ptr, flags);
         for (int stat = 0; stat < A_MAX; stat++) {
@@ -209,7 +202,8 @@ static void display_equipments_compensation(player_type *creature_ptr, BIT_FLAGS
             char c = '.';
             if (has_flag(flags, stat)) {
                 compensate_stat_by_weapon(&c, &a, o_ptr, stat, flags);
-            } else if (has_flag(flags, stat + TR_SUST_STR)) {
+            }
+            else if (has_flag(flags, stat + TR_SUST_STR)) {
                 a = TERM_GREEN;
                 c = 's';
             }
@@ -227,8 +221,7 @@ static void display_equipments_compensation(player_type *creature_ptr, BIT_FLAGS
  * @param stat 能力値番号
  * @return なし
  */
-static int compensation_stat_by_mutation(player_type *creature_ptr, int stat)
-{
+static int compensation_stat_by_mutation(player_type* creature_ptr, int stat) {
     int compensation = 0;
     if (stat == A_STR) {
         if (creature_ptr->muta3 & MUT3_HYPER_STR)
@@ -299,8 +292,7 @@ static int compensation_stat_by_mutation(player_type *creature_ptr, int stat)
  * @param a 表示色
  * @return なし
  */
-static void change_display_by_mutation(player_type *creature_ptr, int stat, char *c, TERM_COLOR *a)
-{
+static void change_display_by_mutation(player_type* creature_ptr, int stat, char* c, TERM_COLOR* a) {
     int compensation = compensation_stat_by_mutation(creature_ptr, stat);
     if (compensation == 0)
         return;
@@ -327,8 +319,7 @@ static void change_display_by_mutation(player_type *creature_ptr, int stat, char
  * @param row 行数
  * @return なし
  */
-static void display_mutation_compensation(player_type *creature_ptr, BIT_FLAGS *flags, int row, int col)
-{
+static void display_mutation_compensation(player_type* creature_ptr, BIT_FLAGS* flags, int row, int col) {
     for (int stat = 0; stat < A_MAX; stat++) {
         byte a = TERM_SLATE;
         char c = '.';
@@ -359,8 +350,7 @@ static void display_mutation_compensation(player_type *creature_ptr, BIT_FLAGS *
  * No mod, no sustain, will be a slate '.'
  * </pre>
  */
-void display_player_stat_info(player_type *creature_ptr)
-{
+void display_player_stat_info(player_type* creature_ptr) {
     int stat_col = 22;
     int row = 3;
     c_put_str(TERM_WHITE, _("能力", "Stat"), row, stat_col + 1);

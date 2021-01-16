@@ -26,8 +26,7 @@
 #include "term/screen-processor.h"
 #include "view/display-self-info.h"
 
-static void set_bad_status_info(player_type *creature_ptr, self_info_type *self_ptr)
-{
+static void set_bad_status_info(player_type* creature_ptr, self_info_type* self_ptr) {
     if (creature_ptr->blind)
         self_ptr->info[self_ptr->line++] = _("あなたは目が見えない。", "You cannot see.");
 
@@ -50,8 +49,7 @@ static void set_bad_status_info(player_type *creature_ptr, self_info_type *self_
         self_ptr->info[self_ptr->line++] = _("あなたは幻覚を見ている。", "You are hallucinating.");
 }
 
-static void set_curse_info(player_type *creature_ptr, self_info_type *self_ptr)
-{
+static void set_curse_info(player_type* creature_ptr, self_info_type* self_ptr) {
     if (creature_ptr->cursed & TRC_TY_CURSE)
         self_ptr->info[self_ptr->line++] = _("あなたは邪悪な怨念に包まれている。", "You carry an ancient foul curse.");
 
@@ -104,8 +102,7 @@ static void set_curse_info(player_type *creature_ptr, self_info_type *self_ptr)
         self_ptr->info[self_ptr->line++] = _("あなたは魔力を吸われている。", "You occasionally lose spell points for no reason.");
 }
 
-static void set_special_attack_info(player_type *creature_ptr, self_info_type *self_ptr)
-{
+static void set_special_attack_info(player_type* creature_ptr, self_info_type* self_ptr) {
     if (creature_ptr->special_attack & ATTACK_CONFUSE)
         self_ptr->info[self_ptr->line++] = _("あなたの手は赤く輝いている。", "Your hands are glowing dull red.");
 
@@ -125,8 +122,7 @@ static void set_special_attack_info(player_type *creature_ptr, self_info_type *s
         self_ptr->info[self_ptr->line++] = _("あなたの手は毒に覆われている。", "You can strike the enemy with poison.");
 }
 
-static void set_esp_info(player_type *creature_ptr, self_info_type *self_ptr)
-{
+static void set_esp_info(player_type* creature_ptr, self_info_type* self_ptr) {
     if (creature_ptr->telepathy)
         self_ptr->info[self_ptr->line++] = _("あなたはテレパシー能力を持っている。", "You have ESP.");
 
@@ -185,10 +181,9 @@ static void set_esp_info(player_type *creature_ptr, self_info_type *self_ptr)
  * Use the "show_file()" method, perhaps.
  * </pre>
  */
-void self_knowledge(player_type *creature_ptr)
-{
+void self_knowledge(player_type* creature_ptr) {
     self_info_type tmp_si;
-    self_info_type *self_ptr = initialize_self_info_type(&tmp_si);
+    self_info_type* self_ptr = initialize_self_info_type(&tmp_si);
     display_life_rating(creature_ptr, self_ptr);
     chg_virtue(creature_ptr, V_KNOWLEDGE, 1);
     chg_virtue(creature_ptr, V_ENLIGHTEN, 1);
@@ -231,21 +226,26 @@ void self_knowledge(player_type *creature_ptr)
  * @param dur 効果ターン数
  * @return 効果時間の表現ID
  */
-static int report_magics_aux(int dur)
-{
+static int report_magics_aux(int dur) {
     if (dur <= 5) {
         return 0;
-    } else if (dur <= 10) {
+    }
+    else if (dur <= 10) {
         return 1;
-    } else if (dur <= 20) {
+    }
+    else if (dur <= 20) {
         return 2;
-    } else if (dur <= 50) {
+    }
+    else if (dur <= 50) {
         return 3;
-    } else if (dur <= 100) {
+    }
+    else if (dur <= 100) {
         return 4;
-    } else if (dur <= 200) {
+    }
+    else if (dur <= 200) {
         return 5;
-    } else {
+    }
+    else {
         return 6;
     }
 }
@@ -258,8 +258,7 @@ static concptr report_magic_durations[] = { _("ごく短い間", "for a short ti
  * @brief 現在の一時的効果一覧を返す / Report all currently active magical effects.
  * @return なし
  */
-void report_magics(player_type *creature_ptr)
-{
+void report_magics(player_type* creature_ptr) {
     int i = 0;
     concptr info[128];
     int info2[128];

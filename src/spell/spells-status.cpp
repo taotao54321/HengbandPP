@@ -26,8 +26,8 @@
 #include "object/object-generator.h"
 #include "object/object-kind-hook.h"
 #include "object/object-kind.h"
-#include "player/attack-defense-types.h"
 #include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
 #include "player/player-class.h"
 #include "player/player-status.h"
 #include "spell-kind/spells-launcher.h"
@@ -54,8 +54,7 @@
  * @param dam 威力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool heal_monster(player_type *caster_ptr, DIRECTION dir, HIT_POINT dam)
-{
+bool heal_monster(player_type* caster_ptr, DIRECTION dir, HIT_POINT dam) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
     return (project_hook(caster_ptr, GF_OLD_HEAL, dir, dam, flg));
 }
@@ -67,8 +66,7 @@ bool heal_monster(player_type *caster_ptr, DIRECTION dir, HIT_POINT dam)
  * @param power 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool speed_monster(player_type *caster_ptr, DIRECTION dir, int power)
-{
+bool speed_monster(player_type* caster_ptr, DIRECTION dir, int power) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
     return (project_hook(caster_ptr, GF_OLD_SPEED, dir, power, flg));
 }
@@ -80,8 +78,7 @@ bool speed_monster(player_type *caster_ptr, DIRECTION dir, int power)
  * @param power 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool slow_monster(player_type *caster_ptr, DIRECTION dir, int power)
-{
+bool slow_monster(player_type* caster_ptr, DIRECTION dir, int power) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
     return (project_hook(caster_ptr, GF_OLD_SLOW, dir, power, flg));
 }
@@ -93,8 +90,7 @@ bool slow_monster(player_type *caster_ptr, DIRECTION dir, int power)
  * @param power 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool sleep_monster(player_type *caster_ptr, DIRECTION dir, int power)
-{
+bool sleep_monster(player_type* caster_ptr, DIRECTION dir, int power) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
     return (project_hook(caster_ptr, GF_OLD_SLEEP, dir, power, flg));
 }
@@ -106,7 +102,7 @@ bool sleep_monster(player_type *caster_ptr, DIRECTION dir, int power)
  * @return 作用が実際にあった場合TRUEを返す
  * @details 威力はプレイヤーレベル*2に固定
  */
-bool stasis_monster(player_type *caster_ptr, DIRECTION dir) { return (fire_ball_hide(caster_ptr, GF_STASIS, dir, caster_ptr->lev * 2, 0)); }
+bool stasis_monster(player_type* caster_ptr, DIRECTION dir) { return (fire_ball_hide(caster_ptr, GF_STASIS, dir, caster_ptr->lev * 2, 0)); }
 
 /*!
  * @brief 邪悪なモンスター拘束(STASIS)処理
@@ -115,7 +111,7 @@ bool stasis_monster(player_type *caster_ptr, DIRECTION dir) { return (fire_ball_
  * @return 作用が実際にあった場合TRUEを返す
  * @details 威力はプレイヤーレベル*2に固定
  */
-bool stasis_evil(player_type *caster_ptr, DIRECTION dir) { return (fire_ball_hide(caster_ptr, GF_STASIS_EVIL, dir, caster_ptr->lev * 2, 0)); }
+bool stasis_evil(player_type* caster_ptr, DIRECTION dir) { return (fire_ball_hide(caster_ptr, GF_STASIS_EVIL, dir, caster_ptr->lev * 2, 0)); }
 
 /*!
  * @brief モンスター混乱処理
@@ -124,8 +120,7 @@ bool stasis_evil(player_type *caster_ptr, DIRECTION dir) { return (fire_ball_hid
  * @param plev プレイヤーレベル(=効力)
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool confuse_monster(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
-{
+bool confuse_monster(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
     return (project_hook(caster_ptr, GF_OLD_CONF, dir, plev, flg));
 }
@@ -137,8 +132,7 @@ bool confuse_monster(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
  * @param plev プレイヤーレベル(=効力)
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool stun_monster(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
-{
+bool stun_monster(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
     return (project_hook(caster_ptr, GF_STUN, dir, plev, flg));
 }
@@ -150,8 +144,7 @@ bool stun_monster(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
  * @param power 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool poly_monster(player_type *caster_ptr, DIRECTION dir, int power)
-{
+bool poly_monster(player_type* caster_ptr, DIRECTION dir, int power) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
     bool tester = (project_hook(caster_ptr, GF_OLD_POLY, dir, power, flg));
     if (tester)
@@ -165,8 +158,7 @@ bool poly_monster(player_type *caster_ptr, DIRECTION dir, int power)
  * @param dir 方向(5ならばグローバル変数 target_col/target_row の座標を目標にする)
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool clone_monster(player_type *caster_ptr, DIRECTION dir)
-{
+bool clone_monster(player_type* caster_ptr, DIRECTION dir) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
     return (project_hook(caster_ptr, GF_OLD_CLONE, dir, 0, flg));
 }
@@ -178,14 +170,12 @@ bool clone_monster(player_type *caster_ptr, DIRECTION dir)
  * @param plev プレイヤーレベル(=効力)
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool fear_monster(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
-{
+bool fear_monster(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL | PROJECT_REFLECTABLE;
     return (project_hook(caster_ptr, GF_TURN_ALL, dir, plev, flg));
 }
 
-bool time_walk(player_type *creature_ptr)
-{
+bool time_walk(player_type* creature_ptr) {
     if (creature_ptr->timewalk) {
         msg_print(_("既に時は止まっている。", "Time is already stopped."));
         return FALSE;
@@ -210,8 +200,7 @@ bool time_walk(player_type *creature_ptr)
  * @param options スペル共通オプション
  * @return なし
  */
-void roll_hitdice(player_type *creature_ptr, spell_operation options)
-{
+void roll_hitdice(player_type* creature_ptr, spell_operation options) {
     HIT_POINT min_value = creature_ptr->hitdie + ((PY_MAX_LEVEL + 2) * (creature_ptr->hitdie + 1)) * 3 / 8;
     HIT_POINT max_value = creature_ptr->hitdie + ((PY_MAX_LEVEL + 2) * (creature_ptr->hitdie + 1)) * 5 / 8;
 
@@ -258,8 +247,7 @@ void roll_hitdice(player_type *creature_ptr, spell_operation options)
     creature_ptr->knowledge &= ~(KNOW_HPRATE);
 }
 
-bool life_stream(player_type *creature_ptr, bool message, bool virtue_change)
-{
+bool life_stream(player_type* creature_ptr, bool message, bool virtue_change) {
     if (virtue_change) {
         chg_virtue(creature_ptr, V_VITALITY, 1);
         chg_virtue(creature_ptr, V_UNLIFE, -5);
@@ -284,8 +272,7 @@ bool life_stream(player_type *creature_ptr, bool message, bool virtue_change)
     return TRUE;
 }
 
-bool heroism(player_type *creature_ptr, int base)
-{
+bool heroism(player_type* creature_ptr, int base) {
     bool ident = FALSE;
     if (set_afraid(creature_ptr, 0))
         ident = TRUE;
@@ -296,8 +283,7 @@ bool heroism(player_type *creature_ptr, int base)
     return ident;
 }
 
-bool berserk(player_type *creature_ptr, int base)
-{
+bool berserk(player_type* creature_ptr, int base) {
     bool ident = FALSE;
     if (set_afraid(creature_ptr, 0))
         ident = TRUE;
@@ -308,8 +294,7 @@ bool berserk(player_type *creature_ptr, int base)
     return ident;
 }
 
-bool cure_light_wounds(player_type *creature_ptr, DICE_NUMBER dice, DICE_SID sides)
-{
+bool cure_light_wounds(player_type* creature_ptr, DICE_NUMBER dice, DICE_SID sides) {
     bool ident = FALSE;
     if (hp_player(creature_ptr, damroll(dice, sides)))
         ident = TRUE;
@@ -322,8 +307,7 @@ bool cure_light_wounds(player_type *creature_ptr, DICE_NUMBER dice, DICE_SID sid
     return ident;
 }
 
-bool cure_serious_wounds(player_type *creature_ptr, DICE_NUMBER dice, DICE_SID sides)
-{
+bool cure_serious_wounds(player_type* creature_ptr, DICE_NUMBER dice, DICE_SID sides) {
     bool ident = FALSE;
     if (hp_player(creature_ptr, damroll(dice, sides)))
         ident = TRUE;
@@ -338,8 +322,7 @@ bool cure_serious_wounds(player_type *creature_ptr, DICE_NUMBER dice, DICE_SID s
     return ident;
 }
 
-bool cure_critical_wounds(player_type *creature_ptr, HIT_POINT pow)
-{
+bool cure_critical_wounds(player_type* creature_ptr, HIT_POINT pow) {
     bool ident = FALSE;
     if (hp_player(creature_ptr, pow))
         ident = TRUE;
@@ -358,8 +341,7 @@ bool cure_critical_wounds(player_type *creature_ptr, HIT_POINT pow)
     return ident;
 }
 
-bool true_healing(player_type *creature_ptr, HIT_POINT pow)
-{
+bool true_healing(player_type* creature_ptr, HIT_POINT pow) {
     bool ident = FALSE;
     if (hp_player(creature_ptr, pow))
         ident = TRUE;
@@ -378,8 +360,7 @@ bool true_healing(player_type *creature_ptr, HIT_POINT pow)
     return ident;
 }
 
-bool restore_mana(player_type *creature_ptr, bool magic_eater)
-{
+bool restore_mana(player_type* creature_ptr, bool magic_eater) {
     if (creature_ptr->pclass == CLASS_MAGIC_EATER && magic_eater) {
         int i;
         for (i = 0; i < EATER_EXT * 2; i++) {
@@ -413,8 +394,7 @@ bool restore_mana(player_type *creature_ptr, bool magic_eater)
     return TRUE;
 }
 
-bool restore_all_status(player_type *creature_ptr)
-{
+bool restore_all_status(player_type* creature_ptr) {
     bool ident = FALSE;
     if (do_res_stat(creature_ptr, A_STR))
         ident = TRUE;
@@ -431,8 +411,7 @@ bool restore_all_status(player_type *creature_ptr)
     return ident;
 }
 
-bool fishing(player_type *creature_ptr)
-{
+bool fishing(player_type* creature_ptr) {
     DIRECTION dir;
     if (!get_direction(creature_ptr, &dir, FALSE, FALSE))
         return FALSE;
@@ -457,8 +436,7 @@ bool fishing(player_type *creature_ptr)
     return TRUE;
 }
 
-bool cosmic_cast_off(player_type *creature_ptr, object_type *o_ptr)
-{
+bool cosmic_cast_off(player_type* creature_ptr, object_type* o_ptr) {
     /* Cast off activated item */
     INVENTORY_IDX inv;
     for (inv = INVEN_RARM; inv <= INVEN_FEET; inv++) {
@@ -504,8 +482,7 @@ bool cosmic_cast_off(player_type *creature_ptr, object_type *o_ptr)
  * @param m_ptr 因果混乱をプレイヤーに与えたモンスターの情報参照ポインタ
  * @return なし
  */
-void apply_nexus(monster_type *m_ptr, player_type *target_ptr)
-{
+void apply_nexus(monster_type* m_ptr, player_type* target_ptr) {
     switch (randint1(7)) {
     case 1:
     case 2:
@@ -548,8 +525,7 @@ void apply_nexus(monster_type *m_ptr, player_type *target_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void status_shuffle(player_type *creature_ptr)
-{
+void status_shuffle(player_type* creature_ptr) {
     /* Pick a pair of stats */
     int i = randint0(A_MAX);
     int j;

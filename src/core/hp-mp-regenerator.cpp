@@ -8,8 +8,8 @@
 #include "monster-race/race-flags2.h"
 #include "monster/monster-status.h"
 #include "player/attack-defense-types.h"
-#include "player/special-defense-types.h"
 #include "player/player-status-table.h"
+#include "player/special-defense-types.h"
 #include "system/floor-type-definition.h"
 #include "system/object-type-definition.h"
 
@@ -21,8 +21,7 @@ int wild_regen = 20;
  * @param percent 回復比率
  * @return なし
  */
-void regenhp(player_type *creature_ptr, int percent)
-{
+void regenhp(player_type* creature_ptr, int percent) {
     if (creature_ptr->special_defense & KATA_KOUKIJIN)
         return;
     if (creature_ptr->action == ACTION_HAYAGAKE)
@@ -57,8 +56,7 @@ void regenhp(player_type *creature_ptr, int percent)
  * @param regen_amount 回復量
  * @return なし
  */
-void regenmana(player_type *creature_ptr, MANA_POINT upkeep_factor, MANA_POINT regen_amount)
-{
+void regenmana(player_type* creature_ptr, MANA_POINT upkeep_factor, MANA_POINT regen_amount) {
     MANA_POINT old_csp = creature_ptr->csp;
     s32b regen_rate = regen_amount * 100 - upkeep_factor * PY_REGEN_NORMAL;
 
@@ -114,8 +112,7 @@ void regenmana(player_type *creature_ptr, MANA_POINT upkeep_factor, MANA_POINT r
  * @param regen_amount 回復量
  * @return なし
  */
-void regenmagic(player_type *creature_ptr, int regen_amount)
-{
+void regenmagic(player_type* creature_ptr, int regen_amount) {
     MANA_POINT new_mana;
     int dev = 30;
     int mult = (dev + adj_mag_mana[creature_ptr->stat_ind[A_INT]]); /* x1 to x2 speed bonus for recharging */
@@ -161,11 +158,10 @@ void regenmagic(player_type *creature_ptr, int regen_amount)
  * @return なし
  * @note Should probably be done during monster turns.
  */
-void regenerate_monsters(player_type *player_ptr)
-{
+void regenerate_monsters(player_type* player_ptr) {
     for (int i = 1; i < player_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &player_ptr->current_floor_ptr->m_list[i];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_type* m_ptr = &player_ptr->current_floor_ptr->m_list[i];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
         if (!monster_is_valid(m_ptr))
             continue;
@@ -197,12 +193,11 @@ void regenerate_monsters(player_type *player_ptr)
  * @return なし
  * @note Should probably be done during monster turns.
  */
-void regenerate_captured_monsters(player_type *creature_ptr)
-{
+void regenerate_captured_monsters(player_type* creature_ptr) {
     bool heal = FALSE;
     for (int i = 0; i < INVEN_TOTAL; i++) {
-        monster_race *r_ptr;
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        monster_race* r_ptr;
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
         if (o_ptr->tval != TV_CAPTURE)

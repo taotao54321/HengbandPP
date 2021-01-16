@@ -11,8 +11,7 @@
 #include "locale/japanese.h"
 #endif
 
-void display_monster_hp_ac(lore_type *lore_ptr)
-{
+void display_monster_hp_ac(lore_type* lore_ptr) {
     if (!lore_ptr->know_everything && (know_armour(lore_ptr->r_idx) == 0))
         return;
 
@@ -20,14 +19,14 @@ void display_monster_hp_ac(lore_type *lore_ptr)
     if ((lore_ptr->flags1 & RF1_FORCE_MAXHP) || (lore_ptr->r_ptr->hside == 1)) {
         u32b hp = lore_ptr->r_ptr->hdice * (lore_ptr->nightmare ? 2 : 1) * lore_ptr->r_ptr->hside;
         hooked_roff(format(_(" %d の体力がある。", " and a life rating of %d.  "), (s16b)MIN(30000, hp)));
-    } else {
+    }
+    else {
         hooked_roff(format(
             _(" %dd%d の体力がある。", " and a life rating of %dd%d.  "), lore_ptr->r_ptr->hdice * (lore_ptr->nightmare ? 2 : 1), lore_ptr->r_ptr->hside));
     }
 }
 
-void display_monster_concrete_abilities(lore_type *lore_ptr)
-{
+void display_monster_concrete_abilities(lore_type* lore_ptr) {
     if (lore_ptr->flags7 & (RF7_HAS_LITE_1 | RF7_HAS_LITE_2)) {
         lore_ptr->vp[lore_ptr->vn] = _("ダンジョンを照らす", "illuminate the dungeon");
         lore_ptr->color[lore_ptr->vn++] = TERM_WHITE;
@@ -89,8 +88,7 @@ void display_monster_concrete_abilities(lore_type *lore_ptr)
     }
 }
 
-void display_monster_abilities(lore_type *lore_ptr)
-{
+void display_monster_abilities(lore_type* lore_ptr) {
     if (lore_ptr->vn <= 0)
         return;
 
@@ -101,7 +99,8 @@ void display_monster_abilities(lore_type *lore_ptr)
             jverb(lore_ptr->vp[n], lore_ptr->jverb_buf, JVERB_AND);
             hook_c_roff(lore_ptr->color[n], lore_ptr->jverb_buf);
             hooked_roff("、");
-        } else {
+        }
+        else {
             hook_c_roff(lore_ptr->color[n], lore_ptr->vp[n]);
         }
 #else
@@ -119,8 +118,7 @@ void display_monster_abilities(lore_type *lore_ptr)
     hooked_roff(_("ことができる。", ".  "));
 }
 
-void display_monster_constitutions(lore_type *lore_ptr)
-{
+void display_monster_constitutions(lore_type* lore_ptr) {
     if (lore_ptr->flags7 & RF7_AQUATIC)
         hooked_roff(format(_("%^sは水中に棲んでいる。", "%^s lives in water.  "), wd_he[lore_ptr->msex]));
 
@@ -151,8 +149,7 @@ void display_monster_constitutions(lore_type *lore_ptr)
         hook_c_roff(TERM_SLATE, format(_("%^sに乗ることができる。", "%^s is suitable for riding.  "), wd_he[lore_ptr->msex]));
 }
 
-void display_monster_concrete_weakness(lore_type *lore_ptr)
-{
+void display_monster_concrete_weakness(lore_type* lore_ptr) {
     if (lore_ptr->flags3 & RF3_HURT_ROCK) {
         lore_ptr->vp[lore_ptr->vn] = _("岩を除去するもの", "rock remover");
         lore_ptr->color[lore_ptr->vn++] = TERM_UMBER;
@@ -174,8 +171,7 @@ void display_monster_concrete_weakness(lore_type *lore_ptr)
     }
 }
 
-void display_monster_weakness(lore_type *lore_ptr)
-{
+void display_monster_weakness(lore_type* lore_ptr) {
     if (lore_ptr->vn <= 0)
         return;
 
@@ -198,8 +194,7 @@ void display_monster_weakness(lore_type *lore_ptr)
     hooked_roff(_("でダメージを与えられる。", ".  "));
 }
 
-void display_monster_concrete_resistances(lore_type *lore_ptr)
-{
+void display_monster_concrete_resistances(lore_type* lore_ptr) {
     if (lore_ptr->flagsr & RFR_IM_ACID) {
         lore_ptr->vp[lore_ptr->vn] = _("酸", "acid");
         lore_ptr->color[lore_ptr->vn++] = TERM_GREEN;
@@ -306,8 +301,7 @@ void display_monster_concrete_resistances(lore_type *lore_ptr)
     }
 }
 
-void display_monster_resistances(lore_type *lore_ptr)
-{
+void display_monster_resistances(lore_type* lore_ptr) {
     if (lore_ptr->vn <= 0)
         return;
 
@@ -330,8 +324,7 @@ void display_monster_resistances(lore_type *lore_ptr)
     hooked_roff(_("の耐性を持っている。", ".  "));
 }
 
-void display_monster_evolution(lore_type* lore_ptr)
-{
+void display_monster_evolution(lore_type* lore_ptr) {
     if (((lore_ptr->r_ptr->r_xtra1 & MR1_EVOLUTION) == 0) && !lore_ptr->know_everything)
         return;
 
@@ -340,13 +333,13 @@ void display_monster_evolution(lore_type* lore_ptr)
         hook_c_roff(TERM_YELLOW, format("%s", r_name + r_info[lore_ptr->r_ptr->next_r_idx].name));
 
         hooked_roff(_(format("に進化する。"), format(" when %s gets enough experience.  ", wd_he[lore_ptr->msex])));
-    } else if (!(lore_ptr->r_ptr->flags1 & RF1_UNIQUE)) {
+    }
+    else if (!(lore_ptr->r_ptr->flags1 & RF1_UNIQUE)) {
         hooked_roff(format(_("%sは進化しない。", "%s won't evolve.  "), wd_he[lore_ptr->msex]));
     }
 }
 
-void display_monster_concrete_immunities(lore_type *lore_ptr)
-{
+void display_monster_concrete_immunities(lore_type* lore_ptr) {
     if (lore_ptr->flags3 & RF3_NO_STUN) {
         lore_ptr->vp[lore_ptr->vn] = _("朦朧としない", "stunned");
         lore_ptr->color[lore_ptr->vn++] = TERM_ORANGE;
@@ -373,8 +366,7 @@ void display_monster_concrete_immunities(lore_type *lore_ptr)
     }
 }
 
-void display_monster_immunities(lore_type *lore_ptr)
-{
+void display_monster_immunities(lore_type* lore_ptr) {
     if (lore_ptr->vn <= 0)
         return;
 
@@ -397,8 +389,7 @@ void display_monster_immunities(lore_type *lore_ptr)
     hooked_roff(_("。", ".  "));
 }
 
-void display_monster_alert(lore_type *lore_ptr)
-{
+void display_monster_alert(lore_type* lore_ptr) {
     bool alert = ((int)lore_ptr->r_ptr->r_wake * (int)lore_ptr->r_ptr->r_wake) > lore_ptr->r_ptr->sleep;
     alert |= lore_ptr->r_ptr->r_ignore == MAX_UCHAR;
     alert |= (lore_ptr->r_ptr->sleep == 0) && (lore_ptr->r_ptr->r_tkills >= 10);
@@ -409,25 +400,35 @@ void display_monster_alert(lore_type *lore_ptr)
     concptr act;
     if (lore_ptr->r_ptr->sleep > 200) {
         act = _("を無視しがちであるが", "prefers to ignore");
-    } else if (lore_ptr->r_ptr->sleep > 95) {
+    }
+    else if (lore_ptr->r_ptr->sleep > 95) {
         act = _("に対してほとんど注意を払わないが", "pays very little attention to");
-    } else if (lore_ptr->r_ptr->sleep > 75) {
+    }
+    else if (lore_ptr->r_ptr->sleep > 75) {
         act = _("に対してあまり注意を払わないが", "pays little attention to");
-    } else if (lore_ptr->r_ptr->sleep > 45) {
+    }
+    else if (lore_ptr->r_ptr->sleep > 45) {
         act = _("を見過ごしがちであるが", "tends to overlook");
-    } else if (lore_ptr->r_ptr->sleep > 25) {
+    }
+    else if (lore_ptr->r_ptr->sleep > 25) {
         act = _("をほんの少しは見ており", "takes quite a while to see");
-    } else if (lore_ptr->r_ptr->sleep > 10) {
+    }
+    else if (lore_ptr->r_ptr->sleep > 10) {
         act = _("をしばらくは見ており", "takes a while to see");
-    } else if (lore_ptr->r_ptr->sleep > 5) {
+    }
+    else if (lore_ptr->r_ptr->sleep > 5) {
         act = _("を幾分注意深く見ており", "is fairly observant of");
-    } else if (lore_ptr->r_ptr->sleep > 3) {
+    }
+    else if (lore_ptr->r_ptr->sleep > 3) {
         act = _("を注意深く見ており", "is observant of");
-    } else if (lore_ptr->r_ptr->sleep > 1) {
+    }
+    else if (lore_ptr->r_ptr->sleep > 1) {
         act = _("をかなり注意深く見ており", "is very observant of");
-    } else if (lore_ptr->r_ptr->sleep > 0) {
+    }
+    else if (lore_ptr->r_ptr->sleep > 0) {
         act = _("を警戒しており", "is vigilant for");
-    } else {
+    }
+    else {
         act = _("をかなり警戒しており", "is ever vigilant for");
     }
 

@@ -6,8 +6,8 @@
  */
 
 #include "object-enchant/apply-magic.h"
-#include "artifact/fixed-art-types.h"
 #include "artifact/fixed-art-generator.h"
+#include "artifact/fixed-art-types.h"
 #include "dungeon/dungeon.h"
 #include "mutation/mutation-flag-types.h"
 #include "object-enchant/apply-magic-accessory.h"
@@ -45,8 +45,7 @@
  * @details
  * エゴ＆アーティファクトの生成、呪い、pval強化
  */
-void apply_magic(player_type *owner_ptr, object_type *o_ptr, DEPTH lev, BIT_FLAGS mode)
-{
+void apply_magic(player_type* owner_ptr, object_type* o_ptr, DEPTH lev, BIT_FLAGS mode) {
     if (owner_ptr->pseikaku == PERSONALITY_MUNCHKIN)
         lev += randint0(owner_ptr->lev / 2 + 10);
     if (lev > MAX_DEPTH - 1)
@@ -63,7 +62,8 @@ void apply_magic(player_type *owner_ptr, object_type *o_ptr, DEPTH lev, BIT_FLAG
     if (has_good_luck(owner_ptr)) {
         f1 += 5;
         f2 += 2;
-    } else if (owner_ptr->muta3 & MUT3_BAD_LUCK) {
+    }
+    else if (owner_ptr->muta3 & MUT3_BAD_LUCK) {
         f1 -= 5;
         f2 -= 2;
     }
@@ -76,7 +76,8 @@ void apply_magic(player_type *owner_ptr, object_type *o_ptr, DEPTH lev, BIT_FLAG
             if (mode & AM_SPECIAL)
                 power = 3;
         }
-    } else if (magik(f1)) {
+    }
+    else if (magik(f1)) {
         power = -1;
         if (magik(f2))
             power = -2;
@@ -84,7 +85,8 @@ void apply_magic(player_type *owner_ptr, object_type *o_ptr, DEPTH lev, BIT_FLAG
     if (mode & AM_CURSED) {
         if (power > 0) {
             power = 0 - power;
-        } else {
+        }
+        else {
             power--;
         }
     }
@@ -108,7 +110,7 @@ void apply_magic(player_type *owner_ptr, object_type *o_ptr, DEPTH lev, BIT_FLAG
     }
 
     if (object_is_fixed_artifact(o_ptr)) {
-        artifact_type *a_ptr = &a_info[o_ptr->name1];
+        artifact_type* a_ptr = &a_info[o_ptr->name1];
         a_ptr->cur_num = 1;
         if (current_world_ptr->character_dungeon)
             a_ptr->floor_id = owner_ptr->floor_id;
@@ -211,7 +213,7 @@ void apply_magic(player_type *owner_ptr, object_type *o_ptr, DEPTH lev, BIT_FLAG
     }
 
     if (object_is_ego(o_ptr)) {
-        ego_item_type *e_ptr = &e_info[o_ptr->name2];
+        ego_item_type* e_ptr = &e_info[o_ptr->name2];
         if (!e_ptr->cost)
             o_ptr->ident |= (IDENT_BROKEN);
 
@@ -263,7 +265,8 @@ void apply_magic(player_type *owner_ptr, object_type *o_ptr, DEPTH lev, BIT_FLAG
                 o_ptr->to_a -= randint1(e_ptr->max_to_a);
             if (e_ptr->max_pval)
                 o_ptr->pval -= randint1(e_ptr->max_pval);
-        } else {
+        }
+        else {
             if (e_ptr->max_to_h) {
                 if (e_ptr->max_to_h > 127)
                     o_ptr->to_h -= randint1(256 - e_ptr->max_to_h);
@@ -310,25 +313,31 @@ void apply_magic(player_type *owner_ptr, object_type *o_ptr, DEPTH lev, BIT_FLAG
                     o_ptr->pval++;
                     if ((lev > 60) && one_in_(3) && ((o_ptr->dd * (o_ptr->ds + 1)) < 15))
                         o_ptr->pval++;
-                } else if (o_ptr->name2 == EGO_DEMON) {
+                }
+                else if (o_ptr->name2 == EGO_DEMON) {
                     if (has_flag(o_ptr->art_flags, TR_BLOWS)) {
                         o_ptr->pval += randint1(2);
-                    } else {
+                    }
+                    else {
                         o_ptr->pval += randint1(e_ptr->max_pval);
                     }
-                } else if (o_ptr->name2 == EGO_ATTACKS) {
+                }
+                else if (o_ptr->name2 == EGO_ATTACKS) {
                     o_ptr->pval = randint1(e_ptr->max_pval * lev / 100 + 1);
                     if (o_ptr->pval > 3)
                         o_ptr->pval = 3;
                     if ((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_HAYABUSA))
                         o_ptr->pval += randint1(2);
-                } else if (o_ptr->name2 == EGO_BAT) {
+                }
+                else if (o_ptr->name2 == EGO_BAT) {
                     o_ptr->pval = randint1(e_ptr->max_pval);
                     if (o_ptr->sval == SV_ELVEN_CLOAK)
                         o_ptr->pval += randint1(2);
-                } else if (o_ptr->name2 == EGO_A_DEMON || o_ptr->name2 == EGO_DRUID || o_ptr->name2 == EGO_OLOG) {
+                }
+                else if (o_ptr->name2 == EGO_A_DEMON || o_ptr->name2 == EGO_DRUID || o_ptr->name2 == EGO_OLOG) {
                     o_ptr->pval = randint1(e_ptr->max_pval);
-                } else {
+                }
+                else {
                     o_ptr->pval += randint1(e_ptr->max_pval);
                 }
             }
@@ -345,7 +354,7 @@ void apply_magic(player_type *owner_ptr, object_type *o_ptr, DEPTH lev, BIT_FLAG
     }
 
     if (o_ptr->k_idx) {
-        object_kind *k_ptr = &k_info[o_ptr->k_idx];
+        object_kind* k_ptr = &k_info[o_ptr->k_idx];
         if (!k_info[o_ptr->k_idx].cost)
             o_ptr->ident |= (IDENT_BROKEN);
 

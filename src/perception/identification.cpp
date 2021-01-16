@@ -32,8 +32,7 @@
  * @param mode 表示オプション
  * @return 特筆すべき情報が一つでもあった場合TRUE、一つもなく表示がキャンセルされた場合FALSEを返す。
  */
-bool screen_object(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS mode)
-{
+bool screen_object(player_type* player_ptr, object_type* o_ptr, BIT_FLAGS mode) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     char temp[70 * 20];
     concptr info[128];
@@ -107,7 +106,7 @@ bool screen_object(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS mode)
     }
 
     if (o_ptr->tval == TV_STATUE) {
-        monster_race *r_ptr = &r_info[o_ptr->pval];
+        monster_race* r_ptr = &r_info[o_ptr->pval];
         if (o_ptr->pval == MON_BULLGATES)
             info[i++] = _("それは部屋に飾ると恥ずかしい。", "It is shameful.");
         else if (r_ptr->flags2 & (RF2_ELDRITCH_HORROR))
@@ -139,7 +138,8 @@ bool screen_object(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS mode)
     if (has_flag(flgs, TR_LITE_FUEL) && !has_flag(flgs, TR_DARK_SOURCE)) {
         if (rad > 0)
             sprintf(desc, _("それは燃料補給によって明かり(半径 %d)を授ける。", "It provides light (radius %d) when fueled."), (int)rad);
-    } else {
+    }
+    else {
         if (rad > 0)
             sprintf(desc, _("それは永遠なる明かり(半径 %d)を授ける。", "It provides light (radius %d) forever."), (int)rad);
         if (rad < 0)
@@ -252,7 +252,8 @@ bool screen_object(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS mode)
 
     if (has_flag(flgs, TR_KILL_DRAGON)) {
         info[i++] = _("それはドラゴンにとっての天敵である。", "It is a great bane of dragons.");
-    } else if (has_flag(flgs, TR_SLAY_DRAGON)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_DRAGON)) {
         info[i++] = _("それはドラゴンに対して特に恐るべき力を発揮する。", "It is especially deadly against dragons.");
     }
 
@@ -274,7 +275,8 @@ bool screen_object(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS mode)
 
     if (has_flag(flgs, TR_KILL_GIANT)) {
         info[i++] = _("それは巨人にとっての天敵である。", "It is a great bane of giants.");
-    } else if (has_flag(flgs, TR_SLAY_GIANT)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_GIANT)) {
         info[i++] = _("それは巨人に対して特に恐るべき力を発揮する。", "It is especially deadly against giants.");
     }
 
@@ -553,9 +555,11 @@ bool screen_object(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS mode)
     if (object_is_cursed(o_ptr)) {
         if (o_ptr->curse_flags & TRC_PERMA_CURSE) {
             info[i++] = _("それは永遠の呪いがかけられている。", "It is permanently cursed.");
-        } else if (o_ptr->curse_flags & TRC_HEAVY_CURSE) {
+        }
+        else if (o_ptr->curse_flags & TRC_HEAVY_CURSE) {
             info[i++] = _("それは強力な呪いがかけられている。", "It is heavily cursed.");
-        } else {
+        }
+        else {
             info[i++] = _("それは呪われている。", "It is cursed.");
 
             /*
@@ -669,7 +673,8 @@ bool screen_object(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS mode)
 
     if (has_flag(flgs, TR_IGNORE_ACID) && has_flag(flgs, TR_IGNORE_ELEC) && has_flag(flgs, TR_IGNORE_FIRE) && has_flag(flgs, TR_IGNORE_COLD)) {
         info[i++] = _("それは酸・電撃・火炎・冷気では傷つかない。", "It cannot be harmed by the elements.");
-    } else {
+    }
+    else {
         if (has_flag(flgs, TR_IGNORE_ACID)) {
             info[i++] = _("それは酸では傷つかない。", "It cannot be harmed by acid.");
         }
@@ -708,12 +713,13 @@ bool screen_object(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS mode)
     }
 
     if ((o_ptr->tval == TV_STATUE) && (o_ptr->sval == SV_PHOTO)) {
-        monster_race *r_ptr = &r_info[o_ptr->pval];
+        monster_race* r_ptr = &r_info[o_ptr->pval];
         int namelen = strlen(r_name + r_ptr->name);
         prt(format("%s: '", r_name + r_ptr->name), 1, 15);
         term_queue_bigchar(18 + namelen, 1, r_ptr->x_attr, r_ptr->x_char, 0, 0);
         prt("'", 1, (use_bigtile ? 20 : 19) + namelen);
-    } else {
+    }
+    else {
         prt(_("     アイテムの能力:", "     Item Attributes:"), 1, 15);
     }
 

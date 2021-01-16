@@ -21,9 +21,8 @@
  * @param mode 呼称オプション
  * @return なし
  */
-void monster_desc(player_type *player_ptr, char *desc, monster_type *m_ptr, BIT_FLAGS mode)
-{
-    monster_race *r_ptr;
+void monster_desc(player_type* player_ptr, char* desc, monster_type* m_ptr, BIT_FLAGS mode) {
+    monster_race* r_ptr;
     r_ptr = &r_info[m_ptr->ap_r_idx];
     concptr name = (mode & MD_TRUE_NAME) ? (r_name + real_r_ptr(m_ptr)->name) : (r_name + r_ptr->name);
     GAME_TEXT silly_name[1024];
@@ -35,7 +34,7 @@ void monster_desc(player_type *player_ptr, char *desc, monster_type *m_ptr, BIT_
         }
 
         if (!named) {
-            monster_race *hallu_race;
+            monster_race* hallu_race;
 
             do {
                 hallu_race = &r_info[randint1(max_r_idx - 1)];
@@ -51,7 +50,7 @@ void monster_desc(player_type *player_ptr, char *desc, monster_type *m_ptr, BIT_
     bool pron = (m_ptr && ((seen && (mode & MD_PRON_VISIBLE)) || (!seen && (mode & MD_PRON_HIDDEN))));
 
     /* First, try using pronouns, or describing hidden monsters */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!seen || pron) {
         int kind = 0x00;
         if (r_ptr->flags1 & (RF1_FEMALE))
@@ -158,7 +157,7 @@ void monster_desc(player_type *player_ptr, char *desc, monster_type *m_ptr, BIT_
     /* Tanuki? */
     if (is_pet(m_ptr) && !is_original_ap(m_ptr)) {
 #ifdef JP
-        char *t;
+        char* t;
         char buf[128];
         strcpy(buf, name);
         t = buf;
@@ -167,16 +166,18 @@ void monster_desc(player_type *player_ptr, char *desc, monster_type *m_ptr, BIT_
         if (*t) {
             *t = '\0';
             (void)sprintf(desc, "%s？』", buf);
-        } else
+        }
+        else
             (void)sprintf(desc, "%s？", name);
 #else
         (void)sprintf(desc, "%s?", name);
 #endif
-    } else {
+    }
+    else {
         if ((r_ptr->flags1 & RF1_UNIQUE) && !(player_ptr->image && !(mode & MD_IGNORE_HALLU))) {
             if ((m_ptr->mflag2 & MFLAG2_CHAMELEON) && !(mode & MD_TRUE_NAME)) {
 #ifdef JP
-                char *t;
+                char* t;
                 char buf[128];
                 strcpy(buf, name);
                 t = buf;
@@ -185,24 +186,29 @@ void monster_desc(player_type *player_ptr, char *desc, monster_type *m_ptr, BIT_
                 if (*t) {
                     *t = '\0';
                     (void)sprintf(desc, "%s？』", buf);
-                } else
+                }
+                else
                     (void)sprintf(desc, "%s？", name);
 #else
                 (void)sprintf(desc, "%s?", name);
 #endif
-            } else if (player_ptr->phase_out && !(player_ptr->riding && (&floor_ptr->m_list[player_ptr->riding] == m_ptr))) {
+            }
+            else if (player_ptr->phase_out && !(player_ptr->riding && (&floor_ptr->m_list[player_ptr->riding] == m_ptr))) {
                 (void)sprintf(desc, _("%sもどき", "fake %s"), name);
-            } else {
+            }
+            else {
                 (void)strcpy(desc, name);
             }
-        } else if (mode & MD_INDEF_VISIBLE) {
+        }
+        else if (mode & MD_INDEF_VISIBLE) {
 #ifdef JP
             (void)strcpy(desc, "");
 #else
             (void)strcpy(desc, is_a_vowel(name[0]) ? "an " : "a ");
 #endif
             (void)strcat(desc, name);
-        } else {
+        }
+        else {
             if (is_pet(m_ptr))
                 (void)strcpy(desc, _("あなたの", "your "));
             else
@@ -225,7 +231,8 @@ void monster_desc(player_type *player_ptr, char *desc, monster_type *m_ptr, BIT_
     if ((mode & MD_IGNORE_HALLU) && (m_ptr->mflag2 & MFLAG2_CHAMELEON)) {
         if (r_ptr->flags1 & RF1_UNIQUE) {
             strcat(desc, _("(カメレオンの王)", "(Chameleon Lord)"));
-        } else {
+        }
+        else {
             strcat(desc, _("(カメレオン)", "(Chameleon)"));
         }
     }
@@ -249,10 +256,9 @@ void monster_desc(player_type *player_ptr, char *desc, monster_type *m_ptr, BIT_
  * @details
  * Technically should attempt to treat "Beholder"'s as jelly's
  */
-void message_pain(player_type *player_ptr, MONSTER_IDX m_idx, HIT_POINT dam)
-{
-    monster_type *m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+void message_pain(player_type* player_ptr, MONSTER_IDX m_idx, HIT_POINT dam) {
+    monster_type* m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     GAME_TEXT m_name[MAX_NLEN];
 

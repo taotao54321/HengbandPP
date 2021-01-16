@@ -4,8 +4,7 @@
 #include "player-info/self-info-util.h"
 #include "util/bit-flags-calculator.h"
 
-static void set_weapon_bless_info(self_info_type *self_ptr)
-{
+static void set_weapon_bless_info(self_info_type* self_ptr) {
     if (has_flag(self_ptr->flags, TR_BLESSED))
         self_ptr->info[self_ptr->line++] = _("あなたの武器は神の祝福を受けている。", "Your weapon has been blessed by the gods.");
 
@@ -22,8 +21,7 @@ static void set_weapon_bless_info(self_info_type *self_ptr)
         self_ptr->info[self_ptr->line++] = _("あなたの武器は敵から生命力を吸収する。", "Your weapon drains life from your foes.");
 }
 
-static void set_brand_attack_info(self_info_type *self_ptr)
-{
+static void set_brand_attack_info(self_info_type* self_ptr) {
     if (has_flag(self_ptr->flags, TR_BRAND_ACID))
         self_ptr->info[self_ptr->line++] = _("あなたの武器は敵を溶かす。", "Your weapon melts your foes.");
 
@@ -40,8 +38,7 @@ static void set_brand_attack_info(self_info_type *self_ptr)
         self_ptr->info[self_ptr->line++] = _("あなたの武器は敵を毒で侵す。", "Your weapon poisons your foes.");
 }
 
-static void set_slay_info(self_info_type *self_ptr)
-{
+static void set_slay_info(self_info_type* self_ptr) {
     if (has_flag(self_ptr->flags, TR_KILL_ANIMAL))
         self_ptr->info[self_ptr->line++] = _("あなたの武器は動物の天敵である。", "Your weapon is a great bane of animals.");
     else if (has_flag(self_ptr->flags, TR_SLAY_ANIMAL))
@@ -88,9 +85,8 @@ static void set_slay_info(self_info_type *self_ptr)
         self_ptr->info[self_ptr->line++] = _("あなたの武器はドラゴンに対して特に強い力を発揮する。", "Your weapon is especially deadly against dragons.");
 }
 
-void set_weapon_effect_info(player_type *creature_ptr, self_info_type *self_ptr)
-{
-    object_type *o_ptr = &creature_ptr->inventory_list[INVEN_RARM];
+void set_weapon_effect_info(player_type* creature_ptr, self_info_type* self_ptr) {
+    object_type* o_ptr = &creature_ptr->inventory_list[INVEN_RARM];
     if (o_ptr->k_idx == 0)
         return;
 

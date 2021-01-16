@@ -48,8 +48,7 @@
  * 120    0.03  0.11  0.31  0.46  1.31  2.48  4.60  7.78 11.67 25.53 45.72\n
  * 128    0.02  0.01  0.13  0.33  0.83  1.41  3.24  6.17  9.57 14.22 64.07\n
  */
-int m_bonus(int max, DEPTH level)
-{
+int m_bonus(int max, DEPTH level) {
     int bonus, stand, extra, value;
 
     /* Paranoia -- enforce maximal "level" */
@@ -95,8 +94,7 @@ int m_bonus(int max, DEPTH level)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void one_sustain(object_type *o_ptr)
-{
+void one_sustain(object_type* o_ptr) {
     switch (randint0(A_MAX)) {
     case 0:
         add_flag(o_ptr->art_flags, TR_SUST_STR);
@@ -124,8 +122,7 @@ void one_sustain(object_type *o_ptr)
  * @param o_ptr 強化を与えたいオブジェクトの構造体参照ポインタ
  * @return TR_ESP_NONLIVINGがついたならばTRUE
  */
-bool add_esp_strong(object_type *o_ptr)
-{
+bool add_esp_strong(object_type* o_ptr) {
     bool nonliv = FALSE;
 
     switch (randint1(3)) {
@@ -150,8 +147,7 @@ bool add_esp_strong(object_type *o_ptr)
  * @param extra TRUEならばESPの最大付与数が増える(TRUE -> 3+1d6 / FALSE -> 1d3)
  * @return なし
  */
-void add_esp_weak(object_type *o_ptr, bool extra)
-{
+void add_esp_weak(object_type* o_ptr, bool extra) {
     int i;
     u32b weak_esp_list[] = {
         TR_ESP_ANIMAL,
@@ -183,8 +179,7 @@ void add_esp_weak(object_type *o_ptr, bool extra)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void one_ele_resistance(object_type *o_ptr)
-{
+void one_ele_resistance(object_type* o_ptr) {
     switch (randint0(4)) {
     case 0:
         add_flag(o_ptr->art_flags, TR_RES_ACID);
@@ -207,11 +202,11 @@ void one_ele_resistance(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void one_dragon_ele_resistance(object_type *o_ptr)
-{
+void one_dragon_ele_resistance(object_type* o_ptr) {
     if (one_in_(7)) {
         add_flag(o_ptr->art_flags, TR_RES_POIS);
-    } else {
+    }
+    else {
         one_ele_resistance(o_ptr);
     }
 }
@@ -222,8 +217,7 @@ void one_dragon_ele_resistance(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void one_high_resistance(object_type *o_ptr)
-{
+void one_high_resistance(object_type* o_ptr) {
     switch (randint0(12)) {
     case 0:
         add_flag(o_ptr->art_flags, TR_RES_POIS);
@@ -269,8 +263,7 @@ void one_high_resistance(object_type *o_ptr)
  * @param o_ptr 強化を与えたいオブジェクトの構造体参照ポインタ
  * @return なし
  */
-void dragon_resist(object_type *o_ptr)
-{
+void dragon_resist(object_type* o_ptr) {
     do {
         if (one_in_(4))
             one_dragon_ele_resistance(o_ptr);
@@ -286,11 +279,11 @@ void dragon_resist(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void one_resistance(object_type *o_ptr)
-{
+void one_resistance(object_type* o_ptr) {
     if (one_in_(3)) {
         one_ele_resistance(o_ptr);
-    } else {
+    }
+    else {
         one_high_resistance(o_ptr);
     }
 }
@@ -302,8 +295,7 @@ void one_resistance(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void one_ability(object_type *o_ptr)
-{
+void one_ability(object_type* o_ptr) {
     switch (randint0(10)) {
     case 0:
         add_flag(o_ptr->art_flags, TR_LEVITATION);
@@ -343,8 +335,7 @@ void one_ability(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void one_low_esp(object_type *o_ptr)
-{
+void one_low_esp(object_type* o_ptr) {
     switch (randint1(10)) {
     case 1:
         add_flag(o_ptr->art_flags, TR_ESP_ANIMAL);
@@ -386,8 +377,7 @@ void one_low_esp(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void one_activation(object_type *o_ptr)
-{
+void one_activation(object_type* o_ptr) {
     int type = 0;
     PERCENTAGE chance = 0;
     while (randint1(100) >= chance) {
@@ -506,8 +496,7 @@ void one_activation(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void one_lordly_high_resistance(object_type *o_ptr)
-{
+void one_lordly_high_resistance(object_type* o_ptr) {
     switch (randint0(10)) {
     case 0:
         add_flag(o_ptr->art_flags, TR_RES_LITE);

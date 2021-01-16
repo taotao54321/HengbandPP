@@ -3,8 +3,8 @@
 #include "dungeon/dungeon.h"
 #include "grid/door.h"
 #include "grid/grid.h"
-#include "grid/stair.h"
 #include "grid/object-placer.h"
+#include "grid/stair.h"
 #include "grid/trap.h"
 #include "room/door-definition.h"
 #include "room/rooms-builder.h"
@@ -17,16 +17,15 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-bool build_type1(player_type *player_ptr, dun_data_type *dd_ptr)
-{
+bool build_type1(player_type* player_ptr, dun_data_type* dd_ptr) {
     POSITION y, x, y2, x2, yval, xval;
     POSITION y1, x1, xsize, ysize;
 
     bool light;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     bool curtain = (d_info[floor_ptr->dungeon_idx].flags1 & DF1_CURTAIN) && one_in_((d_info[floor_ptr->dungeon_idx].flags1 & DF1_NO_CAVE) ? 48 : 512);
 
     /* Pick a room size */
@@ -165,7 +164,8 @@ bool build_type1(player_type *player_ptr, dun_data_type *dd_ptr)
             /* Prevent edge of wall from being tunneled */
             place_bold(player_ptr, yval, x1 - 1, GB_SOLID);
             place_bold(player_ptr, yval, x2 + 1, GB_SOLID);
-        } else {
+        }
+        else {
             /* Vertical wall */
             for (y = y1; y <= y2; y++) {
                 place_bold(player_ptr, y, xval, GB_INNER);
@@ -191,16 +191,15 @@ bool build_type1(player_type *player_ptr, dun_data_type *dd_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-bool build_type2(player_type *player_ptr, dun_data_type *dd_ptr)
-{
+bool build_type2(player_type* player_ptr, dun_data_type* dd_ptr) {
     POSITION y, x, xval, yval;
     POSITION y1a, x1a, y2a, x2a;
     POSITION y1b, x1b, y2b, x2b;
     bool light;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
 
     /* Find and reserve some space in the dungeon.  Get center of room. */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!find_space(player_ptr, dd_ptr, &yval, &xval, 11, 25))
         return FALSE;
 
@@ -302,17 +301,16 @@ bool build_type2(player_type *player_ptr, dun_data_type *dd_ptr)
  * the code below will work (with "bounds checking") for 5x5, or even\n
  * for unsymetric values like 4x3 or 5x3 or 3x4 or 3x5, or even larger.\n
  */
-bool build_type3(player_type *player_ptr, dun_data_type *dd_ptr)
-{
+bool build_type3(player_type* player_ptr, dun_data_type* dd_ptr) {
     POSITION y, x, dy, dx, wy, wx;
     POSITION y1a, x1a, y2a, x2a;
     POSITION y1b, x1b, y2b, x2b;
     POSITION yval, xval;
     bool light;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
 
     /* Find and reserve some space in the dungeon.  Get center of room. */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!find_space(player_ptr, dd_ptr, &yval, &xval, 11, 25))
         return FALSE;
 
@@ -540,15 +538,14 @@ bool build_type3(player_type *player_ptr, dun_data_type *dd_ptr)
  *	4 - Inner room has a maze\n
  *	5 - A set of four inner rooms\n
  */
-bool build_type4(player_type *player_ptr, dun_data_type *dd_ptr)
-{
+bool build_type4(player_type* player_ptr, dun_data_type* dd_ptr) {
     POSITION y, x, y1, x1;
     POSITION y2, x2, tmp, yval, xval;
     bool light;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
 
     /* Find and reserve some space in the dungeon.  Get center of room. */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!find_space(player_ptr, dd_ptr, &yval, &xval, 11, 25))
         return FALSE;
 
@@ -839,7 +836,8 @@ bool build_type4(player_type *player_ptr, dun_data_type *dd_ptr)
             place_secret_door(player_ptr, y1 - 1, xval + i, door_type);
             place_secret_door(player_ptr, y2 + 1, xval - i, door_type);
             place_secret_door(player_ptr, y2 + 1, xval + i, door_type);
-        } else {
+        }
+        else {
             int i = randint1(3);
             place_secret_door(player_ptr, yval + i, x1 - 1, door_type);
             place_secret_door(player_ptr, yval - i, x1 - 1, door_type);
@@ -873,13 +871,12 @@ bool build_type4(player_type *player_ptr, dun_data_type *dd_ptr)
  *\n
  * When done fill from the inside to find the walls,\n
  */
-bool build_type11(player_type *player_ptr, dun_data_type *dd_ptr)
-{
+bool build_type11(player_type* player_ptr, dun_data_type* dd_ptr) {
     POSITION rad, x, y, x0, y0;
     int light = FALSE;
 
     /* Occasional light */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if ((randint1(floor_ptr->dun_level) <= 15) && !(d_info[floor_ptr->dungeon_idx].flags1 & DF1_DARKNESS))
         light = TRUE;
 
@@ -895,7 +892,8 @@ bool build_type11(player_type *player_ptr, dun_data_type *dd_ptr)
             if (distance(y0, x0, y, x) <= rad - 1) {
                 /* inside- so is floor */
                 place_bold(player_ptr, y, x, GB_FLOOR);
-            } else if (distance(y0, x0, y, x) <= rad + 1) {
+            }
+            else if (distance(y0, x0, y, x) <= rad + 1) {
                 /* make granite outside so on_defeat_arena_monster works */
                 place_bold(player_ptr, y, x, GB_EXTRA);
             }
@@ -918,8 +916,7 @@ bool build_type11(player_type *player_ptr, dun_data_type *dd_ptr)
  *\n
  * When done fill from the inside to find the walls,\n
  */
-bool build_type12(player_type *player_ptr, dun_data_type *dd_ptr)
-{
+bool build_type12(player_type* player_ptr, dun_data_type* dd_ptr) {
     POSITION rad, x, y, x0, y0;
     int light = FALSE;
     bool emptyflag = TRUE;
@@ -932,7 +929,7 @@ bool build_type12(player_type *player_ptr, dun_data_type *dd_ptr)
     h4 = randint1(32) - 16;
 
     /* Occasional light */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if ((randint1(floor_ptr->dun_level) <= 5) && !(d_info[floor_ptr->dungeon_idx].flags1 & DF1_DARKNESS))
         light = TRUE;
 
@@ -951,9 +948,11 @@ bool build_type12(player_type *player_ptr, dun_data_type *dd_ptr)
             if (dist2(y0, x0, y, x, h1, h2, h3, h4) <= rad - 1) {
                 /* inside - so is floor */
                 place_bold(player_ptr, y, x, GB_FLOOR);
-            } else if (distance(y0, x0, y, x) < 3) {
+            }
+            else if (distance(y0, x0, y, x) < 3) {
                 place_bold(player_ptr, y, x, GB_FLOOR);
-            } else {
+            }
+            else {
                 /* make granite outside so on_defeat_arena_monster works */
                 place_bold(player_ptr, y, x, GB_EXTRA);
             }

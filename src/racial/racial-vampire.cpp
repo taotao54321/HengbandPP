@@ -9,8 +9,7 @@
 #include "target/target-getter.h"
 #include "view/display-messages.h"
 
-bool vampirism(player_type *caster_ptr)
-{
+bool vampirism(player_type* caster_ptr) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_NO_MELEE) {
         msg_print(_("なぜか攻撃することができない。", "Something prevents you from attacking."));
         return FALSE;
@@ -22,7 +21,7 @@ bool vampirism(player_type *caster_ptr)
 
     POSITION y = caster_ptr->y + ddy[dir];
     POSITION x = caster_ptr->x + ddx[dir];
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
     stop_mouth(caster_ptr);
     if (!(g_ptr->m_idx)) {

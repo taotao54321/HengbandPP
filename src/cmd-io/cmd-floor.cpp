@@ -20,8 +20,7 @@
  * Target command
  * @return なし
  */
-void do_cmd_target(player_type *creature_ptr)
-{
+void do_cmd_target(player_type* creature_ptr) {
     if (creature_ptr->wild_mode)
         return;
 
@@ -36,8 +35,7 @@ void do_cmd_target(player_type *creature_ptr)
  * Look command
  * @return なし
  */
-void do_cmd_look(player_type *creature_ptr)
-{
+void do_cmd_look(player_type* creature_ptr) {
     creature_ptr->window |= PW_MONSTER_LIST;
     handle_stuff(creature_ptr);
     if (target_set(creature_ptr, TARGET_LOOK))
@@ -49,8 +47,7 @@ void do_cmd_look(player_type *creature_ptr)
  * Allow the player to examine other sectors on the map
  * @return なし
  */
-void do_cmd_locate(player_type *creature_ptr)
-{
+void do_cmd_locate(player_type* creature_ptr) {
     DIRECTION dir;
     POSITION y1, x1;
     GAME_TEXT tmp_val[80];
@@ -63,8 +60,10 @@ void do_cmd_locate(player_type *creature_ptr)
         if ((y2 == y1) && (x2 == x1))
             strcpy(tmp_val, _("真上", "\0"));
         else
-            sprintf(tmp_val, "%s%s", ((y2 < y1) ? _("北", " North") : (y2 > y1) ? _("南", " South") : ""),
-                ((x2 < x1) ? _("西", " West") : (x2 > x1) ? _("東", " East") : ""));
+            sprintf(tmp_val, "%s%s", ((y2 < y1) ? _("北", " North") : (y2 > y1) ? _("南", " South")
+                                                                                : ""),
+                ((x2 < x1) ? _("西", " West") : (x2 > x1) ? _("東", " East")
+                                                          : ""));
 
         sprintf(out_val, _("マップ位置 [%d(%02d),%d(%02d)] (プレイヤーの%s)  方向?", "Map sector [%d(%02d),%d(%02d)], which is%s your sector.  Direction?"),
             y2 / (hgt / 2), y2 % (hgt / 2), x2 / (wid / 2), x2 % (wid / 2), tmp_val);

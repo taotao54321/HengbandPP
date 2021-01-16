@@ -43,9 +43,8 @@
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @param idx テレポート・レベル対象のモンスター
  */
-bool is_teleport_level_ineffective(player_type *caster_ptr, MONSTER_IDX idx)
-{
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+bool is_teleport_level_ineffective(player_type* caster_ptr, MONSTER_IDX idx) {
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
     bool is_special_floor
         = floor_ptr->inside_arena || caster_ptr->phase_out || (floor_ptr->inside_quest && !random_quest_number(caster_ptr, floor_ptr->dun_level));
     bool is_invalid_floor = idx <= 0;
@@ -63,14 +62,14 @@ bool is_teleport_level_ineffective(player_type *caster_ptr, MONSTER_IDX idx)
  * @param m_idx テレポートの対象となるモンスターID(0ならばプレイヤー) / If m_idx <= 0, target is player.
  * @return なし
  */
-void teleport_level(player_type *creature_ptr, MONSTER_IDX m_idx)
-{
+void teleport_level(player_type* creature_ptr, MONSTER_IDX m_idx) {
     GAME_TEXT m_name[160];
     bool see_m = TRUE;
     if (m_idx <= 0) {
         strcpy(m_name, _("あなた", "you"));
-    } else {
-        monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
+    }
+    else {
+        monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
         monster_desc(creature_ptr, m_name, m_ptr, 0);
         see_m = is_seen(creature_ptr, m_ptr);
     }
@@ -123,13 +122,15 @@ void teleport_level(player_type *creature_ptr, MONSTER_IDX m_idx)
             if (!creature_ptr->current_floor_ptr->dun_level) {
                 creature_ptr->current_floor_ptr->dun_level = d_info[creature_ptr->dungeon_idx].mindepth;
                 prepare_change_floor_mode(creature_ptr, CFM_RAND_PLACE);
-            } else {
+            }
+            else {
                 prepare_change_floor_mode(creature_ptr, CFM_SAVE_FLOORS | CFM_DOWN | CFM_RAND_PLACE | CFM_RAND_CONNECT);
             }
 
             creature_ptr->leaving = TRUE;
         }
-    } else if (quest_number(creature_ptr, creature_ptr->current_floor_ptr->dun_level)
+    }
+    else if (quest_number(creature_ptr, creature_ptr->current_floor_ptr->dun_level)
         || (creature_ptr->current_floor_ptr->dun_level >= d_info[creature_ptr->dungeon_idx].maxdepth)) {
 #ifdef JP
         if (see_m)
@@ -152,7 +153,8 @@ void teleport_level(player_type *creature_ptr, MONSTER_IDX m_idx)
             creature_ptr->current_floor_ptr->inside_quest = 0;
             creature_ptr->leaving = TRUE;
         }
-    } else if (go_up) {
+    }
+    else if (go_up) {
 #ifdef JP
         if (see_m)
             msg_format("%^sは天井を突き破って宙へ浮いていく。", m_name);
@@ -171,7 +173,8 @@ void teleport_level(player_type *creature_ptr, MONSTER_IDX m_idx)
             prepare_change_floor_mode(creature_ptr, CFM_SAVE_FLOORS | CFM_UP | CFM_RAND_PLACE | CFM_RAND_CONNECT);
             creature_ptr->leaving = TRUE;
         }
-    } else {
+    }
+    else {
 #ifdef JP
         if (see_m)
             msg_format("%^sは床を突き破って沈んでいく。", m_name);
@@ -196,7 +199,7 @@ void teleport_level(player_type *creature_ptr, MONSTER_IDX m_idx)
         return;
     }
 
-    monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
+    monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
     check_quest_completion(creature_ptr, m_ptr);
     if (record_named_pet && is_pet(m_ptr) && m_ptr->nickname) {
         char m2_name[MAX_NLEN];
@@ -209,8 +212,7 @@ void teleport_level(player_type *creature_ptr, MONSTER_IDX m_idx)
     sound(SOUND_TPLEVEL);
 }
 
-bool teleport_level_other(player_type *caster_ptr)
-{
+bool teleport_level_other(player_type* caster_ptr) {
     if (!target_set(caster_ptr, TARGET_KILL))
         return FALSE;
     MONSTER_IDX target_m_idx = caster_ptr->current_floor_ptr->grid_array[target_row][target_col].m_idx;
@@ -221,8 +223,8 @@ bool teleport_level_other(player_type *caster_ptr)
     if (!projectable(caster_ptr, caster_ptr->y, caster_ptr->x, target_row, target_col))
         return TRUE;
 
-    monster_type *m_ptr;
-    monster_race *r_ptr;
+    monster_type* m_ptr;
+    monster_race* r_ptr;
     m_ptr = &caster_ptr->current_floor_ptr->m_list[target_m_idx];
     r_ptr = &r_info[m_ptr->r_idx];
     GAME_TEXT m_name[MAX_NLEN];
@@ -232,7 +234,8 @@ bool teleport_level_other(player_type *caster_ptr)
     if ((r_ptr->flagsr & (RFR_EFF_RES_NEXU_MASK | RFR_RES_TELE)) || (r_ptr->flags1 & RF1_QUESTOR)
         || (r_ptr->level + randint1(50) > caster_ptr->lev + randint1(60))) {
         msg_format(_("しかし効果がなかった！", "%^s is unaffected!"), m_name);
-    } else {
+    }
+    else {
         teleport_level(caster_ptr, target_m_idx);
     }
 
@@ -244,8 +247,7 @@ bool teleport_level_other(player_type *caster_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return テレポート処理を決定したか否か
  */
-bool tele_town(player_type *caster_ptr)
-{
+bool tele_town(player_type* caster_ptr) {
     if (caster_ptr->current_floor_ptr->dun_level) {
         msg_print(_("この魔法は地上でしか使えない！", "This spell can only be used on the surface!"));
         return FALSE;
@@ -317,8 +319,7 @@ bool tele_town(player_type *caster_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void reserve_alter_reality(player_type *caster_ptr, TIME_EFFECT turns)
-{
+void reserve_alter_reality(player_type* caster_ptr, TIME_EFFECT turns) {
     if (caster_ptr->current_floor_ptr->inside_arena || ironman_downward) {
         msg_print(_("何も起こらなかった。", "Nothing happens."));
         return;
@@ -343,8 +344,7 @@ void reserve_alter_reality(player_type *caster_ptr, TIME_EFFECT turns)
  * @param turns 発動までのターン数
  * @return 常にTRUEを返す
  */
-bool recall_player(player_type *creature_ptr, TIME_EFFECT turns)
-{
+bool recall_player(player_type* creature_ptr, TIME_EFFECT turns) {
     /*
      * TODO: Recall the player to the last
      * visited town when in the wilderness
@@ -387,8 +387,7 @@ bool recall_player(player_type *creature_ptr, TIME_EFFECT turns)
     return TRUE;
 }
 
-bool free_level_recall(player_type *creature_ptr)
-{
+bool free_level_recall(player_type* creature_ptr) {
     DUNGEON_IDX select_dungeon = choose_dungeon(_("にテレポート", "teleport"), 4, 0);
     if (!select_dungeon)
         return FALSE;
@@ -426,8 +425,7 @@ bool free_level_recall(player_type *creature_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return リセット処理が実際に行われたらTRUEを返す
  */
-bool reset_recall(player_type *caster_ptr)
-{
+bool reset_recall(player_type* caster_ptr) {
     int select_dungeon, dummy = 0;
     char ppp[80];
     char tmp_val[160];

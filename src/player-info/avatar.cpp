@@ -51,8 +51,7 @@ concptr virtue[MAX_VIRTUE] = {
  * @return 比較の真偽値を返す
  * @todo 引数名を直しておく
  */
-bool compare_virtue(player_type *creature_ptr, int type, int num, int tekitou)
-{
+bool compare_virtue(player_type* creature_ptr, int type, int num, int tekitou) {
     int vir = virtue_number(creature_ptr, type) ? creature_ptr->virtues[virtue_number(creature_ptr, type) - 1] : 0;
     switch (tekitou) {
     case VIRTUE_LARGE:
@@ -75,8 +74,7 @@ bool compare_virtue(player_type *creature_ptr, int type, int num, int tekitou)
  * @param type 確認したい徳のID
  * @return スロットがあるならばスロットのID(0～7)+1、ない場合は0を返す。
  */
-int virtue_number(player_type *creature_ptr, int type)
-{
+int virtue_number(player_type* creature_ptr, int type) {
     for (int i = 0; i < 8; i++)
         if (creature_ptr->vir_types[i] == type)
             return i + 1;
@@ -89,8 +87,7 @@ int virtue_number(player_type *creature_ptr, int type)
  * @param which 確認したい徳のID
  * @return なし
  */
-static void get_random_virtue(player_type *creature_ptr, int which)
-{
+static void get_random_virtue(player_type* creature_ptr, int which) {
     int type = 0;
     while (!(type) || virtue_number(creature_ptr, type)) {
         switch (randint1(29)) {
@@ -152,8 +149,7 @@ static void get_random_virtue(player_type *creature_ptr, int which)
  * @param realm 魔法領域のID
  * @return 対応する徳のID
  */
-static VIRTUES_IDX get_realm_virtues(player_type *creature_ptr, REALM_IDX realm)
-{
+static VIRTUES_IDX get_realm_virtues(player_type* creature_ptr, REALM_IDX realm) {
     switch (realm) {
     case REALM_LIFE:
         if (virtue_number(creature_ptr, V_VITALITY))
@@ -211,8 +207,7 @@ static VIRTUES_IDX get_realm_virtues(player_type *creature_ptr, REALM_IDX realm)
  * @details 職業に応じて1～4種が固定、種族に応じて1種類が与えられ、後は重複なくランダムに選択される。
  * @return なし
  */
-void get_virtues(player_type *creature_ptr)
-{
+void get_virtues(player_type* creature_ptr) {
     int i = 0, j = 0;
     s16b tmp_vir;
 
@@ -434,8 +429,7 @@ void get_virtues(player_type *creature_ptr)
  * @param amount 加減量
  * @return なし
  */
-void chg_virtue(player_type *creature_ptr, int virtue_id, int amount)
-{
+void chg_virtue(player_type* creature_ptr, int virtue_id, int amount) {
     for (int i = 0; i < 8; i++) {
         if (creature_ptr->vir_types[i] != virtue_id)
             continue;
@@ -460,7 +454,8 @@ void chg_virtue(player_type *creature_ptr, int virtue_id, int amount)
                 creature_ptr->virtues[i] = 125;
             else
                 creature_ptr->virtues[i] = creature_ptr->virtues[i] + amount;
-        } else {
+        }
+        else {
             if ((amount + creature_ptr->virtues[i] < -50) && one_in_(2)) {
                 creature_ptr->virtues[i] = MIN(creature_ptr->virtues[i], -50);
                 return;
@@ -493,8 +488,7 @@ void chg_virtue(player_type *creature_ptr, int virtue_id, int amount)
  * @param amount セットしたい値
  * @return なし
  */
-void set_virtue(player_type *creature_ptr, int virtue_id, int amount)
-{
+void set_virtue(player_type* creature_ptr, int virtue_id, int amount) {
     for (int i = 0; i < 8; i++)
         if (creature_ptr->vir_types[i] == virtue_id) {
             creature_ptr->virtues[i] = (s16b)amount;
@@ -507,8 +501,7 @@ void set_virtue(player_type *creature_ptr, int virtue_id, int amount)
  * @param out_file ファイルポインタ
  * @return なし
  */
-void dump_virtues(player_type *creature_ptr, FILE *out_file)
-{
+void dump_virtues(player_type* creature_ptr, FILE* out_file) {
     if (!out_file)
         return;
 

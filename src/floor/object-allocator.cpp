@@ -2,9 +2,9 @@
 #include "dungeon/dungeon.h"
 #include "dungeon/quest.h"
 #include "floor/cave.h"
+#include "floor/dungeon-tunnel-util.h"
 #include "floor/floor-allocation-types.h"
 #include "floor/floor-generator-util.h"
-#include "floor/dungeon-tunnel-util.h"
 #include "game-option/birth-options.h"
 #include "game-option/cheat-types.h"
 #include "grid/feature.h"
@@ -25,8 +25,7 @@
  * @note Assumes "in_bounds()"
  * @details We count only granite walls and permanent walls.
  */
-static int next_to_walls(floor_type *floor_ptr, POSITION y, POSITION x)
-{
+static int next_to_walls(floor_type* floor_ptr, POSITION y, POSITION x) {
     int k = 0;
     if (in_bounds(floor_ptr, y + 1, x) && is_extra_bold(floor_ptr, y + 1, x))
         k++;
@@ -51,10 +50,9 @@ static int next_to_walls(floor_type *floor_ptr, POSITION y, POSITION x)
  * @param walls 最低減隣接させたい外壁の数
  * @return 階段を生成して問題がないならばTRUEを返す。
  */
-static bool alloc_stairs_aux(player_type *player_ptr, POSITION y, POSITION x, int walls)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+static bool alloc_stairs_aux(player_type* player_ptr, POSITION y, POSITION x, int walls) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     if (!is_floor_grid(g_ptr) || pattern_tile(floor_ptr, y, x) || (g_ptr->o_idx != 0) || (g_ptr->m_idx != 0) || next_to_walls(floor_ptr, y, x) < walls)
         return FALSE;
 
@@ -69,21 +67,21 @@ static bool alloc_stairs_aux(player_type *player_ptr, POSITION y, POSITION x, in
  * @param walls 最低減隣接させたい外壁の数
  * @return 規定数通りに生成に成功したらTRUEを返す。
  */
-bool alloc_stairs(player_type *owner_ptr, FEAT_IDX feat, int num, int walls)
-{
+bool alloc_stairs(player_type* owner_ptr, FEAT_IDX feat, int num, int walls) {
     int shaft_num = 0;
-    feature_type *f_ptr = &f_info[feat];
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
+    feature_type* f_ptr = &f_info[feat];
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
     if (has_flag(f_ptr->flags, FF_LESS)) {
         if (ironman_downward || !floor_ptr->dun_level)
             return TRUE;
 
         if (floor_ptr->dun_level > d_info[floor_ptr->dungeon_idx].mindepth)
             shaft_num = (randint1(num + 1)) / 2;
-    } else if (has_flag(f_ptr->flags, FF_MORE)) {
+    }
+    else if (has_flag(f_ptr->flags, FF_MORE)) {
         QUEST_IDX q_idx = quest_number(owner_ptr, floor_ptr->dun_level);
         if (floor_ptr->dun_level > 1 && q_idx) {
-            monster_race *r_ptr = &r_info[quest[q_idx].r_idx];
+            monster_race* r_ptr = &r_info[quest[q_idx].r_idx];
             if (!(r_ptr->flags1 & RF1_UNIQUE) || 0 < r_ptr->max_num)
                 return TRUE;
         }
@@ -93,12 +91,13 @@ bool alloc_stairs(player_type *owner_ptr, FEAT_IDX feat, int num, int walls)
 
         if ((floor_ptr->dun_level < d_info[floor_ptr->dungeon_idx].maxdepth - 1) && !quest_number(owner_ptr, floor_ptr->dun_level + 1))
             shaft_num = (randint1(num) + 1) / 2;
-    } else
+    }
+    else
         return FALSE;
 
     for (int i = 0; i < num; i++) {
         while (TRUE) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             int candidates = 0;
             const POSITION max_x = floor_ptr->width - 1;
             for (POSITION y = 1; y < floor_ptr->height - 1; y++)
@@ -148,13 +147,12 @@ bool alloc_stairs(player_type *owner_ptr, FEAT_IDX feat, int num, int walls)
  * @param num 配置したい数
  * @return 規定数通りに生成に成功したらTRUEを返す。
  */
-void alloc_object(player_type *owner_ptr, dap_type set, EFFECT_ID typ, int num)
-{
+void alloc_object(player_type* owner_ptr, dap_type set, EFFECT_ID typ, int num) {
     POSITION y = 0;
     POSITION x = 0;
     int dummy = 0;
-    grid_type *g_ptr;
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
+    grid_type* g_ptr;
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
     num = num * floor_ptr->height * floor_ptr->width / (MAX_HGT * MAX_WID) + 1;
     for (int k = 0; k < num; k++) {
         while (dummy < SAFE_MAX_ATTEMPTS) {

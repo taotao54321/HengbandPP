@@ -45,8 +45,7 @@
 #include "view/display-messages.h"
 #include "world/world.h"
 
-static void write_pet_death(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void write_pet_death(player_type* player_ptr, monster_death_type* md_ptr) {
     md_ptr->md_y = md_ptr->m_ptr->fy;
     md_ptr->md_x = md_ptr->m_ptr->fx;
     if (record_named_pet && is_pet(md_ptr->m_ptr) && md_ptr->m_ptr->nickname) {
@@ -56,8 +55,7 @@ static void write_pet_death(player_type *player_ptr, monster_death_type *md_ptr)
     }
 }
 
-static void on_dead_explosion(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_explosion(player_type* player_ptr, monster_death_type* md_ptr) {
     for (int i = 0; i < 4; i++) {
         if (md_ptr->r_ptr->blow[i].method != RBM_EXPLODE)
             continue;
@@ -72,9 +70,8 @@ static void on_dead_explosion(player_type *player_ptr, monster_death_type *md_pt
     }
 }
 
-static void on_defeat_arena_monster(player_type *player_ptr, monster_death_type *md_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void on_defeat_arena_monster(player_type* player_ptr, monster_death_type* md_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!floor_ptr->inside_arena || is_pet(md_ptr->m_ptr))
         return;
 
@@ -86,7 +83,7 @@ static void on_defeat_arena_monster(player_type *player_ptr, monster_death_type 
 
     if (arena_info[player_ptr->arena_number].tval) {
         object_type forge;
-        object_type *q_ptr = &forge;
+        object_type* q_ptr = &forge;
         object_prep(player_ptr, q_ptr, lookup_kind(arena_info[player_ptr->arena_number].tval, arena_info[player_ptr->arena_number].sval));
         apply_magic(player_ptr, q_ptr, floor_ptr->object_level, AM_NO_FIXED_ART);
         (void)drop_near(player_ptr, q_ptr, -1, md_ptr->md_y, md_ptr->md_x);
@@ -104,9 +101,8 @@ static void on_defeat_arena_monster(player_type *player_ptr, monster_death_type 
     exe_write_diary(player_ptr, DIARY_ARENA, player_ptr->arena_number, m_name);
 }
 
-static void drop_corpse(player_type *player_ptr, monster_death_type *md_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void drop_corpse(player_type* player_ptr, monster_death_type* md_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     bool is_drop_corpse = one_in_(md_ptr->r_ptr->flags1 & RF1_UNIQUE ? 1 : 4);
     is_drop_corpse &= (md_ptr->r_ptr->flags9 & (RF9_DROP_CORPSE | RF9_DROP_SKELETON)) != 0;
     is_drop_corpse &= !(floor_ptr->inside_arena || player_ptr->phase_out || md_ptr->cloned || ((md_ptr->m_ptr->r_idx == today_mon) && is_pet(md_ptr->m_ptr)));
@@ -122,14 +118,15 @@ static void drop_corpse(player_type *player_ptr, monster_death_type *md_ptr)
         if ((0 - ((md_ptr->m_ptr->maxhp) / 4)) > md_ptr->m_ptr->hp) {
             if (one_in_(5))
                 corpse = TRUE;
-        } else {
+        }
+        else {
             if (!one_in_(5))
                 corpse = TRUE;
         }
     }
 
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     object_prep(player_ptr, q_ptr, lookup_kind(TV_CORPSE, (corpse ? SV_CORPSE : SV_SKELETON)));
     apply_magic(player_ptr, q_ptr, floor_ptr->object_level, AM_NO_FIXED_ART);
     q_ptr->pval = md_ptr->m_ptr->r_idx;
@@ -142,8 +139,7 @@ static void drop_corpse(player_type *player_ptr, monster_death_type *md_ptr)
  * @param md_ptr モンスター死亡構造体への参照ポインタ
  * @return 何かドロップするなら1以上、何もドロップしないなら0
  */
-static ARTIFACT_IDX get_artifact_index(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static ARTIFACT_IDX get_artifact_index(player_type* player_ptr, monster_death_type* md_ptr) {
     ARTIFACT_IDX a_idx = 0;
     PERCENTAGE chance = 0;
     for (int i = 0; i < 4; i++) {
@@ -155,7 +151,7 @@ static ARTIFACT_IDX get_artifact_index(player_type *player_ptr, monster_death_ty
         if ((randint0(100) >= chance) && !current_world_ptr->wizard)
             continue;
 
-        artifact_type *a_ptr = &a_info[a_idx];
+        artifact_type* a_ptr = &a_info[a_idx];
         if (a_ptr->cur_num == 1)
             continue;
 
@@ -174,30 +170,29 @@ static ARTIFACT_IDX get_artifact_index(player_type *player_ptr, monster_death_ty
     return a_idx;
 }
 
-static KIND_OBJECT_IDX drop_dungeon_final_artifact(player_type *player_ptr, monster_death_type *md_ptr, ARTIFACT_IDX a_idx)
-{
+static KIND_OBJECT_IDX drop_dungeon_final_artifact(player_type* player_ptr, monster_death_type* md_ptr, ARTIFACT_IDX a_idx) {
     KIND_OBJECT_IDX k_idx
         = d_info[player_ptr->dungeon_idx].final_object != 0 ? d_info[player_ptr->dungeon_idx].final_object : lookup_kind(TV_SCROLL, SV_SCROLL_ACQUIREMENT);
     if (d_info[player_ptr->dungeon_idx].final_artifact == 0)
         return k_idx;
 
     a_idx = d_info[player_ptr->dungeon_idx].final_artifact;
-    artifact_type *a_ptr = &a_info[a_idx];
+    artifact_type* a_ptr = &a_info[a_idx];
     if (a_ptr->cur_num == 1)
         return k_idx;
     if (create_named_art(player_ptr, a_idx, md_ptr->md_y, md_ptr->md_x)) {
         a_ptr->cur_num = 1;
         if (current_world_ptr->character_dungeon)
             a_ptr->floor_id = player_ptr->floor_id;
-    } else if (!preserve_mode) {
+    }
+    else if (!preserve_mode) {
         a_ptr->cur_num = 1;
     }
 
     return d_info[player_ptr->dungeon_idx].final_object ? k_idx : 0;
 }
 
-static void drop_artifact(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void drop_artifact(player_type* player_ptr, monster_death_type* md_ptr) {
     if (!md_ptr->drop_chosen_item)
         return;
 
@@ -208,7 +203,7 @@ static void drop_artifact(player_type *player_ptr, monster_death_type *md_ptr)
     KIND_OBJECT_IDX k_idx = drop_dungeon_final_artifact(player_ptr, md_ptr, a_idx);
     if (k_idx != 0) {
         object_type forge;
-        object_type *q_ptr = &forge;
+        object_type* q_ptr = &forge;
         object_prep(player_ptr, q_ptr, k_idx);
         apply_magic(player_ptr, q_ptr, player_ptr->current_floor_ptr->object_level, AM_NO_FIXED_ART | AM_GOOD);
         (void)drop_near(player_ptr, q_ptr, -1, md_ptr->md_y, md_ptr->md_x);
@@ -217,8 +212,7 @@ static void drop_artifact(player_type *player_ptr, monster_death_type *md_ptr)
     msg_format(_("あなたは%sを制覇した！", "You have conquered %s!"), d_name + d_info[player_ptr->dungeon_idx].name);
 }
 
-static void decide_drop_quality(monster_death_type *md_ptr)
-{
+static void decide_drop_quality(monster_death_type* md_ptr) {
     md_ptr->mo_mode = 0L;
     if (md_ptr->r_ptr->flags1 & RF1_DROP_GOOD)
         md_ptr->mo_mode |= AM_GOOD;
@@ -227,8 +221,7 @@ static void decide_drop_quality(monster_death_type *md_ptr)
         md_ptr->mo_mode |= AM_GREAT;
 }
 
-static int decide_drop_numbers(player_type *player_ptr, monster_death_type *md_ptr, const bool drop_item)
-{
+static int decide_drop_numbers(player_type* player_ptr, monster_death_type* md_ptr, const bool drop_item) {
     int drop_numbers = 0;
     if ((md_ptr->r_ptr->flags1 & RF1_DROP_60) && (randint0(100) < 60))
         drop_numbers++;
@@ -263,20 +256,20 @@ static int decide_drop_numbers(player_type *player_ptr, monster_death_type *md_p
     return drop_numbers;
 }
 
-static void drop_items_golds(player_type *player_ptr, monster_death_type *md_ptr, int drop_numbers)
-{
+static void drop_items_golds(player_type* player_ptr, monster_death_type* md_ptr, int drop_numbers) {
     int dump_item = 0;
     int dump_gold = 0;
     for (int i = 0; i < drop_numbers; i++) {
         object_type forge;
-        object_type *q_ptr = &forge;
+        object_type* q_ptr = &forge;
         object_wipe(q_ptr);
         if (md_ptr->do_gold && (!md_ptr->do_item || (randint0(100) < 50))) {
             if (!make_gold(player_ptr, q_ptr))
                 continue;
 
             dump_gold++;
-        } else {
+        }
+        else {
             if (!make_object(player_ptr, q_ptr, md_ptr->mo_mode))
                 continue;
 
@@ -286,7 +279,7 @@ static void drop_items_golds(player_type *player_ptr, monster_death_type *md_ptr
         (void)drop_near(player_ptr, q_ptr, -1, md_ptr->md_y, md_ptr->md_x);
     }
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     floor_ptr->object_level = floor_ptr->base_level;
     coin_type = 0;
     bool visible = (md_ptr->m_ptr->ml && !player_ptr->image) || ((md_ptr->r_ptr->flags1 & RF1_UNIQUE) != 0);
@@ -294,8 +287,7 @@ static void drop_items_golds(player_type *player_ptr, monster_death_type *md_ptr
         lore_treasure(player_ptr, md_ptr->m_idx, dump_item, dump_gold);
 }
 
-static void on_defeat_last_boss(player_type *player_ptr)
-{
+static void on_defeat_last_boss(player_type* player_ptr) {
     current_world_ptr->total_winner = TRUE;
     player_ptr->redraw |= PR_TITLE;
     play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_FINAL_QUEST_CLEAR);
@@ -323,10 +315,9 @@ static void on_defeat_last_boss(player_type *player_ptr)
  * it drops all of its objects, which may disappear in crowded rooms.
  * </pre>
  */
-void monster_death(player_type *player_ptr, MONSTER_IDX m_idx, bool drop_item)
-{
+void monster_death(player_type* player_ptr, MONSTER_IDX m_idx, bool drop_item) {
     monster_death_type tmp_md;
-    monster_death_type *md_ptr = initialize_monster_death_type(player_ptr, &tmp_md, m_idx, drop_item);
+    monster_death_type* md_ptr = initialize_monster_death_type(player_ptr, &tmp_md, m_idx, drop_item);
     if (current_world_ptr->timewalk_m_idx && current_world_ptr->timewalk_m_idx == m_idx)
         current_world_ptr->timewalk_m_idx = 0;
 
@@ -352,7 +343,7 @@ void monster_death(player_type *player_ptr, MONSTER_IDX m_idx, bool drop_item)
     drop_artifact(player_ptr, md_ptr);
     int drop_numbers = decide_drop_numbers(player_ptr, md_ptr, drop_item);
     coin_type = md_ptr->force_coin;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     floor_ptr->object_level = (floor_ptr->dun_level + md_ptr->r_ptr->level) / 2;
     drop_items_golds(player_ptr, md_ptr, drop_numbers);
     if (((md_ptr->r_ptr->flags1 & RF1_QUESTOR) == 0) || player_ptr->phase_out || (md_ptr->m_ptr->r_idx != MON_SERPENT) || md_ptr->cloned)
@@ -367,9 +358,8 @@ void monster_death(player_type *player_ptr, MONSTER_IDX m_idx, bool drop_item)
  * @param r_ptr 撃破されたモンスターの種族情報を持つ構造体の参照ポインタ
  * @return 撃破されたモンスターの述語
  */
-concptr extract_note_dies(MONRACE_IDX r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+concptr extract_note_dies(MONRACE_IDX r_idx) {
+    monster_race* r_ptr = &r_info[r_idx];
     if (monster_living(r_idx))
         return _("は死んだ。", " dies.");
 

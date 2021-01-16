@@ -36,8 +36,7 @@
  * @param path パス保管先の文字列
  * @return なし
  */
-void init_file_paths(char *libpath, char *varpath)
-{
+void init_file_paths(char* libpath, char* varpath) {
     char *libtail, *vartail;
 
 #ifdef PRIVATE_USER_PATH
@@ -95,8 +94,7 @@ void init_file_paths(char *libpath, char *varpath)
  * @param str 初期化中のコンテンツ文字列
  * @return なし
  */
-static void init_note(concptr str)
-{
+static void init_note(concptr str) {
     term_erase(0, 23, 255);
     term_putstr(20, 23, -1, TERM_WHITE, str);
     term_fresh();
@@ -113,8 +111,7 @@ static void init_note(concptr str)
  * functions are "supposed" to work under any conditions.
  * </pre>
  */
-static void init_angband_aux(concptr why)
-{
+static void init_angband_aux(concptr why) {
     plog(why);
     plog(_("'lib'ディレクトリが存在しないか壊れているようです。", "The 'lib' directory is probably missing or broken."));
     plog(_("ひょっとするとアーカイブが正しく解凍されていないのかもしれません。", "The 'lib' directory is probably missing or broken."));
@@ -122,13 +119,12 @@ static void init_angband_aux(concptr why)
     quit(_("致命的なエラー。", "Fatal Error."));
 }
 
-void put_version(char *buf)
-{
+void put_version(char* buf) {
     if (IS_ALPHA_VERSION) {
         sprintf(buf, "変愚蛮怒 %d.%d.%dAlpha%d", H_VER_MAJOR, H_VER_MINOR, H_VER_PATCH, H_VER_EXTRA);
-
-    } else {
-        const char *mode = IS_STABLE_VERSION ? _("安定版", "Stable") : _("開発版", "Developing");
+    }
+    else {
+        const char* mode = IS_STABLE_VERSION ? _("安定版", "Stable") : _("開発版", "Developing");
         sprintf(buf, _("変愚蛮怒 %d.%d.%d.%d(%s)", "Hengband %d.%d.%d.%d(%s)"), H_VER_MAJOR, H_VER_MINOR, H_VER_PATCH, H_VER_EXTRA, mode);
     }
 }
@@ -138,8 +134,7 @@ void put_version(char *buf)
  * @param なし
  * @return なし
  */
-static void put_title(void)
-{
+static void put_title(void) {
     char title[120];
     put_version(title);
 
@@ -155,8 +150,7 @@ static void put_title(void)
  * @param process_autopick_file_command 自動拾いファイル読み込み関数への関数ポインタ
  * @return なし
  */
-void init_angband(player_type *player_ptr, process_autopick_file_command_pf process_autopick_file_command)
-{
+void init_angband(player_type* player_ptr, process_autopick_file_command_pf process_autopick_file_command) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, _("news_j.txt", "news.txt"));
     int fd = fd_open(buf, O_RDONLY);
@@ -169,7 +163,7 @@ void init_angband(player_type *player_ptr, process_autopick_file_command_pf proc
     (void)fd_close(fd);
     term_clear();
     path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, _("news_j.txt", "news.txt"));
-    FILE *fp;
+    FILE* fp;
     fp = angband_fopen(buf, "r");
     if (fp) {
         int i = 0;

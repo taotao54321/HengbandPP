@@ -27,11 +27,10 @@
  * @param hand_entry 項目ID
  * @return なし
  */
-static void display_player_melee_bonus(player_type *creature_ptr, int hand, int hand_entry)
-{
+static void display_player_melee_bonus(player_type* creature_ptr, int hand, int hand_entry) {
     HIT_PROB show_tohit = creature_ptr->dis_to_h[hand];
     HIT_POINT show_todam = creature_ptr->dis_to_d[hand];
-    object_type *o_ptr = &creature_ptr->inventory_list[INVEN_RARM + hand];
+    object_type* o_ptr = &creature_ptr->inventory_list[INVEN_RARM + hand];
 
     if (object_is_known(o_ptr))
         show_tohit += o_ptr->to_h;
@@ -56,8 +55,7 @@ static void display_player_melee_bonus(player_type *creature_ptr, int hand, int 
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void display_left_hand(player_type *creature_ptr)
-{
+static void display_left_hand(player_type* creature_ptr) {
     if (has_left_hand_weapon(creature_ptr)) {
         display_player_melee_bonus(creature_ptr, 1, left_hander ? ENTRY_RIGHT_HAND2 : ENTRY_LEFT_HAND2);
         return;
@@ -87,9 +85,8 @@ static void display_left_hand(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void display_hit_damage(player_type *creature_ptr)
-{
-    object_type *o_ptr = &creature_ptr->inventory_list[INVEN_BOW];
+static void display_hit_damage(player_type* creature_ptr) {
+    object_type* o_ptr = &creature_ptr->inventory_list[INVEN_BOW];
     HIT_PROB show_tohit = creature_ptr->dis_to_h_b;
     HIT_POINT show_todam = 0;
     if (object_is_known(o_ptr))
@@ -112,8 +109,7 @@ static void display_hit_damage(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void display_shoot_magnification(player_type *creature_ptr)
-{
+static void display_shoot_magnification(player_type* creature_ptr) {
     int tmul = 0;
     if (creature_ptr->inventory_list[INVEN_BOW].k_idx) {
         tmul = bow_tmul(creature_ptr->inventory_list[INVEN_BOW].sval);
@@ -131,20 +127,21 @@ static void display_shoot_magnification(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @param base_speed プレーヤーの速度
  */
-static TERM_COLOR decide_speed_color(player_type *creature_ptr, const int base_speed)
-{
+static TERM_COLOR decide_speed_color(player_type* creature_ptr, const int base_speed) {
     TERM_COLOR attr;
     if (base_speed > 0) {
         if (!creature_ptr->riding)
             attr = TERM_L_GREEN;
         else
             attr = TERM_GREEN;
-    } else if (base_speed == 0) {
+    }
+    else if (base_speed == 0) {
         if (!creature_ptr->riding)
             attr = TERM_L_BLUE;
         else
             attr = TERM_GREEN;
-    } else {
+    }
+    else {
         if (!creature_ptr->riding)
             attr = TERM_L_UMBER;
         else
@@ -159,8 +156,7 @@ static TERM_COLOR decide_speed_color(player_type *creature_ptr, const int base_s
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return プレーヤーの速度
  */
-static int calc_temporary_speed(player_type *creature_ptr)
-{
+static int calc_temporary_speed(player_type* creature_ptr) {
     int tmp_speed = 0;
     if (!creature_ptr->riding) {
         if (is_fast(creature_ptr))
@@ -169,7 +165,8 @@ static int calc_temporary_speed(player_type *creature_ptr)
             tmp_speed -= 10;
         if (creature_ptr->lightspeed)
             tmp_speed = 99;
-    } else {
+    }
+    else {
         if (monster_fast_remaining(&creature_ptr->current_floor_ptr->m_list[creature_ptr->riding]))
             tmp_speed += 10;
         if (monster_slow_remaining(&creature_ptr->current_floor_ptr->m_list[creature_ptr->riding]))
@@ -187,8 +184,7 @@ static int calc_temporary_speed(player_type *creature_ptr)
  * @param tmp_speed アイテム等で一時的に変化した速度量
  * @return なし
  */
-static void display_player_speed(player_type *creature_ptr, TERM_COLOR attr, int base_speed, int tmp_speed)
-{
+static void display_player_speed(player_type* creature_ptr, TERM_COLOR attr, int base_speed, int tmp_speed) {
     char buf[160];
     if (tmp_speed) {
         if (!creature_ptr->riding)
@@ -200,7 +196,8 @@ static void display_player_speed(player_type *creature_ptr, TERM_COLOR attr, int
             attr = TERM_YELLOW;
         else
             attr = TERM_VIOLET;
-    } else {
+    }
+    else {
         if (!creature_ptr->riding)
             sprintf(buf, "(%+d)", base_speed);
         else
@@ -216,8 +213,7 @@ static void display_player_speed(player_type *creature_ptr, TERM_COLOR attr, int
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void display_player_exp(player_type *creature_ptr)
-{
+static void display_player_exp(player_type* creature_ptr) {
     int e = (creature_ptr->prace == RACE_ANDROID) ? ENTRY_EXP_ANDR : ENTRY_CUR_EXP;
     if (creature_ptr->exp >= creature_ptr->max_exp)
         display_player_one_line(e, format("%ld", creature_ptr->exp), TERM_L_GREEN);
@@ -242,8 +238,7 @@ static void display_player_exp(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void display_playtime_in_game(player_type *creature_ptr)
-{
+static void display_playtime_in_game(player_type* creature_ptr) {
     int day, hour, min;
     extract_day_hour_min(creature_ptr, &day, &hour, &min);
 
@@ -275,8 +270,7 @@ static void display_playtime_in_game(player_type *creature_ptr)
  * @param なし
  * @param なし
  */
-static void display_real_playtime(void)
-{
+static void display_real_playtime(void) {
     u32b play_hour = current_world_ptr->play_time / (60 * 60);
     u32b play_min = (current_world_ptr->play_time / 60) % 60;
     u32b play_sec = current_world_ptr->play_time % 60;
@@ -289,8 +283,7 @@ static void display_real_playtime(void)
  * Prints the following information on the screen.
  * @return なし
  */
-void display_player_middle(player_type *creature_ptr)
-{
+void display_player_middle(player_type* creature_ptr) {
     if (has_right_hand_weapon(creature_ptr))
         display_player_melee_bonus(creature_ptr, 0, left_hander ? ENTRY_LEFT_HAND1 : ENTRY_RIGHT_HAND1);
 

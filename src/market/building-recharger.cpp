@@ -30,8 +30,7 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void building_recharge(player_type *player_ptr)
-{
+void building_recharge(player_type* player_ptr) {
     msg_flag = FALSE;
     clear_bldg(4, 18);
     prt(_("  再充填の費用はアイテムの種類によります。", "  The prices of recharge depend on the type."), 6, 0);
@@ -41,12 +40,12 @@ void building_recharge(player_type *player_ptr)
     concptr s = _("魔力を充填すべきアイテムがない。", "You have nothing to recharge.");
 
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(player_ptr, &item, q, s, (USE_INVEN | USE_FLOOR), TV_NONE);
     if (!o_ptr)
         return;
 
-    object_kind *k_ptr;
+    object_kind* k_ptr;
     k_ptr = &k_info[o_ptr->k_idx];
 
     /*
@@ -79,15 +78,18 @@ void building_recharge(player_type *player_ptr)
     if (o_ptr->tval == TV_ROD) {
         if (o_ptr->timeout > 0) {
             price = (lev * 50 * o_ptr->timeout) / k_ptr->pval;
-        } else {
+        }
+        else {
             price = 0;
             msg_format(_("それは再充填する必要はありません。", "That doesn't need to be recharged."));
             return;
         }
-    } else if (o_ptr->tval == TV_STAFF) {
+    }
+    else if (o_ptr->tval == TV_STAFF) {
         price = (k_info[o_ptr->k_idx].cost / 10) * o_ptr->number;
         price = MAX(10, price);
-    } else {
+    }
+    else {
         price = (k_info[o_ptr->k_idx].cost / 10);
         price = MAX(10, price);
     }
@@ -95,15 +97,18 @@ void building_recharge(player_type *player_ptr)
     if (o_ptr->tval == TV_WAND && (o_ptr->pval / o_ptr->number >= k_ptr->pval)) {
         if (o_ptr->number > 1) {
             msg_print(_("この魔法棒はもう充分に充填されています。", "These wands are already fully charged."));
-        } else {
+        }
+        else {
             msg_print(_("この魔法棒はもう充分に充填されています。", "This wand is already fully charged."));
         }
 
         return;
-    } else if (o_ptr->tval == TV_STAFF && o_ptr->pval >= k_ptr->pval) {
+    }
+    else if (o_ptr->tval == TV_STAFF && o_ptr->pval >= k_ptr->pval) {
         if (o_ptr->number > 1) {
             msg_print(_("この杖はもう充分に充填されています。", "These staffs are already fully charged."));
-        } else {
+        }
+        else {
             msg_print(_("この杖はもう充分に充填されています。", "This staff is already fully charged."));
         }
 
@@ -130,10 +135,12 @@ void building_recharge(player_type *player_ptr)
 
         {
             o_ptr->timeout = 0;
-        } else {
+        }
+        else {
             return;
         }
-    } else {
+    }
+    else {
         int max_charges;
         if (o_ptr->tval == TV_STAFF)
             max_charges = k_ptr->pval - o_ptr->pval;
@@ -174,8 +181,7 @@ void building_recharge(player_type *player_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void building_recharge_all(player_type *player_ptr)
-{
+void building_recharge_all(player_type* player_ptr) {
     msg_flag = FALSE;
     clear_bldg(4, 18);
     prt(_("  再充填の費用はアイテムの種類によります。", "  The prices of recharge depend on the type."), 6, 0);
@@ -183,7 +189,7 @@ void building_recharge_all(player_type *player_ptr)
     PRICE price = 0;
     PRICE total_cost = 0;
     for (INVENTORY_IDX i = 0; i < INVEN_PACK; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &player_ptr->inventory_list[i];
 
         if (o_ptr->tval < TV_STAFF || o_ptr->tval > TV_ROD)
@@ -192,7 +198,7 @@ void building_recharge_all(player_type *player_ptr)
             total_cost += 50;
 
         DEPTH lev = k_info[o_ptr->k_idx].level;
-        object_kind *k_ptr;
+        object_kind* k_ptr;
         k_ptr = &k_info[o_ptr->k_idx];
 
         switch (o_ptr->tval) {
@@ -233,9 +239,9 @@ void building_recharge_all(player_type *player_ptr)
         return;
 
     for (INVENTORY_IDX i = 0; i < INVEN_PACK; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &player_ptr->inventory_list[i];
-        object_kind *k_ptr;
+        object_kind* k_ptr;
         k_ptr = &k_info[o_ptr->k_idx];
 
         if (o_ptr->tval < TV_STAFF || o_ptr->tval > TV_ROD)

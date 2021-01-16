@@ -18,8 +18,7 @@
  * @param separator フラグ表示の区切り記号
  * @return なし
  */
-void spoiler_outlist(concptr header, concptr *list, char separator)
-{
+void spoiler_outlist(concptr header, concptr* list, char separator) {
     char line[MAX_LINE_LEN + 1], buf[80];
     if (*list == NULL)
         return;
@@ -43,12 +42,14 @@ void spoiler_outlist(concptr header, concptr *list, char separator)
         if (line_len + buf_len <= MAX_LINE_LEN) {
             strcat(line, buf);
             line_len += buf_len;
-        } else {
+        }
+        else {
             if (line_len > 1 && line[line_len - 1] == ' ' && line[line_len - 2] == list_separator) {
                 line[line_len - 2] = '\0';
                 fprintf(spoiler_file, "%s\n", line);
                 sprintf(line, "%s%s", spoiler_indent, buf);
-            } else {
+            }
+            else {
                 fprintf(spoiler_file, "%s\n", line);
                 concptr ident2 = "      ";
                 sprintf(line, "%s%s", ident2, buf);
@@ -68,8 +69,7 @@ void spoiler_outlist(concptr header, concptr *list, char separator)
  * @brief バッファにアーティファクト出力情報ヘッダを収める /
  * @return なし
  */
-static void print_header(void)
-{
+static void print_header(void) {
     char buf[80];
     sprintf(buf, "Artifact Spoilers for Hengband Version %d.%d.%d", FAKE_VER_MAJOR - 10, FAKE_VER_MINOR, FAKE_VER_PATCH);
     spoiler_underline(buf);
@@ -82,9 +82,8 @@ static void print_header(void)
  * @param name1 生成するアーティファクトID
  * @return 生成が成功した場合TRUEを返す
  */
-static bool make_fake_artifact(player_type *player_ptr, object_type *o_ptr, ARTIFACT_IDX name1)
-{
-    artifact_type *a_ptr = &a_info[name1];
+static bool make_fake_artifact(player_type* player_ptr, object_type* o_ptr, ARTIFACT_IDX name1) {
+    artifact_type* a_ptr = &a_info[name1];
     if (!a_ptr->name)
         return FALSE;
 
@@ -111,9 +110,8 @@ static bool make_fake_artifact(player_type *player_ptr, object_type *o_ptr, ARTI
  * @param art_ptr アーティファクト情報をまとめた構造体の参照ポインタ
  * @return なし
  */
-static void spoiler_print_art(obj_desc_list *art_ptr)
-{
-    pval_info_type *pval_ptr = &art_ptr->pval_info;
+static void spoiler_print_art(obj_desc_list* art_ptr) {
+    pval_info_type* pval_ptr = &art_ptr->pval_info;
     char buf[80];
     fprintf(spoiler_file, "%s\n", art_ptr->description);
     if (pval_ptr->pval_desc[0]) {
@@ -144,10 +142,9 @@ static void spoiler_print_art(obj_desc_list *art_ptr)
  * @param fname 生成ファイル名
  * @return なし
  */
-void spoil_fixed_artifact(player_type *player_ptr, concptr fname)
-{
+void spoil_fixed_artifact(player_type* player_ptr, concptr fname) {
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
     obj_desc_list artifact;
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, fname);
@@ -166,7 +163,7 @@ void spoil_fixed_artifact(player_type *player_ptr, concptr fname)
         }
 
         for (ARTIFACT_IDX j = 1; j < max_a_idx; ++j) {
-            artifact_type *a_ptr = &a_info[j];
+            artifact_type* a_ptr = &a_info[j];
             if (a_ptr->tval != group_artifact[i].tval)
                 continue;
 

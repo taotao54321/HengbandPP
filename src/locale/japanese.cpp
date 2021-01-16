@@ -44,8 +44,7 @@ static const convert_key s2j_table[] = { { "mb", "nb" }, { "mp", "np" }, { "mv",
  * @return なし
  * @details
  */
-void sindarin_to_kana(char *kana, concptr sindarin)
-{
+void sindarin_to_kana(char* kana, concptr sindarin) {
     char buf[256];
     int idx;
 
@@ -58,15 +57,16 @@ void sindarin_to_kana(char *kana, concptr sindarin)
         concptr pat1 = s2j_table[idx].key1;
         concptr pat2 = s2j_table[idx].key2;
         int len = strlen(pat1);
-        char *src = kana;
-        char *dest = buf;
+        char* src = kana;
+        char* dest = buf;
 
         while (*src) {
             if (strncmp(src, pat1, len) == 0) {
                 strcpy(dest, pat2);
                 src += len;
                 dest += strlen(pat2);
-            } else {
+            }
+            else {
                 if (iskanji(*src)) {
                     *dest = *src;
                     src++;
@@ -95,8 +95,8 @@ void sindarin_to_kana(char *kana, concptr sindarin)
  * JVERB_TO:  殴る,蹴る > 殴って蹴る
  * JVERB_OR:  殴る,蹴る > 殴ったり蹴ったり */
 static const struct jverb_table_t {
-    const char *from;
-    const char *to[3];
+    const char* from;
+    const char* to[3];
 } jverb_table[] = {
     { "する", { "し", "して", "した" } },
     { "いる", { "いて", "いて", "いた" } },
@@ -137,9 +137,8 @@ static const struct jverb_table_t {
  * @return なし
  * @details
  */
-void jverb(concptr in, char *out, int flag)
-{
-    const struct jverb_table_t *p;
+void jverb(concptr in, char* out, int flag) {
+    const struct jverb_table_t* p;
     int in_len = strlen(in);
 
     strcpy(out, in);
@@ -162,11 +161,10 @@ void jverb(concptr in, char *out, int flag)
  * @return なし
  * @details
  */
-void sjis2euc(char *str)
-{
+void sjis2euc(char* str) {
     int i;
     unsigned char c1, c2;
-    unsigned char *tmp;
+    unsigned char* tmp;
 
     int len = strlen(str);
 
@@ -180,17 +178,19 @@ void sjis2euc(char *str)
             if (c2 >= 0x9f) {
                 c1 = c1 * 2 - (c1 >= 0xe0 ? 0xe0 : 0x60);
                 c2 += 2;
-            } else {
+            }
+            else {
                 c1 = c1 * 2 - (c1 >= 0xe0 ? 0xe1 : 0x61);
                 c2 += 0x60 + (c2 < 0x7f);
             }
             tmp[i - 1] = c1;
             tmp[i] = c2;
-        } else
+        }
+        else
             tmp[i] = c1;
     }
     tmp[len] = 0;
-    strcpy(str, (char *)tmp);
+    strcpy(str, (char*)tmp);
 
     C_KILL(tmp, len + 1, byte);
 }
@@ -201,11 +201,10 @@ void sjis2euc(char *str)
  * @return なし
  * @details
  */
-void euc2sjis(char *str)
-{
+void euc2sjis(char* str) {
     int i;
     unsigned char c1, c2;
-    unsigned char *tmp;
+    unsigned char* tmp;
 
     int len = strlen(str);
 
@@ -219,18 +218,20 @@ void euc2sjis(char *str)
             if (c1 % 2) {
                 c1 = (c1 >> 1) + (c1 < 0xdf ? 0x31 : 0x71);
                 c2 -= 0x60 + (c2 < 0xe0);
-            } else {
+            }
+            else {
                 c1 = (c1 >> 1) + (c1 < 0xdf ? 0x30 : 0x70);
                 c2 -= 2;
             }
 
             tmp[i - 1] = c1;
             tmp[i] = c2;
-        } else
+        }
+        else
             tmp[i] = c1;
     }
     tmp[len] = 0;
-    strcpy(str, (char *)tmp);
+    strcpy(str, (char*)tmp);
 
     C_KILL(tmp, len + 1, byte);
 }
@@ -244,8 +245,7 @@ void euc2sjis(char *str)
  * 2: EUC<br>
  * 3: SJIS<br>
  */
-byte codeconv(char *str)
-{
+byte codeconv(char* str) {
     byte code = 0;
     int i;
 
@@ -321,8 +321,7 @@ byte codeconv(char *str)
  * @param x 判定する位置(バイト)
  * @return 漢字の1バイト目ならばTRUE
  */
-bool iskanji2(concptr s, int x)
-{
+bool iskanji2(concptr s, int x) {
     int i;
 
     for (i = 0; i < x; i++) {
@@ -340,8 +339,7 @@ bool iskanji2(concptr s, int x)
  * @param str 判定する文字列へのポインタ
  * @return 文字列の文字コードがASCIIならTRUE、そうでなければFALSE
  */
-static bool is_ascii_str(concptr str)
-{
+static bool is_ascii_str(concptr str) {
     for (; *str; str++) {
         int ch = *str;
         if (!(0x00 < ch && ch <= 0x7f))
@@ -355,10 +353,9 @@ static bool is_ascii_str(concptr str)
  * @param str 判定する文字列へのポインタ
  * @return 文字列の文字コードがUTF-8ならTRUE、そうでなければFALSE
  */
-static bool is_utf8_str(concptr str)
-{
-    const unsigned char *p;
-    for (p = (const unsigned char *)str; *p; p++) {
+static bool is_utf8_str(concptr str) {
+    const unsigned char* p;
+    for (p = (const unsigned char*)str; *p; p++) {
         int subseq_num = 0;
         if (0x00 < *p && *p <= 0x7f)
             continue;
@@ -397,10 +394,9 @@ static const struct ms_to_jis_unicode_conv_t {
  * @param str 変換する文字列のポインタ
  * @return なし
  */
-static void ms_to_jis_unicode(char *str)
-{
-    unsigned char *p;
-    for (p = (unsigned char *)str; *p; p++) {
+static void ms_to_jis_unicode(char* str) {
+    unsigned char* p;
+    for (p = (unsigned char*)str; *p; p++) {
         int subseq_num = 0;
         if (0x00 < *p && *p <= 0x7f)
             continue;
@@ -410,7 +406,7 @@ static void ms_to_jis_unicode(char *str)
         if ((*p & 0xf0) == 0xe0) {
             size_t i;
             for (i = 0; i < sizeof(ms_to_jis_unicode_conv) / sizeof(ms_to_jis_unicode_conv[0]); ++i) {
-                const struct ms_to_jis_unicode_conv_t *c = &ms_to_jis_unicode_conv[i];
+                const struct ms_to_jis_unicode_conv_t* c = &ms_to_jis_unicode_conv[i];
                 if (memcmp(p, c->from, 3) == 0) {
                     memcpy(p, c->to, 3);
                 }
@@ -434,13 +430,12 @@ static void ms_to_jis_unicode(char *str)
  * @param sys_str_buflen 変換したシステムの文字コードの文字列を格納するバッファの長さ
  * @return 変換に成功した場合TRUE、失敗した場合FALSEを返す
  */
-static bool utf8_to_sys(char *utf8_str, char *sys_str_buffer, size_t sys_str_buflen)
-{
+static bool utf8_to_sys(char* utf8_str, char* sys_str_buffer, size_t sys_str_buflen) {
 #if defined(EUC)
 
     iconv_t cd = iconv_open("EUC-JP", "UTF-8");
     size_t utf8_len = strlen(utf8_str) + 1; /* include termination character */
-    char *from = utf8_str;
+    char* from = utf8_str;
     int ret;
 
     ms_to_jis_unicode(utf8_str);
@@ -481,13 +476,12 @@ static bool utf8_to_sys(char *utf8_str, char *sys_str_buffer, size_t sys_str_buf
  * @param buflen バッファの長さ。
  * @return なし
  */
-void guess_convert_to_system_encoding(char *strbuf, int buflen)
-{
+void guess_convert_to_system_encoding(char* strbuf, int buflen) {
     if (is_ascii_str(strbuf))
         return;
 
     if (is_utf8_str(strbuf)) {
-        char *work;
+        char* work;
         C_MAKE(work, buflen, char);
         angband_strcpy(work, strbuf, buflen);
         if (!utf8_to_sys(work, strbuf, buflen)) {

@@ -1,6 +1,7 @@
 ﻿#include "cmd-action/cmd-racial.h"
 #include "action/action-limited.h"
 #include "action/mutation-execution.h"
+#include "action/racial-execution.h"
 #include "core/asking-player.h"
 #include "core/player-redraw-types.h"
 #include "core/player-update-types.h"
@@ -15,15 +16,13 @@
 #include "player/special-defense-types.h"
 #include "racial/class-racial-switcher.h"
 #include "racial/mutation-racial-selector.h"
-#include "action/racial-execution.h"
 #include "racial/race-racial-command-setter.h"
 #include "racial/racial-util.h"
 #include "status/action-setter.h"
 #include "term/screen-processor.h"
 #include "util/int-char-converter.h"
 
-static bool input_racial_power_selection(player_type *creature_ptr, rc_type *rc_ptr)
-{
+static bool input_racial_power_selection(player_type* creature_ptr, rc_type* rc_ptr) {
     switch (rc_ptr->choice) {
     case '0':
         screen_load();
@@ -62,8 +61,7 @@ static bool input_racial_power_selection(player_type *creature_ptr, rc_type *rc_
     }
 }
 
-static bool check_input_racial_power(player_type *creature_ptr, rc_type *rc_ptr)
-{
+static bool check_input_racial_power(player_type* creature_ptr, rc_type* rc_ptr) {
     if (!use_menu || rc_ptr->choice == ' ')
         return FALSE;
 
@@ -76,8 +74,7 @@ static bool check_input_racial_power(player_type *creature_ptr, rc_type *rc_ptr)
     return FALSE;
 }
 
-static void display_racial_list(rc_type *rc_ptr, char *dummy)
-{
+static void display_racial_list(rc_type* rc_ptr, char* dummy) {
     strcpy(dummy, "");
     rc_ptr->redraw = TRUE;
     if (!use_menu)
@@ -93,8 +90,7 @@ static void display_racial_list(rc_type *rc_ptr, char *dummy)
         1, 0);
 }
 
-static void select_racial_power(player_type *creature_ptr, rc_type *rc_ptr)
-{
+static void select_racial_power(player_type* creature_ptr, rc_type* rc_ptr) {
     char dummy[80];
     display_racial_list(rc_ptr, dummy);
     byte y = 2;
@@ -108,7 +104,8 @@ static void select_racial_power(player_type *creature_ptr, rc_type *rc_ptr)
                 strcpy(dummy, _(" 》 ", " >  "));
             else
                 strcpy(dummy, "    ");
-        } else {
+        }
+        else {
             char letter;
             if (ctr < 26)
                 letter = I2A(ctr);
@@ -126,8 +123,7 @@ static void select_racial_power(player_type *creature_ptr, rc_type *rc_ptr)
     }
 }
 
-static bool check_racial_power_choice(player_type *creature_ptr, rc_type *rc_ptr)
-{
+static bool check_racial_power_choice(player_type* creature_ptr, rc_type* rc_ptr) {
     if ((rc_ptr->choice != ' ') && (rc_ptr->choice != '*') && (rc_ptr->choice != '?') && (!use_menu || !rc_ptr->ask))
         return FALSE;
 
@@ -141,8 +137,7 @@ static bool check_racial_power_choice(player_type *creature_ptr, rc_type *rc_ptr
     return TRUE;
 }
 
-static void decide_racial_command(rc_type *rc_ptr)
-{
+static void decide_racial_command(rc_type* rc_ptr) {
     if (use_menu)
         return;
 
@@ -162,8 +157,7 @@ static void decide_racial_command(rc_type *rc_ptr)
     rc_ptr->command_code = (islower(rc_ptr->choice) ? A2I(rc_ptr->choice) : -1);
 }
 
-static bool ask_invoke_racial_power(rc_type *rc_ptr)
-{
+static bool ask_invoke_racial_power(rc_type* rc_ptr) {
     if ((rc_ptr->command_code < 0) || (rc_ptr->command_code >= rc_ptr->num)) {
         bell();
         return FALSE;
@@ -177,8 +171,7 @@ static bool ask_invoke_racial_power(rc_type *rc_ptr)
     return get_check(tmp_val);
 }
 
-static bool process_racial_power_choice(player_type *creature_ptr, rc_type *rc_ptr)
-{
+static bool process_racial_power_choice(player_type* creature_ptr, rc_type* rc_ptr) {
     rc_ptr->choice = (always_show_list || use_menu) ? ESCAPE : 1;
     while (!rc_ptr->flag) {
         if (rc_ptr->choice == ESCAPE)
@@ -202,8 +195,7 @@ static bool process_racial_power_choice(player_type *creature_ptr, rc_type *rc_p
     return FALSE;
 }
 
-static bool repeat_racial_power(player_type *creature_ptr, rc_type *rc_ptr)
-{
+static bool repeat_racial_power(player_type* creature_ptr, rc_type* rc_ptr) {
     if (repeat_pull(&rc_ptr->command_code) && (rc_ptr->command_code >= 0) && (rc_ptr->command_code < rc_ptr->num))
         return FALSE;
 
@@ -225,8 +217,7 @@ static bool repeat_racial_power(player_type *creature_ptr, rc_type *rc_ptr)
     return FALSE;
 }
 
-static void check_cast_racial_power(player_type *creature_ptr, rc_type *rc_ptr)
-{
+static void check_cast_racial_power(player_type* creature_ptr, rc_type* rc_ptr) {
     switch (check_racial_level(creature_ptr, &rc_ptr->power_desc[rc_ptr->command_code])) {
     case RACIAL_SUCCESS:
         if (rc_ptr->power_desc[rc_ptr->command_code].number < 0)
@@ -244,8 +235,7 @@ static void check_cast_racial_power(player_type *creature_ptr, rc_type *rc_ptr)
     }
 }
 
-static bool reduce_mana_by_racial(player_type *creature_ptr, rc_type *rc_ptr)
-{
+static bool reduce_mana_by_racial(player_type* creature_ptr, rc_type* rc_ptr) {
     int racial_cost = rc_ptr->power_desc[rc_ptr->command_code].racial_cost;
     if (racial_cost == 0)
         return FALSE;
@@ -267,8 +257,7 @@ static bool reduce_mana_by_racial(player_type *creature_ptr, rc_type *rc_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_racial_power(player_type *creature_ptr)
-{
+void do_cmd_racial_power(player_type* creature_ptr) {
     if (creature_ptr->wild_mode)
         return;
 
@@ -281,7 +270,7 @@ void do_cmd_racial_power(player_type *creature_ptr)
         set_action(creature_ptr, ACTION_NONE);
 
     rc_type tmp_rc;
-    rc_type *rc_ptr = initialize_rc_type(creature_ptr, &tmp_rc);
+    rc_type* rc_ptr = initialize_rc_type(creature_ptr, &tmp_rc);
     switch_class_racial(creature_ptr, rc_ptr);
     if (creature_ptr->mimic_form)
         set_mimic_racial_command(creature_ptr, rc_ptr);

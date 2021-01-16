@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool create_ration(player_type *crature_ptr);
+bool create_ration(player_type* crature_ptr);

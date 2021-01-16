@@ -32,8 +32,7 @@
  * @return
  * @details Execute a single editor command
  */
-ape_quittance do_editor_command(player_type *player_ptr, text_body_type *tb, int com_id)
-{
+ape_quittance do_editor_command(player_type* player_ptr, text_body_type* tb, int com_id) {
     switch (com_id) {
     case EC_QUIT: {
         if (tb->changed) {
@@ -95,7 +94,8 @@ ape_quittance do_editor_command(player_type *player_ptr, text_body_type *tb, int
                 }
             }
 #endif
-        } else if (tb->cy > 0) {
+        }
+        else if (tb->cy > 0) {
             tb->cy--;
             tb->cx = strlen(tb->lines_list[tb->cy]);
         }
@@ -187,7 +187,8 @@ ape_quittance do_editor_command(player_type *player_ptr, text_body_type *tb, int
 
             kill_line_segment(tb, tb->cy, bx1, bx2, TRUE);
             tb->cx = bx1;
-        } else {
+        }
+        else {
             int by1 = MIN(tb->my, tb->cy);
             int by2 = MAX(tb->my, tb->cy);
 
@@ -239,7 +240,7 @@ ape_quittance do_editor_command(player_type *player_ptr, text_body_type *tb, int
         break;
     }
     case EC_PASTE: {
-        chain_str_type *chain = tb->yank;
+        chain_str_type* chain = tb->yank;
         int len = strlen(tb->lines_list[tb->cy]);
         if (!chain)
             break;
@@ -368,7 +369,8 @@ ape_quittance do_editor_command(player_type *player_ptr, text_body_type *tb, int
         if (tb->lines_list[tb->cy + 1]) {
             tb->cy++;
             tb->cx = 0;
-        } else {
+        }
+        else {
             tb->cx = len;
             break;
         }

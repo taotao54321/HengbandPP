@@ -37,8 +37,7 @@ s16b command_new; /* Command chaining from inven/equip view */
  */
 static char request_command_buffer[256];
 
-static char inkey_from_menu(player_type *player_ptr)
-{
+static char inkey_from_menu(player_type* player_ptr) {
     char cmd;
     int basey, basex;
     int num = 0, max_num, old_num = 0;
@@ -54,7 +53,7 @@ static char inkey_from_menu(player_type *player_ptr)
     prt("", 0, 0);
     screen_save();
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     while (TRUE) {
         int i;
         char sub_cmd;
@@ -109,17 +108,20 @@ static char inkey_from_menu(player_type *player_ptr)
                 cmd = menu_info[menu][num].cmd;
                 use_menu = TRUE;
                 break;
-            } else {
+            }
+            else {
                 menu = menu_info[menu][num].cmd;
                 num = 0;
                 basey += 2;
                 basex += 8;
             }
-        } else if ((sub_cmd == ESCAPE) || (sub_cmd == 'z') || (sub_cmd == 'Z') || (sub_cmd == '0')) {
+        }
+        else if ((sub_cmd == ESCAPE) || (sub_cmd == 'z') || (sub_cmd == 'Z') || (sub_cmd == '0')) {
             if (!menu) {
                 cmd = ESCAPE;
                 break;
-            } else {
+            }
+            else {
                 menu = 0;
                 num = old_num;
                 basey -= 2;
@@ -127,26 +129,32 @@ static char inkey_from_menu(player_type *player_ptr)
                 screen_load();
                 screen_save();
             }
-        } else if ((sub_cmd == '2') || (sub_cmd == 'j') || (sub_cmd == 'J')) {
+        }
+        else if ((sub_cmd == '2') || (sub_cmd == 'j') || (sub_cmd == 'J')) {
             if (kisuu) {
                 if (num % 2)
                     num = (num + 2) % (max_num - 1);
                 else
                     num = (num + 2) % (max_num + 1);
-            } else
+            }
+            else
                 num = (num + 2) % max_num;
-        } else if ((sub_cmd == '8') || (sub_cmd == 'k') || (sub_cmd == 'K')) {
+        }
+        else if ((sub_cmd == '8') || (sub_cmd == 'k') || (sub_cmd == 'K')) {
             if (kisuu) {
                 if (num % 2)
                     num = (num + max_num - 3) % (max_num - 1);
                 else
                     num = (num + max_num - 1) % (max_num + 1);
-            } else
+            }
+            else
                 num = (num + max_num - 2) % max_num;
-        } else if ((sub_cmd == '4') || (sub_cmd == '6') || (sub_cmd == 'h') || (sub_cmd == 'H') || (sub_cmd == 'l') || (sub_cmd == 'L')) {
+        }
+        else if ((sub_cmd == '4') || (sub_cmd == '6') || (sub_cmd == 'h') || (sub_cmd == 'H') || (sub_cmd == 'l') || (sub_cmd == 'L')) {
             if ((num % 2) || (num == max_num - 1)) {
                 num--;
-            } else if (num < max_num - 1) {
+            }
+            else if (num < max_num - 1) {
                 num++;
             }
         }
@@ -178,8 +186,7 @@ static char inkey_from_menu(player_type *player_ptr)
  *
  * Note that "player_ptr->command_new" may not work any more.
  */
-void request_command(player_type *player_ptr, int shopping)
-{
+void request_command(player_type* player_ptr, int shopping) {
     s16b cmd;
     int mode;
 
@@ -190,7 +197,8 @@ void request_command(player_type *player_ptr, int shopping)
 #endif
     if (rogue_like_commands) {
         mode = KEYMAP_MODE_ROGUE;
-    } else {
+    }
+    else {
         mode = KEYMAP_MODE_ORIG;
     }
 
@@ -204,7 +212,8 @@ void request_command(player_type *player_ptr, int shopping)
             msg_erase();
             cmd = command_new;
             command_new = 0;
-        } else {
+        }
+        else {
             msg_flag = FALSE;
             num_more = 0;
             inkey_flag = TRUE;
@@ -223,16 +232,19 @@ void request_command(player_type *player_ptr, int shopping)
                 if ((cmd == 0x7F) || (cmd == KTRL('H'))) {
                     command_arg = command_arg / 10;
                     prt(format(_("回数: %d", "Count: %d"), command_arg), 0, 0);
-                } else if (cmd >= '0' && cmd <= '9') {
+                }
+                else if (cmd >= '0' && cmd <= '9') {
                     if (command_arg >= 1000) {
                         bell();
                         command_arg = 9999;
-                    } else {
+                    }
+                    else {
                         command_arg = command_arg * 10 + D2I(cmd);
                     }
 
                     prt(format(_("回数: %d", "Count: %d"), command_arg), 0, 0);
-                } else {
+                }
+                else {
                     break;
                 }
             }
@@ -248,7 +260,7 @@ void request_command(player_type *player_ptr, int shopping)
             }
 
             if ((cmd == ' ') || (cmd == '\n') || (cmd == '\r')) {
-                if (!get_com(_("コマンド: ", "Command: "), (char *)&cmd, FALSE)) {
+                if (!get_com(_("コマンド: ", "Command: "), (char*)&cmd, FALSE)) {
                     command_arg = 0;
                     continue;
                 }
@@ -256,13 +268,13 @@ void request_command(player_type *player_ptr, int shopping)
         }
 
         if (cmd == '\\') {
-            (void)get_com(_("コマンド: ", "Command: "), (char *)&cmd, FALSE);
+            (void)get_com(_("コマンド: ", "Command: "), (char*)&cmd, FALSE);
             if (!inkey_next)
                 inkey_next = "";
         }
 
         if (cmd == '^') {
-            if (get_com(_("CTRL: ", "Control: "), (char *)&cmd, FALSE))
+            if (get_com(_("CTRL: ", "Control: "), (char*)&cmd, FALSE))
                 cmd = KTRL(cmd);
         }
 
@@ -318,7 +330,7 @@ void request_command(player_type *player_ptr, int shopping)
 #endif
 
     for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i = inventory_slot_type(i + 1)) {
-        object_type *o_ptr = &player_ptr->inventory_list[i];
+        object_type* o_ptr = &player_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
 

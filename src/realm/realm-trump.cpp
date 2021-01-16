@@ -34,8 +34,7 @@
  * @param mode 処理内容 (SPELL_NAME / SPELL_DESC / SPELL_INFO / SPELL_CAST)
  * @return SPELL_NAME / SPELL_DESC / SPELL_INFO 時には文字列ポインタを返す。SPELL_CAST時はNULL文字列を返す。
  */
-concptr do_trump_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
-{
+concptr do_trump_spell(player_type* caster_ptr, SPELL_IDX spell, spell_type mode) {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
@@ -226,7 +225,8 @@ concptr do_trump_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode
                         return NULL;
                     x = target_col;
                     y = target_row;
-                } else {
+                }
+                else {
                     /* Summons near player when failed */
                     x = caster_ptr->x;
                     y = caster_ptr->y;

@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool exe_mutation_power(player_type *creature_ptr, int power);
+bool exe_mutation_power(player_type* creature_ptr, int power);

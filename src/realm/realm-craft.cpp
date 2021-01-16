@@ -25,8 +25,7 @@
  * @param mode 処理内容 (SPELL_NAME / SPELL_DESC / SPELL_INFO / SPELL_CAST)
  * @return SPELL_NAME / SPELL_DESC / SPELL_INFO 時には文字列ポインタを返す。SPELL_CAST時はNULL文字列を返す。
  */
-concptr do_craft_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
-{
+concptr do_craft_spell(player_type* caster_ptr, SPELL_IDX spell, spell_type mode) {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
@@ -434,7 +433,8 @@ concptr do_craft_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode
             if (cast) {
                 if (summon_specific(caster_ptr, -1, caster_ptr->y, caster_ptr->x, plev, SUMMON_GOLEM, PM_FORCE_PET)) {
                     msg_print(_("ゴーレムを作った。", "You make a golem."));
-                } else {
+                }
+                else {
                     msg_print(_("うまくゴーレムを作れなかった。", "No Golems arrive."));
                 }
             }

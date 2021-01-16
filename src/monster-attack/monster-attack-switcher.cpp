@@ -33,8 +33,7 @@
  * @return なし
  * @detail 減衰の計算式がpoisではなくnukeなのは仕様 (1/3では減衰が強すぎると判断したため)
  */
-static void calc_blow_poison(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_poison(player_type* target_ptr, monap_type* monap_ptr) {
     if (monap_ptr->explode)
         return;
 
@@ -53,8 +52,7 @@ static void calc_blow_poison(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void calc_blow_disenchant(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_disenchant(player_type* target_ptr, monap_type* monap_ptr) {
     if (monap_ptr->explode)
         return;
 
@@ -77,8 +75,7 @@ static void calc_blow_disenchant(player_type *target_ptr, monap_type *monap_ptr)
  * @return なし
  * @detals 魔道具使用能力向上フラグがあれば、吸収対象のアイテムをスキャンされる回数が半分で済む
  */
-static void calc_blow_un_power(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_un_power(player_type* target_ptr, monap_type* monap_ptr) {
     int damage_ratio = 1000;
     if (has_dec_mana(target_ptr))
         damage_ratio -= 75;
@@ -113,8 +110,7 @@ static void calc_blow_un_power(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void calc_blow_blind(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_blind(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_resist_blind(target_ptr))
         monap_ptr->damage = monap_ptr->damage * (randint1(4) + 3) / 8;
 
@@ -132,8 +128,7 @@ static void calc_blow_blind(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void calc_blow_confusion(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_confusion(player_type* target_ptr, monap_type* monap_ptr) {
     if (monap_ptr->explode)
         return;
 
@@ -156,8 +151,7 @@ static void calc_blow_confusion(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void calc_blow_fear(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_fear(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_resist_fear(target_ptr))
         monap_ptr->damage = monap_ptr->damage * (randint1(4) + 3) / 8;
 
@@ -175,8 +169,7 @@ static void calc_blow_fear(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void calc_blow_paralysis(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_paralysis(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_free_act(target_ptr))
         monap_ptr->damage = monap_ptr->damage * (randint1(4) + 3) / 8;
 
@@ -194,8 +187,7 @@ static void calc_blow_paralysis(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void calc_blow_drain_exp(player_type *target_ptr, monap_type *monap_ptr, const int drain_value, const int hold_exp_prob)
-{
+static void calc_blow_drain_exp(player_type* target_ptr, monap_type* monap_ptr, const int drain_value, const int hold_exp_prob) {
     s32b d = damroll(drain_value, 6) + (target_ptr->exp / 100) * MON_DRAIN_LIFE;
     monap_ptr->obvious = TRUE;
     int damage_ratio = 1000;
@@ -219,8 +211,7 @@ static void calc_blow_drain_exp(player_type *target_ptr, monap_type *monap_ptr, 
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void calc_blow_time(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_time(player_type* target_ptr, monap_type* monap_ptr) {
     if (monap_ptr->explode)
         return;
 
@@ -237,8 +228,7 @@ static void calc_blow_time(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void calc_blow_drain_life(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_drain_life(player_type* target_ptr, monap_type* monap_ptr) {
     s32b d = damroll(60, 6) + (target_ptr->exp / 100) * MON_DRAIN_LIFE;
     monap_ptr->obvious = TRUE;
     if (target_ptr->hold_exp)
@@ -258,8 +248,7 @@ static void calc_blow_drain_life(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void calc_blow_drain_mana(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_drain_mana(player_type* target_ptr, monap_type* monap_ptr) {
     monap_ptr->obvious = TRUE;
     int damage_ratio = 100;
     if (has_dec_mana(target_ptr))
@@ -276,8 +265,7 @@ static void calc_blow_drain_mana(player_type *target_ptr, monap_type *monap_ptr)
     update_smart_learn(target_ptr, monap_ptr->m_idx, DRS_MANA);
 }
 
-static void calc_blow_inertia(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_blow_inertia(player_type* target_ptr, monap_type* monap_ptr) {
     if ((target_ptr->fast > 0) || (target_ptr->pspeed >= 130))
         monap_ptr->damage = monap_ptr->damage * (randint1(4) + 4) / 9;
 
@@ -289,8 +277,7 @@ static void calc_blow_inertia(player_type *target_ptr, monap_type *monap_ptr)
         monap_ptr->obvious = TRUE;
 }
 
-void switch_monster_blow_to_player(player_type *target_ptr, monap_type *monap_ptr)
-{
+void switch_monster_blow_to_player(player_type* target_ptr, monap_type* monap_ptr) {
     switch (monap_ptr->effect) {
     case RBE_NONE:
         monap_ptr->obvious = TRUE;

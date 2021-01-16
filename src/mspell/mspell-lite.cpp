@@ -37,8 +37,7 @@
  * @param path_check 射線を判定するための関数ポインタ
  * @return 有効な座標があった場合TRUEを返す
  */
-bool adjacent_grid_check(player_type *target_ptr, monster_type *m_ptr, POSITION *yp, POSITION *xp, int f_flag, path_check_pf path_check)
-{
+bool adjacent_grid_check(player_type* target_ptr, monster_type* m_ptr, POSITION* yp, POSITION* xp, int f_flag, path_check_pf path_check) {
     static int tonari_y[4][8] = { { -1, -1, -1, 0, 0, 1, 1, 1 }, { -1, -1, -1, 0, 0, 1, 1, 1 }, { 1, 1, 1, 0, 0, -1, -1, -1 }, { 1, 1, 1, 0, 0, -1, -1, -1 } };
     static int tonari_x[4][8] = { { -1, 0, 1, -1, 1, -1, 0, 1 }, { 1, 0, -1, 1, -1, 1, 0, -1 }, { -1, 0, 1, -1, 1, -1, 0, 1 }, { 1, 0, -1, 1, -1, 1, 0, -1 } };
 
@@ -55,7 +54,7 @@ bool adjacent_grid_check(player_type *target_ptr, monster_type *m_ptr, POSITION 
     for (int i = 0; i < 8; i++) {
         int next_x = *xp + tonari_x[next][i];
         int next_y = *yp + tonari_y[next][i];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &target_ptr->current_floor_ptr->grid_array[next_y][next_x];
         if (!cave_has_flag_grid(g_ptr, f_flag))
             continue;
@@ -70,18 +69,18 @@ bool adjacent_grid_check(player_type *target_ptr, monster_type *m_ptr, POSITION 
     return FALSE;
 }
 
-void decide_lite_range(player_type *target_ptr, msa_type *msa_ptr)
-{
+void decide_lite_range(player_type* target_ptr, msa_type* msa_ptr) {
     if ((msa_ptr->f4 & RF4_BR_LITE) == 0)
         return;
 
     msa_ptr->y_br_lite = msa_ptr->y;
     msa_ptr->x_br_lite = msa_ptr->x;
     if (los(target_ptr, msa_ptr->m_ptr->fy, msa_ptr->m_ptr->fx, msa_ptr->y_br_lite, msa_ptr->x_br_lite)) {
-        feature_type *f_ptr = &f_info[target_ptr->current_floor_ptr->grid_array[msa_ptr->y_br_lite][msa_ptr->x_br_lite].feat];
+        feature_type* f_ptr = &f_info[target_ptr->current_floor_ptr->grid_array[msa_ptr->y_br_lite][msa_ptr->x_br_lite].feat];
         if (!has_flag(f_ptr->flags, FF_LOS) && has_flag(f_ptr->flags, FF_PROJECT) && one_in_(2))
             msa_ptr->f4 &= ~(RF4_BR_LITE);
-    } else if (!adjacent_grid_check(target_ptr, msa_ptr->m_ptr, &msa_ptr->y_br_lite, &msa_ptr->x_br_lite, FF_LOS, los))
+    }
+    else if (!adjacent_grid_check(target_ptr, msa_ptr->m_ptr, &msa_ptr->y_br_lite, &msa_ptr->x_br_lite, FF_LOS, los))
         msa_ptr->f4 &= ~(RF4_BR_LITE);
 
     if ((msa_ptr->f4 & RF4_BR_LITE) != 0)
@@ -91,9 +90,8 @@ void decide_lite_range(player_type *target_ptr, msa_type *msa_ptr)
     msa_ptr->x_br_lite = 0;
 }
 
-static void feature_projection(floor_type *floor_ptr, msa_type *msa_ptr)
-{
-    feature_type *f_ptr = &f_info[floor_ptr->grid_array[msa_ptr->y][msa_ptr->x].feat];
+static void feature_projection(floor_type* floor_ptr, msa_type* msa_ptr) {
+    feature_type* f_ptr = &f_info[floor_ptr->grid_array[msa_ptr->y][msa_ptr->x].feat];
     if (has_flag(f_ptr->flags, FF_PROJECT))
         return;
 
@@ -106,8 +104,7 @@ static void feature_projection(floor_type *floor_ptr, msa_type *msa_ptr)
         msa_ptr->do_spell = DO_SPELL_BR_LITE;
 }
 
-static void check_lite_area_by_mspell(player_type *target_ptr, msa_type *msa_ptr)
-{
+static void check_lite_area_by_mspell(player_type* target_ptr, msa_type* msa_ptr) {
     if ((msa_ptr->f4 & RF4_BR_DISI) && (msa_ptr->m_ptr->cdis < get_max_range(target_ptr) / 2)
         && in_disintegration_range(target_ptr->current_floor_ptr, msa_ptr->m_ptr->fy, msa_ptr->m_ptr->fx, msa_ptr->y, msa_ptr->x)
         && (one_in_(10) || (projectable(target_ptr, msa_ptr->y, msa_ptr->x, msa_ptr->m_ptr->fy, msa_ptr->m_ptr->fx) && one_in_(2)))) {
@@ -134,8 +131,7 @@ static void check_lite_area_by_mspell(player_type *target_ptr, msa_type *msa_ptr
     }
 }
 
-static void decide_lite_breath(player_type *target_ptr, msa_type *msa_ptr)
-{
+static void decide_lite_breath(player_type* target_ptr, msa_type* msa_ptr) {
     if (msa_ptr->success)
         return;
 
@@ -162,8 +158,7 @@ static void decide_lite_breath(player_type *target_ptr, msa_type *msa_ptr)
     msa_ptr->success = TRUE;
 }
 
-bool decide_lite_projection(player_type *target_ptr, msa_type *msa_ptr)
-{
+bool decide_lite_projection(player_type* target_ptr, msa_type* msa_ptr) {
     if (projectable(target_ptr, msa_ptr->m_ptr->fy, msa_ptr->m_ptr->fx, msa_ptr->y, msa_ptr->x)) {
         feature_projection(target_ptr->current_floor_ptr, msa_ptr);
         return TRUE;
@@ -178,8 +173,7 @@ bool decide_lite_projection(player_type *target_ptr, msa_type *msa_ptr)
     return msa_ptr->success;
 }
 
-void decide_lite_area(player_type *target_ptr, msa_type *msa_ptr)
-{
+void decide_lite_area(player_type* target_ptr, msa_type* msa_ptr) {
     if ((msa_ptr->f6 & RF6_DARKNESS) == 0)
         return;
 

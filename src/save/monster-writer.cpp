@@ -7,8 +7,7 @@
 #include "system/monster-type-definition.h"
 #include "util/quarks.h"
 
-static void write_monster_flags(monster_type *m_ptr, BIT_FLAGS *flags)
-{
+static void write_monster_flags(monster_type* m_ptr, BIT_FLAGS* flags) {
     if (!is_original_ap(m_ptr))
         *flags |= SAVE_MON_AP_R_IDX;
 
@@ -60,8 +59,7 @@ static void write_monster_flags(monster_type *m_ptr, BIT_FLAGS *flags)
     wr_u32b(*flags);
 }
 
-static void write_monster_info(monster_type *m_ptr, const BIT_FLAGS flags)
-{
+static void write_monster_info(monster_type* m_ptr, const BIT_FLAGS flags) {
     byte tmp8u;
     if (flags & SAVE_MON_FAST) {
         tmp8u = (byte)m_ptr->mtimed[MTIMED_FAST];
@@ -120,8 +118,7 @@ static void write_monster_info(monster_type *m_ptr, const BIT_FLAGS flags)
  * @param m_ptr モンスター情報保存元ポインタ
  * @return なし
  */
-void wr_monster(monster_type *m_ptr)
-{
+void wr_monster(monster_type* m_ptr) {
     BIT_FLAGS flags = 0x00000000;
     write_monster_flags(m_ptr, &flags);
 
@@ -152,9 +149,8 @@ void wr_monster(monster_type *m_ptr)
  * @param r_idx モンスター種族ID
  * @return なし
  */
-void wr_lore(MONRACE_IDX r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+void wr_lore(MONRACE_IDX r_idx) {
+    monster_race* r_ptr = &r_info[r_idx];
     wr_s16b((s16b)r_ptr->r_sights);
     wr_s16b((s16b)r_ptr->r_deaths);
     wr_s16b((s16b)r_ptr->r_pkills);

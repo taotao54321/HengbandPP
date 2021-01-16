@@ -23,8 +23,7 @@
  * @brief プレイヤーが詠唱中の全呪術を停止する
  * @return なし
  */
-bool stop_hex_spell_all(player_type *caster_ptr)
-{
+bool stop_hex_spell_all(player_type* caster_ptr) {
     SPELL_IDX i;
 
     for (i = 0; i < 32; i++) {
@@ -48,8 +47,7 @@ bool stop_hex_spell_all(player_type *caster_ptr)
  * @brief プレイヤーが詠唱中の呪術から一つを選んで停止する
  * @return なし
  */
-bool stop_hex_spell(player_type *caster_ptr)
-{
+bool stop_hex_spell(player_type* caster_ptr) {
     int spell;
     char choice = 0;
     char out_val[160];
@@ -66,7 +64,8 @@ bool stop_hex_spell(player_type *caster_ptr)
     /* Stop all spells */
     else if ((casting_hex_num(caster_ptr) == 1) || (caster_ptr->lev < 35)) {
         return stop_hex_spell_all(caster_ptr);
-    } else {
+    }
+    else {
         strnfmt(out_val, 78, _("どの呪文の詠唱を中断しますか？(呪文 %c-%c, 'l'全て, ESC)", "Which spell do you stop casting? (Spell %c-%c, 'l' to all, ESC)"),
             I2A(0), I2A(casting_hex_num(caster_ptr) - 1));
 
@@ -121,8 +120,7 @@ bool stop_hex_spell(player_type *caster_ptr)
  * Upkeeping hex spells Called from dungeon.c
  * @return なし
  */
-void check_hex(player_type *caster_ptr)
-{
+void check_hex(player_type* caster_ptr) {
     int spell;
     MANA_POINT need_mana;
     u32b need_mana_frac;
@@ -149,7 +147,7 @@ void check_hex(player_type *caster_ptr)
     need_mana = 0;
     for (spell = 0; spell < 32; spell++) {
         if (hex_spelling(caster_ptr, spell)) {
-            const magic_type *s_ptr;
+            const magic_type* s_ptr;
             s_ptr = &technic_info[REALM_HEX - MIN_TECHNIC][spell];
             need_mana += mod_need_mana(caster_ptr, s_ptr->smana, spell, REALM_HEX);
         }
@@ -185,7 +183,7 @@ void check_hex(player_type *caster_ptr)
 
     /* Gain experiences of spelling spells */
     for (spell = 0; spell < 32; spell++) {
-        const magic_type *s_ptr;
+        const magic_type* s_ptr;
 
         if (!hex_spelling(caster_ptr, spell))
             continue;
@@ -197,11 +195,13 @@ void check_hex(player_type *caster_ptr)
         else if (caster_ptr->spell_exp[spell] < SPELL_EXP_SKILLED) {
             if (one_in_(2) && (caster_ptr->current_floor_ptr->dun_level > 4) && ((caster_ptr->current_floor_ptr->dun_level + 10) > caster_ptr->lev))
                 caster_ptr->spell_exp[spell] += 1;
-        } else if (caster_ptr->spell_exp[spell] < SPELL_EXP_EXPERT) {
+        }
+        else if (caster_ptr->spell_exp[spell] < SPELL_EXP_EXPERT) {
             if (one_in_(5) && ((caster_ptr->current_floor_ptr->dun_level + 5) > caster_ptr->lev)
                 && ((caster_ptr->current_floor_ptr->dun_level + 5) > s_ptr->slevel))
                 caster_ptr->spell_exp[spell] += 1;
-        } else if (caster_ptr->spell_exp[spell] < SPELL_EXP_MASTER) {
+        }
+        else if (caster_ptr->spell_exp[spell] < SPELL_EXP_MASTER) {
             if (one_in_(5) && ((caster_ptr->current_floor_ptr->dun_level + 5) > caster_ptr->lev) && (caster_ptr->current_floor_ptr->dun_level > s_ptr->slevel))
                 caster_ptr->spell_exp[spell] += 1;
         }
@@ -219,8 +219,7 @@ void check_hex(player_type *caster_ptr)
  * @brief プレイヤーの呪術詠唱枠がすでに最大かどうかを返す
  * @return すでに全枠を利用しているならTRUEを返す
  */
-bool hex_spell_fully(player_type *caster_ptr)
-{
+bool hex_spell_fully(player_type* caster_ptr) {
     int k_max = 0;
     k_max = (caster_ptr->lev / 15) + 1;
     k_max = MIN(k_max, MAX_KEEP);
@@ -233,8 +232,7 @@ bool hex_spell_fully(player_type *caster_ptr)
  * @brief 一定ゲームターン毎に復讐処理の残り期間の判定を行う
  * @return なし
  */
-void revenge_spell(player_type *caster_ptr)
-{
+void revenge_spell(player_type* caster_ptr) {
     if (caster_ptr->realm1 != REALM_HEX)
         return;
     if (hex_revenge_turn(caster_ptr) <= 0)
@@ -255,8 +253,7 @@ void revenge_spell(player_type *caster_ptr)
  * @param dam 蓄積されるダメージ量
  * @return なし
  */
-void revenge_store(player_type *caster_ptr, HIT_POINT dam)
-{
+void revenge_store(player_type* caster_ptr, HIT_POINT dam) {
     if (caster_ptr->realm1 != REALM_HEX)
         return;
     if (hex_revenge_turn(caster_ptr) <= 0)
@@ -270,10 +267,9 @@ void revenge_store(player_type *caster_ptr, HIT_POINT dam)
  * @param m_idx 判定の対象となるモンスターID
  * @return 反テレポートの効果が適用されるならTRUEを返す
  */
-bool teleport_barrier(player_type *caster_ptr, MONSTER_IDX m_idx)
-{
-    monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+bool teleport_barrier(player_type* caster_ptr, MONSTER_IDX m_idx) {
+    monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     if (!hex_spelling(caster_ptr, HEX_ANTI_TELE))
         return FALSE;
@@ -288,10 +284,9 @@ bool teleport_barrier(player_type *caster_ptr, MONSTER_IDX m_idx)
  * @param m_idx 判定の対象となるモンスターID
  * @return 反魔法の効果が適用されるならTRUEを返す
  */
-bool magic_barrier(player_type *target_ptr, MONSTER_IDX m_idx)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+bool magic_barrier(player_type* target_ptr, MONSTER_IDX m_idx) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     if (!hex_spelling(target_ptr, HEX_ANTI_MAGIC))
         return FALSE;
@@ -306,10 +301,9 @@ bool magic_barrier(player_type *target_ptr, MONSTER_IDX m_idx)
  * @param m_idx 判定の対象となるモンスターID
  * @return 反増殖の効果が適用されるならTRUEを返す
  */
-bool multiply_barrier(player_type *caster_ptr, MONSTER_IDX m_idx)
-{
-    monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+bool multiply_barrier(player_type* caster_ptr, MONSTER_IDX m_idx) {
+    monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     if (!hex_spelling(caster_ptr, HEX_ANTI_MULTI))
         return FALSE;
@@ -319,6 +313,6 @@ bool multiply_barrier(player_type *caster_ptr, MONSTER_IDX m_idx)
     return TRUE;
 }
 
-bool hex_spelling(player_type *caster_ptr, int hex) { return (caster_ptr->realm1 == REALM_HEX) && (caster_ptr->magic_num1[0] & (1L << (hex))); }
+bool hex_spelling(player_type* caster_ptr, int hex) { return (caster_ptr->realm1 == REALM_HEX) && (caster_ptr->magic_num1[0] & (1L << (hex))); }
 
-bool hex_spelling_any(player_type *caster_ptr) { return (caster_ptr->realm1 == REALM_HEX) && (caster_ptr->magic_num1[0] != 0); }
+bool hex_spelling_any(player_type* caster_ptr) { return (caster_ptr->realm1 == REALM_HEX) && (caster_ptr->magic_num1[0] != 0); }

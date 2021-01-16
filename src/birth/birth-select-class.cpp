@@ -9,8 +9,7 @@
 
 static const char p2 = ')';
 
-static void enumerate_class_list(char *sym)
-{
+static void enumerate_class_list(char* sym) {
     for (int n = 0; n < MAX_CLASS; n++) {
         cp_ptr = &class_info[n];
         mp_ptr = &m_info[n];
@@ -30,8 +29,7 @@ static void enumerate_class_list(char *sym)
     }
 }
 
-static void display_class_stat(int cs, int *os, char *cur, char *sym)
-{
+static void display_class_stat(int cs, int* os, char* cur, char* sym) {
     if (cs == *os)
         return;
 
@@ -41,7 +39,8 @@ static void display_class_stat(int cs, int *os, char *cur, char *sym)
         sprintf(cur, "%c%c%s", '*', p2, _("ランダム", "Random"));
         put_str("                                   ", 4, 40);
         put_str("                                   ", 5, 40);
-    } else {
+    }
+    else {
         cp_ptr = &class_info[cs];
         mp_ptr = &m_info[cs];
         concptr str = cp_ptr->title;
@@ -63,8 +62,7 @@ static void display_class_stat(int cs, int *os, char *cur, char *sym)
     *os = cs;
 }
 
-static void interpret_class_select_key_move(char c, int *cs)
-{
+static void interpret_class_select_key_move(char c, int* cs) {
     if (c == '8') {
         if (*cs >= 4)
             *cs -= 4;
@@ -86,8 +84,7 @@ static void interpret_class_select_key_move(char c, int *cs)
     }
 }
 
-static bool select_class(player_type *creature_ptr, char *cur, char *sym, int *k)
-{
+static bool select_class(player_type* creature_ptr, char* cur, char* sym, int* k) {
     int cs = creature_ptr->pclass;
     int os = MAX_CLASS;
     while (TRUE) {
@@ -111,7 +108,8 @@ static bool select_class(player_type *creature_ptr, char *cur, char *sym, int *k
                 *k = randint0(MAX_CLASS);
                 cs = *k;
                 continue;
-            } else {
+            }
+            else {
                 *k = cs;
                 break;
             }
@@ -134,7 +132,8 @@ static bool select_class(player_type *creature_ptr, char *cur, char *sym, int *k
         if ((*k >= 26) && (*k < MAX_CLASS)) {
             cs = *k;
             continue;
-        } else
+        }
+        else
             *k = -1;
 
         birth_help_option(creature_ptr, c, BK_CLASS);
@@ -147,8 +146,7 @@ static bool select_class(player_type *creature_ptr, char *cur, char *sym, int *k
  * @brief プレイヤーの職業選択を行う / Player class
  * @return なし
  */
-bool get_player_class(player_type *creature_ptr)
-{
+bool get_player_class(player_type* creature_ptr) {
     clear_from(10);
     put_str(
         _("注意：《職業》によってキャラクターの先天的な能力やボーナスが変化します。", "Note: Your 'class' determines various intrinsic abilities and bonuses."),

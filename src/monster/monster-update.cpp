@@ -36,7 +36,7 @@
 
 // Update Monster.
 typedef struct um_type {
-    monster_type *m_ptr;
+    monster_type* m_ptr;
     bool do_disturb;
     POSITION fy;
     POSITION fx;
@@ -57,11 +57,10 @@ typedef struct um_type {
  * @param ox 移動後の、モンスターのX座標
  * @return アイテム等に影響を及ぼしたらTRUE
  */
-bool update_riding_monster(player_type *target_ptr, turn_flags *turn_flags_ptr, MONSTER_IDX m_idx, POSITION oy, POSITION ox, POSITION ny, POSITION nx)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
-    grid_type *g_ptr = &target_ptr->current_floor_ptr->grid_array[ny][nx];
-    monster_type *y_ptr = &target_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
+bool update_riding_monster(player_type* target_ptr, turn_flags* turn_flags_ptr, MONSTER_IDX m_idx, POSITION oy, POSITION ox, POSITION ny, POSITION nx) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    grid_type* g_ptr = &target_ptr->current_floor_ptr->grid_array[ny][nx];
+    monster_type* y_ptr = &target_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
     if (turn_flags_ptr->is_riding_mon)
         return move_player_effect(target_ptr, ny, nx, MPE_DONT_PICKUP);
 
@@ -88,8 +87,7 @@ bool update_riding_monster(player_type *target_ptr, turn_flags *turn_flags_ptr, 
  * @param turn_flags_ptr ターン経過処理フラグへの参照ポインタ
  * @return なし
  */
-void update_player_type(player_type *target_ptr, turn_flags *turn_flags_ptr, monster_race *r_ptr)
-{
+void update_player_type(player_type* target_ptr, turn_flags* turn_flags_ptr, monster_race* r_ptr) {
     if (turn_flags_ptr->do_view) {
         target_ptr->update |= PU_FLOW;
         target_ptr->window |= PW_OVERHEAD | PW_DUNGEON;
@@ -109,9 +107,8 @@ void update_player_type(player_type *target_ptr, turn_flags *turn_flags_ptr, mon
  * @param m_ptr モンスターへの参照ポインタ
  * @return なし
  */
-void update_monster_race_flags(player_type *target_ptr, turn_flags *turn_flags_ptr, monster_type *m_ptr)
-{
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+void update_monster_race_flags(player_type* target_ptr, turn_flags* turn_flags_ptr, monster_type* m_ptr) {
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     if (!is_original_ap_and_seen(target_ptr, m_ptr))
         return;
 
@@ -144,9 +141,8 @@ void update_monster_race_flags(player_type *target_ptr, turn_flags *turn_flags_p
  * @param old_race_flags_ptr モンスターフラグへの参照ポインタ
  * @return なし
  */
-void update_player_window(player_type *target_ptr, old_race_flags *old_race_flags_ptr)
-{
-    monster_race *r_ptr;
+void update_player_window(player_type* target_ptr, old_race_flags* old_race_flags_ptr) {
+    monster_race* r_ptr;
     r_ptr = &r_info[target_ptr->monster_race_idx];
     if ((old_race_flags_ptr->old_r_flags1 != r_ptr->r_flags1) || (old_race_flags_ptr->old_r_flags2 != r_ptr->r_flags2)
         || (old_race_flags_ptr->old_r_flags3 != r_ptr->r_flags3) || (old_race_flags_ptr->old_r_flags4 != r_ptr->r_flags4)
@@ -158,8 +154,7 @@ void update_player_window(player_type *target_ptr, old_race_flags *old_race_flag
     }
 }
 
-static um_type *initialize_um_type(player_type *subject_ptr, um_type *um_ptr, MONSTER_IDX m_idx, bool full)
-{
+static um_type* initialize_um_type(player_type* subject_ptr, um_type* um_ptr, MONSTER_IDX m_idx, bool full) {
     um_ptr->m_ptr = &subject_ptr->current_floor_ptr->m_list[m_idx];
     um_ptr->do_disturb = disturb_move;
     um_ptr->fy = um_ptr->m_ptr->fy;
@@ -171,8 +166,7 @@ static um_type *initialize_um_type(player_type *subject_ptr, um_type *um_ptr, MO
     return um_ptr;
 }
 
-static POSITION decide_updated_distance(player_type *subject_ptr, um_type *um_ptr)
-{
+static POSITION decide_updated_distance(player_type* subject_ptr, um_type* um_ptr) {
     if (!um_ptr->full)
         return um_ptr->m_ptr->cdis;
 
@@ -189,8 +183,7 @@ static POSITION decide_updated_distance(player_type *subject_ptr, um_type *um_pt
     return distance;
 }
 
-static void update_smart_stupid_flags(monster_race *r_ptr)
-{
+static void update_smart_stupid_flags(monster_race* r_ptr) {
     if (r_ptr->flags2 & RF2_SMART)
         r_ptr->r_flags2 |= RF2_SMART;
 
@@ -204,9 +197,8 @@ static void update_smart_stupid_flags(monster_race *r_ptr)
  * @param um_ptr モンスター情報アップデート構造体への参照ポインタ
  * @return WEIRD_MINDフラグがあるならTRUE
  */
-static bool update_weird_telepathy(player_type *subject_ptr, um_type *um_ptr)
-{
-    monster_race *r_ptr = &r_info[um_ptr->m_ptr->r_idx];
+static bool update_weird_telepathy(player_type* subject_ptr, um_type* um_ptr) {
+    monster_race* r_ptr = &r_info[um_ptr->m_ptr->r_idx];
     if ((r_ptr->flags2 & RF2_WEIRD_MIND) == 0)
         return FALSE;
 
@@ -222,9 +214,8 @@ static bool update_weird_telepathy(player_type *subject_ptr, um_type *um_ptr)
     return TRUE;
 }
 
-static void update_telepathy_sight(player_type *subject_ptr, um_type *um_ptr)
-{
-    monster_race *r_ptr = &r_info[um_ptr->m_ptr->r_idx];
+static void update_telepathy_sight(player_type* subject_ptr, um_type* um_ptr) {
+    monster_race* r_ptr = &r_info[um_ptr->m_ptr->r_idx];
     if (subject_ptr->special_defense & KATA_MUSOU) {
         um_ptr->flag = TRUE;
         if (is_original_ap(um_ptr->m_ptr) && !subject_ptr->image)
@@ -251,9 +242,8 @@ static void update_telepathy_sight(player_type *subject_ptr, um_type *um_ptr)
         update_smart_stupid_flags(r_ptr);
 }
 
-static void update_specific_race_telepathy(player_type *subject_ptr, um_type *um_ptr)
-{
-    monster_race *r_ptr = &r_info[um_ptr->m_ptr->r_idx];
+static void update_specific_race_telepathy(player_type* subject_ptr, um_type* um_ptr) {
+    monster_race* r_ptr = &r_info[um_ptr->m_ptr->r_idx];
     if ((subject_ptr->esp_animal) && (r_ptr->flags3 & RF3_ANIMAL)) {
         um_ptr->flag = TRUE;
         if (is_original_ap(um_ptr->m_ptr) && !subject_ptr->image)
@@ -327,12 +317,11 @@ static void update_specific_race_telepathy(player_type *subject_ptr, um_type *um
     }
 }
 
-static bool check_cold_blood(player_type *subject_ptr, um_type *um_ptr, const POSITION distance)
-{
+static bool check_cold_blood(player_type* subject_ptr, um_type* um_ptr, const POSITION distance) {
     if (distance > subject_ptr->see_infra)
         return FALSE;
 
-    monster_race *r_ptr = &r_info[um_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[um_ptr->m_ptr->r_idx];
     if ((r_ptr->flags2 & (RF2_COLD_BLOOD | RF2_AURA_FIRE)) == RF2_COLD_BLOOD)
         return FALSE;
 
@@ -341,18 +330,18 @@ static bool check_cold_blood(player_type *subject_ptr, um_type *um_ptr, const PO
     return TRUE;
 }
 
-static bool check_invisible(player_type *subject_ptr, um_type *um_ptr)
-{
+static bool check_invisible(player_type* subject_ptr, um_type* um_ptr) {
     if (!player_can_see_bold(subject_ptr, um_ptr->fy, um_ptr->fx))
         return FALSE;
 
-    monster_race *r_ptr = &r_info[um_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[um_ptr->m_ptr->r_idx];
     if (r_ptr->flags2 & RF2_INVISIBLE) {
         if (subject_ptr->see_inv) {
             um_ptr->easy = TRUE;
             um_ptr->flag = TRUE;
         }
-    } else {
+    }
+    else {
         um_ptr->easy = TRUE;
         um_ptr->flag = TRUE;
     }
@@ -366,10 +355,9 @@ static bool check_invisible(player_type *subject_ptr, um_type *um_ptr)
  * @param um_ptr モンスター情報アップデート構造体への参照ポインタ
  * @return なし
  */
-static void decide_sight_invisible_monster(player_type *subject_ptr, um_type *um_ptr)
-{
+static void decide_sight_invisible_monster(player_type* subject_ptr, um_type* um_ptr) {
     POSITION distance = decide_updated_distance(subject_ptr, um_ptr);
-    monster_race *r_ptr = &r_info[um_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[um_ptr->m_ptr->r_idx];
     if (distance > (um_ptr->in_darkness ? MAX_SIGHT / 2 : MAX_SIGHT))
         return;
 
@@ -407,8 +395,7 @@ static void decide_sight_invisible_monster(player_type *subject_ptr, um_type *um
  * @return なし
  * @details 感知した結果、エルドリッチホラー持ちがいたら精神を破壊する
  */
-static void update_invisible_monster(player_type *subject_ptr, um_type *um_ptr, MONSTER_IDX m_idx)
-{
+static void update_invisible_monster(player_type* subject_ptr, um_type* um_ptr, MONSTER_IDX m_idx) {
     if (um_ptr->m_ptr->ml)
         return;
 
@@ -422,7 +409,7 @@ static void update_invisible_monster(player_type *subject_ptr, um_type *um_ptr, 
         subject_ptr->redraw |= PR_UHEALTH;
 
     if (!subject_ptr->image) {
-        monster_race *r_ptr = &r_info[um_ptr->m_ptr->r_idx];
+        monster_race* r_ptr = &r_info[um_ptr->m_ptr->r_idx];
         if ((um_ptr->m_ptr->ap_r_idx == MON_KAGE) && (r_info[MON_KAGE].r_sights < MAX_SHORT))
             r_info[MON_KAGE].r_sights++;
         else if (is_original_ap(um_ptr->m_ptr) && (r_ptr->r_sights < MAX_SHORT))
@@ -440,8 +427,7 @@ static void update_invisible_monster(player_type *subject_ptr, um_type *um_ptr, 
     }
 }
 
-static void update_visible_monster(player_type *subject_ptr, um_type *um_ptr, MONSTER_IDX m_idx)
-{
+static void update_visible_monster(player_type* subject_ptr, um_type* um_ptr, MONSTER_IDX m_idx) {
     if (!um_ptr->m_ptr->ml)
         return;
 
@@ -458,8 +444,7 @@ static void update_visible_monster(player_type *subject_ptr, um_type *um_ptr, MO
         disturb(subject_ptr, TRUE, TRUE);
 }
 
-static bool update_clear_monster(player_type *subject_ptr, um_type *um_ptr)
-{
+static bool update_clear_monster(player_type* subject_ptr, um_type* um_ptr) {
     if (!um_ptr->easy)
         return FALSE;
 
@@ -478,12 +463,11 @@ static bool update_clear_monster(player_type *subject_ptr, um_type *um_ptr)
  * @param full プレイヤーとの距離更新を行うならばtrue
  * @return なし
  */
-void update_monster(player_type *subject_ptr, MONSTER_IDX m_idx, bool full)
-{
+void update_monster(player_type* subject_ptr, MONSTER_IDX m_idx, bool full) {
     um_type tmp_um;
-    um_type *um_ptr = initialize_um_type(subject_ptr, &tmp_um, m_idx, full);
+    um_type* um_ptr = initialize_um_type(subject_ptr, &tmp_um, m_idx, full);
     if (disturb_high) {
-        monster_race *ap_r_ptr = &r_info[um_ptr->m_ptr->ap_r_idx];
+        monster_race* ap_r_ptr = &r_info[um_ptr->m_ptr->ap_r_idx];
         if (ap_r_ptr->r_tkills && ap_r_ptr->level >= subject_ptr->lev)
             um_ptr->do_disturb = TRUE;
     }
@@ -496,7 +480,7 @@ void update_monster(player_type *subject_ptr, MONSTER_IDX m_idx, bool full)
         update_invisible_monster(subject_ptr, um_ptr, m_idx);
     else
         update_visible_monster(subject_ptr, um_ptr, m_idx);
-    
+
     if (update_clear_monster(subject_ptr, um_ptr) || ((um_ptr->m_ptr->mflag & MFLAG_VIEW) == 0))
         return;
 
@@ -512,11 +496,10 @@ void update_monster(player_type *subject_ptr, MONSTER_IDX m_idx, bool full)
  * @param full 距離更新を行うならtrue
  * @return なし
  */
-void update_monsters(player_type *player_ptr, bool full)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void update_monsters(player_type* player_ptr, bool full) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (MONSTER_IDX i = 1; i < floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &floor_ptr->m_list[i];
+        monster_type* m_ptr = &floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -530,10 +513,9 @@ void update_monsters(player_type *player_ptr, bool full)
  * @param what 学習対象ID
  * @return なし
  */
-void update_smart_learn(player_type *player_ptr, MONSTER_IDX m_idx, int what)
-{
-    monster_type *m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+void update_smart_learn(player_type* player_ptr, MONSTER_IDX m_idx, int what) {
+    monster_type* m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     if (!smart_learn || ((r_ptr->flags2 & RF2_STUPID) != 0) || (((r_ptr->flags2 & RF2_SMART) == 0) && (randint0(100) < 50)))
         return;
 

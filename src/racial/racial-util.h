@@ -31,4 +31,4 @@ typedef struct rc_type {
     int menu_line;
 } rc_type;
 
-rc_type *initialize_rc_type(player_type *creature_ptr, rc_type *rc_ptr);
+rc_type* initialize_rc_type(player_type* creature_ptr, rc_type* rc_ptr);

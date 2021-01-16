@@ -19,14 +19,14 @@
  * Fill in an object description structure for a given object
  * @return なし
  */
-static void spoiler_print_randart(object_type *o_ptr, obj_desc_list *art_ptr)
-{
-    pval_info_type *pval_ptr = &art_ptr->pval_info;
+static void spoiler_print_randart(object_type* o_ptr, obj_desc_list* art_ptr) {
+    pval_info_type* pval_ptr = &art_ptr->pval_info;
     char buf[80];
     fprintf(spoiler_file, "%s\n", art_ptr->description);
     if (!object_is_fully_known(o_ptr)) {
         fprintf(spoiler_file, _("%s不明\n", "%sUnknown\n"), spoiler_indent);
-    } else {
+    }
+    else {
         if (pval_ptr->pval_desc[0]) {
             sprintf(buf, _("%sの修正:", "%s to"), pval_ptr->pval_desc);
             spoiler_outlist(buf, pval_ptr->pval_affects, item_separator);
@@ -53,8 +53,7 @@ static void spoiler_print_randart(object_type *o_ptr, obj_desc_list *art_ptr)
  * @param i 出力したい記録ランダムアーティファクトID
  * @return なし
  */
-static void spoil_random_artifact_aux(player_type *player_ptr, object_type *o_ptr, int i)
-{
+static void spoil_random_artifact_aux(player_type* player_ptr, object_type* o_ptr, int i) {
     obj_desc_list artifact;
     if (!object_is_known(o_ptr) || !o_ptr->art_name || o_ptr->tval != group_artifact[i].tval)
         return;
@@ -69,10 +68,9 @@ static void spoil_random_artifact_aux(player_type *player_ptr, object_type *o_pt
  * @param fname 出力ファイル名
  * @return なし
  */
-void spoil_random_artifact(player_type *creature_ptr, concptr fname)
-{
-    store_type *store_ptr;
-    object_type *q_ptr;
+void spoil_random_artifact(player_type* creature_ptr, concptr fname) {
+    store_type* store_ptr;
+    object_type* q_ptr;
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, fname);
     spoiler_file = angband_fopen(buf, "w");

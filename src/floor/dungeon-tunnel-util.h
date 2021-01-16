@@ -8,4 +8,4 @@ typedef struct dt_type {
     int dun_tun_jct; /*!< ダンジョンの通路交差地点付近にドアを設置する頻度(一回の試行ごとに%で判定している) */
 } dt_type;
 
-dt_type *initialize_dt_type(dt_type *dt_ptr);
+dt_type* initialize_dt_type(dt_type* dt_ptr);

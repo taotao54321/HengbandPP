@@ -7,8 +7,8 @@
 #include "object/object-generator.h"
 #include "object/object-kind.h"
 #include "object/object-value.h"
-#include "system/object-type-definition.h"
 #include "system/angband-version.h"
+#include "system/object-type-definition.h"
 #include "util/angband-files.h"
 #include "view/display-messages.h"
 #include "wizard/spoiler-util.h"
@@ -26,10 +26,9 @@
  * @param k ベースアイテムID
  * @return なし
  */
-static void kind_info(player_type *player_ptr, char *buf, char *dam, char *wgt, char *chance, DEPTH *lev, PRICE *val, OBJECT_IDX k)
-{
+static void kind_info(player_type* player_ptr, char* buf, char* dam, char* wgt, char* chance, DEPTH* lev, PRICE* val, OBJECT_IDX k) {
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     object_prep(player_ptr, q_ptr, k);
     q_ptr->ident |= IDENT_KNOWN;
     q_ptr->pval = 0;
@@ -89,8 +88,7 @@ static void kind_info(player_type *player_ptr, char *buf, char *dam, char *wgt, 
  * @param fname ファイル名
  * @return なし
  */
-void spoil_obj_desc(player_type *player_ptr, concptr fname)
-{
+void spoil_obj_desc(player_type* player_ptr, concptr fname) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, fname);
     spoiler_file = angband_fopen(buf, "w");
@@ -151,7 +149,7 @@ void spoil_obj_desc(player_type *player_ptr, concptr fname)
         }
 
         for (int k = 1; k < max_k_idx; k++) {
-            object_kind *k_ptr = &k_info[k];
+            object_kind* k_ptr = &k_info[k];
             if ((k_ptr->tval != group_item[i].tval) || (k_ptr->gen_flags & TRG_INSTA_ART))
                 continue;
 

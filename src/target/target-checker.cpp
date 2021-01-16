@@ -10,10 +10,10 @@
  */
 
 #include "target/target-checker.h"
+#include "core/disturbance.h"
 #include "core/player-redraw-types.h"
 #include "core/player-update-types.h"
 #include "core/window-redrawer.h"
-#include "core/disturbance.h"
 #include "game-option/disturbance-options.h"
 #include "game-option/map-screen-options.h"
 #include "io/cursor.h"
@@ -39,8 +39,7 @@ POSITION target_row;
  * The map is reprinted if necessary, and "TRUE" is returned.
  * @return 実際に再描画が必要だった場合TRUEを返す
  */
-void verify_panel(player_type *creature_ptr)
-{
+void verify_panel(player_type* creature_ptr) {
     POSITION y = creature_ptr->y;
     POSITION x = creature_ptr->x;
     TERM_LEN wid, hgt;
@@ -66,7 +65,8 @@ void verify_panel(player_type *creature_ptr)
             pcol_min = 0;
         else if (pcol_min > max_pcol_min)
             pcol_min = max_pcol_min;
-    } else {
+    }
+    else {
         prow_min = panel_row_min;
         pcol_min = panel_col_min;
         if (y > panel_row_max - 2)
@@ -116,8 +116,7 @@ void verify_panel(player_type *creature_ptr)
  * Update (if necessary) and verify (if possible) the target.
  * We return TRUE if the target is "okay" and FALSE otherwise.
  */
-bool target_okay(player_type *creature_ptr)
-{
+bool target_okay(player_type* creature_ptr) {
     if (target_who < 0)
         return TRUE;
 
@@ -127,7 +126,7 @@ bool target_okay(player_type *creature_ptr)
     if (!target_able(creature_ptr, target_who))
         return FALSE;
 
-    monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[target_who];
+    monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[target_who];
     target_row = m_ptr->fy;
     target_col = m_ptr->fx;
     return TRUE;

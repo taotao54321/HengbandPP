@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum race_flags8 {
-	RF8_WILD_ONLY = 0x00000001,
+    RF8_WILD_ONLY = 0x00000001,
     RF8_WILD_TOWN = 0x00000002,
     RF8_XXX8X02 = 0x00000004,
     RF8_WILD_SHORE = 0x00000008,

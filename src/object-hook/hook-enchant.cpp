@@ -11,8 +11,7 @@
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return レアアイテムならばTRUEを返す
  */
-bool object_is_rare(object_type *o_ptr)
-{
+bool object_is_rare(object_type* o_ptr) {
     switch (o_ptr->tval) {
     case TV_HAFTED:
         if (o_ptr->sval == SV_MACE_OF_DISRUPTION || o_ptr->sval == SV_WIZSTAFF)
@@ -76,7 +75,7 @@ bool object_is_rare(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return アーティファクトならばTRUEを返す
  */
-bool object_is_artifact(object_type *o_ptr) { return object_is_fixed_artifact(o_ptr) || (o_ptr->art_name != 0); }
+bool object_is_artifact(object_type* o_ptr) { return object_is_fixed_artifact(o_ptr) || (o_ptr->art_name != 0); }
 
 /*!
  * @brief オブジェクトがランダムアーティファクトかを返す /
@@ -84,7 +83,7 @@ bool object_is_artifact(object_type *o_ptr) { return object_is_fixed_artifact(o_
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return ランダムアーティファクトならばTRUEを返す
  */
-bool object_is_random_artifact(object_type *o_ptr) { return object_is_artifact(o_ptr) && !object_is_fixed_artifact(o_ptr); }
+bool object_is_random_artifact(object_type* o_ptr) { return object_is_artifact(o_ptr) && !object_is_fixed_artifact(o_ptr); }
 
 /*!
  * @brief オブジェクトが通常のアイテム(アーティファクト、エゴ、鍛冶師エッセンス付加いずれでもない)かを返す /
@@ -92,8 +91,7 @@ bool object_is_random_artifact(object_type *o_ptr) { return object_is_artifact(o
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return 通常のアイテムならばTRUEを返す
  */
-bool object_is_nameless(player_type *player_ptr, object_type *o_ptr)
-{
+bool object_is_nameless(player_type* player_ptr, object_type* o_ptr) {
     /* Unused */
     (void)player_ptr;
 
@@ -103,9 +101,9 @@ bool object_is_nameless(player_type *player_ptr, object_type *o_ptr)
 /*
  * Artifacts use the "name1" field
  */
-bool object_is_fixed_artifact(object_type *o_ptr) { return o_ptr->name1 != 0; }
+bool object_is_fixed_artifact(object_type* o_ptr) { return o_ptr->name1 != 0; }
 
 /*
  * Ego-Items use the "name2" field
  */
-bool object_is_ego(object_type *o_ptr) { return o_ptr->name2 != 0; }
+bool object_is_ego(object_type* o_ptr) { return o_ptr->name2 != 0; }

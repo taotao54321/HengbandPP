@@ -50,7 +50,7 @@ static struct {
 
 /* リングバッファ構造体 */
 static struct {
-    char *buf;
+    char* buf;
     int wptr;
     int rptr;
     int inlen;
@@ -66,12 +66,11 @@ static errr (*old_wipe_hook)(int x, int y, int n);
 static errr (*old_text_hook)(int x, int y, int n, TERM_COLOR a, concptr s);
 
 /* ANSI Cによればstatic変数は0で初期化されるが一応初期化する */
-static errr init_buffer(void)
-{
+static errr init_buffer(void) {
     fresh_queue.next = fresh_queue.tail = 0;
     ring.wptr = ring.rptr = ring.inlen = 0;
     fresh_queue.time[0] = 0;
-    ring.buf = (char *)malloc(RINGBUF_SIZE);
+    ring.buf = (char*)malloc(RINGBUF_SIZE);
     if (ring.buf == NULL)
         return -1;
 
@@ -79,8 +78,7 @@ static errr init_buffer(void)
 }
 
 /* 現在の時間を100ms単位で取得する */
-static long get_current_time(void)
-{
+static long get_current_time(void) {
 #ifdef WINDOWS
     return timeGetTime() / 100;
 #else
@@ -92,8 +90,7 @@ static long get_current_time(void)
 }
 
 /* リングバッファ構造体に buf の内容を加える */
-static errr insert_ringbuf(char *buf)
-{
+static errr insert_ringbuf(char* buf) {
     int len;
     len = strlen(buf) + 1; /* +1は終端文字分 */
 
@@ -128,8 +125,7 @@ static errr insert_ringbuf(char *buf)
 }
 
 /* strが同じ文字の繰り返しかどうか調べる */
-static bool string_is_repeat(char *str, int len)
-{
+static bool string_is_repeat(char* str, int len) {
     char c = str[0];
     int i;
 
@@ -153,8 +149,7 @@ static bool string_is_repeat(char *str, int len)
     return TRUE;
 }
 
-void prepare_movie_hooks(player_type *player_ptr)
-{
+void prepare_movie_hooks(player_type* player_ptr) {
     char buf[1024];
     char tmp[80];
 
@@ -162,7 +157,8 @@ void prepare_movie_hooks(player_type *player_ptr)
         movie_mode = 0;
         fd_close(movie_fd);
         msg_print(_("録画を終了しました。", "Stopped recording."));
-    } else {
+    }
+    else {
         sprintf(tmp, "%s.amv", player_ptr->base_name);
         if (get_string(_("ムービー記録ファイル: ", "Movie file name: "), tmp, 80)) {
             int fd;
@@ -184,7 +180,8 @@ void prepare_movie_hooks(player_type *player_ptr)
                     return;
 
                 movie_fd = fd_open(buf, O_WRONLY | O_TRUNC);
-            } else {
+            }
+            else {
                 movie_fd = fd_make(buf, 0644);
             }
 
@@ -199,8 +196,7 @@ void prepare_movie_hooks(player_type *player_ptr)
     }
 }
 
-static int handle_movie_timestamp_data(int timestamp)
-{
+static int handle_movie_timestamp_data(int timestamp) {
     static int initialized = FALSE;
 
     /* 描画キューは空かどうか？ */
@@ -224,8 +220,7 @@ static int handle_movie_timestamp_data(int timestamp)
     return 0;
 }
 
-static int read_movie_file(void)
-{
+static int read_movie_file(void) {
     static char recv_buf[RECVBUF_SIZE];
     static int remain_bytes = 0;
     int recv_bytes;
@@ -264,8 +259,7 @@ static int read_movie_file(void)
 
 #ifndef WINDOWS
 /* Win版の床の中点と壁の豆腐をピリオドとシャープにする。*/
-static void win2unix(int col, char *buf)
-{
+static void win2unix(int col, char* buf) {
     char wall;
     if (col == 9)
         wall = '%';
@@ -288,9 +282,8 @@ static void win2unix(int col, char *buf)
 }
 #endif
 
-static bool get_nextbuf(char *buf)
-{
-    char *ptr = buf;
+static bool get_nextbuf(char* buf) {
+    char* ptr = buf;
 
     while (TRUE) {
         *ptr = ring.buf[ring.rptr++];
@@ -308,8 +301,7 @@ static bool get_nextbuf(char *buf)
 }
 
 /* プレイホストのマップが大きいときクライアントのマップもリサイズする */
-static void update_term_size(int x, int y, int len)
-{
+static void update_term_size(int x, int y, int len) {
     int ox, oy;
     int nx, ny;
     term_get_size(&ox, &oy);
@@ -327,8 +319,7 @@ static void update_term_size(int x, int y, int len)
         term_resize(nx, ny);
 }
 
-static bool flush_ringbuf_client(void)
-{
+static bool flush_ringbuf_client(void) {
     char buf[1024];
 
     /* 書くデータなし */
@@ -346,7 +337,7 @@ static bool flush_ringbuf_client(void)
         TERM_COLOR col;
         int i;
         unsigned char tmp1, tmp2, tmp3, tmp4;
-        char *mesg;
+        char* mesg;
 
         sscanf(buf, "%c%c%c%c%c", &id, &tmp1, &tmp2, &tmp3, &tmp4);
         x = tmp1 - 1;
@@ -356,7 +347,8 @@ static bool flush_ringbuf_client(void)
         if (id == 's') {
             col = tmp3;
             mesg = &buf[4];
-        } else
+        }
+        else
             mesg = &buf[5];
 #ifndef WINDOWS
         win2unix(col, mesg);
@@ -423,14 +415,12 @@ static bool flush_ringbuf_client(void)
     return TRUE;
 }
 
-void prepare_browse_movie_without_path_build(concptr filename)
-{
+void prepare_browse_movie_without_path_build(concptr filename) {
     movie_fd = fd_open(filename, O_RDONLY);
     init_buffer();
 }
 
-void browse_movie(void)
-{
+void browse_movie(void) {
     term_clear();
     term_fresh();
     term_xtra(TERM_XTRA_REACT, 0);
@@ -452,8 +442,7 @@ void browse_movie(void)
 }
 
 #ifndef WINDOWS
-void prepare_browse_movie_with_path_build(concptr filename)
-{
+void prepare_browse_movie_with_path_build(concptr filename) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, filename);
     movie_fd = fd_open(buf, O_RDONLY);

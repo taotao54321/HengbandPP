@@ -146,16 +146,16 @@ struct grid_template_type {
 #define DOOR_GLASS_DOOR 1
 #define DOOR_CURTAIN 2
 
-extern bool new_player_spot(player_type *creature_ptr);
+extern bool new_player_spot(player_type* creature_ptr);
 extern pos_list tmp_pos;
 
-extern void place_bound_perm_wall(player_type *player_ptr, grid_type *g_ptr);
-extern bool is_known_trap(player_type *player_ptr, grid_type *g_ptr);
-extern bool is_hidden_door(player_type *player_ptr, grid_type *g_ptr);
-extern bool is_mirror_grid(grid_type *g_ptr);
-extern bool is_glyph_grid(grid_type *g_ptr);
-extern bool is_explosive_rune_grid(grid_type *g_ptr);
-extern bool player_can_enter(player_type *creature_ptr, FEAT_IDX feature, BIT_FLAGS16 mode);
+extern void place_bound_perm_wall(player_type* player_ptr, grid_type* g_ptr);
+extern bool is_known_trap(player_type* player_ptr, grid_type* g_ptr);
+extern bool is_hidden_door(player_type* player_ptr, grid_type* g_ptr);
+extern bool is_mirror_grid(grid_type* g_ptr);
+extern bool is_glyph_grid(grid_type* g_ptr);
+extern bool is_explosive_rune_grid(grid_type* g_ptr);
+extern bool player_can_enter(player_type* creature_ptr, FEAT_IDX feature, BIT_FLAGS16 mode);
 
 /*!
  * マス構造体のspecial要素を利用する地形かどうかを判定するマクロ / Is this feature has special meaning (except floor_id) with g_ptr->special?
@@ -163,20 +163,20 @@ extern bool player_can_enter(player_type *creature_ptr, FEAT_IDX feature, BIT_FL
 bool feat_uses_special(FEAT_IDX f_idx);
 
 extern POSITION distance(POSITION y1, POSITION x1, POSITION y2, POSITION x2);
-extern void update_local_illumination(player_type *creature_ptr, POSITION y, POSITION x);
-extern bool no_lite(player_type *creature_ptr);
-extern void print_rel(player_type *subject_ptr, SYMBOL_CODE c, TERM_COLOR a, POSITION y, POSITION x);
-extern void note_spot(player_type *player_ptr, POSITION y, POSITION x);
-extern void lite_spot(player_type *player_ptr, POSITION y, POSITION x);
-extern void update_flow(player_type *subject_ptr);
-extern FEAT_IDX feat_state(player_type *player_ptr, FEAT_IDX feat, int action);
-extern void cave_alter_feat(player_type *player_ptr, POSITION y, POSITION x, int action);
-extern void remove_mirror(player_type *caster_ptr, POSITION y, POSITION x);
-extern bool is_open(player_type *player_ptr, FEAT_IDX feat);
-extern bool check_local_illumination(player_type *creature_ptr, POSITION y, POSITION x);
+extern void update_local_illumination(player_type* creature_ptr, POSITION y, POSITION x);
+extern bool no_lite(player_type* creature_ptr);
+extern void print_rel(player_type* subject_ptr, SYMBOL_CODE c, TERM_COLOR a, POSITION y, POSITION x);
+extern void note_spot(player_type* player_ptr, POSITION y, POSITION x);
+extern void lite_spot(player_type* player_ptr, POSITION y, POSITION x);
+extern void update_flow(player_type* subject_ptr);
+extern FEAT_IDX feat_state(player_type* player_ptr, FEAT_IDX feat, int action);
+extern void cave_alter_feat(player_type* player_ptr, POSITION y, POSITION x, int action);
+extern void remove_mirror(player_type* caster_ptr, POSITION y, POSITION x);
+extern bool is_open(player_type* player_ptr, FEAT_IDX feat);
+extern bool check_local_illumination(player_type* creature_ptr, POSITION y, POSITION x);
 
-extern bool cave_monster_teleportable_bold(player_type *player_ptr, MONSTER_IDX m_idx, POSITION y, POSITION x, teleport_flags mode);
-extern bool cave_player_teleportable_bold(player_type *player_ptr, POSITION y, POSITION x, teleport_flags mode);
+extern bool cave_monster_teleportable_bold(player_type* player_ptr, MONSTER_IDX m_idx, POSITION y, POSITION x, teleport_flags mode);
+extern bool cave_player_teleportable_bold(player_type* player_ptr, POSITION y, POSITION x, teleport_flags mode);
 
 typedef enum grid_bold_type {
     GB_FLOOR,
@@ -191,13 +191,13 @@ typedef enum grid_bold_type {
     GB_SOLID_NOPERM
 } grid_bold_type;
 
-void place_grid(player_type *player_ptr, grid_type *g_ptr, grid_bold_type pg_type);
-bool darkened_grid(player_type *player_ptr, grid_type *g_ptr);
-void delete_monster(player_type *player_ptr, POSITION y, POSITION x);
-void place_bold(player_type *player_ptr, POSITION y, POSITION x, grid_bold_type gh_type);
-void set_cave_feat(floor_type *floor_ptr, POSITION y, POSITION x, FEAT_IDX feature_idx);
-void add_cave_info(floor_type *floor_ptr, POSITION y, POSITION x, int cave_mask);
-FEAT_IDX get_feat_mimic(grid_type *g_ptr);
+void place_grid(player_type* player_ptr, grid_type* g_ptr, grid_bold_type pg_type);
+bool darkened_grid(player_type* player_ptr, grid_type* g_ptr);
+void delete_monster(player_type* player_ptr, POSITION y, POSITION x);
+void place_bold(player_type* player_ptr, POSITION y, POSITION x, grid_bold_type gh_type);
+void set_cave_feat(floor_type* floor_ptr, POSITION y, POSITION x, FEAT_IDX feature_idx);
+void add_cave_info(floor_type* floor_ptr, POSITION y, POSITION x, int cave_mask);
+FEAT_IDX get_feat_mimic(grid_type* g_ptr);
 
 /*
  * This macro allows us to efficiently add a grid to the "lite" array,
@@ -205,34 +205,34 @@ FEAT_IDX get_feat_mimic(grid_type *g_ptr);
  * have already been placed into the "lite" array, and we are never
  * called when the "lite" array is full.
  */
-#define cave_lite_hack(F, Y, X)                                                                                                                                \
-    {                                                                                                                                                          \
-        if (!((F)->grid_array[Y][X].info & (CAVE_LITE))) {                                                                                                     \
-            (F)->grid_array[Y][X].info |= (CAVE_LITE);                                                                                                         \
-            (F)->lite_y[(F)->lite_n] = (Y);                                                                                                                    \
-            (F)->lite_x[(F)->lite_n++] = (X);                                                                                                                  \
-        }                                                                                                                                                      \
+#define cave_lite_hack(F, Y, X)                            \
+    {                                                      \
+        if (!((F)->grid_array[Y][X].info & (CAVE_LITE))) { \
+            (F)->grid_array[Y][X].info |= (CAVE_LITE);     \
+            (F)->lite_y[(F)->lite_n] = (Y);                \
+            (F)->lite_x[(F)->lite_n++] = (X);              \
+        }                                                  \
     }
 
 /*
  * For delayed visual update
  */
-#define cave_note_and_redraw_later(F, C, Y, X)                                                                                                                 \
-    {                                                                                                                                                          \
-        (C)->info |= CAVE_NOTE;                                                                                                                                \
-        cave_redraw_later((F), (C), (Y), (X));                                                                                                                 \
+#define cave_note_and_redraw_later(F, C, Y, X) \
+    {                                          \
+        (C)->info |= CAVE_NOTE;                \
+        cave_redraw_later((F), (C), (Y), (X)); \
     }
 
 /*
  * For delayed visual update
  */
-#define cave_redraw_later(F, G, Y, X)                                                                                                                          \
-    {                                                                                                                                                          \
-        if (!((G)->info & CAVE_REDRAW)) {                                                                                                                      \
-            (G)->info |= CAVE_REDRAW;                                                                                                                          \
-            (F)->redraw_y[(F)->redraw_n] = (Y);                                                                                                                \
-            (F)->redraw_x[(F)->redraw_n++] = (X);                                                                                                              \
-        }                                                                                                                                                      \
+#define cave_redraw_later(F, G, Y, X)             \
+    {                                             \
+        if (!((G)->info & CAVE_REDRAW)) {         \
+            (G)->info |= CAVE_REDRAW;             \
+            (F)->redraw_y[(F)->redraw_n] = (Y);   \
+            (F)->redraw_x[(F)->redraw_n++] = (X); \
+        }                                         \
     }
 
 /*
@@ -241,14 +241,14 @@ FEAT_IDX get_feat_mimic(grid_type *g_ptr);
  * have already been placed into the "view" array, and we are never
  * called when the "view" array is full.
  */
-#define cave_view_hack(F, C, Y, X)                                                                                                                             \
-    {                                                                                                                                                          \
-        if (!((C)->info & (CAVE_VIEW))) {                                                                                                                      \
-            (C)->info |= (CAVE_VIEW);                                                                                                                          \
-            (F)->view_y[(F)->view_n] = (Y);                                                                                                                    \
-            (F)->view_x[(F)->view_n] = (X);                                                                                                                    \
-            (F)->view_n++;                                                                                                                                     \
-        }                                                                                                                                                      \
+#define cave_view_hack(F, C, Y, X)          \
+    {                                       \
+        if (!((C)->info & (CAVE_VIEW))) {   \
+            (C)->info |= (CAVE_VIEW);       \
+            (F)->view_y[(F)->view_n] = (Y); \
+            (F)->view_x[(F)->view_n] = (X); \
+            (F)->view_n++;                  \
+        }                                   \
     }
 
-int count_dt(player_type *creature_ptr, POSITION *y, POSITION *x, bool (*test)(player_type *, FEAT_IDX), bool under);
+int count_dt(player_type* creature_ptr, POSITION* y, POSITION* x, bool (*test)(player_type*, FEAT_IDX), bool under);

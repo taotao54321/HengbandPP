@@ -37,7 +37,7 @@
 int store_top = 0;
 int store_bottom = 0;
 int xtra_stock = 0;
-const owner_type *ot_ptr = NULL;
+const owner_type* ot_ptr = NULL;
 s16b old_town_num = 0;
 s16b inner_town_num = 0;
 
@@ -56,12 +56,12 @@ bool allow_inc = FALSE;
  * @details オプション powerup_home が設定されていると我が家が 20 ページまで使える /
  * Free space is always usable
  */
-static int check_free_space(void)
-{
+static int check_free_space(void) {
     if ((cur_store_num == STORE_HOME) && !powerup_home) {
         if (st_ptr->stock_num < ((st_ptr->stock_size) / 10))
             return 1;
-    } else if (st_ptr->stock_num < st_ptr->stock_size)
+    }
+    else if (st_ptr->stock_num < st_ptr->stock_size)
         return 1;
 
     return 0;
@@ -82,9 +82,8 @@ static int check_free_space(void)
  *  1 : Cannot be combined but there are empty spaces.
  * </pre>
  */
-int store_check_num(object_type *o_ptr)
-{
-    object_type *j_ptr;
+int store_check_num(object_type* o_ptr) {
+    object_type* j_ptr;
     if ((cur_store_num == STORE_HOME) || (cur_store_num == STORE_MUSEUM)) {
         bool old_stack_force_notes = stack_force_notes;
         bool old_stack_force_costs = stack_force_costs;
@@ -110,7 +109,8 @@ int store_check_num(object_type *o_ptr)
             stack_force_notes = old_stack_force_notes;
             stack_force_costs = old_stack_force_costs;
         }
-    } else {
+    }
+    else {
         for (int i = 0; i < st_ptr->stock_num; i++) {
             j_ptr = &st_ptr->stock[i];
             if (store_object_similar(j_ptr, o_ptr))
@@ -130,8 +130,7 @@ int store_check_num(object_type *o_ptr)
  * @param j 選択範囲の最大値
  * @return 実際に選択したらTRUE、キャンセルしたらFALSE
  */
-int get_stock(COMMAND_CODE *com_val, concptr pmt, int i, int j)
-{
+int get_stock(COMMAND_CODE* com_val, concptr pmt, int i, int j) {
     if (repeat_pull(com_val) && (*com_val >= i) && (*com_val <= j))
         return TRUE;
 
@@ -180,8 +179,7 @@ int get_stock(COMMAND_CODE *com_val, concptr pmt, int i, int j)
  * Examine an item in a store			   -JDL-
  * @return なし
  */
-void store_examine(player_type *player_ptr)
-{
+void store_examine(player_type* player_ptr) {
     if (st_ptr->stock_num <= 0) {
         if (cur_store_num == STORE_HOME)
             msg_print(_("我が家には何も置いてありません。", "Your home is empty."));
@@ -203,7 +201,7 @@ void store_examine(player_type *player_ptr)
     if (!get_stock(&item, out_val, 0, i - 1))
         return;
     item = item + store_top;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &st_ptr->stock[item];
     if (!object_is_fully_known(o_ptr)) {
         msg_print(_("このアイテムについて特に知っていることはない。", "You have no special knowledge about that item."));
@@ -223,8 +221,7 @@ void store_examine(player_type *player_ptr)
  * @param which 店舗種類のID
  * @return なし
  */
-void store_shuffle(player_type *player_ptr, int which)
-{
+void store_shuffle(player_type* player_ptr, int which) {
     if ((which == STORE_HOME) || (which == STORE_MUSEUM))
         return;
 
@@ -255,7 +252,7 @@ void store_shuffle(player_type *player_ptr, int which)
     st_ptr->good_buy = 0;
     st_ptr->bad_buy = 0;
     for (int i = 0; i < st_ptr->stock_num; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &st_ptr->stock[i];
         if (object_is_artifact(o_ptr))
             continue;
@@ -274,8 +271,7 @@ void store_shuffle(player_type *player_ptr, int which)
  * @param store_num 店舗種類のID
  * @return なし
  */
-void store_maintenance(player_type *player_ptr, int town_num, int store_num)
-{
+void store_maintenance(player_type* player_ptr, int town_num, int store_num) {
     cur_store_num = store_num;
     if ((store_num == STORE_HOME) || (store_num == STORE_MUSEUM))
         return;
@@ -285,7 +281,7 @@ void store_maintenance(player_type *player_ptr, int town_num, int store_num)
     st_ptr->insult_cur = 0;
     if (store_num == STORE_BLACK) {
         for (INVENTORY_IDX j = st_ptr->stock_num - 1; j >= 0; j--) {
-            object_type *o_ptr = &st_ptr->stock[j];
+            object_type* o_ptr = &st_ptr->stock[j];
             if (black_market_crap(player_ptr, o_ptr)) {
                 store_item_increase(j, 0 - o_ptr->number);
                 store_item_optimize(j);
@@ -329,8 +325,7 @@ void store_maintenance(player_type *player_ptr, int town_num, int store_num)
  * @param store_num 店舗種類のID
  * @return なし
  */
-void store_init(int town_num, int store_num)
-{
+void store_init(int town_num, int store_num) {
     cur_store_num = store_num;
     st_ptr = &town_info[town_num].store[store_num];
     while (TRUE) {

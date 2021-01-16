@@ -40,20 +40,19 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_knowledge_artifacts(player_type *player_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_artifacts(player_type* player_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
 
-    ARTIFACT_IDX *who;
+    ARTIFACT_IDX* who;
     C_MAKE(who, max_a_idx, ARTIFACT_IDX);
-    bool *okay;
+    bool* okay;
     C_MAKE(okay, max_a_idx, bool);
 
     for (ARTIFACT_IDX k = 0; k < max_a_idx; k++) {
-        artifact_type *a_ptr = &a_info[k];
+        artifact_type* a_ptr = &a_info[k];
         okay[k] = FALSE;
         if (!a_ptr->name)
             continue;
@@ -65,10 +64,10 @@ void do_cmd_knowledge_artifacts(player_type *player_ptr)
 
     for (POSITION y = 0; y < player_ptr->current_floor_ptr->height; y++) {
         for (POSITION x = 0; x < player_ptr->current_floor_ptr->width; x++) {
-            grid_type *g_ptr = &player_ptr->current_floor_ptr->grid_array[y][x];
+            grid_type* g_ptr = &player_ptr->current_floor_ptr->grid_array[y][x];
             OBJECT_IDX this_o_idx, next_o_idx = 0;
             for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-                object_type *o_ptr;
+                object_type* o_ptr;
                 o_ptr = &player_ptr->current_floor_ptr->o_list[this_o_idx];
                 next_o_idx = o_ptr->next_o_idx;
                 if (!object_is_fixed_artifact(o_ptr))
@@ -82,7 +81,7 @@ void do_cmd_knowledge_artifacts(player_type *player_ptr)
     }
 
     for (ARTIFACT_IDX i = 0; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr = &player_ptr->inventory_list[i];
+        object_type* o_ptr = &player_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
         if (!object_is_fixed_artifact(o_ptr))
@@ -102,13 +101,13 @@ void do_cmd_knowledge_artifacts(player_type *player_ptr)
     u16b why = 3;
     ang_sort(player_ptr, who, &why, n, ang_sort_art_comp, ang_sort_art_swap);
     for (ARTIFACT_IDX k = 0; k < n; k++) {
-        artifact_type *a_ptr = &a_info[who[k]];
+        artifact_type* a_ptr = &a_info[who[k]];
         GAME_TEXT base_name[MAX_NLEN];
         strcpy(base_name, _("未知の伝説のアイテム", "Unknown Artifact"));
         ARTIFACT_IDX z = lookup_kind(a_ptr->tval, a_ptr->sval);
         if (z) {
             object_type forge;
-            object_type *q_ptr;
+            object_type* q_ptr;
             q_ptr = &forge;
             object_prep(player_ptr, q_ptr, z);
             q_ptr->name1 = (byte)who[k];
@@ -133,12 +132,11 @@ void do_cmd_knowledge_artifacts(player_type *player_ptr)
  * mode & 0x01 : check for non-empty group
  * mode & 0x02 : visual operation only
  */
-static KIND_OBJECT_IDX collect_objects(int grp_cur, KIND_OBJECT_IDX object_idx[], BIT_FLAGS8 mode)
-{
+static KIND_OBJECT_IDX collect_objects(int grp_cur, KIND_OBJECT_IDX object_idx[], BIT_FLAGS8 mode) {
     KIND_OBJECT_IDX object_cnt = 0;
     byte group_tval = object_group_tval[grp_cur];
     for (KIND_OBJECT_IDX i = 0; i < max_k_idx; i++) {
-        object_kind *k_ptr = &k_info[i];
+        object_kind* k_ptr = &k_info[i];
         if (!k_ptr->name)
             continue;
 
@@ -160,11 +158,14 @@ static KIND_OBJECT_IDX collect_objects(int grp_cur, KIND_OBJECT_IDX object_idx[]
         if (TV_LIFE_BOOK == group_tval) {
             if (TV_LIFE_BOOK <= k_ptr->tval && k_ptr->tval <= TV_HEX_BOOK) {
                 object_idx[object_cnt++] = i;
-            } else
+            }
+            else
                 continue;
-        } else if (k_ptr->tval == group_tval) {
+        }
+        else if (k_ptr->tval == group_tval) {
             object_idx[object_cnt++] = i;
-        } else
+        }
+        else
             continue;
 
         if (mode & 0x01)
@@ -178,28 +179,29 @@ static KIND_OBJECT_IDX collect_objects(int grp_cur, KIND_OBJECT_IDX object_idx[]
 /*
  * Display the objects in a group.
  */
-static void display_object_list(int col, int row, int per_page, IDX object_idx[], int object_cur, int object_top, bool visual_only)
-{
+static void display_object_list(int col, int row, int per_page, IDX object_idx[], int object_cur, int object_top, bool visual_only) {
     int i;
     for (i = 0; i < per_page && (object_idx[object_top + i] >= 0); i++) {
         GAME_TEXT o_name[MAX_NLEN];
         TERM_COLOR a;
         SYMBOL_CODE c;
-        object_kind *flavor_k_ptr;
+        object_kind* flavor_k_ptr;
         KIND_OBJECT_IDX k_idx = object_idx[object_top + i];
-        object_kind *k_ptr = &k_info[k_idx];
+        object_kind* k_ptr = &k_info[k_idx];
         TERM_COLOR attr = ((k_ptr->aware || visual_only) ? TERM_WHITE : TERM_SLATE);
         byte cursor = ((k_ptr->aware || visual_only) ? TERM_L_BLUE : TERM_BLUE);
         if (!visual_only && k_ptr->flavor) {
             flavor_k_ptr = &k_info[k_ptr->flavor];
-        } else {
+        }
+        else {
             flavor_k_ptr = k_ptr;
         }
 
         attr = ((i + object_top == object_cur) ? cursor : attr);
         if (!k_ptr->flavor || (!visual_only && k_ptr->aware)) {
             strip_name(o_name, k_idx);
-        } else {
+        }
+        else {
             strcpy(o_name, k_name + flavor_k_ptr->flavor_name);
         }
 
@@ -226,9 +228,8 @@ static void display_object_list(int col, int row, int per_page, IDX object_idx[]
 /*
  * Describe fake object
  */
-static void desc_obj_fake(player_type *creature_ptr, KIND_OBJECT_IDX k_idx)
-{
-    object_type *o_ptr;
+static void desc_obj_fake(player_type* creature_ptr, KIND_OBJECT_IDX k_idx) {
+    object_type* o_ptr;
     object_type object_type_body;
     o_ptr = &object_type_body;
     object_wipe(o_ptr);
@@ -247,12 +248,11 @@ static void desc_obj_fake(player_type *creature_ptr, KIND_OBJECT_IDX k_idx)
 /**
  * @brief Display known objects
  */
-void do_cmd_knowledge_objects(player_type *creature_ptr, bool *need_redraw, bool visual_only, KIND_OBJECT_IDX direct_k_idx)
-{
+void do_cmd_knowledge_objects(player_type* creature_ptr, bool* need_redraw, bool visual_only, KIND_OBJECT_IDX direct_k_idx) {
     KIND_OBJECT_IDX object_old, object_top;
     KIND_OBJECT_IDX grp_idx[100];
     int object_cnt;
-    OBJECT_IDX *object_idx;
+    OBJECT_IDX* object_idx;
 
     bool visual_list = FALSE;
     TERM_COLOR attr_top = 0;
@@ -282,13 +282,15 @@ void do_cmd_knowledge_objects(player_type *creature_ptr, bool *need_redraw, bool
 
         object_old = -1;
         object_cnt = 0;
-    } else {
-        object_kind *k_ptr = &k_info[direct_k_idx];
-        object_kind *flavor_k_ptr;
+    }
+    else {
+        object_kind* k_ptr = &k_info[direct_k_idx];
+        object_kind* flavor_k_ptr;
 
         if (!visual_only && k_ptr->flavor) {
             flavor_k_ptr = &k_info[k_ptr->flavor];
-        } else {
+        }
+        else {
             flavor_k_ptr = k_ptr;
         }
 
@@ -366,7 +368,8 @@ void do_cmd_knowledge_objects(player_type *creature_ptr, bool *need_redraw, bool
 
         if (!visual_list) {
             display_object_list(max + 3, 6, browser_rows, object_idx, object_cur, object_top, visual_only);
-        } else {
+        }
+        else {
             object_top = object_cur;
             display_object_list(max + 3, 6, 1, object_idx, object_cur, object_top, visual_only);
             display_visual_list(max + 3, 7, browser_rows - 1, wid - (max + 3), attr_top, char_left);
@@ -376,7 +379,8 @@ void do_cmd_knowledge_objects(player_type *creature_ptr, bool *need_redraw, bool
 
         if (!visual_only && k_ptr->flavor) {
             flavor_k_ptr = &k_info[k_ptr->flavor];
-        } else {
+        }
+        else {
             flavor_k_ptr = k_ptr;
         }
 
@@ -402,9 +406,11 @@ void do_cmd_knowledge_objects(player_type *creature_ptr, bool *need_redraw, bool
 
         if (visual_list) {
             place_visual_list_cursor(max + 3, 7, flavor_k_ptr->x_attr, flavor_k_ptr->x_char, attr_top, char_left);
-        } else if (!column) {
+        }
+        else if (!column) {
             term_gotoxy(0, 6 + (grp_cur - grp_top));
-        } else {
+        }
+        else {
             term_gotoxy(max + 3, 6 + (object_cur - object_top));
         }
 

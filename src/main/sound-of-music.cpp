@@ -8,8 +8,7 @@
 /*
  * Flush the screen, make a noise
  */
-void bell(void)
-{
+void bell(void) {
     term_fresh();
     if (ring_bell)
         term_xtra(TERM_XTRA_NOISE, 0);
@@ -21,8 +20,7 @@ void bell(void)
  * todo intをsound_typeに差し替える
  * @brief 音を鳴らす
  */
-void sound(int val)
-{
+void sound(int val) {
     if (!use_sound)
         return;
 
@@ -32,8 +30,7 @@ void sound(int val)
 /*
  * Hack -- Play a music
  */
-errr play_music(int type, int val)
-{
+errr play_music(int type, int val) {
     if (!use_music)
         return 1;
 
@@ -43,8 +40,7 @@ errr play_music(int type, int val)
 /*
  * Hack -- Select floor music.
  */
-void select_floor_music(player_type *player_ptr)
-{
+void select_floor_music(player_type* player_ptr) {
     if (!use_music)
         return;
 
@@ -79,20 +75,24 @@ void select_floor_music(player_type *player_ptr)
         if (player_ptr->feeling == 2) {
             if (!play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_DUN_FEEL2))
                 return;
-        } else if (player_ptr->feeling >= 3 && player_ptr->feeling <= 5) {
+        }
+        else if (player_ptr->feeling >= 3 && player_ptr->feeling <= 5) {
             if (!play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_DUN_FEEL1))
                 return;
-        } else {
+        }
+        else {
             if (!play_music(TERM_XTRA_MUSIC_DUNGEON, player_ptr->dungeon_idx))
                 return;
 
             if (player_ptr->current_floor_ptr->dun_level < 40) {
                 if (!play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_DUN_LOW))
                     return;
-            } else if (player_ptr->current_floor_ptr->dun_level < 80) {
+            }
+            else if (player_ptr->current_floor_ptr->dun_level < 80) {
                 if (!play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_DUN_MED))
                     return;
-            } else {
+            }
+            else {
                 if (!play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_DUN_HIGH))
                     return;
             }
@@ -111,10 +111,12 @@ void select_floor_music(player_type *player_ptr)
         if (player_ptr->lev >= 45) {
             if (!play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_FIELD3))
                 return;
-        } else if (player_ptr->lev >= 25) {
+        }
+        else if (player_ptr->lev >= 25) {
             if (!play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_FIELD2))
                 return;
-        } else {
+        }
+        else {
             if (!play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_FIELD1))
                 return;
         }

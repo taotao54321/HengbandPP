@@ -31,8 +31,7 @@ static char kanji_colon[] = "：";
 /*
  * A function to create new entry
  */
-bool autopick_new_entry(autopick_type *entry, concptr str, bool allow_default)
-{
+bool autopick_new_entry(autopick_type* entry, concptr str, bool allow_default) {
     if (str[0] && str[1] == ':')
         switch (str[0]) {
         case '?':
@@ -146,7 +145,8 @@ bool autopick_new_entry(autopick_type *entry, concptr str, bool allow_default)
             if (k > 0 && k <= 2) {
                 (void)MATCH_KEY(KEY_DICE);
                 ADD_FLG(FLG_MORE_DICE);
-            } else
+            }
+            else
                 ptr = prev_ptr;
         }
 
@@ -172,7 +172,8 @@ bool autopick_new_entry(autopick_type *entry, concptr str, bool allow_default)
                     ptr++;
 #endif
                 ADD_FLG(FLG_MORE_BONUS);
-            } else
+            }
+            else
                 ptr = prev_ptr;
         }
 
@@ -266,7 +267,8 @@ bool autopick_new_entry(autopick_type *entry, concptr str, bool allow_default)
     else if (*ptr == '\0') {
         if (prev_flg == -1)
             ADD_FLG_NOUN(FLG_ITEMS);
-    } else {
+    }
+    else {
         if (prev_flg != -1) {
             entry->flag[prev_flg / 32] &= ~(1L << (prev_flg % 32));
             ptr = prev_ptr;
@@ -283,8 +285,7 @@ bool autopick_new_entry(autopick_type *entry, concptr str, bool allow_default)
 /*
  * Get auto-picker entry from o_ptr.
  */
-void autopick_entry_from_object(player_type *player_ptr, autopick_type *entry, object_type *o_ptr)
-{
+void autopick_entry_from_object(player_type* player_ptr, autopick_type* entry, object_type* o_ptr) {
     /* Assume that object name is to be added */
     bool name = TRUE;
     GAME_TEXT name_str[MAX_NLEN];
@@ -300,11 +301,13 @@ void autopick_entry_from_object(player_type *player_ptr, autopick_type *entry, o
     if (!object_is_aware(o_ptr)) {
         ADD_FLG(FLG_UNAWARE);
         is_hat_added = TRUE;
-    } else if (!object_is_known(o_ptr)) {
+    }
+    else if (!object_is_known(o_ptr)) {
         if (!(o_ptr->ident & IDENT_SENSE)) {
             ADD_FLG(FLG_UNIDENTIFIED);
             is_hat_added = TRUE;
-        } else {
+        }
+        else {
             switch (o_ptr->feeling) {
             case FEEL_AVERAGE:
             case FEEL_GOOD:
@@ -335,7 +338,8 @@ void autopick_entry_from_object(player_type *player_ptr, autopick_type *entry, o
                 break;
             }
         }
-    } else {
+    }
+    else {
         if (object_is_ego(o_ptr)) {
             if (object_is_weapon_armour_ammo(player_ptr, o_ptr)) {
                 /*
@@ -343,7 +347,7 @@ void autopick_entry_from_object(player_type *player_ptr, autopick_type *entry, o
                  * are almost meaningless.
                  * Register the ego type only.
                  */
-                ego_item_type *e_ptr = &e_info[o_ptr->name2];
+                ego_item_type* e_ptr = &e_info[o_ptr->name2];
 #ifdef JP
                 /* エゴ銘には「^」マークが使える */
                 sprintf(name_str, "^%s", e_name + e_ptr->name);
@@ -357,7 +361,8 @@ void autopick_entry_from_object(player_type *player_ptr, autopick_type *entry, o
             }
 
             ADD_FLG(FLG_EGO);
-        } else if (object_is_artifact(o_ptr))
+        }
+        else if (object_is_artifact(o_ptr))
             ADD_FLG(FLG_ARTIFACT);
         else {
             if (object_is_equipment(o_ptr))
@@ -368,7 +373,7 @@ void autopick_entry_from_object(player_type *player_ptr, autopick_type *entry, o
     }
 
     if (object_is_melee_weapon(o_ptr)) {
-        object_kind *k_ptr = &k_info[o_ptr->k_idx];
+        object_kind* k_ptr = &k_info[o_ptr->k_idx];
 
         if ((o_ptr->dd != k_ptr->dd) || (o_ptr->ds != k_ptr->ds))
             ADD_FLG(FLG_BOOSTED);
@@ -466,8 +471,7 @@ void autopick_entry_from_object(player_type *player_ptr, autopick_type *entry, o
 /*
  * Reconstruct preference line from entry
  */
-concptr autopick_line_from_entry(autopick_type *entry)
-{
+concptr autopick_line_from_entry(autopick_type* entry) {
     char buf[MAX_LINELEN];
     *buf = '\0';
     if (!(entry->action & DO_DISPLAY))
@@ -479,7 +483,7 @@ concptr autopick_line_from_entry(autopick_type *entry)
     if (entry->action & DONT_AUTOPICK)
         strcat(buf, "~");
 
-    char *ptr;
+    char* ptr;
     ptr = buf;
     if (IS_FLG(FLG_ALL))
         ADD_KEY(KEY_ALL);
@@ -628,8 +632,7 @@ concptr autopick_line_from_entry(autopick_type *entry)
 /*
  * Reconstruct preference line from entry and kill entry
  */
-concptr autopick_line_from_entry_kill(autopick_type *entry)
-{
+concptr autopick_line_from_entry_kill(autopick_type* entry) {
     concptr ptr = autopick_line_from_entry(entry);
     autopick_free_entry(entry);
     return ptr;
@@ -638,11 +641,10 @@ concptr autopick_line_from_entry_kill(autopick_type *entry)
 /*
  * Choose an item and get auto-picker entry from it.
  */
-bool entry_from_choosed_object(player_type *player_ptr, autopick_type *entry)
-{
+bool entry_from_choosed_object(player_type* player_ptr, autopick_type* entry) {
     concptr q = _("どのアイテムを登録しますか? ", "Enter which item? ");
     concptr s = _("アイテムを持っていない。", "You have nothing to enter.");
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(player_ptr, NULL, q, s, USE_INVEN | USE_FLOOR | USE_EQUIP, TV_NONE);
     if (!o_ptr)
         return FALSE;

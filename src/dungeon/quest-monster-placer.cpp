@@ -16,11 +16,10 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return 成功したならばTRUEを返す
  */
-bool place_quest_monsters(player_type *creature_ptr)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+bool place_quest_monsters(player_type* creature_ptr) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     for (int i = 0; i < max_q_idx; i++) {
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         BIT_FLAGS mode;
         if (quest[i].status != QUEST_STATUS_TAKEN || (quest[i].type != QUEST_TYPE_KILL_LEVEL && quest[i].type != QUEST_TYPE_RANDOM)
             || quest[i].level != floor_ptr->dun_level || creature_ptr->dungeon_idx != quest[i].dungeon || (quest[i].flags & QUEST_FLAG_PRESET)) {
@@ -42,8 +41,8 @@ bool place_quest_monsters(player_type *creature_ptr)
                 POSITION y = 0;
                 int l;
                 for (l = SAFE_MAX_ATTEMPTS; l > 0; l--) {
-                    grid_type *g_ptr;
-                    feature_type *f_ptr;
+                    grid_type* g_ptr;
+                    feature_type* f_ptr;
                     y = randint0(floor_ptr->height);
                     x = randint0(floor_ptr->width);
                     g_ptr = &floor_ptr->grid_array[y][x];

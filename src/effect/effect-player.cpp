@@ -17,8 +17,8 @@
 #include "monster-race/monster-race.h"
 #include "monster/monster-describer.h"
 #include "monster/monster-description-types.h"
-#include "player/special-defense-types.h"
 #include "player/player-status-flags.h"
+#include "player/special-defense-types.h"
 #include "realm/realm-hex-numbers.h"
 #include "spell-realm/spells-crusade.h"
 #include "spell-realm/spells-hex.h"
@@ -29,8 +29,7 @@
 
 /*! 盲目時の代替メッセージ // TODO: 各種の盲目時メッセージからまとめ上げて統合
 */
-concptr blind_spell_effect_messages[MAX_GF] =
-{
+concptr blind_spell_effect_messages[MAX_GF] = {
     "", // GF_NONE = 0,
     "", // GF_ELEC = 1, /*!< 魔法効果: 電撃*/
     "", // GF_POIS = 2, /*!< 魔法効果: 毒*/
@@ -166,9 +165,8 @@ typedef enum effect_player_check_result {
  * @param monspell 効果元のモンスター魔法ID
  * @return 初期化後の構造体ポインタ
  */
-static effect_player_type *initialize_effect_player(
-    effect_player_type *ep_ptr, MONSTER_IDX who, HIT_POINT dam, EFFECT_ID effect_type, BIT_FLAGS flag, int monspell)
-{
+static effect_player_type* initialize_effect_player(
+    effect_player_type* ep_ptr, MONSTER_IDX who, HIT_POINT dam, EFFECT_ID effect_type, BIT_FLAGS flag, int monspell) {
     ep_ptr->rlev = 0;
     ep_ptr->m_ptr = NULL;
     ep_ptr->get_damage = 0;
@@ -186,8 +184,7 @@ static effect_player_type *initialize_effect_player(
  * @param ep_ptr プレーヤー効果構造体への参照ポインタ
  * @return 当たったらFALSE、反射したらTRUE
  */
-static bool process_bolt_reflection(player_type *target_ptr, effect_player_type *ep_ptr, project_func project)
-{
+static bool process_bolt_reflection(player_type* target_ptr, effect_player_type* ep_ptr, project_func project) {
     bool can_bolt_hit = has_reflect(target_ptr) || (((target_ptr->special_defense & KATA_FUUJIN) != 0) && !target_ptr->blind);
     can_bolt_hit &= (ep_ptr->flag & PROJECT_REFLECTABLE) != 0;
     can_bolt_hit &= !one_in_(10);
@@ -206,7 +203,7 @@ static bool process_bolt_reflection(player_type *target_ptr, effect_player_type 
         msg_print(_("攻撃が跳ね返った！", "The attack bounces!"));
 
     if (ep_ptr->who > 0) {
-        floor_type *floor_ptr = target_ptr->current_floor_ptr;
+        floor_type* floor_ptr = target_ptr->current_floor_ptr;
         monster_type m_type = floor_ptr->m_list[ep_ptr->who];
         do {
             t_y = m_type.fy - 1 + randint1(3);
@@ -218,7 +215,8 @@ static bool process_bolt_reflection(player_type *target_ptr, effect_player_type 
             t_y = m_type.fy;
             t_x = m_type.fx;
         }
-    } else {
+    }
+    else {
         t_y = target_ptr->y - 1 + randint1(3);
         t_x = target_ptr->x - 1 + randint1(3);
     }
@@ -236,8 +234,7 @@ static bool process_bolt_reflection(player_type *target_ptr, effect_player_type 
  * @param x 目標X座標
  * @return 当たらなかったらFALSE、反射したらTRUE、当たったらCONTINUE
  */
-static ep_check_result check_continue_player_effect(player_type *target_ptr, effect_player_type *ep_ptr, POSITION y, POSITION x, project_func project)
-{
+static ep_check_result check_continue_player_effect(player_type* target_ptr, effect_player_type* ep_ptr, POSITION y, POSITION x, project_func project) {
     if (!player_bold(target_ptr, y, x))
         return EP_CHECK_FALSE;
 
@@ -261,8 +258,7 @@ static ep_check_result check_continue_player_effect(player_type *target_ptr, eff
  * @param who_name モンスター名
  * @return なし
  */
-static void describe_effect_source(player_type *target_ptr, effect_player_type *ep_ptr, concptr who_name)
-{
+static void describe_effect_source(player_type* target_ptr, effect_player_type* ep_ptr, concptr who_name) {
     if (ep_ptr->who > 0) {
         ep_ptr->m_ptr = &target_ptr->current_floor_ptr->m_list[ep_ptr->who];
         ep_ptr->rlev = (&r_info[ep_ptr->m_ptr->r_idx])->level >= 1 ? (&r_info[ep_ptr->m_ptr->r_idx])->level : 1;
@@ -299,11 +295,10 @@ static void describe_effect_source(player_type *target_ptr, effect_player_type *
  * @param monspell 効果元のモンスター魔法ID
  * @return 何か一つでも効力があればTRUEを返す / TRUE if any "effects" of the projection were observed, else FALSE
  */
-bool affect_player(MONSTER_IDX who, player_type *target_ptr, concptr who_name, int r, POSITION y, POSITION x, HIT_POINT dam, EFFECT_ID effect_type,
-    BIT_FLAGS flag, int monspell, project_func project)
-{
+bool affect_player(MONSTER_IDX who, player_type* target_ptr, concptr who_name, int r, POSITION y, POSITION x, HIT_POINT dam, EFFECT_ID effect_type,
+    BIT_FLAGS flag, int monspell, project_func project) {
     effect_player_type tmp_effect;
-    effect_player_type *ep_ptr = initialize_effect_player(&tmp_effect, who, dam, effect_type, flag, monspell);
+    effect_player_type* ep_ptr = initialize_effect_player(&tmp_effect, who, dam, effect_type, flag, monspell);
     ep_check_result check_result = check_continue_player_effect(target_ptr, ep_ptr, y, x, project);
     if (check_result != EP_CHECK_CONTINUE)
         return check_result;

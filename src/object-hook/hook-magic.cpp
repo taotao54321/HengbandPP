@@ -15,8 +15,7 @@
  * @param o_ptr 判定したいオブジェクトの構造体参照ポインタ
  * @return 魔道具として発動可能ならばTRUEを返す
  */
-bool item_tester_hook_activate(player_type *player_ptr, object_type *o_ptr)
-{
+bool item_tester_hook_activate(player_type* player_ptr, object_type* o_ptr) {
     /* Unused */
     (void)player_ptr;
 
@@ -37,8 +36,7 @@ bool item_tester_hook_activate(player_type *player_ptr, object_type *o_ptr)
  * @param o_ptr 判定したいオブジェクトの構造体参照ポインタ
  * @return 利用可能ならばTRUEを返す
  */
-bool item_tester_hook_use(player_type *player_ptr, object_type *o_ptr)
-{
+bool item_tester_hook_use(player_type* player_ptr, object_type* o_ptr) {
     /* Unused */
     (void)player_ptr;
 
@@ -81,8 +79,7 @@ bool item_tester_hook_use(player_type *player_ptr, object_type *o_ptr)
  * @param o_ptr 判定するアイテムの情報参照ポインタ
  * @return 魔力充填が可能ならばTRUEを返す
  */
-bool item_tester_hook_recharge(player_type *player_ptr, object_type *o_ptr)
-{
+bool item_tester_hook_recharge(player_type* player_ptr, object_type* o_ptr) {
     /* Unused */
     (void)player_ptr;
 
@@ -94,13 +91,13 @@ bool item_tester_hook_recharge(player_type *player_ptr, object_type *o_ptr)
  * @param o_ptr 判定したいオブ会ジェクトの構造体参照ポインタ
  * @return 学習できる魔道書ならばTRUEを返す
  */
-bool item_tester_learn_spell(player_type *player_ptr, object_type *o_ptr)
-{
+bool item_tester_learn_spell(player_type* player_ptr, object_type* o_ptr) {
     s32b choices = realm_choices2[player_ptr->pclass];
     if (player_ptr->pclass == CLASS_PRIEST) {
         if (is_good_realm(player_ptr->realm1)) {
             choices &= ~(CH_DEATH | CH_DAEMON);
-        } else {
+        }
+        else {
             choices &= ~(CH_LIFE | CH_CRUSADE);
         }
     }
@@ -121,8 +118,7 @@ bool item_tester_learn_spell(player_type *player_ptr, object_type *o_ptr)
  * @param o_ptr 判定したいオブジェクトの構造体参照ポインタ
  * @return オブジェクトが高位の魔法書ならばTRUEを返す
  */
-bool item_tester_high_level_book(object_type *o_ptr)
-{
+bool item_tester_high_level_book(object_type* o_ptr) {
     if ((o_ptr->tval == TV_LIFE_BOOK) || (o_ptr->tval == TV_SORCERY_BOOK) || (o_ptr->tval == TV_NATURE_BOOK) || (o_ptr->tval == TV_CHAOS_BOOK)
         || (o_ptr->tval == TV_DEATH_BOOK) || (o_ptr->tval == TV_TRUMP_BOOK) || (o_ptr->tval == TV_CRAFT_BOOK) || (o_ptr->tval == TV_DEMON_BOOK)
         || (o_ptr->tval == TV_CRUSADE_BOOK) || (o_ptr->tval == TV_MUSIC_BOOK) || (o_ptr->tval == TV_HEX_BOOK)) {

@@ -44,21 +44,20 @@ static bool find_breakleft;
  * @param x 移動元のX座標
  * @return 移動先が既知の壁ならばTRUE
  */
-static bool see_wall(player_type *creature_ptr, DIRECTION dir, POSITION y, POSITION x)
-{
+static bool see_wall(player_type* creature_ptr, DIRECTION dir, POSITION y, POSITION x) {
     y += ddy[dir];
     x += ddx[dir];
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (!in_bounds2(floor_ptr, y, x))
         return FALSE;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &floor_ptr->grid_array[y][x];
     if (!(g_ptr->info & CAVE_MARK))
         return FALSE;
 
     s16b feat = get_feat_mimic(g_ptr);
-    feature_type *f_ptr = &f_info[feat];
+    feature_type* f_ptr = &f_info[feat];
     if (!player_can_enter(creature_ptr, feat, 0))
         return !has_flag(f_ptr->flags, FF_DOOR);
 
@@ -88,8 +87,7 @@ static bool see_wall(player_type *creature_ptr, DIRECTION dir, POSITION y, POSIT
  *       \#x\#                  \@x\#\n
  *       \@\@p.                  p\n
  */
-static void run_init(player_type *creature_ptr, DIRECTION dir)
-{
+static void run_init(player_type* creature_ptr, DIRECTION dir) {
     find_current = dir;
     find_prevdir = dir;
     find_openarea = TRUE;
@@ -107,7 +105,8 @@ static void run_init(player_type *creature_ptr, DIRECTION dir)
     if (see_wall(creature_ptr, cycle[i + 1], creature_ptr->y, creature_ptr->x)) {
         find_breakleft = TRUE;
         shortleft = TRUE;
-    } else if (see_wall(creature_ptr, cycle[i + 1], row, col)) {
+    }
+    else if (see_wall(creature_ptr, cycle[i + 1], row, col)) {
         find_breakleft = TRUE;
         deepleft = TRUE;
     }
@@ -115,7 +114,8 @@ static void run_init(player_type *creature_ptr, DIRECTION dir)
     if (see_wall(creature_ptr, cycle[i - 1], creature_ptr->y, creature_ptr->x)) {
         find_breakright = TRUE;
         shortright = TRUE;
-    } else if (see_wall(creature_ptr, cycle[i - 1], row, col)) {
+    }
+    else if (see_wall(creature_ptr, cycle[i - 1], row, col)) {
         find_breakright = TRUE;
         deepright = TRUE;
     }
@@ -127,7 +127,8 @@ static void run_init(player_type *creature_ptr, DIRECTION dir)
     if (dir & 0x01) {
         if (deepleft && !deepright) {
             find_prevdir = cycle[i - 1];
-        } else if (deepright && !deepleft) {
+        }
+        else if (deepright && !deepleft) {
             find_prevdir = cycle[i + 1];
         }
 
@@ -139,7 +140,8 @@ static void run_init(player_type *creature_ptr, DIRECTION dir)
 
     if (shortleft && !shortright) {
         find_prevdir = cycle[i - 2];
-    } else if (shortright && !shortleft) {
+    }
+    else if (shortright && !shortleft) {
         find_prevdir = cycle[i + 2];
     }
 }
@@ -153,12 +155,11 @@ static void run_init(player_type *creature_ptr, DIRECTION dir)
  * @param x 移動元のX座標
  * @return 移動先が未知の地形ならばTRUE
  */
-static bool see_nothing(player_type *creature_ptr, DIRECTION dir, POSITION y, POSITION x)
-{
+static bool see_nothing(player_type* creature_ptr, DIRECTION dir, POSITION y, POSITION x) {
     y += ddy[dir];
     x += ddx[dir];
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (!in_bounds2(floor_ptr, y, x))
         return TRUE;
 
@@ -179,11 +180,10 @@ static bool see_nothing(player_type *creature_ptr, DIRECTION dir, POSITION y, PO
  * ダッシュ移動が継続できるならばTRUEを返す。
  * Return TRUE if the running should be stopped
  */
-static bool run_test(player_type *creature_ptr)
-{
+static bool run_test(player_type* creature_ptr) {
     DIRECTION prev_dir = find_prevdir;
     int max = (prev_dir & 0x01) + 1;
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if ((disturb_trap_detect || alert_trap_detect) && creature_ptr->dtrap && !(floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].info & CAVE_IN_DETECT)) {
         creature_ptr->dtrap = FALSE;
         if (!(floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].info & CAVE_UNSAFE)) {
@@ -205,19 +205,19 @@ static bool run_test(player_type *creature_ptr)
         DIRECTION new_dir = cycle[chome[prev_dir] + i];
         int row = creature_ptr->y + ddy[new_dir];
         int col = creature_ptr->x + ddx[new_dir];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[row][col];
         FEAT_IDX feat = get_feat_mimic(g_ptr);
-        feature_type *f_ptr;
+        feature_type* f_ptr;
         f_ptr = &f_info[feat];
         if (g_ptr->m_idx) {
-            monster_type *m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
+            monster_type* m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
             if (m_ptr->ml)
                 return TRUE;
         }
 
         for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-            object_type *o_ptr;
+            object_type* o_ptr;
             o_ptr = &floor_ptr->o_list[this_o_idx];
             next_o_idx = o_ptr->next_o_idx;
             if (o_ptr->marked & OM_FOUND)
@@ -230,11 +230,14 @@ static bool run_test(player_type *creature_ptr)
             if (notice && has_flag(f_ptr->flags, FF_MOVE)) {
                 if (find_ignore_doors && has_flag(f_ptr->flags, FF_DOOR) && has_flag(f_ptr->flags, FF_CLOSE)) {
                     notice = FALSE;
-                } else if (find_ignore_stairs && has_flag(f_ptr->flags, FF_STAIRS)) {
+                }
+                else if (find_ignore_stairs && has_flag(f_ptr->flags, FF_STAIRS)) {
                     notice = FALSE;
-                } else if (has_flag(f_ptr->flags, FF_LAVA) && (has_immune_fire(creature_ptr) || is_invuln(creature_ptr))) {
+                }
+                else if (has_flag(f_ptr->flags, FF_LAVA) && (has_immune_fire(creature_ptr) || is_invuln(creature_ptr))) {
                     notice = FALSE;
-                } else if (has_flag(f_ptr->flags, FF_WATER) && has_flag(f_ptr->flags, FF_DEEP)
+                }
+                else if (has_flag(f_ptr->flags, FF_WATER) && has_flag(f_ptr->flags, FF_DEEP)
                     && (creature_ptr->levitation || creature_ptr->can_swim || (calc_inventory_weight(creature_ptr) <= calc_weight_limit(creature_ptr)))) {
                     notice = FALSE;
                 }
@@ -250,7 +253,8 @@ static bool run_test(player_type *creature_ptr)
             if (find_openarea) {
                 if (i < 0) {
                     find_breakright = TRUE;
-                } else if (i > 0) {
+                }
+                else if (i > 0) {
                     find_breakleft = TRUE;
                 }
             }
@@ -288,7 +292,8 @@ static bool run_test(player_type *creature_ptr)
             if (!see_wall(creature_ptr, cycle[chome[prev_dir] + i], creature_ptr->y, creature_ptr->x)) {
                 if (find_breakright)
                     return TRUE;
-            } else {
+            }
+            else {
                 if (find_breakleft)
                     return TRUE;
             }
@@ -298,7 +303,8 @@ static bool run_test(player_type *creature_ptr)
             if (!see_wall(creature_ptr, cycle[chome[prev_dir] + i], creature_ptr->y, creature_ptr->x)) {
                 if (find_breakleft)
                     return TRUE;
-            } else {
+            }
+            else {
                 if (find_breakright)
                     return TRUE;
             }
@@ -314,7 +320,8 @@ static bool run_test(player_type *creature_ptr)
         find_current = option;
         find_prevdir = option;
         return see_wall(creature_ptr, find_current, creature_ptr->y, creature_ptr->x);
-    } else if (!find_cut) {
+    }
+    else if (!find_cut) {
         find_current = option;
         find_prevdir = option2;
         return see_wall(creature_ptr, find_current, creature_ptr->y, creature_ptr->x);
@@ -350,8 +357,7 @@ static bool run_test(player_type *creature_ptr)
  * @param dir 移動を試みる方向ID
  * @return なし
  */
-void run_step(player_type *creature_ptr, DIRECTION dir)
-{
+void run_step(player_type* creature_ptr, DIRECTION dir) {
     if (dir) {
         ignore_avoid_run = TRUE;
         if (see_wall(creature_ptr, dir, creature_ptr->y, creature_ptr->x)) {
@@ -362,7 +368,8 @@ void run_step(player_type *creature_ptr, DIRECTION dir)
         }
 
         run_init(creature_ptr, dir);
-    } else {
+    }
+    else {
         if (run_test(creature_ptr)) {
             disturb(creature_ptr, FALSE, FALSE);
             return;

@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-errr restore_dungeon(player_type *creature_ptr);
+errr restore_dungeon(player_type* creature_ptr);

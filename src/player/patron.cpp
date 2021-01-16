@@ -149,8 +149,7 @@ const int chaos_rewards[MAX_PATRON][20] = {
         REW_POLY_SLF, REW_GAIN_EXP, REW_GAIN_ABL, REW_GAIN_ABL, REW_SER_MONS, REW_GOOD_OBJ, REW_CHAOS_WP, REW_GREA_OBJ, REW_GOOD_OBS }
 };
 
-void gain_level_reward(player_type *creature_ptr, int chosen_reward)
-{
+void gain_level_reward(player_type* creature_ptr, int chosen_reward) {
     char wrath_reason[32] = "";
     int nasty_chance = 6;
     int type, effect;
@@ -192,7 +191,8 @@ void gain_level_reward(player_type *creature_ptr, int chosen_reward)
         msg_format(_("%^sは褒美としてあなたを突然変異させた。", "%^s rewards you with a mutation!"), chaos_patrons[creature_ptr->chaos_patron]);
         (void)gain_mutation(creature_ptr, 0);
         reward = _("変異した。", "mutation");
-    } else {
+    }
+    else {
         switch (chosen_reward ? chosen_reward : effect) {
 
         case REW_POLY_SLF:
@@ -211,7 +211,8 @@ void gain_level_reward(player_type *creature_ptr, int chosen_reward)
 
             if (creature_ptr->prace == RACE_ANDROID) {
                 msg_print(_("しかし何も起こらなかった。", "But, nothing happen."));
-            } else if (creature_ptr->exp < PY_MAX_EXP) {
+            }
+            else if (creature_ptr->exp < PY_MAX_EXP) {
                 s32b ee = (creature_ptr->exp / 2) + 10;
                 if (ee > 100000L)
                     ee = 100000L;
@@ -229,7 +230,8 @@ void gain_level_reward(player_type *creature_ptr, int chosen_reward)
 
             if (creature_ptr->prace == RACE_ANDROID) {
                 msg_print(_("しかし何も起こらなかった。", "But, nothing happen."));
-            } else {
+            }
+            else {
                 lose_exp(creature_ptr, creature_ptr->exp / 6);
                 reward = _("経験値を失った。", "losing experience");
             }
@@ -446,7 +448,8 @@ void gain_level_reward(player_type *creature_ptr, int chosen_reward)
                     describe_flavor(creature_ptr, o_name, &creature_ptr->inventory_list[slot], OD_NAME_ONLY);
                     (void)curse_weapon_object(creature_ptr, FALSE, &creature_ptr->inventory_list[slot]);
                     reward = format(_("%sが破壊された。", "destroying %s"), o_name);
-                } else {
+                }
+                else {
                     if (!creature_ptr->inventory_list[INVEN_BODY].k_idx)
                         break;
                     describe_flavor(creature_ptr, o_name, &creature_ptr->inventory_list[INVEN_BODY], OD_NAME_ONLY);
@@ -481,7 +484,8 @@ void gain_level_reward(player_type *creature_ptr, int chosen_reward)
                     slot = INVEN_RARM;
                     if (has_melee_weapon(creature_ptr, INVEN_LARM) && one_in_(2))
                         slot = INVEN_LARM;
-                } else if (has_melee_weapon(creature_ptr, INVEN_LARM))
+                }
+                else if (has_melee_weapon(creature_ptr, INVEN_LARM))
                     slot = INVEN_LARM;
 
                 if (slot)
@@ -569,8 +573,7 @@ void gain_level_reward(player_type *creature_ptr, int chosen_reward)
     }
 }
 
-void admire_from_patron(player_type *creature_ptr)
-{
+void admire_from_patron(player_type* creature_ptr) {
     if ((creature_ptr->pclass == CLASS_CHAOS_WARRIOR) || (creature_ptr->muta2 & MUT2_CHAOS_GIFT)) {
         msg_format(_("%sからの声が響いた。", "The voice of %s booms out:"), chaos_patrons[creature_ptr->chaos_patron]);
         msg_print(_("『よくやった、定命の者よ！』", "'Thou art donst well, mortal!'"));

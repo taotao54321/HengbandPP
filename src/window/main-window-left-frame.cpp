@@ -20,19 +20,21 @@
  * @brief プレイヤーの称号を表示する / Prints "title", including "wizard" or "winner" as needed.
  * @return なし
  */
-void print_title(player_type *creature_ptr)
-{
+void print_title(player_type* creature_ptr) {
     GAME_TEXT str[14];
     concptr p = "";
     if (current_world_ptr->wizard) {
         p = _("[ウィザード]", "[=-WIZARD-=]");
-    } else if (current_world_ptr->total_winner || (creature_ptr->lev > PY_MAX_LEVEL)) {
+    }
+    else if (current_world_ptr->total_winner || (creature_ptr->lev > PY_MAX_LEVEL)) {
         if (creature_ptr->arena_number > MAX_ARENA_MONS + 2) {
             p = _("*真・勝利者*", "*TRUEWINNER*");
-        } else {
+        }
+        else {
             p = _("***勝利者***", "***WINNER***");
         }
-    } else {
+    }
+    else {
         angband_strcpy(str, player_title[creature_ptr->pclass][(creature_ptr->lev - 1) / 5], sizeof(str));
         p = str;
     }
@@ -44,14 +46,14 @@ void print_title(player_type *creature_ptr)
  * @brief プレイヤーのレベルを表示する / Prints level
  * @return なし
  */
-void print_level(player_type *creature_ptr)
-{
+void print_level(player_type* creature_ptr) {
     char tmp[32];
     sprintf(tmp, "%5d", creature_ptr->lev);
     if (creature_ptr->lev >= creature_ptr->max_plv) {
         put_str(_("レベル ", "LEVEL "), ROW_LEVEL, 0);
         c_put_str(TERM_L_GREEN, tmp, ROW_LEVEL, COL_LEVEL + 7);
-    } else {
+    }
+    else {
         put_str(_("xレベル", "Level "), ROW_LEVEL, 0);
         c_put_str(TERM_YELLOW, tmp, ROW_LEVEL, COL_LEVEL + 7);
     }
@@ -61,16 +63,17 @@ void print_level(player_type *creature_ptr)
  * @brief プレイヤーの経験値を表示する / Display the experience
  * @return なし
  */
-void print_exp(player_type *creature_ptr)
-{
+void print_exp(player_type* creature_ptr) {
     char out_val[32];
 
     if ((!exp_need) || (creature_ptr->prace == RACE_ANDROID)) {
         (void)sprintf(out_val, "%8ld", (long)creature_ptr->exp);
-    } else {
+    }
+    else {
         if (creature_ptr->lev >= PY_MAX_LEVEL) {
             (void)sprintf(out_val, "********");
-        } else {
+        }
+        else {
             (void)sprintf(out_val, "%8ld", (long)(player_exp[creature_ptr->lev - 1] * creature_ptr->expfact / 100L) - creature_ptr->exp);
         }
     }
@@ -81,7 +84,8 @@ void print_exp(player_type *creature_ptr)
         else
             put_str(_("経験 ", "EXP "), ROW_EXP, 0);
         c_put_str(TERM_L_GREEN, out_val, ROW_EXP, COL_EXP + 4);
-    } else {
+    }
+    else {
         put_str(_("x経験", "Exp "), ROW_EXP, 0);
         c_put_str(TERM_YELLOW, out_val, ROW_EXP, COL_EXP + 4);
     }
@@ -91,8 +95,7 @@ void print_exp(player_type *creature_ptr)
  * @brief プレイヤーのACを表示する / Prints current AC
  * @return なし
  */
-void print_ac(player_type *creature_ptr)
-{
+void print_ac(player_type* creature_ptr) {
     char tmp[32];
 
 #ifdef JP
@@ -111,17 +114,18 @@ void print_ac(player_type *creature_ptr)
  * @brief プレイヤーのHPを表示する / Prints Cur/Max hit points
  * @return なし
  */
-void print_hp(player_type *creature_ptr)
-{
+void print_hp(player_type* creature_ptr) {
     char tmp[32];
     put_str("HP", ROW_CURHP, COL_CURHP);
     sprintf(tmp, "%4ld", (long int)creature_ptr->chp);
     TERM_COLOR color;
     if (creature_ptr->chp >= creature_ptr->mhp) {
         color = TERM_L_GREEN;
-    } else if (creature_ptr->chp > (creature_ptr->mhp * hitpoint_warn) / 10) {
+    }
+    else if (creature_ptr->chp > (creature_ptr->mhp * hitpoint_warn) / 10) {
         color = TERM_YELLOW;
-    } else {
+    }
+    else {
         color = TERM_RED;
     }
 
@@ -136,8 +140,7 @@ void print_hp(player_type *creature_ptr)
  * @brief プレイヤーのMPを表示する / Prints players max/cur spell points
  * @return なし
  */
-void print_sp(player_type *creature_ptr)
-{
+void print_sp(player_type* creature_ptr) {
     char tmp[32];
     byte color;
     if (!mp_ptr->spell_book)
@@ -147,9 +150,11 @@ void print_sp(player_type *creature_ptr)
     sprintf(tmp, "%4ld", (long int)creature_ptr->csp);
     if (creature_ptr->csp >= creature_ptr->msp) {
         color = TERM_L_GREEN;
-    } else if (creature_ptr->csp > (creature_ptr->msp * mana_warn) / 10) {
+    }
+    else if (creature_ptr->csp > (creature_ptr->msp * mana_warn) / 10) {
         color = TERM_YELLOW;
-    } else {
+    }
+    else {
         color = TERM_RED;
     }
 
@@ -165,8 +170,7 @@ void print_sp(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void print_gold(player_type *creature_ptr)
-{
+void print_gold(player_type* creature_ptr) {
     char tmp[32];
     put_str(_("＄ ", "AU "), ROW_GOLD, COL_GOLD);
     sprintf(tmp, "%9ld", (long)creature_ptr->au);
@@ -178,8 +182,7 @@ void print_gold(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void print_depth(player_type *creature_ptr)
-{
+void print_depth(player_type* creature_ptr) {
     char depths[32];
     TERM_COLOR attr = TERM_WHITE;
 
@@ -188,7 +191,7 @@ void print_depth(player_type *creature_ptr)
     TERM_LEN col_depth = wid + COL_DEPTH;
     TERM_LEN row_depth = hgt + ROW_DEPTH;
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (!floor_ptr->dun_level) {
         strcpy(depths, _("地上", "Surf."));
         c_prt(attr, format("%7s", depths), row_depth, col_depth);
@@ -250,11 +253,11 @@ void print_depth(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void print_frame_basic(player_type *creature_ptr)
-{
+void print_frame_basic(player_type* creature_ptr) {
     if (creature_ptr->mimic_form) {
         print_field(mimic_info[creature_ptr->mimic_form].title, ROW_RACE, COL_RACE);
-    } else {
+    }
+    else {
         char str[14];
         angband_strcpy(str, rp_ptr->title, sizeof(str));
         print_field(str, ROW_RACE, COL_RACE);
@@ -295,8 +298,7 @@ void print_frame_basic(player_type *creature_ptr)
  * health-bar stops tracking any monster that "disappears".
  * </pre>
  */
-void health_redraw(player_type *creature_ptr, bool riding)
-{
+void health_redraw(player_type* creature_ptr, bool riding) {
     s16b health_who;
     int row, col;
 
@@ -304,13 +306,14 @@ void health_redraw(player_type *creature_ptr, bool riding)
         health_who = creature_ptr->riding;
         row = ROW_RIDING_INFO;
         col = COL_RIDING_INFO;
-    } else {
+    }
+    else {
         health_who = creature_ptr->health_who;
         row = ROW_INFO;
         col = COL_INFO;
     }
 
-    monster_type *m_ptr;
+    monster_type* m_ptr;
     m_ptr = &creature_ptr->current_floor_ptr->m_list[health_who];
 
     if (current_world_ptr->wizard && creature_ptr->phase_out) {
@@ -375,7 +378,8 @@ void health_redraw(player_type *creature_ptr, bool riding)
 
     int pct = m_ptr->maxhp > 0 ? 100L * m_ptr->hp / m_ptr->maxhp : 0;
     int pct2 = m_ptr->maxhp > 0 ? 100L * m_ptr->hp / m_ptr->max_maxhp : 0;
-    int len = (pct2 < 10) ? 1 : (pct2 < 90) ? (pct2 / 10 + 1) : 10;
+    int len = (pct2 < 10) ? 1 : (pct2 < 90) ? (pct2 / 10 + 1)
+                                            : 10;
     TERM_COLOR attr = TERM_RED;
     if (monster_invulner_remaining(m_ptr))
         attr = TERM_WHITE;

@@ -7,13 +7,13 @@
 #include "cmd-io/cmd-gameoption.h"
 #include "cmd-io/cmd-help.h"
 #include "cmd-io/cmd-knowledge.h"
-#include "cmd-io/cmd-process-screen.h"
-#include "cmd-item/cmd-destroy.h"
-#include "cmd-item/cmd-item.h"
-#include "cmd-item/cmd-magiceat.h"
 #include "cmd-io/cmd-lore.h"
 #include "cmd-io/cmd-macro.h"
+#include "cmd-io/cmd-process-screen.h"
+#include "cmd-item/cmd-destroy.h"
 #include "cmd-item/cmd-equipment.h"
+#include "cmd-item/cmd-item.h"
+#include "cmd-item/cmd-magiceat.h"
 #include "cmd-item/cmd-smith.h"
 #include "cmd-visual/cmd-draw.h"
 #include "cmd-visual/cmd-visuals.h"
@@ -49,8 +49,7 @@ bool leave_store = FALSE;
  * but not in the stores, to prevent chaos.
  * </pre>
  */
-void store_process_command(player_type *client_ptr)
-{
+void store_process_command(player_type* client_ptr) {
     repeat_check();
     if (rogue_like_commands && (command_cmd == 'l'))
         command_cmd = 'x';
@@ -65,7 +64,8 @@ void store_process_command(player_type *client_ptr)
         /* 1 ページ戻るコマンド: 我が家のページ数が多いので重宝するはず By BUG */
         if (st_ptr->stock_num <= store_bottom) {
             msg_print(_("これで全部です。", "Entire inventory is shown."));
-        } else {
+        }
+        else {
             store_top -= store_bottom;
             if (store_top < 0)
                 store_top = ((st_ptr->stock_num - 1) / store_bottom) * store_bottom;
@@ -82,7 +82,8 @@ void store_process_command(player_type *client_ptr)
     case ' ': {
         if (st_ptr->stock_num <= store_bottom) {
             msg_print(_("これで全部です。", "Entire inventory is shown."));
-        } else {
+        }
+        else {
             store_top += store_bottom;
             /*
              * 隠しオプション(powerup_home)がセットされていないときは
@@ -92,7 +93,8 @@ void store_process_command(player_type *client_ptr)
                 if (store_top >= (STORE_INVEN_MAX - 1)) {
                     store_top = 0;
                 }
-            } else {
+            }
+            else {
                 if (store_top >= st_ptr->stock_num)
                     store_top = 0;
             }
@@ -262,7 +264,8 @@ void store_process_command(player_type *client_ptr)
     default: {
         if ((cur_store_num == STORE_MUSEUM) && (command_cmd == 'r')) {
             museum_remove_object(client_ptr);
-        } else {
+        }
+        else {
             msg_print(_("そのコマンドは店の中では使えません。", "That command does not work in stores."));
         }
 

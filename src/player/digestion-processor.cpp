@@ -19,14 +19,14 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void starve_player(player_type *creature_ptr)
-{
+void starve_player(player_type* creature_ptr) {
     if (creature_ptr->phase_out)
         return;
 
     if (creature_ptr->food >= PY_FOOD_MAX) {
         (void)set_food(creature_ptr, creature_ptr->food - 100);
-    } else if (!(current_world_ptr->game_turn % (TURNS_PER_TICK * 5))) {
+    }
+    else if (!(current_world_ptr->game_turn % (TURNS_PER_TICK * 5))) {
         int digestion = SPEED_TO_ENERGY(creature_ptr->pspeed);
         if (creature_ptr->regenerate)
             digestion += 20;
@@ -88,37 +88,47 @@ void starve_player(player_type *creature_ptr)
  * game turns, or 500/(100/5) = 25 player turns (if nothing else is
  * affecting the player speed).\n
  */
-bool set_food(player_type *creature_ptr, TIME_EFFECT v)
-{
+bool set_food(player_type* creature_ptr, TIME_EFFECT v) {
     int old_aux, new_aux;
 
     bool notice = FALSE;
-    v = (v > 20000) ? 20000 : (v < 0) ? 0 : v;
+    v = (v > 20000) ? 20000 : (v < 0) ? 0
+                                      : v;
     if (creature_ptr->food < PY_FOOD_FAINT) {
         old_aux = 0;
-    } else if (creature_ptr->food < PY_FOOD_WEAK) {
+    }
+    else if (creature_ptr->food < PY_FOOD_WEAK) {
         old_aux = 1;
-    } else if (creature_ptr->food < PY_FOOD_ALERT) {
+    }
+    else if (creature_ptr->food < PY_FOOD_ALERT) {
         old_aux = 2;
-    } else if (creature_ptr->food < PY_FOOD_FULL) {
+    }
+    else if (creature_ptr->food < PY_FOOD_FULL) {
         old_aux = 3;
-    } else if (creature_ptr->food < PY_FOOD_MAX) {
+    }
+    else if (creature_ptr->food < PY_FOOD_MAX) {
         old_aux = 4;
-    } else {
+    }
+    else {
         old_aux = 5;
     }
 
     if (v < PY_FOOD_FAINT) {
         new_aux = 0;
-    } else if (v < PY_FOOD_WEAK) {
+    }
+    else if (v < PY_FOOD_WEAK) {
         new_aux = 1;
-    } else if (v < PY_FOOD_ALERT) {
+    }
+    else if (v < PY_FOOD_ALERT) {
         new_aux = 2;
-    } else if (v < PY_FOOD_FULL) {
+    }
+    else if (v < PY_FOOD_FULL) {
         new_aux = 3;
-    } else if (v < PY_FOOD_MAX) {
+    }
+    else if (v < PY_FOOD_MAX) {
         new_aux = 4;
-    } else {
+    }
+    else {
         new_aux = 5;
     }
 
@@ -155,7 +165,8 @@ bool set_food(player_type *creature_ptr, TIME_EFFECT v)
         }
 
         notice = TRUE;
-    } else if (new_aux < old_aux) {
+    }
+    else if (new_aux < old_aux) {
         switch (new_aux) {
         case 0:
             msg_print(_("あまりにも空腹で気を失ってしまった！", "You are getting faint from hunger!"));

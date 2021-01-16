@@ -31,8 +31,7 @@
  * The possibly updated description pointer is returned.
  * </pre>
  */
-static concptr *spoiler_flag_aux(const BIT_FLAGS art_flags[TR_FLAG_SIZE], const flag_desc *flag_ptr, concptr *desc_ptr, const int n_elmnts)
-{
+static concptr* spoiler_flag_aux(const BIT_FLAGS art_flags[TR_FLAG_SIZE], const flag_desc* flag_ptr, concptr* desc_ptr, const int n_elmnts) {
     for (int i = 0; i < n_elmnts; ++i)
         if (has_flag(art_flags, flag_ptr[i].flag))
             *desc_ptr++ = flag_ptr[i].desc;
@@ -47,8 +46,7 @@ static concptr *spoiler_flag_aux(const BIT_FLAGS art_flags[TR_FLAG_SIZE], const 
  * @param desc_ptr 記述内容を返すための文字列参照ポインタ
  * @return なし
  */
-static void analyze_general(player_type *player_ptr, object_type *o_ptr, char *desc_ptr)
-{
+static void analyze_general(player_type* player_ptr, object_type* o_ptr, char* desc_ptr) {
     describe_flavor(player_ptr, desc_ptr, o_ptr, OD_NAME_AND_ENCHANT | OD_STORE);
 }
 
@@ -60,10 +58,9 @@ static void analyze_general(player_type *player_ptr, object_type *o_ptr, char *d
  * @param pi_ptr pval修正構造体の参照ポインタ
  * @return なし
  */
-static void analyze_pval(player_type *player_ptr, object_type *o_ptr, pval_info_type *pi_ptr)
-{
+static void analyze_pval(player_type* player_ptr, object_type* o_ptr, pval_info_type* pi_ptr) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
-    concptr *affects_list;
+    concptr* affects_list;
     if (!o_ptr->pval) {
         pi_ptr->pval_desc[0] = '\0';
         return;
@@ -75,7 +72,8 @@ static void analyze_pval(player_type *player_ptr, object_type *o_ptr, pval_info_
     if (has_flag(flgs, TR_STR) && has_flag(flgs, TR_INT) && has_flag(flgs, TR_WIS) && has_flag(flgs, TR_DEX) && has_flag(flgs, TR_CON)
         && has_flag(flgs, TR_CHR)) {
         *affects_list++ = _("全能力", "All stats");
-    } else if (has_flag(flgs, TR_STR) || has_flag(flgs, TR_INT) || has_flag(flgs, TR_WIS) || has_flag(flgs, TR_DEX) || has_flag(flgs, TR_CON)
+    }
+    else if (has_flag(flgs, TR_STR) || has_flag(flgs, TR_INT) || has_flag(flgs, TR_WIS) || has_flag(flgs, TR_DEX) || has_flag(flgs, TR_CON)
         || has_flag(flgs, TR_CHR)) {
         affects_list = spoiler_flag_aux(flgs, stat_flags_desc, affects_list, N_ELEMENTS(stat_flags_desc));
     }
@@ -91,8 +89,7 @@ static void analyze_pval(player_type *player_ptr, object_type *o_ptr, pval_info_
  * @param slay_list 種族スレイ構造体の参照ポインタ
  * @return なし
  */
-static void analyze_slay(player_type *player_ptr, object_type *o_ptr, concptr *slay_list)
-{
+static void analyze_slay(player_type* player_ptr, object_type* o_ptr, concptr* slay_list) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     slay_list = spoiler_flag_aux(flgs, slay_flags_desc, slay_list, N_ELEMENTS(slay_flags_desc));
@@ -106,8 +103,7 @@ static void analyze_slay(player_type *player_ptr, object_type *o_ptr, concptr *s
  * @param brand_list 属性ブランド構造体の参照ポインタ
  * @return なし
  */
-static void analyze_brand(player_type *player_ptr, object_type *o_ptr, concptr *brand_list)
-{
+static void analyze_brand(player_type* player_ptr, object_type* o_ptr, concptr* brand_list) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     brand_list = spoiler_flag_aux(flgs, brand_flags_desc, brand_list, N_ELEMENTS(brand_flags_desc));
@@ -121,8 +117,7 @@ static void analyze_brand(player_type *player_ptr, object_type *o_ptr, concptr *
  * @param resist_list 通常耐性構造体の参照ポインタ
  * @return なし
  */
-static void analyze_resist(player_type *player_ptr, object_type *o_ptr, concptr *resist_list)
-{
+static void analyze_resist(player_type* player_ptr, object_type* o_ptr, concptr* resist_list) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     resist_list = spoiler_flag_aux(flgs, resist_flags_desc, resist_list, N_ELEMENTS(resist_flags_desc));
@@ -136,8 +131,7 @@ static void analyze_resist(player_type *player_ptr, object_type *o_ptr, concptr 
  * @param immune_list 免疫構造体の参照ポインタ
  * @return なし
  */
-static void analyze_immune(player_type *player_ptr, object_type *o_ptr, concptr *immune_list)
-{
+static void analyze_immune(player_type* player_ptr, object_type* o_ptr, concptr* immune_list) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     immune_list = spoiler_flag_aux(flgs, immune_flags_desc, immune_list, N_ELEMENTS(immune_flags_desc));
@@ -151,14 +145,14 @@ static void analyze_immune(player_type *player_ptr, object_type *o_ptr, concptr 
  * @param sustain_list 維持特性構造体の参照ポインタ
  * @return なし
  */
-static void analyze_sustains(player_type *player_ptr, object_type *o_ptr, concptr *sustain_list)
-{
+static void analyze_sustains(player_type* player_ptr, object_type* o_ptr, concptr* sustain_list) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     if (has_flag(flgs, TR_SUST_STR) && has_flag(flgs, TR_SUST_INT) && has_flag(flgs, TR_SUST_WIS) && has_flag(flgs, TR_SUST_DEX)
         && has_flag(flgs, TR_SUST_CON) && has_flag(flgs, TR_SUST_CHR)) {
         *sustain_list++ = _("全能力", "All stats");
-    } else if (has_flag(flgs, TR_SUST_STR) || has_flag(flgs, TR_SUST_INT) || has_flag(flgs, TR_SUST_WIS) || has_flag(flgs, TR_SUST_DEX)
+    }
+    else if (has_flag(flgs, TR_SUST_STR) || has_flag(flgs, TR_SUST_INT) || has_flag(flgs, TR_SUST_WIS) || has_flag(flgs, TR_SUST_DEX)
         || has_flag(flgs, TR_SUST_CON) || has_flag(flgs, TR_SUST_CHR)) {
         sustain_list = spoiler_flag_aux(flgs, sustain_flags_desc, sustain_list, N_ELEMENTS(sustain_flags_desc));
     }
@@ -174,8 +168,7 @@ static void analyze_sustains(player_type *player_ptr, object_type *o_ptr, concpt
  * @param misc_list その他の特性構造体の参照ポインタ
  * @return なし
  */
-static void analyze_misc_magic(player_type *player_ptr, object_type *o_ptr, concptr *misc_list)
-{
+static void analyze_misc_magic(player_type* player_ptr, object_type* o_ptr, concptr* misc_list) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     char desc[256];
 
@@ -207,7 +200,8 @@ static void analyze_misc_magic(player_type *player_ptr, object_type *o_ptr, conc
     if (has_flag(flgs, TR_LITE_FUEL)) {
         if (rad > 0)
             sprintf(desc, _("それは燃料補給によって明かり(半径 %d)を授ける。", "It provides light (radius %d) when fueled."), (int)rad);
-    } else {
+    }
+    else {
         if (rad > 0)
             sprintf(desc, _("永久光源(半径 %d)", "Permanent Light(radius %d)"), (int)rad);
 
@@ -244,15 +238,14 @@ static void analyze_misc_magic(player_type *player_ptr, object_type *o_ptr, conc
  * @param addition 追加ランダム耐性構造体の参照ポインタ
  * @return なし
  */
-static void analyze_addition(object_type *o_ptr, char *addition)
-{
-    artifact_type *a_ptr = &a_info[o_ptr->name1];
+static void analyze_addition(object_type* o_ptr, char* addition) {
+    artifact_type* a_ptr = &a_info[o_ptr->name1];
     strcpy(addition, "");
     if ((a_ptr->gen_flags & TRG_XTRA_POWER) && (a_ptr->gen_flags & TRG_XTRA_H_RES)) {
         strcat(addition, _("能力and耐性", "Ability and Resistance"));
         return;
     }
-    
+
     if (a_ptr->gen_flags & TRG_XTRA_POWER) {
         strcat(addition, _("能力", "Ability"));
         if (a_ptr->gen_flags & TRG_XTRA_RES_OR_POWER)
@@ -260,7 +253,7 @@ static void analyze_addition(object_type *o_ptr, char *addition)
 
         return;
     }
-    
+
     if (a_ptr->gen_flags & TRG_XTRA_H_RES) {
         strcat(addition, _("耐性", "Resistance"));
         if (a_ptr->gen_flags & TRG_XTRA_RES_OR_POWER)
@@ -268,7 +261,7 @@ static void analyze_addition(object_type *o_ptr, char *addition)
 
         return;
     }
-    
+
     if (a_ptr->gen_flags & TRG_XTRA_RES_OR_POWER)
         strcat(addition, _("能力or耐性", "Ability or Resistance"));
 }
@@ -281,9 +274,8 @@ static void analyze_addition(object_type *o_ptr, char *addition)
  * @param misc_desc 基本情報を収める文字列参照ポインタ
  * @return なし
  */
-static void analyze_misc(object_type *o_ptr, char *misc_desc)
-{
-    artifact_type *a_ptr = &a_info[o_ptr->name1];
+static void analyze_misc(object_type* o_ptr, char* misc_desc) {
+    artifact_type* a_ptr = &a_info[o_ptr->name1];
     sprintf(misc_desc, _("レベル %d, 希少度 %u, %d.%d kg, ＄%ld", "Level %d, Rarity %u, %d.%d lbs, %ld Gold"), (int)a_ptr->level, a_ptr->rarity,
         _(lbtokg1(a_ptr->weight), a_ptr->weight / 10), _(lbtokg2(a_ptr->weight), a_ptr->weight % 10), (long int)a_ptr->cost);
 }
@@ -297,8 +289,7 @@ static void analyze_misc(object_type *o_ptr, char *misc_desc)
  * @param desc_ptr 全アーティファクト情報を収める文字列参照ポインタ
  * @return なし
  */
-void object_analyze(player_type *player_ptr, object_type *o_ptr, obj_desc_list *desc_ptr)
-{
+void object_analyze(player_type* player_ptr, object_type* o_ptr, obj_desc_list* desc_ptr) {
     analyze_general(player_ptr, o_ptr, desc_ptr->description);
     analyze_pval(player_ptr, o_ptr, &desc_ptr->pval_info);
     analyze_brand(player_ptr, o_ptr, desc_ptr->brands);
@@ -320,8 +311,7 @@ void object_analyze(player_type *player_ptr, object_type *o_ptr, obj_desc_list *
  * @param desc_ptr 記述内容を収める構造体参照ポインタ
  * @return なし
  */
-void random_artifact_analyze(player_type *player_ptr, object_type *o_ptr, obj_desc_list *desc_ptr)
-{
+void random_artifact_analyze(player_type* player_ptr, object_type* o_ptr, obj_desc_list* desc_ptr) {
     analyze_general(player_ptr, o_ptr, desc_ptr->description);
     analyze_pval(player_ptr, o_ptr, &desc_ptr->pval_info);
     analyze_brand(player_ptr, o_ptr, desc_ptr->brands);

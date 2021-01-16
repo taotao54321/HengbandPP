@@ -42,20 +42,19 @@
 // Melee-post-process-type
 typedef struct mam_pp_type {
     MONSTER_IDX m_idx;
-    monster_type *m_ptr;
+    monster_type* m_ptr;
     bool seen;
     GAME_TEXT m_name[160];
     HIT_POINT dam;
     bool known; /* Can the player be aware of this attack? */
     concptr note;
-    bool *dead;
-    bool *fear;
+    bool* dead;
+    bool* fear;
     MONSTER_IDX who;
 } mam_pp_type;
 
-mam_pp_type *initialize_mam_pp_type(
-    player_type *player_ptr, mam_pp_type *mam_pp_ptr, MONSTER_IDX m_idx, HIT_POINT dam, bool *dead, bool *fear, concptr note, MONSTER_IDX who)
-{
+mam_pp_type* initialize_mam_pp_type(
+    player_type* player_ptr, mam_pp_type* mam_pp_ptr, MONSTER_IDX m_idx, HIT_POINT dam, bool* dead, bool* fear, concptr note, MONSTER_IDX who) {
     mam_pp_ptr->m_idx = m_idx;
     mam_pp_ptr->m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
     mam_pp_ptr->seen = is_seen(player_ptr, mam_pp_ptr->m_ptr);
@@ -68,8 +67,7 @@ mam_pp_type *initialize_mam_pp_type(
     return mam_pp_ptr;
 }
 
-static void prepare_redraw(player_type *player_ptr, mam_pp_type *mam_pp_ptr)
-{
+static void prepare_redraw(player_type* player_ptr, mam_pp_type* mam_pp_ptr) {
     if (!mam_pp_ptr->m_ptr->ml)
         return;
 
@@ -85,8 +83,7 @@ static void prepare_redraw(player_type *player_ptr, mam_pp_type *mam_pp_ptr)
  * @param mam_pp_ptr 標的モンスター構造体への参照ポインタ
  * @return 無敵ノーダメならTRUE、無敵でないか無敵を貫通したらFALSE
  */
-static bool process_invulnerability(mam_pp_type *mam_pp_ptr)
-{
+static bool process_invulnerability(mam_pp_type* mam_pp_ptr) {
     if (monster_invulner_remaining(mam_pp_ptr->m_ptr) && randint0(PENETRATE_INVULNERABILITY))
         return FALSE;
 
@@ -101,9 +98,8 @@ static bool process_invulnerability(mam_pp_type *mam_pp_ptr)
  * @param mam_pp_ptr 標的モンスター構造体への参照ポインタ
  * @return ノーダメならTRUE、 そうでないならFALSE
  */
-static bool process_all_resistances(mam_pp_type *mam_pp_ptr)
-{
-    monster_race *r_ptr = &r_info[mam_pp_ptr->m_ptr->r_idx];
+static bool process_all_resistances(mam_pp_type* mam_pp_ptr) {
+    monster_race* r_ptr = &r_info[mam_pp_ptr->m_ptr->r_idx];
     if ((r_ptr->flagsr & RFR_RES_ALL) == 0)
         return FALSE;
 
@@ -131,8 +127,7 @@ static bool process_all_resistances(mam_pp_type *mam_pp_ptr)
  * 見えない位置で死んだら何も表示しない
  * 爆発して粉々になった等ならその旨を、残りは生命か無生命かで分岐
  */
-static void print_monster_dead_by_monster(player_type *player_ptr, mam_pp_type *mam_pp_ptr)
-{
+static void print_monster_dead_by_monster(player_type* player_ptr, mam_pp_type* mam_pp_ptr) {
     if (!mam_pp_ptr->known)
         return;
 
@@ -161,9 +156,8 @@ static void print_monster_dead_by_monster(player_type *player_ptr, mam_pp_type *
  * @param mam_pp_ptr 標的モンスター構造体への参照ポインタ
  * @return 生きていたらTRUE、それ以外 (ユニークは＠以外の攻撃では死なない)はFALSE
  */
-static bool check_monster_hp(player_type *player_ptr, mam_pp_type *mam_pp_ptr)
-{
-    monster_race *r_ptr = &r_info[mam_pp_ptr->m_ptr->r_idx];
+static bool check_monster_hp(player_type* player_ptr, mam_pp_type* mam_pp_ptr) {
+    monster_race* r_ptr = &r_info[mam_pp_ptr->m_ptr->r_idx];
     if (mam_pp_ptr->m_ptr->hp < 0)
         return FALSE;
 
@@ -189,8 +183,7 @@ static bool check_monster_hp(player_type *player_ptr, mam_pp_type *mam_pp_ptr)
  * @param mam_pp_ptr 標的モンスター構造体への参照ポインタ
  * @return なし
  */
-static void cancel_fear_by_pain(player_type *player_ptr, mam_pp_type *mam_pp_ptr)
-{
+static void cancel_fear_by_pain(player_type* player_ptr, mam_pp_type* mam_pp_ptr) {
     if (!monster_fear_remaining(mam_pp_ptr->m_ptr) || (mam_pp_ptr->dam <= 0)
         || !set_monster_monfear(player_ptr, mam_pp_ptr->m_idx, monster_fear_remaining(mam_pp_ptr->m_ptr) - randint1(mam_pp_ptr->dam / 4)))
         return;
@@ -204,9 +197,8 @@ static void cancel_fear_by_pain(player_type *player_ptr, mam_pp_type *mam_pp_ptr
  * @param mam_pp_ptr 標的モンスター構造体への参照ポインタ
  * @return なし
  */
-static void make_monster_fear(player_type *player_ptr, mam_pp_type *mam_pp_ptr)
-{
-    monster_race *r_ptr = &r_info[mam_pp_ptr->m_ptr->r_idx];
+static void make_monster_fear(player_type* player_ptr, mam_pp_type* mam_pp_ptr) {
+    monster_race* r_ptr = &r_info[mam_pp_ptr->m_ptr->r_idx];
     if (monster_fear_remaining(mam_pp_ptr->m_ptr) || ((r_ptr->flags3 & RF3_NO_FEAR) == 0))
         return;
 
@@ -226,8 +218,7 @@ static void make_monster_fear(player_type *player_ptr, mam_pp_type *mam_pp_ptr)
  * @param mam_pp_ptr 標的モンスター構造体への参照ポインタ
  * @return なし
  */
-static void fall_off_horse_by_melee(player_type *player_ptr, mam_pp_type *mam_pp_ptr)
-{
+static void fall_off_horse_by_melee(player_type* player_ptr, mam_pp_type* mam_pp_ptr) {
     if (!player_ptr->riding || (player_ptr->riding != mam_pp_ptr->m_idx) || (mam_pp_ptr->dam <= 0))
         return;
 
@@ -251,12 +242,11 @@ static void fall_off_horse_by_melee(player_type *player_ptr, mam_pp_type *mam_pp
  * @param who 打撃を行ったモンスターの参照ID
  * @return なし
  */
-void mon_take_hit_mon(player_type *player_ptr, MONSTER_IDX m_idx, HIT_POINT dam, bool *dead, bool *fear, concptr note, MONSTER_IDX who)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+void mon_take_hit_mon(player_type* player_ptr, MONSTER_IDX m_idx, HIT_POINT dam, bool* dead, bool* fear, concptr note, MONSTER_IDX who) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     mam_pp_type tmp_mam_pp;
-    mam_pp_type *mam_pp_ptr = initialize_mam_pp_type(player_ptr, &tmp_mam_pp, m_idx, dam, dead, fear, note, who);
+    mam_pp_type* mam_pp_ptr = initialize_mam_pp_type(player_ptr, &tmp_mam_pp, m_idx, dam, dead, fear, note, who);
     monster_desc(player_ptr, mam_pp_ptr->m_name, m_ptr, 0);
     prepare_redraw(player_ptr, mam_pp_ptr);
     (void)set_monster_csleep(player_ptr, m_idx, 0);

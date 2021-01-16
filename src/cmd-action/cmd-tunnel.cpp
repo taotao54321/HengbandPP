@@ -28,8 +28,7 @@
  * accomplished by strong players using heavy weapons.
  * </pre>
  */
-void do_cmd_tunnel(player_type *creature_ptr)
-{
+void do_cmd_tunnel(player_type* creature_ptr) {
     bool more = FALSE;
     if (creature_ptr->special_defense & KATA_MUSOU)
         set_action(creature_ptr, ACTION_NONE);
@@ -50,7 +49,7 @@ void do_cmd_tunnel(player_type *creature_ptr)
 
     POSITION y = creature_ptr->y + ddy[dir];
     POSITION x = creature_ptr->x + ddx[dir];
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
     FEAT_IDX feat = get_feat_mimic(g_ptr);
     if (has_flag(f_info[feat].flags, FF_DOOR))
@@ -61,7 +60,8 @@ void do_cmd_tunnel(player_type *creature_ptr)
         take_turn(creature_ptr, 100);
         msg_print(_("モンスターが立ちふさがっている！", "There is a monster in the way!"));
         do_cmd_attack(creature_ptr, y, x, combat_options(0));
-    } else
+    }
+    else
         more = exe_tunnel(creature_ptr, y, x);
 
     if (!more)

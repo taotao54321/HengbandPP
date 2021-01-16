@@ -3,14 +3,13 @@
 #include "core/stuff-handler.h"
 #include "mutation/gain-mutation-switcher.h"
 #include "mutation/lose-mutation-switcher.h"
+#include "mutation/mutation-calculator.h" // todo calc_mutant_regenerate_mod() が相互依存している、後で消す.
 #include "mutation/mutation-flag-types.h"
 #include "mutation/mutation-util.h"
-#include "mutation/mutation-calculator.h" // todo calc_mutant_regenerate_mod() が相互依存している、後で消す.
 #include "player-info/avatar.h"
 #include "view/display-messages.h"
 
-static void sweep_gain_mutation(player_type *creature_ptr, glm_type *gm_ptr)
-{
+static void sweep_gain_mutation(player_type* creature_ptr, glm_type* gm_ptr) {
     int attempts_left = 20;
     if (gm_ptr->choose_mut)
         attempts_left = 1;
@@ -25,8 +24,7 @@ static void sweep_gain_mutation(player_type *creature_ptr, glm_type *gm_ptr)
     }
 }
 
-static void race_dependent_mutation(player_type *creature_ptr, glm_type *gm_ptr)
-{
+static void race_dependent_mutation(player_type* creature_ptr, glm_type* gm_ptr) {
     if (gm_ptr->choose_mut != 0)
         return;
 
@@ -65,8 +63,7 @@ static void race_dependent_mutation(player_type *creature_ptr, glm_type *gm_ptr)
     }
 }
 
-static void neutralize_base_status(player_type *creature_ptr, glm_type *gm_ptr)
-{
+static void neutralize_base_status(player_type* creature_ptr, glm_type* gm_ptr) {
     if (gm_ptr->muta_which == MUT3_PUNY) {
         if (creature_ptr->muta3 & MUT3_HYPER_STR) {
             msg_print(_("あなたはもう超人的に強くはない！", "You no longer feel super-strong!"));
@@ -177,8 +174,7 @@ static void neutralize_base_status(player_type *creature_ptr, glm_type *gm_ptr)
     }
 }
 
-static void neutralize_other_status(player_type *creature_ptr, glm_type *gm_ptr)
-{
+static void neutralize_other_status(player_type* creature_ptr, glm_type* gm_ptr) {
     if (gm_ptr->muta_which == MUT2_COWARDICE) {
         if (creature_ptr->muta3 & MUT3_FEARLESS) {
             msg_print(_("恐れ知らずでなくなった。", "You no longer feel fearless."));
@@ -206,10 +202,9 @@ static void neutralize_other_status(player_type *creature_ptr, glm_type *gm_ptr)
  * @param choose_mut 与えたい突然変異のID、0ならばランダムに選択
  * @return なし
  */
-bool gain_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
-{
+bool gain_mutation(player_type* creature_ptr, MUTATION_IDX choose_mut) {
     glm_type tmp_gm;
-    glm_type *gm_ptr = initialize_glm_type(&tmp_gm, choose_mut);
+    glm_type* gm_ptr = initialize_glm_type(&tmp_gm, choose_mut);
     sweep_gain_mutation(creature_ptr, gm_ptr);
     if (!gm_ptr->muta_chosen) {
         msg_print(_("普通になった気がする。", "You feel normal."));
@@ -225,7 +220,8 @@ bool gain_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
 
     if (gm_ptr->muta_class == &(creature_ptr->muta3)) {
         neutralize_base_status(creature_ptr, gm_ptr);
-    } else if (gm_ptr->muta_class == &(creature_ptr->muta2)) {
+    }
+    else if (gm_ptr->muta_class == &(creature_ptr->muta2)) {
         neutralize_other_status(creature_ptr, gm_ptr);
     }
 
@@ -235,8 +231,7 @@ bool gain_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
     return TRUE;
 }
 
-static void sweep_lose_mutation(player_type *creature_ptr, glm_type *glm_ptr)
-{
+static void sweep_lose_mutation(player_type* creature_ptr, glm_type* glm_ptr) {
     int attempts_left = 20;
     if (glm_ptr->choose_mut)
         attempts_left = 1;
@@ -259,10 +254,9 @@ static void sweep_lose_mutation(player_type *creature_ptr, glm_type *glm_ptr)
  * @param choose_mut 取り除きたい突然変異のID、0ならばランダムに消去
  * @return なし
  */
-bool lose_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
-{
+bool lose_mutation(player_type* creature_ptr, MUTATION_IDX choose_mut) {
     glm_type tmp_glm;
-    glm_type *glm_ptr = initialize_glm_type(&tmp_glm, choose_mut);
+    glm_type* glm_ptr = initialize_glm_type(&tmp_glm, choose_mut);
     sweep_lose_mutation(creature_ptr, glm_ptr);
     if (!glm_ptr->muta_chosen)
         return FALSE;
@@ -277,8 +271,7 @@ bool lose_mutation(player_type *creature_ptr, MUTATION_IDX choose_mut)
     return TRUE;
 }
 
-void lose_all_mutations(player_type *creature_ptr)
-{
+void lose_all_mutations(player_type* creature_ptr) {
     if (creature_ptr->muta1 || creature_ptr->muta2 || creature_ptr->muta3) {
         chg_virtue(creature_ptr, V_CHANCE, -5);
         msg_print(_("全ての突然変異が治った。", "You are cured of all mutations."));

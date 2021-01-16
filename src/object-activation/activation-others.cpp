@@ -46,8 +46,7 @@
 #include "util/quarks.h"
 #include "view/display-messages.h"
 
-bool activate_sunlight(player_type *user_ptr)
-{
+bool activate_sunlight(player_type* user_ptr) {
     DIRECTION dir;
     if (!get_aim_dir(user_ptr, &dir))
         return FALSE;
@@ -57,8 +56,7 @@ bool activate_sunlight(player_type *user_ptr)
     return TRUE;
 }
 
-bool activate_confusion(player_type *user_ptr)
-{
+bool activate_confusion(player_type* user_ptr) {
     DIRECTION dir;
     msg_print(_("様々な色の火花を発している...", "It glows in scintillating colours..."));
     if (!get_aim_dir(user_ptr, &dir))
@@ -68,16 +66,14 @@ bool activate_confusion(player_type *user_ptr)
     return TRUE;
 }
 
-bool activate_banish_evil(player_type *user_ptr)
-{
+bool activate_banish_evil(player_type* user_ptr) {
     if (banish_evil(user_ptr, 100))
         msg_print(_("アーティファクトの力が邪悪を打ち払った！", "The power of the artifact banishes evil!"));
 
     return TRUE;
 }
 
-bool activate_scare(player_type *user_ptr)
-{
+bool activate_scare(player_type* user_ptr) {
     if (music_singing_any(user_ptr))
         stop_singing(user_ptr);
 
@@ -89,8 +85,7 @@ bool activate_scare(player_type *user_ptr)
     return TRUE;
 }
 
-bool activate_aggravation(player_type *user_ptr, object_type *o_ptr, concptr name)
-{
+bool activate_aggravation(player_type* user_ptr, object_type* o_ptr, concptr name) {
     if (o_ptr->name1 == ART_HYOUSIGI)
         msg_print(_("拍子木を打った。", "You beat your wooden clappers."));
     else
@@ -100,8 +95,7 @@ bool activate_aggravation(player_type *user_ptr, object_type *o_ptr, concptr nam
     return TRUE;
 }
 
-bool activate_stone_mud(player_type *user_ptr)
-{
+bool activate_stone_mud(player_type* user_ptr) {
     DIRECTION dir;
     msg_print(_("鼓動している...", "It pulsates..."));
     if (!get_aim_dir(user_ptr, &dir))
@@ -111,8 +105,7 @@ bool activate_stone_mud(player_type *user_ptr)
     return TRUE;
 }
 
-bool activate_judgement(player_type *user_ptr, concptr name)
-{
+bool activate_judgement(player_type* user_ptr, concptr name) {
     msg_format(_("%sは赤く明るく光った！", "The %s flashes bright red!"), name);
     chg_virtue(user_ptr, V_KNOWLEDGE, 1);
     chg_virtue(user_ptr, V_ENLIGHTEN, 1);
@@ -131,8 +124,7 @@ bool activate_judgement(player_type *user_ptr, concptr name)
     return TRUE;
 }
 
-bool activate_telekinesis(player_type *user_ptr, concptr name)
-{
+bool activate_telekinesis(player_type* user_ptr, concptr name) {
     DIRECTION dir;
     if (!get_aim_dir(user_ptr, &dir))
         return FALSE;
@@ -142,10 +134,9 @@ bool activate_telekinesis(player_type *user_ptr, concptr name)
     return TRUE;
 }
 
-bool activate_unique_detection(player_type *user_ptr)
-{
-    monster_type *m_ptr;
-    monster_race *r_ptr;
+bool activate_unique_detection(player_type* user_ptr) {
+    monster_type* m_ptr;
+    monster_race* r_ptr;
     msg_print(_("奇妙な場所が頭の中に浮かんだ．．．", "Some strange places show up in your mind. And you see ..."));
     for (int i = user_ptr->current_floor_ptr->m_max - 1; i >= 1; i--) {
         m_ptr = &user_ptr->current_floor_ptr->m_list[i];
@@ -163,66 +154,57 @@ bool activate_unique_detection(player_type *user_ptr)
     return TRUE;
 }
 
-bool activate_dispel_curse(player_type *user_ptr, concptr name)
-{
+bool activate_dispel_curse(player_type* user_ptr, concptr name) {
     msg_format(_("%sが真実を照らし出す...", "The %s exhibits the truth..."), name);
     (void)remove_all_curse(user_ptr);
     (void)probing(user_ptr);
     return TRUE;
 }
 
-bool activate_cure_lw(player_type *user_ptr)
-{
+bool activate_cure_lw(player_type* user_ptr) {
     (void)set_afraid(user_ptr, 0);
     (void)hp_player(user_ptr, 30);
     return TRUE;
 }
 
-bool activate_grand_cross(player_type *user_ptr)
-{
+bool activate_grand_cross(player_type* user_ptr) {
     msg_print(_("「闇に還れ！」", "You say, 'Return to darkness!'"));
     (void)project(user_ptr, 0, 8, user_ptr->y, user_ptr->x, (randint1(100) + 200) * 2, GF_HOLY_FIRE, PROJECT_KILL | PROJECT_ITEM | PROJECT_GRID, -1);
     return TRUE;
 }
 
-bool activate_call_chaos(player_type *user_ptr)
-{
+bool activate_call_chaos(player_type* user_ptr) {
     msg_print(_("様々な色の火花を発している...", "It glows in scintillating colours..."));
     call_chaos(user_ptr);
     return TRUE;
 }
 
-bool activate_dispel_evil(player_type *user_ptr)
-{
+bool activate_dispel_evil(player_type* user_ptr) {
     msg_print(_("神聖な雰囲気が充満した...", "It floods the area with goodness..."));
     dispel_evil(user_ptr, user_ptr->lev * 5);
     return TRUE;
 }
 
-bool activate_dispel_good(player_type *user_ptr)
-{
+bool activate_dispel_good(player_type* user_ptr) {
     msg_print(_("邪悪な雰囲気が充満した...", "It floods the area with evil..."));
     dispel_good(user_ptr, user_ptr->lev * 5);
     return TRUE;
 }
 
-bool activate_all_monsters_detection(player_type *user_ptr)
-{
+bool activate_all_monsters_detection(player_type* user_ptr) {
     (void)detect_monsters_invis(user_ptr, 255);
     (void)detect_monsters_normal(user_ptr, 255);
     return TRUE;
 }
 
-bool activate_all_detection(player_type *user_ptr)
-{
+bool activate_all_detection(player_type* user_ptr) {
     msg_print(_("白く明るく輝いている...", "It glows bright white..."));
     msg_print(_("心にイメージが浮かんできた...", "An image forms in your mind..."));
     detect_all(user_ptr, DETECT_RAD_DEFAULT);
     return TRUE;
 }
 
-bool activate_extra_detection(player_type *user_ptr)
-{
+bool activate_extra_detection(player_type* user_ptr) {
     msg_print(_("明るく輝いている...", "It glows brightly..."));
     detect_all(user_ptr, DETECT_RAD_DEFAULT);
     probing(user_ptr);
@@ -230,8 +212,7 @@ bool activate_extra_detection(player_type *user_ptr)
     return TRUE;
 }
 
-bool activate_fully_identification(player_type *user_ptr)
-{
+bool activate_fully_identification(player_type* user_ptr) {
     msg_print(_("黄色く輝いている...", "It glows yellow..."));
     identify_fully(user_ptr, FALSE, TV_NONE);
     return TRUE;
@@ -242,10 +223,9 @@ bool activate_fully_identification(player_type *user_ptr)
  * @param user_ptr プレーヤーへの参照ポインタ
  * @return 発動に成功したらTRUE
  */
-bool activate_identification(player_type *user_ptr) { return ident_spell(user_ptr, FALSE, TV_NONE); }
+bool activate_identification(player_type* user_ptr) { return ident_spell(user_ptr, FALSE, TV_NONE); }
 
-bool activate_pesticide(player_type *user_ptr)
-{
+bool activate_pesticide(player_type* user_ptr) {
     msg_print(_("あなたは害虫を一掃した。", "You exterminate small life."));
     (void)dispel_monsters(user_ptr, 4);
     return TRUE;
@@ -256,54 +236,46 @@ bool activate_pesticide(player_type *user_ptr)
  * @param user_ptr プレーヤーへの参照ポインタ
  * @return 発動に成功したらTRUE
  */
-bool activate_whirlwind(player_type *user_ptr)
-{
+bool activate_whirlwind(player_type* user_ptr) {
     massacre(user_ptr);
     return TRUE;
 }
 
-bool activate_blinding_light(player_type *user_ptr, concptr name)
-{
+bool activate_blinding_light(player_type* user_ptr, concptr name) {
     msg_format(_("%sが眩しい光で輝いた...", "The %s gleams with blinding light..."), name);
     (void)fire_ball(user_ptr, GF_LITE, 0, 300, 6);
     confuse_monsters(user_ptr, 3 * user_ptr->lev / 2);
     return TRUE;
 }
 
-bool activate_sleep(player_type *user_ptr)
-{
+bool activate_sleep(player_type* user_ptr) {
     msg_print(_("深青色に輝いている...", "It glows deep blue..."));
     sleep_monsters_touch(user_ptr);
     return TRUE;
 }
 
-bool activate_door_destroy(player_type *user_ptr)
-{
+bool activate_door_destroy(player_type* user_ptr) {
     msg_print(_("明るい赤色に輝いている...", "It glows bright red..."));
     destroy_doors_touch(user_ptr);
     return TRUE;
 }
 
-bool activate_earthquake(player_type *user_ptr)
-{
+bool activate_earthquake(player_type* user_ptr) {
     earthquake(user_ptr, user_ptr->y, user_ptr->x, 5, 0);
     return TRUE;
 }
 
-bool activate_recharge(player_type *user_ptr)
-{
+bool activate_recharge(player_type* user_ptr) {
     recharge(user_ptr, 130);
     return TRUE;
 }
 
-bool activate_recharge_extra(player_type *user_ptr, concptr name)
-{
+bool activate_recharge_extra(player_type* user_ptr, concptr name) {
     msg_format(_("%sが白く輝いた．．．", "The %s gleams with blinding light..."), name);
     return recharge(user_ptr, 1000);
 }
 
-bool activate_shikofumi(player_type *user_ptr)
-{
+bool activate_shikofumi(player_type* user_ptr) {
     msg_print(_("力強く四股を踏んだ。", "You stamp. (as if you are in a ring.)"));
     (void)set_afraid(user_ptr, 0);
     (void)set_hero(user_ptr, randint1(20) + 20, FALSE);
@@ -311,55 +283,47 @@ bool activate_shikofumi(player_type *user_ptr)
     return TRUE;
 }
 
-bool activate_terror(player_type *user_ptr)
-{
+bool activate_terror(player_type* user_ptr) {
     turn_monsters(user_ptr, 40 + user_ptr->lev);
     return TRUE;
 }
 
-bool activate_map_light(player_type *user_ptr)
-{
+bool activate_map_light(player_type* user_ptr) {
     msg_print(_("眩しく輝いた...", "It shines brightly..."));
     map_area(user_ptr, DETECT_RAD_MAP);
     lite_area(user_ptr, damroll(2, 15), 3);
     return TRUE;
 }
 
-bool activate_exploding_rune(player_type *user_ptr)
-{
+bool activate_exploding_rune(player_type* user_ptr) {
     msg_print(_("明るい赤色に輝いている...", "It glows bright red..."));
     explosive_rune(user_ptr, user_ptr->y, user_ptr->x);
     return TRUE;
 }
 
-bool activate_protection_rune(player_type *user_ptr)
-{
+bool activate_protection_rune(player_type* user_ptr) {
     msg_print(_("ブルーに明るく輝いている...", "It glows light blue..."));
     warding_glyph(user_ptr);
     return TRUE;
 }
 
-bool activate_light(player_type *user_ptr, concptr name)
-{
+bool activate_light(player_type* user_ptr, concptr name) {
     msg_format(_("%sから澄んだ光があふれ出た...", "The %s wells with clear light..."), name);
     (void)lite_area(user_ptr, damroll(2, 15), 3);
     return TRUE;
 }
 
-bool activate_recall(player_type *user_ptr)
-{
+bool activate_recall(player_type* user_ptr) {
     msg_print(_("やわらかな白色に輝いている...", "It glows soft white..."));
     return recall_player(user_ptr, randint0(21) + 15);
 }
 
-bool activate_tree_creation(player_type *user_ptr, object_type *o_ptr, concptr name)
-{
+bool activate_tree_creation(player_type* user_ptr, object_type* o_ptr, concptr name) {
     msg_format(_("%s%sから明るい緑の光があふれ出た...", "The %s%s wells with clear light..."), name, quark_str(o_ptr->art_name));
     return tree_creation(user_ptr, user_ptr->y, user_ptr->x);
 }
 
-bool activate_animate_dead(player_type *user_ptr, object_type *o_ptr)
-{
+bool activate_animate_dead(player_type* user_ptr, object_type* o_ptr) {
     msg_print(_("黄金色の光が溢れ出た...", "It emitted a golden light..."));
     if (o_ptr->name1 > 0)
         msg_print(_("ぴぴるぴるぴるぴぴるぴ～♪", "Pipiru piru piru pipiru pii"));

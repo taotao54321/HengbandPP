@@ -50,8 +50,7 @@ int highscore_fd = -1;
  * @param i スコア情報ID
  * @return 問題がなければ0を返す
  */
-static int highscore_seek(int i)
-{
+static int highscore_seek(int i) {
     /* Seek for the requested record */
     return (fd_seek(highscore_fd, (huge)(i) * sizeof(high_score)));
 }
@@ -61,10 +60,9 @@ static int highscore_seek(int i)
  * @param score スコア情報参照ポインタ
  * @return エラーコード
  */
-static errr highscore_read(high_score *score)
-{
+static errr highscore_read(high_score* score) {
     /* Read the record, note failure */
-    return (fd_read(highscore_fd, (char *)(score), sizeof(high_score)));
+    return (fd_read(highscore_fd, (char*)(score), sizeof(high_score)));
 }
 
 /*!
@@ -72,10 +70,9 @@ static errr highscore_read(high_score *score)
  * @param score スコア情報参照ポインタ
  * @return エラーコード(問題がなければ0を返す)
  */
-static int highscore_write(high_score *score)
-{
+static int highscore_write(high_score* score) {
     /* Write the record, note failure */
-    return (fd_write(highscore_fd, (char *)(score), sizeof(high_score)));
+    return (fd_write(highscore_fd, (char*)(score), sizeof(high_score)));
 }
 
 /*!
@@ -83,8 +80,7 @@ static int highscore_write(high_score *score)
  * @param score スコア情報参照ポインタ
  * @return 正常ならば(MAX_HISCORES - 1)、問題があれば-1を返す
  */
-static int highscore_where(high_score *score)
-{
+static int highscore_where(high_score* score) {
     /* Paranoia -- it may not have opened */
     if (highscore_fd < 0)
         return -1;
@@ -114,8 +110,7 @@ static int highscore_where(high_score *score)
  * @param score スコア情報参照ポインタ
  * @return 正常ならば書き込んだスロット位置、問題があれば-1を返す / Return the location (0 is best) or -1 on "failure"
  */
-static int highscore_add(high_score *score)
-{
+static int highscore_add(high_score* score) {
     /* Paranoia -- it may not have opened */
     if (highscore_fd < 0)
         return -1;
@@ -169,8 +164,7 @@ static int highscore_add(high_score *score)
  * Mega-Hack -- allow "fake" entry at the given position.
  * </pre>
  */
-void display_scores_aux(int from, int to, int note, high_score *score)
-{
+void display_scores_aux(int from, int to, int note, high_score* score) {
     int i, j, k, n, place;
     TERM_COLOR attr;
 
@@ -309,11 +303,14 @@ void display_scores_aux(int from, int to, int note, high_score *score)
             /* 死亡原因をオリジナルより細かく表示 */
             if (streq(the_score.how, "yet")) {
                 sprintf(out_val + 13, "  まだ生きている (%d%s)", cdun, "階");
-            } else if (streq(the_score.how, "ripe")) {
+            }
+            else if (streq(the_score.how, "ripe")) {
                 sprintf(out_val + 13, "  勝利の後に引退 (%d%s)", cdun, "階");
-            } else if (streq(the_score.how, "Seppuku")) {
+            }
+            else if (streq(the_score.how, "Seppuku")) {
                 sprintf(out_val + 13, "  勝利の後に切腹 (%d%s)", cdun, "階");
-            } else {
+            }
+            else {
                 codeconv(the_score.how);
 
                 /* Some people die outside of the dungeon */
@@ -381,8 +378,7 @@ void display_scores_aux(int from, int to, int note, high_score *score)
  * to see the "high scores".
  * </pre>
  */
-void display_scores(int from, int to)
-{
+void display_scores(int from, int to) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_APEX, "scores.raw");
 
@@ -416,8 +412,7 @@ void display_scores(int from, int to)
  * @details
  * Assumes "signals_ignore_tstp()" has been called.
  */
-errr top_twenty(player_type *current_player_ptr)
-{
+errr top_twenty(player_type* current_player_ptr) {
     high_score the_score;
     (void)WIPE(&the_score, high_score);
 
@@ -436,7 +431,7 @@ errr top_twenty(player_type *current_player_ptr)
     sprintf(the_score.turns, "%9lu", (long)turn_real(current_player_ptr, current_world_ptr->game_turn));
     the_score.turns[9] = '\0';
 
-    time_t ct = time((time_t *)0);
+    time_t ct = time((time_t*)0);
 
     /* Save the date in standard encoded form (9 chars) */
     strftime(the_score.day, 10, "@%Y%m%d", localtime(&ct));
@@ -466,7 +461,8 @@ errr top_twenty(player_type *current_player_ptr)
         angband_strcpy(the_score.how, current_player_ptr->died_from, sizeof(the_score.how) - 3);
         strcat(the_score.how, "...");
 #endif
-    } else {
+    }
+    else {
         strcpy(the_score.how, current_player_ptr->died_from);
     }
 
@@ -514,8 +510,7 @@ errr top_twenty(player_type *current_player_ptr)
  * Predict the players location, and display it.
  * @return エラーコード
  */
-errr predict_score(player_type *current_player_ptr)
-{
+errr predict_score(player_type* current_player_ptr) {
     high_score the_score;
 
     /* No score file */
@@ -579,8 +574,7 @@ errr predict_score(player_type *current_player_ptr)
  * show_highclass - selectively list highscores based on class -KMW-
  * @return なし
  */
-void show_highclass(player_type *current_player_ptr)
-{
+void show_highclass(player_type* current_player_ptr) {
     screen_save();
     char buf[1024], out_val[256];
     path_build(buf, sizeof(buf), ANGBAND_DIR_APEX, "scores.raw");
@@ -649,8 +643,7 @@ void show_highclass(player_type *current_player_ptr)
  * @param race_num 種族ID
  * @return なし
  */
-void race_score(player_type *current_player_ptr, int race_num)
-{
+void race_score(player_type* current_player_ptr, int race_num) {
     int i = 0, j, m = 0;
     int pr, clev, lastlev;
     high_score the_score;
@@ -725,8 +718,7 @@ void race_score(player_type *current_player_ptr, int race_num)
  * Race Legends -KMW-
  * @return なし
  */
-void race_legends(player_type *current_player_ptr)
-{
+void race_legends(player_type* current_player_ptr) {
     for (int i = 0; i < MAX_RACES; i++) {
         race_score(current_player_ptr, i);
         msg_print(_("何かキーを押すとゲームに戻ります", "Hit any key to continue"));
@@ -741,8 +733,7 @@ void race_legends(player_type *current_player_ptr)
  * Change the player into a King! -RAK-
  * @return なし
  */
-void kingly(player_type *winner_ptr)
-{
+void kingly(player_type* winner_ptr) {
     TERM_LEN wid, hgt;
     TERM_LEN cx, cy;
     bool seppuku = streq(winner_ptr->died_from, "Seppuku");
@@ -813,8 +804,7 @@ void kingly(player_type *winner_ptr)
  * Display some character info
  * @return なし
  */
-bool check_score(player_type *current_player_ptr)
-{
+bool check_score(player_type* current_player_ptr) {
     term_clear();
 
     /* No score file */

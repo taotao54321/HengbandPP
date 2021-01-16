@@ -22,11 +22,10 @@
  * @details
  * Hack -- do not display "trailing" empty slots
  */
-COMMAND_CODE show_inventory(player_type *owner_ptr, int target_item, BIT_FLAGS mode, tval_type tval)
-{
+COMMAND_CODE show_inventory(player_type* owner_ptr, int target_item, BIT_FLAGS mode, tval_type tval) {
     COMMAND_CODE i;
     int k, l, z = 0;
-    object_type *o_ptr;
+    object_type* o_ptr;
     GAME_TEXT o_name[MAX_NLEN];
     char tmp_val[80];
     COMMAND_CODE out_index[23];
@@ -87,9 +86,11 @@ COMMAND_CODE show_inventory(player_type *owner_ptr, int target_item, BIT_FLAGS m
             if (j == (target_item - 1)) {
                 strcpy(tmp_val, _("》", "> "));
                 target_item_label = i;
-            } else
+            }
+            else
                 strcpy(tmp_val, "  ");
-        } else if (i <= INVEN_PACK)
+        }
+        else if (i <= INVEN_PACK)
             sprintf(tmp_val, "%c)", inven_label[i]);
         else
             sprintf(tmp_val, "%c)", index_to_label(i));
@@ -126,10 +127,9 @@ COMMAND_CODE show_inventory(player_type *owner_ptr, int target_item, BIT_FLAGS m
  * Choice window "shadow" of the "show_inven()" function
  * @return なし
  */
-void display_inventory(player_type *owner_ptr, tval_type tval)
-{
+void display_inventory(player_type* owner_ptr, tval_type tval) {
     int i, n, z = 0;
-    object_type *o_ptr;
+    object_type* o_ptr;
     TERM_COLOR attr = TERM_WHITE;
     char tmp_val[80];
     GAME_TEXT o_name[MAX_NLEN];

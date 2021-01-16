@@ -7,7 +7,7 @@
  * and should "gamma corrected" on most (non-Macintosh) machines.
  */
 typedef enum term_color_type {
-	TERM_DARK = 0, /*!< 'd' - 黒 0,0,0 */
+    TERM_DARK = 0, /*!< 'd' - 黒 0,0,0 */
     TERM_WHITE = 1, /*!< 'w' - 白 4,4,4 */
     TERM_SLATE = 2, /*!< 's' - 灰 2,2,2 */
     TERM_ORANGE = 3, /*!< 'o' - 橙 4,2,0 */

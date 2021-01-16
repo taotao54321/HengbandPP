@@ -10,8 +10,7 @@
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return コマンドの入力先にモンスターがいたらTRUE
  */
-bool hit_and_away(player_type *caster_ptr)
-{
+bool hit_and_away(player_type* caster_ptr) {
     DIRECTION dir;
     if (!get_direction(caster_ptr, &dir, FALSE, FALSE))
         return FALSE;
@@ -36,11 +35,10 @@ bool hit_and_away(player_type *caster_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return 常にTRUE
  */
-bool sword_dancing(player_type *creature_ptr)
-{
+bool sword_dancing(player_type* creature_ptr) {
     DIRECTION dir;
     POSITION y = 0, x = 0;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     for (int i = 0; i < 6; i++) {
         dir = randint0(8);
         y = creature_ptr->y + ddy_ddd[dir];

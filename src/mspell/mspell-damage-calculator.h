@@ -4,7 +4,7 @@
 #include "system/angband.h"
 
 typedef enum spell_flag_type {
-	DAM_ROLL = 1,
+    DAM_ROLL = 1,
     DAM_MAX = 2,
     DAM_MIN = 3,
     DICE_NUM = 4,

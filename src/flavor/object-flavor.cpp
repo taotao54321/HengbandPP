@@ -11,6 +11,7 @@
 
 #include "flavor/object-flavor.h"
 #include "cmd-item/cmd-smith.h"
+#include "combat/shoot.h"
 #include "flavor/flag-inscriptions-table.h"
 #include "flavor/flavor-util.h"
 #include "flavor/object-flavor-types.h"
@@ -35,7 +36,6 @@
 #include "perception/object-perception.h"
 #include "player/player-class.h"
 #include "player/player-status.h"
-#include "combat/shoot.h"
 #include "sv-definition/sv-food-types.h"
 #include "sv-definition/sv-lite-types.h"
 #include "util/bit-flags-calculator.h"
@@ -55,9 +55,8 @@
  * @details
  * This function is used only by "flavor_init()"
  */
-static bool object_easy_know(int i)
-{
-    object_kind *k_ptr = &k_info[i];
+static bool object_easy_know(int i) {
+    object_kind* k_ptr = &k_info[i];
     switch (k_ptr->tval) {
     case TV_LIFE_BOOK:
     case TV_SORCERY_BOOK:
@@ -97,8 +96,7 @@ static bool object_easy_know(int i)
  * @details 日本語の場合 aname_j.txt 英語の場合確率に応じて
  * syllables 配列と elvish.txt を組み合わせる。\n
  */
-void get_table_name_aux(char *out_string)
-{
+void get_table_name_aux(char* out_string) {
 #ifdef JP
     char Syllable[80];
     get_rnd_line("aname_j.txt", 1, Syllable);
@@ -122,7 +120,8 @@ void get_table_name_aux(char *out_string)
     if (randint1(3) == 2) {
         while (testcounter--)
             strcat(out_string, syllables[randint0(MAX_SYLLABLES)]);
-    } else {
+    }
+    else {
         char Syllable[80];
         testcounter = randint1(2) + 1;
         while (testcounter--) {
@@ -142,8 +141,7 @@ void get_table_name_aux(char *out_string)
  * @return なし
  * @details get_table_name_aux()ほぼ完全に実装を依存している。
  */
-void get_table_name(char *out_string)
-{
+void get_table_name(char* out_string) {
     char buff[80];
     get_table_name_aux(buff);
     sprintf(out_string, _("『%s』", "'%s'"), buff);
@@ -155,8 +153,7 @@ void get_table_name(char *out_string)
  * @return なし
  * @details sname.txtが語幹の辞書となっている。
  */
-void get_table_sindarin_aux(char *out_string)
-{
+void get_table_sindarin_aux(char* out_string) {
     char Syllable[80];
 #ifdef JP
     char tmp[80];
@@ -179,8 +176,7 @@ void get_table_sindarin_aux(char *out_string)
  * @return なし
  * @details get_table_sindarin_aux()ほぼ完全に実装を依存している。
  */
-void get_table_sindarin(char *out_string)
-{
+void get_table_sindarin(char* out_string) {
     char buff[80];
     get_table_sindarin_aux(buff);
     sprintf(out_string, _("『%s』", "'%s'"), buff);
@@ -192,13 +188,12 @@ void get_table_sindarin(char *out_string)
  * @return なし
  * @details 巻物、各種魔道具などに利用される。
  */
-static void shuffle_flavors(tval_type tval)
-{
-    KIND_OBJECT_IDX *k_idx_list;
+static void shuffle_flavors(tval_type tval) {
+    KIND_OBJECT_IDX* k_idx_list;
     KIND_OBJECT_IDX k_idx_list_num = 0;
     C_MAKE(k_idx_list, max_k_idx, KIND_OBJECT_IDX);
     for (KIND_OBJECT_IDX i = 0; i < max_k_idx; i++) {
-        object_kind *k_ptr = &k_info[i];
+        object_kind* k_ptr = &k_info[i];
         if (k_ptr->tval != tval)
             continue;
 
@@ -213,8 +208,8 @@ static void shuffle_flavors(tval_type tval)
     }
 
     for (KIND_OBJECT_IDX i = 0; i < k_idx_list_num; i++) {
-        object_kind *k1_ptr = &k_info[k_idx_list[i]];
-        object_kind *k2_ptr = &k_info[k_idx_list[randint0(k_idx_list_num)]];
+        object_kind* k1_ptr = &k_info[k_idx_list[i]];
+        object_kind* k2_ptr = &k_info[k_idx_list[randint0(k_idx_list_num)]];
         s16b tmp = k1_ptr->flavor;
         k1_ptr->flavor = k2_ptr->flavor;
         k2_ptr->flavor = tmp;
@@ -228,13 +223,12 @@ static void shuffle_flavors(tval_type tval)
  * @param なし
  * @return なし
  */
-void flavor_init(void)
-{
+void flavor_init(void) {
     u32b state_backup[4];
     Rand_state_backup(state_backup);
     Rand_state_set(current_world_ptr->seed_flavor);
     for (KIND_OBJECT_IDX i = 0; i < max_k_idx; i++) {
-        object_kind *k_ptr = &k_info[i];
+        object_kind* k_ptr = &k_info[i];
         if (!k_ptr->flavor_name)
             continue;
 
@@ -251,7 +245,7 @@ void flavor_init(void)
     shuffle_flavors(TV_SCROLL);
     Rand_state_restore(state_backup);
     for (KIND_OBJECT_IDX i = 1; i < max_k_idx; i++) {
-        object_kind *k_ptr = &k_info[i];
+        object_kind* k_ptr = &k_info[i];
         if (!k_ptr->name)
             continue;
 
@@ -268,14 +262,13 @@ void flavor_init(void)
  * @param k_idx ベースアイテムID
  * @return なし
  */
-void strip_name(char *buf, KIND_OBJECT_IDX k_idx)
-{
-    object_kind *k_ptr = &k_info[k_idx];
+void strip_name(char* buf, KIND_OBJECT_IDX k_idx) {
+    object_kind* k_ptr = &k_info[k_idx];
     concptr str = (k_name + k_ptr->name);
     while ((*str == ' ') || (*str == '&'))
         str++;
 
-    char *t;
+    char* t;
     for (t = buf; *str; str++) {
 #ifdef JP
         if (iskanji(*str)) {

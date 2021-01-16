@@ -51,8 +51,7 @@
  * @param power 発動させる突然変異レイシャルのID
  * @return レイシャルを実行した場合TRUE、キャンセルした場合FALSEを返す
  */
-bool exe_mutation_power(player_type *creature_ptr, int power)
-{
+bool exe_mutation_power(player_type* creature_ptr, int power) {
     DIRECTION dir = 0;
     PLAYER_LEVEL lvl = creature_ptr->lev;
     switch (power) {
@@ -137,7 +136,7 @@ bool exe_mutation_power(player_type *creature_ptr, int power)
         return TRUE;
     case MUT1_DET_CURSE:
         for (int i = 0; i < INVEN_TOTAL; i++) {
-            object_type *o_ptr = &creature_ptr->inventory_list[i];
+            object_type* o_ptr = &creature_ptr->inventory_list[i];
             if ((o_ptr->k_idx == 0) || !object_is_cursed(o_ptr))
                 continue;
 
@@ -225,7 +224,7 @@ bool exe_mutation_power(player_type *creature_ptr, int power)
 
         POSITION y = creature_ptr->y + ddy[dir];
         POSITION x = creature_ptr->x + ddx[dir];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
 
         if (!g_ptr->m_idx) {
@@ -233,9 +232,9 @@ bool exe_mutation_power(player_type *creature_ptr, int power)
             return TRUE;
         }
 
-        monster_type *m_ptr;
+        monster_type* m_ptr;
         m_ptr = &creature_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         r_ptr = &r_info[m_ptr->r_idx];
         if ((r_ptr->flags3 & RF3_EVIL) && !(r_ptr->flags1 & RF1_QUESTOR) && !(r_ptr->flags1 & RF1_UNIQUE) && !creature_ptr->current_floor_ptr->inside_arena
             && !creature_ptr->current_floor_ptr->inside_quest && (r_ptr->level < randint1(creature_ptr->lev + 50)) && !(m_ptr->mflag2 & MFLAG2_NOGENO)) {
@@ -262,7 +261,7 @@ bool exe_mutation_power(player_type *creature_ptr, int power)
 
         POSITION y = creature_ptr->y + ddy[dir];
         POSITION x = creature_ptr->x + ddx[dir];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
         if (!g_ptr->m_idx) {
             msg_print(_("あなたは何もない場所で手を振った。", "You wave your hands in the air."));

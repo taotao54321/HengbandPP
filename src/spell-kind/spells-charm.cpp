@@ -10,8 +10,7 @@
  * @param plev パワー
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool charm_monster(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
-{
+bool charm_monster(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL;
     return (project_hook(caster_ptr, GF_CHARM, dir, plev, flg));
 }
@@ -23,8 +22,7 @@ bool charm_monster(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
  * @param plev パワー
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool control_one_undead(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
-{
+bool control_one_undead(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL;
     return (project_hook(caster_ptr, GF_CONTROL_UNDEAD, dir, plev, flg));
 }
@@ -36,8 +34,7 @@ bool control_one_undead(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL ple
  * @param plev パワー
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool control_one_demon(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
-{
+bool control_one_demon(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL;
     return (project_hook(caster_ptr, GF_CONTROL_DEMON, dir, plev, flg));
 }
@@ -49,8 +46,7 @@ bool control_one_demon(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev
  * @param plev パワー
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool charm_animal(player_type *caster_ptr, DIRECTION dir, PLAYER_LEVEL plev)
-{
+bool charm_animal(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev) {
     BIT_FLAGS flg = PROJECT_STOP | PROJECT_KILL;
     return (project_hook(caster_ptr, GF_CONTROL_ANIMAL, dir, plev, flg));
 }

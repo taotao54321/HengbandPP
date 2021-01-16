@@ -48,8 +48,7 @@
  * @return プレイヤーの価格に対して店主が不服ならばTRUEを返す /
  * Return TRUE if purchase is NOT successful
  */
-static bool sell_haggle(player_type *player_ptr, object_type *o_ptr, s32b *price)
-{
+static bool sell_haggle(player_type* player_ptr, object_type* o_ptr, s32b* price) {
     s32b cur_ask = price_item(player_ptr, o_ptr, ot_ptr->max_inflate, TRUE);
     s32b final_ask = price_item(player_ptr, o_ptr, ot_ptr->min_inflate, TRUE);
     int noneed = noneedtobargain(final_ask);
@@ -65,10 +64,12 @@ static bool sell_haggle(player_type *player_ptr, object_type *o_ptr, s32b *price
             msg_print(_("即座にこの金額にまとまった。", "You instantly agree upon the price."));
             msg_print(NULL);
             final_ask = purse;
-        } else if (noneed) {
+        }
+        else if (noneed) {
             msg_print(_("結局この金額にまとまった。", "You eventually agree upon the price."));
             msg_print(NULL);
-        } else {
+        }
+        else {
             msg_print(_("すんなりとこの金額にまとまった。", "You quickly agree upon the price."));
             msg_print(NULL);
         }
@@ -103,13 +104,16 @@ static bool sell_haggle(player_type *player_ptr, object_type *o_ptr, s32b *price
 
             if (cancel) {
                 flag = TRUE;
-            } else if (offer < cur_ask) {
+            }
+            else if (offer < cur_ask) {
                 say_comment_6();
                 offer = last_offer;
-            } else if (offer == cur_ask) {
+            }
+            else if (offer == cur_ask) {
                 flag = TRUE;
                 *price = offer;
-            } else {
+            }
+            else {
                 loop_flag = FALSE;
             }
 
@@ -126,7 +130,8 @@ static bool sell_haggle(player_type *player_ptr, object_type *o_ptr, s32b *price
                 flag = TRUE;
                 cancel = TRUE;
             }
-        } else if (x1 > max_per) {
+        }
+        else if (x1 > max_per) {
             x1 = x1 * 3 / 4;
             if (x1 < max_per)
                 x1 = max_per;
@@ -152,7 +157,8 @@ static bool sell_haggle(player_type *player_ptr, object_type *o_ptr, s32b *price
 #endif
                 (void)(increase_insults());
             }
-        } else if (offer <= cur_ask) {
+        }
+        else if (offer <= cur_ask) {
             flag = TRUE;
             *price = offer;
         }
@@ -179,8 +185,7 @@ static bool sell_haggle(player_type *player_ptr, object_type *o_ptr, s32b *price
  * @param owner_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void store_sell(player_type *owner_ptr)
-{
+void store_sell(player_type* owner_ptr) {
     concptr q;
     if (cur_store_num == STORE_HOME)
         q = _("どのアイテムを置きますか? ", "Drop which item? ");
@@ -195,14 +200,16 @@ void store_sell(player_type *owner_ptr)
     concptr s;
     if (cur_store_num == STORE_HOME) {
         s = _("置けるアイテムを持っていません。", "You don't have any item to drop.");
-    } else if (cur_store_num == STORE_MUSEUM) {
+    }
+    else if (cur_store_num == STORE_MUSEUM) {
         s = _("寄贈できるアイテムを持っていません。", "You don't have any item to give.");
-    } else {
+    }
+    else {
         s = _("欲しい物がないですねえ。", "You have nothing that I want.");
     }
 
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(owner_ptr, &item, q, s, USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT, TV_NONE);
     if (!o_ptr)
         return;
@@ -220,7 +227,7 @@ void store_sell(player_type *owner_ptr)
     }
 
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
     q_ptr = &forge;
     object_copy(q_ptr, o_ptr);
     q_ptr->number = amt;
@@ -304,7 +311,8 @@ void store_sell(player_type *owner_ptr)
                 display_store_inventory(owner_ptr);
             }
         }
-    } else if (cur_store_num == STORE_MUSEUM) {
+    }
+    else if (cur_store_num == STORE_MUSEUM) {
         char o2_name[MAX_NLEN];
         describe_flavor(owner_ptr, o2_name, q_ptr, OD_NAME_ONLY);
 
@@ -331,7 +339,8 @@ void store_sell(player_type *owner_ptr)
             store_top = (item_pos / store_bottom) * store_bottom;
             display_store_inventory(owner_ptr);
         }
-    } else {
+    }
+    else {
         distribute_charges(o_ptr, q_ptr, amt);
         msg_format(_("%sを置いた。(%c)", "You drop %s (%c)."), o_name, index_to_label(item));
         choice = 0;

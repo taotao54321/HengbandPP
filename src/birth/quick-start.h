@@ -35,6 +35,6 @@ typedef struct birther {
 
 extern birther previous_char;
 
-bool ask_quick_start(player_type *creature_ptr);
-void save_prev_data(player_type *creature_ptr, birther *birther_ptr);
-void load_prev_data(player_type *creature_ptr, bool swap);
+bool ask_quick_start(player_type* creature_ptr);
+void save_prev_data(player_type* creature_ptr, birther* birther_ptr);
+void load_prev_data(player_type* creature_ptr, bool swap);

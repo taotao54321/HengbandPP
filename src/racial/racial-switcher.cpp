@@ -77,8 +77,7 @@
 #include "util/int-char-converter.h"
 #include "view/display-messages.h"
 
-bool switch_class_racial_execution(player_type *creature_ptr, const s32b command)
-{
+bool switch_class_racial_execution(player_type* creature_ptr, const s32b command) {
     DIRECTION dir = 0;
     switch (creature_ptr->pclass) {
     case CLASS_WARRIOR:
@@ -254,8 +253,7 @@ bool switch_class_racial_execution(player_type *creature_ptr, const s32b command
     }
 }
 
-bool switch_mimic_racial_execution(player_type *creature_ptr)
-{
+bool switch_mimic_racial_execution(player_type* creature_ptr) {
     switch (creature_ptr->mimic_form) {
     case MIMIC_DEMON:
     case MIMIC_DEMON_LORD: {
@@ -269,8 +267,7 @@ bool switch_mimic_racial_execution(player_type *creature_ptr)
     }
 }
 
-bool switch_race_racial_execution(player_type *creature_ptr, const s32b command)
-{
+bool switch_race_racial_execution(player_type* creature_ptr, const s32b command) {
     DIRECTION dir = 0;
     switch (creature_ptr->prace) {
     case RACE_DWARF:
@@ -389,7 +386,8 @@ bool switch_race_racial_execution(player_type *creature_ptr, const s32b command)
         if (creature_ptr->lev >= 30) {
             msg_print(_("ファイア・ボールを放った。", "You cast a ball of fire."));
             (void)fire_ball(creature_ptr, GF_FIRE, dir, creature_ptr->lev, 2);
-        } else {
+        }
+        else {
             msg_print(_("ファイア・ボルトを放った。", "You cast a bolt of fire."));
             (void)fire_bolt(creature_ptr, GF_FIRE, dir, creature_ptr->lev);
         }

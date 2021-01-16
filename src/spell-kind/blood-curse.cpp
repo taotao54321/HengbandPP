@@ -16,10 +16,9 @@
 #include "system/monster-type-definition.h"
 #include "view/display-messages.h"
 
-void blood_curse_to_enemy(player_type *caster_ptr, MONSTER_IDX m_idx)
-{
-    monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
-    grid_type *g_ptr = &caster_ptr->current_floor_ptr->grid_array[m_ptr->fy][m_ptr->fx];
+void blood_curse_to_enemy(player_type* caster_ptr, MONSTER_IDX m_idx) {
+    monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
+    grid_type* g_ptr = &caster_ptr->current_floor_ptr->grid_array[m_ptr->fy][m_ptr->fx];
     BIT_FLAGS curse_flg = (PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP);
     int count = 0;
     bool is_first_loop = TRUE;
@@ -124,7 +123,8 @@ void blood_curse_to_enemy(player_type *caster_ptr, MONSTER_IDX m_idx)
                         (void)do_dec_stat(caster_ptr, i);
                     }
                 }
-            } else {
+            }
+            else {
                 (void)do_dec_stat(caster_ptr, randint0(6));
             }
 

@@ -30,19 +30,17 @@
 #include "util/string-processor.h"
 #include "view/display-messages.h"
 
-#define TRC_P_FLAG_MASK                                                                                                                                        \
-    (TRC_TELEPORT_SELF | TRC_CHAINSWORD | TRC_TY_CURSE | TRC_DRAIN_EXP | TRC_ADD_L_CURSE | TRC_ADD_H_CURSE | TRC_CALL_ANIMAL | TRC_CALL_DEMON                  \
+#define TRC_P_FLAG_MASK                                                                                                                       \
+    (TRC_TELEPORT_SELF | TRC_CHAINSWORD | TRC_TY_CURSE | TRC_DRAIN_EXP | TRC_ADD_L_CURSE | TRC_ADD_H_CURSE | TRC_CALL_ANIMAL | TRC_CALL_DEMON \
         | TRC_CALL_DRAGON | TRC_COWARDICE | TRC_TELEPORT | TRC_DRAIN_HP | TRC_DRAIN_MANA | TRC_CALL_UNDEAD)
 
-static bool is_specific_curse(BIT_FLAGS flag)
-{
+static bool is_specific_curse(BIT_FLAGS flag) {
     return (flag == TRC_ADD_L_CURSE) || (flag == TRC_ADD_H_CURSE) || (flag == TRC_DRAIN_HP) || (flag == TRC_DRAIN_MANA) || (flag == TRC_CALL_ANIMAL)
         || (flag == TRC_CALL_DEMON) || (flag == TRC_CALL_DRAGON) || (flag == TRC_CALL_UNDEAD) || (flag == TRC_COWARDICE) || (flag == TRC_LOW_MELEE)
         || (flag == TRC_LOW_AC) || (flag == TRC_LOW_MAGIC) || (flag == TRC_FAST_DIGEST) || (flag == TRC_SLOW_REGEN);
 }
 
-static void choise_cursed_item(player_type *creature_ptr, BIT_FLAGS flag, object_type *o_ptr, int *choices, int *number, int item_num)
-{
+static void choise_cursed_item(player_type* creature_ptr, BIT_FLAGS flag, object_type* o_ptr, int* choices, int* number, int item_num) {
     if (!is_specific_curse(flag))
         return;
 
@@ -109,15 +107,14 @@ static void choise_cursed_item(player_type *creature_ptr, BIT_FLAGS flag, object
  * @return 該当の呪いが一つでもあった場合にランダムに選ばれた装備品のオブジェクト構造体参照ポインタを返す。\n
  * 呪いがない場合NULLを返す。
  */
-object_type *choose_cursed_obj_name(player_type *creature_ptr, BIT_FLAGS flag)
-{
+object_type* choose_cursed_obj_name(player_type* creature_ptr, BIT_FLAGS flag) {
     int choices[INVEN_TOTAL - INVEN_RARM];
     int number = 0;
     if (!(creature_ptr->cursed & flag))
         return NULL;
 
     for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i = inventory_slot_type(i + 1)) {
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
         if (o_ptr->curse_flags & flag) {
             choices[number] = i;
             number++;
@@ -135,13 +132,12 @@ object_type *choose_cursed_obj_name(player_type *creature_ptr, BIT_FLAGS flag)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void curse_teleport(player_type *creature_ptr)
-{
+static void curse_teleport(player_type* creature_ptr) {
     if (((creature_ptr->cursed & TRC_TELEPORT_SELF) == 0) || !one_in_(200))
         return;
 
     GAME_TEXT o_name[MAX_NLEN];
-    object_type *o_ptr;
+    object_type* o_ptr;
     int i_keep = 0, count = 0;
     for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i = inventory_slot_type(i + 1)) {
         BIT_FLAGS flgs[TR_FLAG_SIZE];
@@ -168,7 +164,8 @@ static void curse_teleport(player_type *creature_ptr)
     if (get_check_strict(creature_ptr, _("テレポートしますか？", "Teleport? "), CHECK_OKAY_CANCEL)) {
         disturb(creature_ptr, FALSE, TRUE);
         teleport_player(creature_ptr, 50, TELEPORT_SPONTANEOUS);
-    } else {
+    }
+    else {
         msg_format(_("%sに{.}(ピリオド)と銘を刻むと発動を抑制できます。", "You can inscribe {.} on your %s to disable random teleportation. "), o_name);
         disturb(creature_ptr, TRUE, TRUE);
     }
@@ -177,8 +174,7 @@ static void curse_teleport(player_type *creature_ptr)
 /*!
  * @details 元々呪い効果の発揮ルーチン中にいたので、整合性保持のためここに置いておく
  */
-static void occur_chainsword_effect(player_type *creature_ptr)
-{
+static void occur_chainsword_effect(player_type* creature_ptr) {
     if (((creature_ptr->cursed & TRC_CHAINSWORD) == 0) || !one_in_(CHAINSWORD_NOISE))
         return;
 
@@ -188,8 +184,7 @@ static void occur_chainsword_effect(player_type *creature_ptr)
     disturb(creature_ptr, FALSE, FALSE);
 }
 
-static void curse_drain_exp(player_type *creature_ptr)
-{
+static void curse_drain_exp(player_type* creature_ptr) {
     if ((creature_ptr->prace == RACE_ANDROID) || ((creature_ptr->cursed & TRC_DRAIN_EXP) == 0) || !one_in_(4))
         return;
 
@@ -204,12 +199,11 @@ static void curse_drain_exp(player_type *creature_ptr)
     check_experience(creature_ptr);
 }
 
-static void multiply_low_curse(player_type *creature_ptr)
-{
+static void multiply_low_curse(player_type* creature_ptr) {
     if (((creature_ptr->cursed & TRC_ADD_L_CURSE) == 0) || !one_in_(2000))
         return;
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_cursed_obj_name(creature_ptr, TRC_ADD_L_CURSE);
     BIT_FLAGS new_curse = get_curse(creature_ptr, 0, o_ptr);
     if ((o_ptr->curse_flags & new_curse))
@@ -223,12 +217,11 @@ static void multiply_low_curse(player_type *creature_ptr)
     creature_ptr->update |= (PU_BONUS);
 }
 
-static void multiply_high_curse(player_type *creature_ptr)
-{
+static void multiply_high_curse(player_type* creature_ptr) {
     if (((creature_ptr->cursed & TRC_ADD_H_CURSE) == 0) || !one_in_(2000))
         return;
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_cursed_obj_name(creature_ptr, TRC_ADD_H_CURSE);
     BIT_FLAGS new_curse = get_curse(creature_ptr, 1, o_ptr);
     if ((o_ptr->curse_flags & new_curse))
@@ -242,11 +235,10 @@ static void multiply_high_curse(player_type *creature_ptr)
     creature_ptr->update |= (PU_BONUS);
 }
 
-static void curse_call_monster(player_type *creature_ptr)
-{
+static void curse_call_monster(player_type* creature_ptr) {
     const int call_type = PM_ALLOW_GROUP | PM_ALLOW_UNIQUE | PM_NO_PET;
     const int obj_desc_type = OD_OMIT_PREFIX | OD_NAME_ONLY;
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if ((creature_ptr->cursed & TRC_CALL_ANIMAL) && one_in_(2500)) {
         if (summon_specific(creature_ptr, 0, creature_ptr->y, creature_ptr->x, floor_ptr->dun_level, SUMMON_ANIMAL, call_type)) {
             GAME_TEXT o_name[MAX_NLEN];
@@ -284,8 +276,7 @@ static void curse_call_monster(player_type *creature_ptr)
     }
 }
 
-static void curse_cowardice(player_type *creature_ptr)
-{
+static void curse_cowardice(player_type* creature_ptr) {
     if (((creature_ptr->cursed & TRC_COWARDICE) == 0) || !one_in_(1500))
         return;
 
@@ -297,8 +288,7 @@ static void curse_cowardice(player_type *creature_ptr)
     set_afraid(creature_ptr, creature_ptr->afraid + 13 + randint1(26));
 }
 
-static void curse_drain_hp(player_type *creature_ptr)
-{
+static void curse_drain_hp(player_type* creature_ptr) {
     if (((creature_ptr->cursed & TRC_DRAIN_HP) == 0) || !one_in_(666))
         return;
 
@@ -308,8 +298,7 @@ static void curse_drain_hp(player_type *creature_ptr)
     take_hit(creature_ptr, DAMAGE_LOSELIFE, MIN(creature_ptr->lev * 2, 100), o_name, -1);
 }
 
-static void curse_drain_mp(player_type *creature_ptr)
-{
+static void curse_drain_mp(player_type* creature_ptr) {
     if (((creature_ptr->cursed & TRC_DRAIN_MANA) == 0) || (creature_ptr->csp == 0) || !one_in_(666))
         return;
 
@@ -325,8 +314,7 @@ static void curse_drain_mp(player_type *creature_ptr)
     creature_ptr->redraw |= PR_MANA;
 }
 
-static void occur_curse_effects(player_type *creature_ptr)
-{
+static void occur_curse_effects(player_type* creature_ptr) {
     if (((creature_ptr->cursed & TRC_P_FLAG_MASK) == 0) || creature_ptr->phase_out || creature_ptr->wild_mode)
         return;
 
@@ -357,13 +345,12 @@ static void occur_curse_effects(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void execute_cursed_items_effect(player_type *creature_ptr)
-{
+void execute_cursed_items_effect(player_type* creature_ptr) {
     occur_curse_effects(creature_ptr);
     if (!one_in_(999) || creature_ptr->anti_magic)
         return;
 
-    object_type *o_ptr = &creature_ptr->inventory_list[INVEN_LITE];
+    object_type* o_ptr = &creature_ptr->inventory_list[INVEN_LITE];
     if (o_ptr->name1 != ART_JUDGE)
         return;
 

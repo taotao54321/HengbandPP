@@ -15,13 +15,12 @@
 /*
  * Grid based version of "creature_bold()"
  */
-static bool player_grid(player_type *player_ptr, grid_type *g_ptr) { return g_ptr == &player_ptr->current_floor_ptr->grid_array[player_ptr->y][player_ptr->x]; }
+static bool player_grid(player_type* player_ptr, grid_type* g_ptr) { return g_ptr == &player_ptr->current_floor_ptr->grid_array[player_ptr->y][player_ptr->x]; }
 
 /*
  * Grid based version of "cave_empty_bold()"
  */
-static bool is_cave_empty_grid(player_type *player_ptr, grid_type *g_ptr)
-{
+static bool is_cave_empty_grid(player_type* player_ptr, grid_type* g_ptr) {
     bool is_empty_grid = cave_has_flag_grid(g_ptr, FF_PLACE);
     is_empty_grid &= g_ptr->m_idx == 0;
     is_empty_grid &= !player_grid(player_ptr, g_ptr);
@@ -38,15 +37,14 @@ static bool is_cave_empty_grid(player_type *player_ptr, grid_type *g_ptr)
  * @details
  * Only really called by some of the "vault" routines.
  */
-void vault_monsters(player_type *player_ptr, POSITION y1, POSITION x1, int num)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void vault_monsters(player_type* player_ptr, POSITION y1, POSITION x1, int num) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (int k = 0; k < num; k++) {
         for (int i = 0; i < 9; i++) {
             int d = 1;
             POSITION y, x;
             scatter(player_ptr, &y, &x, y1, x1, d, 0);
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &player_ptr->current_floor_ptr->grid_array[y][x];
             if (!is_cave_empty_grid(player_ptr, g_ptr))
                 continue;
@@ -68,9 +66,8 @@ void vault_monsters(player_type *player_ptr, POSITION y1, POSITION x1, int num)
  * @details
  * Only really called by some of the "vault" routines.
  */
-void vault_objects(player_type *player_ptr, POSITION y, POSITION x, int num)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void vault_objects(player_type* player_ptr, POSITION y, POSITION x, int num) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (; num > 0; --num) {
         int j = y, k = x;
         int dummy = 0;
@@ -88,14 +85,15 @@ void vault_objects(player_type *player_ptr, POSITION y, POSITION x, int num)
                 msg_print(_("警告！地下室のアイテムを配置できません！", "Warning! Could not place vault object!"));
             }
 
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[j][k];
             if (!is_floor_grid(g_ptr) || g_ptr->o_idx)
                 continue;
 
             if (randint0(100) < 75) {
                 place_object(player_ptr, j, k, 0L);
-            } else {
+            }
+            else {
                 place_gold(player_ptr, j, k);
             }
 
@@ -114,10 +112,9 @@ void vault_objects(player_type *player_ptr, POSITION y, POSITION x, int num)
  * @details
  * Only really called by some of the "vault" routines.
  */
-static void vault_trap_aux(player_type *player_ptr, POSITION y, POSITION x, POSITION yd, POSITION xd)
-{
-    grid_type *g_ptr;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void vault_trap_aux(player_type* player_ptr, POSITION y, POSITION x, POSITION yd, POSITION xd) {
+    grid_type* g_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     int y1 = y, x1 = x;
     int dummy = 0;
     for (int count = 0; count <= 5; count++) {
@@ -156,8 +153,7 @@ static void vault_trap_aux(player_type *player_ptr, POSITION y, POSITION x, POSI
  * @details
  * Only really called by some of the "vault" routines.
  */
-void vault_traps(player_type *player_ptr, POSITION y, POSITION x, POSITION yd, POSITION xd, int num)
-{
+void vault_traps(player_type* player_ptr, POSITION y, POSITION x, POSITION yd, POSITION xd, int num) {
     for (int i = 0; i < num; i++)
         vault_trap_aux(player_ptr, y, x, yd, xd);
 }

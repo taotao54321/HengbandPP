@@ -3,8 +3,7 @@
 #include "player-info/self-info-util.h"
 #include "player/player-status-flags.h"
 
-void set_mutation_info_1(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void set_mutation_info_1(player_type* creature_ptr, self_info_type* self_ptr) {
     if (creature_ptr->muta1 == 0)
         return;
 
@@ -109,8 +108,7 @@ void set_mutation_info_1(player_type *creature_ptr, self_info_type *self_ptr)
         self_ptr->info[self_ptr->line++] = _("あなたはアイテムを力強く投げることができる。", "You can hurl objects with great force.");
 }
 
-void set_mutation_info_2(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void set_mutation_info_2(player_type* creature_ptr, self_info_type* self_ptr) {
     if (creature_ptr->muta2 == 0)
         return;
 
@@ -212,8 +210,7 @@ void set_mutation_info_2(player_type *creature_ptr, self_info_type *self_ptr)
 }
 
 /* todo FEAELESS フラグも記述して問題ないと思われる */
-void set_mutation_info_3(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void set_mutation_info_3(player_type* creature_ptr, self_info_type* self_ptr) {
     if (creature_ptr->muta3 == 0)
         return;
 

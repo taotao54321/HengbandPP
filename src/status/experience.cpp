@@ -4,8 +4,7 @@
 /*
  * Gain experience
  */
-void gain_exp_64(player_type *creature_ptr, s32b amount, u32b amount_frac)
-{
+void gain_exp_64(player_type* creature_ptr, s32b amount, u32b amount_frac) {
     if (creature_ptr->is_dead)
         return;
     if (creature_ptr->prace == RACE_ANDROID)
@@ -23,13 +22,12 @@ void gain_exp_64(player_type *creature_ptr, s32b amount, u32b amount_frac)
 /*
  * Gain experience
  */
-void gain_exp(player_type *creature_ptr, s32b amount) { gain_exp_64(creature_ptr, amount, 0L); }
+void gain_exp(player_type* creature_ptr, s32b amount) { gain_exp_64(creature_ptr, amount, 0L); }
 
 /*
  * Lose experience
  */
-void lose_exp(player_type *creature_ptr, s32b amount)
-{
+void lose_exp(player_type* creature_ptr, s32b amount) {
     if (creature_ptr->prace == RACE_ANDROID)
         return;
     if (amount > creature_ptr->exp)
@@ -43,8 +41,7 @@ void lose_exp(player_type *creature_ptr, s32b amount)
 /*
  * Restores any drained experience
  */
-bool restore_level(player_type *creature_ptr)
-{
+bool restore_level(player_type* creature_ptr) {
     if (creature_ptr->exp < creature_ptr->max_exp) {
         msg_print(_("経験値が戻ってきた気がする。", "You feel your experience returning."));
         creature_ptr->exp = creature_ptr->max_exp;
@@ -59,8 +56,7 @@ bool restore_level(player_type *creature_ptr)
  * Drain experience
  * If resisted to draining, return FALSE
  */
-bool drain_exp(player_type *creature_ptr, s32b drain, s32b slip, int hold_exp_prob)
-{
+bool drain_exp(player_type* creature_ptr, s32b drain, s32b slip, int hold_exp_prob) {
     if (creature_ptr->prace == RACE_ANDROID)
         return FALSE;
 
@@ -72,7 +68,8 @@ bool drain_exp(player_type *creature_ptr, s32b drain, s32b slip, int hold_exp_pr
     if (creature_ptr->hold_exp) {
         msg_print(_("経験値を少し吸い取られた気がする！", "You feel your experience slipping away!"));
         lose_exp(creature_ptr, slip);
-    } else {
+    }
+    else {
         msg_print(_("経験値が体から吸い取られた気がする！", "You feel your experience draining away!"));
         lose_exp(creature_ptr, drain);
     }

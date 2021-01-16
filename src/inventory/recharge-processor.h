@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void recharge_magic_items(player_type *creature_ptr);
+void recharge_magic_items(player_type* creature_ptr);

@@ -67,8 +67,8 @@ extern u32b Rand_state[RAND_DEG];
 
 void Rand_state_init(void);
 void Rand_state_set(u32b seed);
-void Rand_state_backup(u32b *backup_state);
-void Rand_state_restore(u32b *backup_state);
+void Rand_state_backup(u32b* backup_state);
+void Rand_state_restore(u32b* backup_state);
 s32b Rand_div(s32b m);
 s16b randnor(int mean, int stand);
 s16b damroll(DICE_NUMBER num, DICE_SID sides);

@@ -4,8 +4,8 @@
 #include "combat/martial-arts-table.h"
 #include "grid/grid.h"
 #include "system/angband.h"
-#include "system/object-type-definition.h"
 #include "system/monster-type-definition.h"
+#include "system/object-type-definition.h"
 
 typedef enum chaotic_effect {
     CE_NONE = 0,
@@ -19,7 +19,7 @@ typedef enum chaotic_effect {
 typedef struct player_attack_type {
     s16b hand;
     combat_options mode;
-    monster_type *m_ptr;
+    monster_type* m_ptr;
     bool backstab;
     bool surprise_attack;
     bool stab_fleeing;
@@ -30,11 +30,11 @@ typedef struct player_attack_type {
     BIT_FLAGS flags[TR_FLAG_SIZE];
     chaotic_effect chaos_effect;
     bool can_drain;
-    const martial_arts *ma_ptr;
+    const martial_arts* ma_ptr;
     int drain_result;
-    grid_type *g_ptr;
-    bool *fear;
-    bool *mdeath;
+    grid_type* g_ptr;
+    bool* fear;
+    bool* mdeath;
     int drain_left;
     bool weak;
 } player_attack_type;

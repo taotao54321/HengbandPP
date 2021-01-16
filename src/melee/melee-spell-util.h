@@ -18,9 +18,9 @@ typedef struct melee_spell_type {
     char m_poss[160];
 #endif
 
-    monster_type *m_ptr;
-    monster_type *t_ptr;
-    monster_race *r_ptr;
+    monster_type* m_ptr;
+    monster_type* t_ptr;
+    monster_race* r_ptr;
     bool see_m;
     bool maneable;
     bool pet;
@@ -31,4 +31,4 @@ typedef struct melee_spell_type {
     BIT_FLAGS f6;
 } melee_spell_type;
 
-melee_spell_type *initialize_melee_spell_type(player_type *target_ptr, melee_spell_type *ms_ptr, MONSTER_IDX m_idx);
+melee_spell_type* initialize_melee_spell_type(player_type* target_ptr, melee_spell_type* ms_ptr, MONSTER_IDX m_idx);

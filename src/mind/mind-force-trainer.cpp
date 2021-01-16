@@ -38,7 +38,7 @@
  * @param caster_ptr プレーヤーの参照ポインタ
  * @return 現在溜まっている気の量
  */
-MAGIC_NUM1 get_current_ki(player_type *caster_ptr) { return caster_ptr->magic_num1[0]; }
+MAGIC_NUM1 get_current_ki(player_type* caster_ptr) { return caster_ptr->magic_num1[0]; }
 
 /*!
  * @brief 練気術師において、気を溜める
@@ -47,8 +47,7 @@ MAGIC_NUM1 get_current_ki(player_type *caster_ptr) { return caster_ptr->magic_nu
  * @param ki 気の量
  * @return なし
  */
-void set_current_ki(player_type *caster_ptr, bool is_reset, MAGIC_NUM1 ki)
-{
+void set_current_ki(player_type* caster_ptr, bool is_reset, MAGIC_NUM1 ki) {
     if (is_reset) {
         caster_ptr->magic_num1[0] = ki;
         return;
@@ -57,8 +56,7 @@ void set_current_ki(player_type *caster_ptr, bool is_reset, MAGIC_NUM1 ki)
     caster_ptr->magic_num1[0] += ki;
 }
 
-bool clear_mind(player_type *creature_ptr)
-{
+bool clear_mind(player_type* creature_ptr) {
     if (total_friends) {
         msg_print(_("今はペットを操ることに集中していないと。", "Your pets demand all of your attention."));
         return FALSE;
@@ -82,10 +80,10 @@ bool clear_mind(player_type *creature_ptr)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return なし
  */
-void set_lightspeed(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+void set_lightspeed(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return;
@@ -97,13 +95,15 @@ void set_lightspeed(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->lightspeed && !do_dec) {
             if (creature_ptr->lightspeed > v)
                 return;
-        } else if (!creature_ptr->lightspeed) {
+        }
+        else if (!creature_ptr->lightspeed) {
             msg_print(_("非常に素早く動けるようになった！", "You feel yourself moving extremely fast!"));
             notice = TRUE;
             chg_virtue(creature_ptr, V_PATIENCE, -1);
             chg_virtue(creature_ptr, V_DILIGENCE, 1);
         }
-    } else {
+    }
+    else {
         if (creature_ptr->lightspeed) {
             msg_print(_("動きの素早さがなくなったようだ。", "You feel yourself slow down."));
             notice = TRUE;
@@ -127,10 +127,10 @@ void set_lightspeed(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_tim_sh_force(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_tim_sh_force(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -139,11 +139,13 @@ bool set_tim_sh_force(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tim_sh_touki && !do_dec) {
             if (creature_ptr->tim_sh_touki > v)
                 return FALSE;
-        } else if (!creature_ptr->tim_sh_touki) {
+        }
+        else if (!creature_ptr->tim_sh_touki) {
             msg_print(_("体が闘気のオーラで覆われた。", "You are enveloped by an aura of the Force!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tim_sh_touki) {
             msg_print(_("闘気が消えた。", "The aura of the Force disappeared."));
             notice = TRUE;
@@ -167,8 +169,7 @@ bool set_tim_sh_force(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 命中したらTRUE
  */
-bool shock_power(player_type *caster_ptr)
-{
+bool shock_power(player_type* caster_ptr) {
     int boost = get_current_ki(caster_ptr);
     if (heavy_armor(caster_ptr))
         boost /= 2;
@@ -189,8 +190,8 @@ bool shock_power(player_type *caster_ptr)
     POSITION ty = y, tx = x;
     POSITION oy = y, ox = x;
     MONSTER_IDX m_idx = caster_ptr->current_floor_ptr->grid_array[y][x].m_idx;
-    monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     GAME_TEXT m_name[MAX_NLEN];
     monster_desc(caster_ptr, m_name, m_ptr, 0);
 
@@ -205,7 +206,8 @@ bool shock_power(player_type *caster_ptr)
         if (is_cave_empty_bold(caster_ptr, y, x)) {
             ty = y;
             tx = x;
-        } else {
+        }
+        else {
             break;
         }
     }
@@ -237,8 +239,7 @@ bool shock_power(player_type *caster_ptr)
  * @param spell 発動する特殊技能のID
  * @return 処理を実行したらTRUE、キャンセルした場合FALSEを返す。
  */
-bool cast_force_spell(player_type *caster_ptr, mind_force_trainer_type spell)
-{
+bool cast_force_spell(player_type* caster_ptr, mind_force_trainer_type spell) {
     DIRECTION dir;
     PLAYER_LEVEL plev = caster_ptr->lev;
     int boost = get_current_ki(caster_ptr);
@@ -276,7 +277,8 @@ bool cast_force_spell(player_type *caster_ptr, mind_force_trainer_type spell)
             msg_print(_("気が暴走した！", "The Force exploded!"));
             fire_ball(caster_ptr, GF_MANA, 0, get_current_ki(caster_ptr) / 2, 10);
             take_hit(caster_ptr, DAMAGE_LOSELIFE, caster_ptr->magic_num1[0] / 2, _("気の暴走", "Explosion of the Force"), -1);
-        } else
+        }
+        else
             return TRUE;
 
         break;

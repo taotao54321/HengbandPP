@@ -35,7 +35,7 @@
 #include "view/display-messages.h"
 #include "world/world.h"
 
-quest_type *quest; /*!< Quest info */
+quest_type* quest; /*!< Quest info */
 QUEST_IDX max_q_idx; /*!< Maximum number of quests */
 char quest_text[10][80]; /*!< Quest text */
 int quest_text_line; /*!< Current line of the quest text */
@@ -57,8 +57,7 @@ static concptr find_quest[] = {
  * @param q_ptr クエスト構造体の参照ポインタ
  * @return なし
  */
-void determine_random_questor(player_type *player_ptr, quest_type *q_ptr)
-{
+void determine_random_questor(player_type* player_ptr, quest_type* q_ptr) {
     get_mon_num_prep(player_ptr, mon_hook_quest, NULL);
 
     MONRACE_IDX r_idx;
@@ -68,7 +67,7 @@ void determine_random_questor(player_type *player_ptr, quest_type *q_ptr)
          * (depending on level)
          */
         r_idx = get_mon_num(player_ptr, q_ptr->level + 5 + randint1(q_ptr->level / 10), GMN_ARENA);
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         r_ptr = &r_info[r_idx];
 
         if (!(r_ptr->flags1 & RF1_UNIQUE))
@@ -103,9 +102,8 @@ void determine_random_questor(player_type *player_ptr, quest_type *q_ptr)
  * @param quest_num 達成状態にしたいクエストのID
  * @return なし
  */
-void complete_quest(player_type *player_ptr, QUEST_IDX quest_num)
-{
-    quest_type *const q_ptr = &quest[quest_num];
+void complete_quest(player_type* player_ptr, QUEST_IDX quest_num) {
+    quest_type* const q_ptr = &quest[quest_num];
 
     switch (q_ptr->type) {
     case QUEST_TYPE_RANDOM:
@@ -138,8 +136,7 @@ void complete_quest(player_type *player_ptr, QUEST_IDX quest_num)
  * @param o_ptr 入手したオブジェクトの構造体参照ポインタ
  * @return なし
  */
-void check_find_art_quest_completion(player_type *player_ptr, object_type *o_ptr)
-{
+void check_find_art_quest_completion(player_type* player_ptr, object_type* o_ptr) {
     /* Check if completed a quest */
     for (QUEST_IDX i = 0; i < max_q_idx; i++) {
         if ((quest[i].type == QUEST_TYPE_FIND_ARTIFACT) && (quest[i].status == QUEST_STATUS_TAKEN) && (quest[i].k_idx == o_ptr->name1)) {
@@ -152,10 +149,9 @@ void check_find_art_quest_completion(player_type *player_ptr, object_type *o_ptr
  * @brief クエストの導入メッセージを表示する / Discover quest
  * @param q_idx 開始されたクエストのID
  */
-void quest_discovery(QUEST_IDX q_idx)
-{
-    quest_type *q_ptr = &quest[q_idx];
-    monster_race *r_ptr = &r_info[q_ptr->r_idx];
+void quest_discovery(QUEST_IDX q_idx) {
+    quest_type* q_ptr = &quest[q_idx];
+    monster_race* r_ptr = &r_info[q_ptr->r_idx];
     MONSTER_NUMBER q_num = q_ptr->max_num;
 
     if (!q_idx)
@@ -197,9 +193,8 @@ void quest_discovery(QUEST_IDX q_idx)
  * @param level 検索対象になる階
  * @return クエストIDを返す。該当がない場合0を返す。
  */
-QUEST_IDX quest_number(player_type *player_ptr, DEPTH level)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+QUEST_IDX quest_number(player_type* player_ptr, DEPTH level) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (floor_ptr->inside_quest)
         return (floor_ptr->inside_quest);
 
@@ -221,8 +216,7 @@ QUEST_IDX quest_number(player_type *player_ptr, DEPTH level)
  * @param level 検索対象になる階
  * @return クエストIDを返す。該当がない場合0を返す。
  */
-QUEST_IDX random_quest_number(player_type *player_ptr, DEPTH level)
-{
+QUEST_IDX random_quest_number(player_type* player_ptr, DEPTH level) {
     if (player_ptr->dungeon_idx != DUNGEON_ANGBAND)
         return 0;
 
@@ -241,13 +235,12 @@ QUEST_IDX random_quest_number(player_type *player_ptr, DEPTH level)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void leave_quest_check(player_type *player_ptr)
-{
+void leave_quest_check(player_type* player_ptr) {
     leaving_quest = player_ptr->current_floor_ptr->inside_quest;
     if (!leaving_quest)
         return;
 
-    quest_type *const q_ptr = &quest[leaving_quest];
+    quest_type* const q_ptr = &quest[leaving_quest];
     bool is_one_time_quest = ((q_ptr->flags & QUEST_FLAG_ONCE) || (q_ptr->type == QUEST_TYPE_RANDOM)) && (q_ptr->status == QUEST_STATUS_TAKEN);
     if (!is_one_time_quest)
         return;
@@ -289,8 +282,7 @@ void leave_quest_check(player_type *player_ptr)
  * @brief 「塔」クエストの各階層から離脱する際の処理
  * @return なし
  */
-void leave_tower_check(player_type *player_ptr)
-{
+void leave_tower_check(player_type* player_ptr) {
     leaving_quest = player_ptr->current_floor_ptr->inside_quest;
     bool is_leaving_from_tower = leaving_quest != 0;
     is_leaving_from_tower &= quest[leaving_quest].type == QUEST_TYPE_TOWER;
@@ -311,8 +303,7 @@ void leave_tower_check(player_type *player_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_quest(player_type *player_ptr)
-{
+void do_cmd_quest(player_type* player_ptr) {
     if (player_ptr->wild_mode)
         return;
 

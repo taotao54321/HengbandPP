@@ -1,15 +1,14 @@
 ﻿#include "player/player-race.h"
 #include "core/player-redraw-types.h"
 #include "inventory/inventory-slot-types.h"
-#include "player/player-race-types.h"
-#include "system/object-type-definition.h"
 #include "mimic-info-table.h"
+#include "player/player-race-types.h"
 #include "player/race-info-table.h"
+#include "system/object-type-definition.h"
 
-const player_race *rp_ptr;
+const player_race* rp_ptr;
 
-SYMBOL_CODE get_summon_symbol_from_player(player_type *creature_ptr)
-{
+SYMBOL_CODE get_summon_symbol_from_player(player_type* creature_ptr) {
     SYMBOL_CODE symbol = 'N';
     switch (creature_ptr->mimic_form) {
     case MIMIC_NONE:
@@ -118,4 +117,4 @@ SYMBOL_CODE get_summon_symbol_from_player(player_type *creature_ptr)
     return symbol;
 }
 
-bool is_specific_player_race(player_type *creature_ptr, player_race_type prace) { return (!creature_ptr->mimic_form && (creature_ptr->prace == prace)); }
+bool is_specific_player_race(player_type* creature_ptr, player_race_type prace) { return (!creature_ptr->mimic_form && (creature_ptr->prace == prace)); }

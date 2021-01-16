@@ -5,8 +5,7 @@
 #include "system/object-type-definition.h"
 #include "util/quarks.h"
 
-static void write_item_flags(object_type *o_ptr, BIT_FLAGS *flags)
-{
+static void write_item_flags(object_type* o_ptr, BIT_FLAGS* flags) {
     if (o_ptr->pval)
         *flags |= SAVE_ITEM_PVAL;
 
@@ -97,8 +96,7 @@ static void write_item_flags(object_type *o_ptr, BIT_FLAGS *flags)
     wr_u32b(*flags);
 }
 
-static void write_item_info(object_type *o_ptr, const BIT_FLAGS flags)
-{
+static void write_item_info(object_type* o_ptr, const BIT_FLAGS flags) {
     wr_s16b((s16b)o_ptr->weight);
     if (flags & SAVE_ITEM_NAME1)
         wr_byte((byte)o_ptr->name1);
@@ -178,8 +176,7 @@ static void write_item_info(object_type *o_ptr, const BIT_FLAGS flags)
  * @param o_ptr アイテムオブジェクト保存元ポインタ
  * @return なし
  */
-void wr_item(object_type *o_ptr)
-{
+void wr_item(object_type* o_ptr) {
     BIT_FLAGS flags = 0x00000000;
     write_item_flags(o_ptr, &flags);
 
@@ -208,10 +205,9 @@ void wr_item(object_type *o_ptr)
  * @param k_idx ベースアイテムのID
  * @return なし
  */
-void wr_perception(KIND_OBJECT_IDX k_idx)
-{
+void wr_perception(KIND_OBJECT_IDX k_idx) {
     byte tmp8u = 0;
-    object_kind *k_ptr = &k_info[k_idx];
+    object_kind* k_ptr = &k_info[k_idx];
     if (k_ptr->aware)
         tmp8u |= 0x01;
 

@@ -33,8 +33,8 @@
 #include "world/world.h"
 
 typedef struct haggle_type {
-    object_type *o_ptr;
-    s32b *price;
+    object_type* o_ptr;
+    s32b* price;
     s32b cur_ask;
     s32b final_ask;
     int noneed;
@@ -49,8 +49,7 @@ typedef struct haggle_type {
     bool cancel;
 } haggle_type;
 
-static haggle_type *initialize_haggle_type(player_type *player_ptr, haggle_type *haggle_ptr, object_type *o_ptr, s32b *price)
-{
+static haggle_type* initialize_haggle_type(player_type* player_ptr, haggle_type* haggle_ptr, object_type* o_ptr, s32b* price) {
     haggle_ptr->o_ptr = o_ptr;
     haggle_ptr->price = price;
     haggle_ptr->cur_ask = price_item(player_ptr, o_ptr, ot_ptr->max_inflate, FALSE);
@@ -61,15 +60,15 @@ static haggle_type *initialize_haggle_type(player_type *player_ptr, haggle_type 
     return haggle_ptr;
 }
 
-static void settle_haggle_result(haggle_type *haggle_ptr)
-{
+static void settle_haggle_result(haggle_type* haggle_ptr) {
     if (!haggle_ptr->noneed && manual_haggle)
         return;
 
     if (haggle_ptr->noneed) {
         msg_print(_("結局この金額にまとまった。", "You eventually agree upon the price."));
         msg_print(NULL);
-    } else {
+    }
+    else {
         msg_print(_("すんなりとこの金額にまとまった。", "You quickly agree upon the price."));
         msg_print(NULL);
         haggle_ptr->final_ask += haggle_ptr->final_ask / 10;
@@ -80,8 +79,7 @@ static void settle_haggle_result(haggle_type *haggle_ptr)
     haggle_ptr->final = TRUE;
 }
 
-static void decide_haggle_offer(player_type *player_ptr, haggle_type *haggle_ptr)
-{
+static void decide_haggle_offer(player_type* player_ptr, haggle_type* haggle_ptr) {
     haggle_ptr->cur_ask *= haggle_ptr->o_ptr->number;
     haggle_ptr->final_ask *= haggle_ptr->o_ptr->number;
     haggle_ptr->min_per = ot_ptr->haggle_per;
@@ -92,8 +90,7 @@ static void decide_haggle_offer(player_type *player_ptr, haggle_type *haggle_ptr
         haggle_ptr->last_offer = 1;
 }
 
-static void initialize_haggle_offer(haggle_type *haggle_ptr)
-{
+static void initialize_haggle_offer(haggle_type* haggle_ptr) {
     haggle_ptr->offer = 0;
     allow_inc = FALSE;
     haggle_ptr->flag = FALSE;
@@ -102,8 +99,7 @@ static void initialize_haggle_offer(haggle_type *haggle_ptr)
     *haggle_ptr->price = 0;
 }
 
-static void suggest_haggle_offer(haggle_type *haggle_ptr)
-{
+static void suggest_haggle_offer(haggle_type* haggle_ptr) {
     bool loop_flag = TRUE;
     while (!haggle_ptr->flag && loop_flag) {
         char out_val[160];
@@ -113,20 +109,22 @@ static void suggest_haggle_offer(haggle_type *haggle_ptr)
             = receive_offer(_("提示する金額? ", "What do you offer? "), &haggle_ptr->offer, haggle_ptr->last_offer, 1, haggle_ptr->cur_ask, haggle_ptr->final);
         if (haggle_ptr->cancel) {
             haggle_ptr->flag = TRUE;
-        } else if (haggle_ptr->offer > haggle_ptr->cur_ask) {
+        }
+        else if (haggle_ptr->offer > haggle_ptr->cur_ask) {
             say_comment_6();
             haggle_ptr->offer = haggle_ptr->last_offer;
-        } else if (haggle_ptr->offer == haggle_ptr->cur_ask) {
+        }
+        else if (haggle_ptr->offer == haggle_ptr->cur_ask) {
             haggle_ptr->flag = TRUE;
             *haggle_ptr->price = haggle_ptr->offer;
-        } else {
+        }
+        else {
             loop_flag = FALSE;
         }
     }
 }
 
-static void final_haggle_offer(haggle_type *haggle_ptr)
-{
+static void final_haggle_offer(haggle_type* haggle_ptr) {
     haggle_ptr->final = TRUE;
     haggle_ptr->cur_ask = haggle_ptr->final_ask;
     haggle_ptr->pmt = _("最終提示価格", "What do you offer? ");
@@ -139,8 +137,7 @@ static void final_haggle_offer(haggle_type *haggle_ptr)
     haggle_ptr->flag = TRUE;
 }
 
-static void show_last_haggle_offer(haggle_type *haggle_ptr)
-{
+static void show_last_haggle_offer(haggle_type* haggle_ptr) {
     haggle_ptr->last_offer = haggle_ptr->offer;
     allow_inc = TRUE;
     prt("", 1, 0);
@@ -159,10 +156,9 @@ static void show_last_haggle_offer(haggle_type *haggle_ptr)
  * @return プレイヤーの価格に対して店主が不服ならばTRUEを返す /
  * Return TRUE if purchase is NOT successful
  */
-static bool purchase_haggle(player_type *player_ptr, object_type *o_ptr, s32b *price)
-{
+static bool purchase_haggle(player_type* player_ptr, object_type* o_ptr, s32b* price) {
     haggle_type tmp_haggle;
-    haggle_type *haggle_ptr = initialize_haggle_type(player_ptr, &tmp_haggle, o_ptr, price);
+    haggle_type* haggle_ptr = initialize_haggle_type(player_ptr, &tmp_haggle, o_ptr, price);
     settle_haggle_result(haggle_ptr);
     decide_haggle_offer(player_ptr, haggle_ptr);
     initialize_haggle_offer(haggle_ptr);
@@ -177,7 +173,8 @@ static bool purchase_haggle(player_type *player_ptr, object_type *o_ptr, s32b *p
                 haggle_ptr->flag = TRUE;
                 haggle_ptr->cancel = TRUE;
             }
-        } else if (x1 > haggle_ptr->max_per) {
+        }
+        else if (x1 > haggle_ptr->max_per) {
             x1 = x1 * 3 / 4;
             if (x1 < haggle_ptr->max_per)
                 x1 = haggle_ptr->max_per;
@@ -209,8 +206,7 @@ static bool purchase_haggle(player_type *player_ptr, object_type *o_ptr, s32b *p
     return FALSE;
 }
 
-static bool show_store_select_item(COMMAND_CODE *item, const int i)
-{
+static bool show_store_select_item(COMMAND_CODE* item, const int i) {
     char out_val[160];
 #ifdef JP
     /* ブラックマーケットの時は別のメッセージ */
@@ -228,7 +224,8 @@ static bool show_store_select_item(COMMAND_CODE *item, const int i)
 #else
     if (cur_store_num == STORE_HOME) {
         sprintf(out_val, "Which item do you want to take? ");
-    } else {
+    }
+    else {
         sprintf(out_val, "Which item are you interested in? ");
     }
 #endif
@@ -236,8 +233,7 @@ static bool show_store_select_item(COMMAND_CODE *item, const int i)
     return get_stock(item, out_val, 0, i - 1) != 0;
 }
 
-static bool process_purchase_result(player_type *player_ptr, object_type *o_ptr, object_type *j_ptr, COMMAND_CODE *item_new,const int amt, int *i, const COMMAND_CODE item)
-{
+static bool process_purchase_result(player_type* player_ptr, object_type* o_ptr, object_type* j_ptr, COMMAND_CODE* item_new, const int amt, int* i, const COMMAND_CODE item) {
     if (cur_store_num != STORE_HOME)
         return FALSE;
 
@@ -271,8 +267,7 @@ static bool process_purchase_result(player_type *player_ptr, object_type *o_ptr,
     return TRUE;
 }
 
-static void shuffle_store(player_type *player_ptr)
-{
+static void shuffle_store(player_type* player_ptr) {
     if (!one_in_(STORE_SHUFFLE)) {
         msg_print(_("店主は新たな在庫を取り出した。", "The shopkeeper brings out some new stock."));
         return;
@@ -288,8 +283,7 @@ static void shuffle_store(player_type *player_ptr)
     prt(buf, 3, 50);
 }
 
-static void switch_store_stock(player_type *player_ptr, const int i, const COMMAND_CODE item)
-{
+static void switch_store_stock(player_type* player_ptr, const int i, const COMMAND_CODE item) {
     if (st_ptr->stock_num == 0) {
         shuffle_store(player_ptr);
         for (int j = 0; j < 10; j++)
@@ -299,7 +293,7 @@ static void switch_store_stock(player_type *player_ptr, const int i, const COMMA
         display_store_inventory(player_ptr);
         return;
     }
-    
+
     if (st_ptr->stock_num != i) {
         if (store_top >= st_ptr->stock_num)
             store_top -= store_bottom;
@@ -317,8 +311,7 @@ static void switch_store_stock(player_type *player_ptr, const int i, const COMMA
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void store_purchase(player_type *player_ptr)
-{
+void store_purchase(player_type* player_ptr) {
     if (cur_store_num == STORE_MUSEUM) {
         msg_print(_("博物館から取り出すことはできません。", "Museum."));
         return;
@@ -341,11 +334,11 @@ void store_purchase(player_type *player_ptr)
         return;
 
     item = item + store_top;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &st_ptr->stock[item];
     ITEM_NUMBER amt = 1;
     object_type forge;
-    object_type *j_ptr;
+    object_type* j_ptr;
     j_ptr = &forge;
     object_copy(j_ptr, o_ptr);
 
@@ -394,7 +387,8 @@ void store_purchase(player_type *player_ptr)
     if (o_ptr->ident & (IDENT_FIXED)) {
         choice = 0;
         price = (best * j_ptr->number);
-    } else {
+    }
+    else {
         GAME_TEXT o_name[MAX_NLEN];
         describe_flavor(player_ptr, o_name, j_ptr, 0);
         msg_format(_("%s(%c)を購入する。", "Buying %s (%c)."), o_name, I2A(item));

@@ -23,11 +23,10 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return 結果はどうあれ騎乗したらTRUE
  */
-bool rodeo(player_type *creature_ptr)
-{
+bool rodeo(player_type* creature_ptr) {
     GAME_TEXT m_name[MAX_NLEN];
-    monster_type *m_ptr;
-    monster_race *r_ptr;
+    monster_type* m_ptr;
+    monster_race* r_ptr;
     int rlev;
 
     if (creature_ptr->riding) {
@@ -57,7 +56,8 @@ bool rodeo(player_type *creature_ptr)
         && (rlev < creature_ptr->lev * 3 / 2 + randint0(creature_ptr->lev / 5))) {
         msg_format(_("%sを手なずけた。", "You tame %s."), m_name);
         set_pet(creature_ptr, m_ptr);
-    } else {
+    }
+    else {
         msg_format(_("%sに振り落とされた！", "You have been thrown off by %s."), m_name);
         process_fall_off_horse(creature_ptr, 1, TRUE);
 

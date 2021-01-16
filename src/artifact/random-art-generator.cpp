@@ -36,10 +36,9 @@
 #include "wizard/wizard-messages.h"
 #include "world/world.h"
 
-static bool weakening_artifact(player_type *player_ptr, object_type *o_ptr)
-{
+static bool weakening_artifact(player_type* player_ptr, object_type* o_ptr) {
     KIND_OBJECT_IDX k_idx = lookup_kind(o_ptr->tval, o_ptr->sval);
-    object_kind *k_ptr = &k_info[k_idx];
+    object_kind* k_ptr = &k_info[k_idx];
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
 
@@ -71,8 +70,7 @@ static bool weakening_artifact(player_type *player_ptr, object_type *o_ptr)
     return FALSE;
 }
 
-static void set_artifact_bias(player_type *player_ptr, object_type *o_ptr, int *warrior_artifact_bias)
-{
+static void set_artifact_bias(player_type* player_ptr, object_type* o_ptr, int* warrior_artifact_bias) {
     switch (player_ptr->pclass) {
     case CLASS_WARRIOR:
     case CLASS_BERSERKER:
@@ -141,13 +139,12 @@ static void set_artifact_bias(player_type *player_ptr, object_type *o_ptr, int *
             o_ptr->artifact_bias = BIAS_MAGE;
         else
             o_ptr->artifact_bias = BIAS_ROGUE;
-        
+
         break;
     }
 }
 
-static void decide_warrior_bias(player_type *player_ptr, object_type *o_ptr, const bool a_scroll)
-{
+static void decide_warrior_bias(player_type* player_ptr, object_type* o_ptr, const bool a_scroll) {
     int warrior_artifact_bias = 0;
     if (a_scroll && one_in_(4))
         set_artifact_bias(player_ptr, o_ptr, &warrior_artifact_bias);
@@ -156,8 +153,7 @@ static void decide_warrior_bias(player_type *player_ptr, object_type *o_ptr, con
         o_ptr->artifact_bias = BIAS_WARRIOR;
 }
 
-static bool decide_random_art_cursed(const bool a_scroll, object_type *o_ptr)
-{
+static bool decide_random_art_cursed(const bool a_scroll, object_type* o_ptr) {
     if (!a_scroll && one_in_(A_CURSED))
         return TRUE;
 
@@ -167,8 +163,7 @@ static bool decide_random_art_cursed(const bool a_scroll, object_type *o_ptr)
     return FALSE;
 }
 
-static int decide_random_art_power(const bool a_cursed)
-{
+static int decide_random_art_power(const bool a_cursed) {
     int powers = randint1(5) + 1;
     while (one_in_(powers) || one_in_(7) || one_in_(10))
         powers++;
@@ -182,8 +177,7 @@ static int decide_random_art_power(const bool a_cursed)
     return powers;
 }
 
-static void invest_powers(player_type *player_ptr, object_type *o_ptr, int *powers, bool *has_pval, const bool a_cursed)
-{
+static void invest_powers(player_type* player_ptr, object_type* o_ptr, int* powers, bool* has_pval, const bool a_cursed) {
     int max_type = object_is_weapon_ammo(o_ptr) ? 7 : 5;
     while ((*powers)--) {
         switch (randint1(max_type)) {
@@ -200,11 +194,13 @@ static void invest_powers(player_type *player_ptr, object_type *o_ptr, int *powe
                 if (one_in_(13)) {
                     if (one_in_(o_ptr->ds + 4))
                         o_ptr->ds++;
-                } else {
+                }
+                else {
                     if (one_in_(o_ptr->dd + 1))
                         o_ptr->dd++;
                 }
-            } else
+            }
+            else
                 random_resistance(o_ptr);
 
             break;
@@ -224,13 +220,13 @@ static void invest_powers(player_type *player_ptr, object_type *o_ptr, int *powe
     };
 }
 
-static void strengthen_pval(object_type *o_ptr)
-{
+static void strengthen_pval(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_BLOWS)) {
         o_ptr->pval = randint1(2);
         if ((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_HAYABUSA))
             o_ptr->pval++;
-    } else {
+    }
+    else {
         do {
             o_ptr->pval++;
         } while (o_ptr->pval < randint1(5) || one_in_(o_ptr->pval));
@@ -246,13 +242,12 @@ static void strengthen_pval(object_type *o_ptr)
  * @param o_ptr ランダムアーティファクトを示すアイテムへの参照ポインタ
  * @return なし
  */
-static void invest_positive_modified_value(player_type *player_ptr, object_type *o_ptr)
-{
+static void invest_positive_modified_value(player_type* player_ptr, object_type* o_ptr) {
     if (object_is_armour(player_ptr, o_ptr)) {
         o_ptr->to_a += randint1(o_ptr->to_a > 19 ? 1 : 20 - o_ptr->to_a);
         return;
     }
-    
+
     if (!object_is_weapon_ammo(o_ptr))
         return;
 
@@ -268,8 +263,7 @@ static void invest_positive_modified_value(player_type *player_ptr, object_type 
  * @param o_ptr ランダムアーティファクトを示すアイテムへの参照ポインタ
  * @return なし
  */
-static void invest_negative_modified_value(player_type *player_ptr, object_type *o_ptr)
-{
+static void invest_negative_modified_value(player_type* player_ptr, object_type* o_ptr) {
     if (!object_is_armour(player_ptr, o_ptr))
         return;
 
@@ -290,8 +284,7 @@ static void invest_negative_modified_value(player_type *player_ptr, object_type 
     }
 }
 
-static void reset_flags_poison_needle(object_type *o_ptr)
-{
+static void reset_flags_poison_needle(object_type* o_ptr) {
     if ((o_ptr->tval != TV_SWORD) || (o_ptr->sval != SV_POISON_NEEDLE))
         return;
 
@@ -317,8 +310,7 @@ static void reset_flags_poison_needle(object_type *o_ptr)
     remove_flag(o_ptr->art_flags, TR_BRAND_COLD);
 }
 
-static int decide_random_art_power_level(object_type *o_ptr, const bool a_cursed, const int total_flags)
-{
+static int decide_random_art_power_level(object_type* o_ptr, const bool a_cursed, const int total_flags) {
     if (object_is_weapon_ammo(o_ptr)) {
         if (a_cursed)
             return 0;
@@ -344,8 +336,7 @@ static int decide_random_art_power_level(object_type *o_ptr, const bool a_cursed
     return 3;
 }
 
-static void name_unnatural_random_artifact(player_type *player_ptr, object_type *o_ptr, const bool a_scroll, const int power_level, GAME_TEXT *new_name)
-{
+static void name_unnatural_random_artifact(player_type* player_ptr, object_type* o_ptr, const bool a_scroll, const int power_level, GAME_TEXT* new_name) {
     if (!a_scroll) {
         get_random_name(o_ptr, new_name, object_is_armour(player_ptr, o_ptr), power_level);
         return;
@@ -361,7 +352,8 @@ static void name_unnatural_random_artifact(player_type *player_ptr, object_type 
     if (!get_string(ask_msg, dummy_name, sizeof dummy_name) || !dummy_name[0]) {
         if (one_in_(2)) {
             get_table_sindarin_aux(dummy_name);
-        } else {
+        }
+        else {
             get_table_name_aux(dummy_name);
         }
     }
@@ -371,8 +363,7 @@ static void name_unnatural_random_artifact(player_type *player_ptr, object_type 
     chg_virtue(player_ptr, V_ENCHANT, 5);
 }
 
-static void generate_unnatural_random_artifact(player_type *player_ptr, object_type *o_ptr, const bool a_scroll, const int power_level, const int max_powers, const int total_flags)
-{
+static void generate_unnatural_random_artifact(player_type* player_ptr, object_type* o_ptr, const bool a_scroll, const int power_level, const int max_powers, const int total_flags) {
     GAME_TEXT new_name[1024];
     strcpy(new_name, "");
     name_unnatural_random_artifact(player_ptr, o_ptr, a_scroll, power_level, new_name);
@@ -391,8 +382,7 @@ static void generate_unnatural_random_artifact(player_type *player_ptr, object_t
  * @param a_scroll アーティファクト生成の巻物上の処理。呪いのアーティファクトが生成対象外となる。
  * @return 常にTRUE(1)を返す
  */
-bool become_random_artifact(player_type *player_ptr, object_type *o_ptr, bool a_scroll)
-{
+bool become_random_artifact(player_type* player_ptr, object_type* o_ptr, bool a_scroll) {
     o_ptr->artifact_bias = 0;
     o_ptr->name1 = 0;
     o_ptr->name2 = 0;

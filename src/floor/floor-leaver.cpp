@@ -37,24 +37,23 @@
 #include "view/display-messages.h"
 #include "world/world.h"
 
-static void check_riding_preservation(player_type *master_ptr)
-{
+static void check_riding_preservation(player_type* master_ptr) {
     if (!master_ptr->riding)
         return;
 
-    monster_type *m_ptr = &master_ptr->current_floor_ptr->m_list[master_ptr->riding];
+    monster_type* m_ptr = &master_ptr->current_floor_ptr->m_list[master_ptr->riding];
     if (m_ptr->parent_m_idx) {
         master_ptr->riding = 0;
         master_ptr->pet_extra_flags &= ~(PF_TWO_HANDS);
         master_ptr->riding_ryoute = master_ptr->old_riding_ryoute = FALSE;
-    } else {
+    }
+    else {
         (void)COPY(&party_mon[0], m_ptr, monster_type);
         delete_monster_idx(master_ptr, master_ptr->riding);
     }
 }
 
-static bool check_pet_preservation_conditions(player_type *master_ptr, monster_type *m_ptr)
-{
+static bool check_pet_preservation_conditions(player_type* master_ptr, monster_type* m_ptr) {
     if (reinit_wilderness)
         return FALSE;
 
@@ -68,19 +67,19 @@ static bool check_pet_preservation_conditions(player_type *master_ptr, monster_t
                 && projectable(master_ptr, m_ptr->fy, m_ptr->fx, master_ptr->y, master_ptr->x)))) {
         if (dis > 3)
             return TRUE;
-    } else if (dis > 1)
+    }
+    else if (dis > 1)
         return TRUE;
 
     return FALSE;
 }
 
-static void sweep_preserving_pet(player_type *master_ptr)
-{
+static void sweep_preserving_pet(player_type* master_ptr) {
     if (master_ptr->wild_mode || master_ptr->current_floor_ptr->inside_arena || master_ptr->phase_out)
         return;
 
     for (MONSTER_IDX i = master_ptr->current_floor_ptr->m_max - 1, party_monster_num = 1; (i >= 1) && (party_monster_num < MAX_PARTY_MON); i--) {
-        monster_type *m_ptr = &master_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &master_ptr->current_floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr) || !is_pet(m_ptr) || (i == master_ptr->riding) || check_pet_preservation_conditions(master_ptr, m_ptr))
             continue;
 
@@ -90,13 +89,12 @@ static void sweep_preserving_pet(player_type *master_ptr)
     }
 }
 
-static void record_pet_diary(player_type *master_ptr)
-{
+static void record_pet_diary(player_type* master_ptr) {
     if (!record_named_pet)
         return;
 
     for (MONSTER_IDX i = master_ptr->current_floor_ptr->m_max - 1; i >= 1; i--) {
-        monster_type *m_ptr = &master_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &master_ptr->current_floor_ptr->m_list[i];
         GAME_TEXT m_name[MAX_NLEN];
         if (!monster_is_valid(m_ptr) || !is_pet(m_ptr) || !m_ptr->nickname || (master_ptr->riding == i))
             continue;
@@ -111,8 +109,7 @@ static void record_pet_diary(player_type *master_ptr)
  * @param master_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void preserve_pet(player_type *master_ptr)
-{
+static void preserve_pet(player_type* master_ptr) {
     for (MONSTER_IDX party_monster_num = 0; party_monster_num < MAX_PARTY_MON; party_monster_num++)
         party_mon[party_monster_num].r_idx = 0;
 
@@ -120,7 +117,7 @@ static void preserve_pet(player_type *master_ptr)
     sweep_preserving_pet(master_ptr);
     record_pet_diary(master_ptr);
     for (MONSTER_IDX i = master_ptr->current_floor_ptr->m_max - 1; i >= 1; i--) {
-        monster_type *m_ptr = &master_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &master_ptr->current_floor_ptr->m_list[i];
         if ((m_ptr->parent_m_idx == 0) || (master_ptr->current_floor_ptr->m_list[m_ptr->parent_m_idx].r_idx != 0))
             continue;
 
@@ -139,8 +136,7 @@ static void preserve_pet(player_type *master_ptr)
  * @param sf_ptr 移動元の保存フロア構造体参照ポインタ
  * @return なし
  */
-static void locate_connected_stairs(player_type *creature_ptr, floor_type *floor_ptr, saved_floor_type *sf_ptr, BIT_FLAGS floor_mode)
-{
+static void locate_connected_stairs(player_type* creature_ptr, floor_type* floor_ptr, saved_floor_type* sf_ptr, BIT_FLAGS floor_mode) {
     POSITION sx = 0;
     POSITION sy = 0;
     POSITION x_table[20];
@@ -148,8 +144,8 @@ static void locate_connected_stairs(player_type *creature_ptr, floor_type *floor
     int num = 0;
     for (POSITION y = 0; y < floor_ptr->height; y++) {
         for (POSITION x = 0; x < floor_ptr->width; x++) {
-            grid_type *g_ptr = &floor_ptr->grid_array[y][x];
-            feature_type *f_ptr = &f_info[g_ptr->feat];
+            grid_type* g_ptr = &floor_ptr->grid_array[y][x];
+            feature_type* f_ptr = &f_info[g_ptr->feat];
             bool ok = FALSE;
             if (floor_mode & CFM_UP) {
                 if (has_flag(f_ptr->flags, FF_LESS) && has_flag(f_ptr->flags, FF_STAIRS) && !has_flag(f_ptr->flags, FF_SPECIAL)) {
@@ -159,7 +155,8 @@ static void locate_connected_stairs(player_type *creature_ptr, floor_type *floor
                         sy = y;
                     }
                 }
-            } else if (floor_mode & CFM_DOWN) {
+            }
+            else if (floor_mode & CFM_DOWN) {
                 if (has_flag(f_ptr->flags, FF_MORE) && has_flag(f_ptr->flags, FF_STAIRS) && !has_flag(f_ptr->flags, FF_SPECIAL)) {
                     ok = TRUE;
                     if (g_ptr->special && g_ptr->special == sf_ptr->lower_floor_id) {
@@ -167,7 +164,8 @@ static void locate_connected_stairs(player_type *creature_ptr, floor_type *floor
                         sy = y;
                     }
                 }
-            } else {
+            }
+            else {
                 if (has_flag(f_ptr->flags, FF_BLDG)) {
                     ok = TRUE;
                 }
@@ -204,19 +202,18 @@ static void locate_connected_stairs(player_type *creature_ptr, floor_type *floor
  * @brief フロア移動時、プレイヤーの移動先モンスターが既にいた場合ランダムな近隣に移動させる / When a monster is at a place where player will return,
  * @return なし
  */
-static void get_out_monster(player_type *protected_ptr)
-{
+static void get_out_monster(player_type* protected_ptr) {
     int tries = 0;
     POSITION dis = 1;
     POSITION oy = protected_ptr->y;
     POSITION ox = protected_ptr->x;
-    floor_type *floor_ptr = protected_ptr->current_floor_ptr;
+    floor_type* floor_ptr = protected_ptr->current_floor_ptr;
     MONSTER_IDX m_idx = floor_ptr->grid_array[oy][ox].m_idx;
     if (m_idx == 0)
         return;
 
     while (TRUE) {
-        monster_type *m_ptr;
+        monster_type* m_ptr;
         POSITION ny = rand_spread(oy, dis);
         POSITION nx = rand_spread(ox, dis);
         tries++;
@@ -244,8 +241,7 @@ static void get_out_monster(player_type *protected_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void preserve_info(player_type *creature_ptr)
-{
+static void preserve_info(player_type* creature_ptr) {
     MONRACE_IDX quest_r_idx = 0;
     for (DUNGEON_IDX i = 0; i < max_q_idx; i++) {
         if ((quest[i].status == QUEST_STATUS_TAKEN) && ((quest[i].type == QUEST_TYPE_KILL_LEVEL) || (quest[i].type == QUEST_TYPE_RANDOM))
@@ -256,8 +252,8 @@ static void preserve_info(player_type *creature_ptr)
     }
 
     for (DUNGEON_IDX i = 1; i < creature_ptr->current_floor_ptr->m_max; i++) {
-        monster_race *r_ptr;
-        monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[i];
+        monster_race* r_ptr;
+        monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr) || (quest_r_idx != m_ptr->r_idx))
             continue;
 
@@ -269,7 +265,7 @@ static void preserve_info(player_type *creature_ptr)
     }
 
     for (DUNGEON_IDX i = 0; i < INVEN_PACK; i++) {
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
         if (!object_is_valid(o_ptr))
             continue;
 
@@ -278,13 +274,12 @@ static void preserve_info(player_type *creature_ptr)
     }
 }
 
-static void set_grid_by_leaving_floor(player_type *creature_ptr, grid_type **g_ptr)
-{
+static void set_grid_by_leaving_floor(player_type* creature_ptr, grid_type** g_ptr) {
     if ((creature_ptr->change_floor_mode & CFM_SAVE_FLOORS) == 0)
         return;
 
     *g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
-    feature_type *f_ptr =  &f_info[(*g_ptr)->feat];
+    feature_type* f_ptr = &f_info[(*g_ptr)->feat];
     if ((*g_ptr)->special && !has_flag(f_ptr->flags, FF_SPECIAL) && get_sf_ptr((*g_ptr)->special))
         new_floor_id = (*g_ptr)->special;
 
@@ -292,8 +287,7 @@ static void set_grid_by_leaving_floor(player_type *creature_ptr, grid_type **g_p
         prepare_change_floor_mode(creature_ptr, CFM_SHAFT);
 }
 
-static void jump_floors(player_type *creature_ptr)
-{
+static void jump_floors(player_type* creature_ptr) {
     if ((creature_ptr->change_floor_mode & (CFM_DOWN | CFM_UP)) == 0)
         return;
 
@@ -309,7 +303,8 @@ static void jump_floors(player_type *creature_ptr)
     if (creature_ptr->change_floor_mode & CFM_DOWN) {
         if (!creature_ptr->current_floor_ptr->dun_level)
             move_num = d_info[creature_ptr->dungeon_idx].mindepth;
-    } else if (creature_ptr->change_floor_mode & CFM_UP) {
+    }
+    else if (creature_ptr->change_floor_mode & CFM_UP) {
         if (creature_ptr->current_floor_ptr->dun_level + move_num < d_info[creature_ptr->dungeon_idx].mindepth)
             move_num = -creature_ptr->current_floor_ptr->dun_level;
     }
@@ -317,8 +312,7 @@ static void jump_floors(player_type *creature_ptr)
     creature_ptr->current_floor_ptr->dun_level += move_num;
 }
 
-static void exit_to_wilderness(player_type *creature_ptr)
-{
+static void exit_to_wilderness(player_type* creature_ptr) {
     if ((creature_ptr->current_floor_ptr->dun_level != 0) || (creature_ptr->dungeon_idx == 0))
         return;
 
@@ -333,8 +327,7 @@ static void exit_to_wilderness(player_type *creature_ptr)
     creature_ptr->change_floor_mode &= ~CFM_SAVE_FLOORS; // TODO
 }
 
-static void kill_saved_floors(player_type *creature_ptr, saved_floor_type *sf_ptr)
-{
+static void kill_saved_floors(player_type* creature_ptr, saved_floor_type* sf_ptr) {
     if (!(creature_ptr->change_floor_mode & CFM_SAVE_FLOORS)) {
         for (DUNGEON_IDX i = 0; i < MAX_SAVED_FLOORS; i++)
             kill_saved_floor(creature_ptr, &saved_floors[i]);
@@ -342,13 +335,12 @@ static void kill_saved_floors(player_type *creature_ptr, saved_floor_type *sf_pt
         latest_visit_mark = 1;
         return;
     }
-    
+
     if (creature_ptr->change_floor_mode & CFM_NO_RETURN)
         kill_saved_floor(creature_ptr, sf_ptr);
 }
 
-static void refresh_new_floor_id(player_type *creature_ptr, grid_type *g_ptr)
-{
+static void refresh_new_floor_id(player_type* creature_ptr, grid_type* g_ptr) {
     if (new_floor_id != 0)
         return;
 
@@ -357,8 +349,7 @@ static void refresh_new_floor_id(player_type *creature_ptr, grid_type *g_ptr)
         g_ptr->special = new_floor_id;
 }
 
-static void update_upper_lower_or_floor_id(player_type *creature_ptr, saved_floor_type *sf_ptr)
-{
+static void update_upper_lower_or_floor_id(player_type* creature_ptr, saved_floor_type* sf_ptr) {
     if ((creature_ptr->change_floor_mode & CFM_RAND_CONNECT) == 0)
         return;
 
@@ -368,9 +359,8 @@ static void update_upper_lower_or_floor_id(player_type *creature_ptr, saved_floo
         sf_ptr->lower_floor_id = new_floor_id;
 }
 
-static void exe_leave_floor(player_type *creature_ptr, saved_floor_type *sf_ptr)
-{
-    grid_type *g_ptr = NULL;
+static void exe_leave_floor(player_type* creature_ptr, saved_floor_type* sf_ptr) {
+    grid_type* g_ptr = NULL;
     set_grid_by_leaving_floor(creature_ptr, &g_ptr);
     jump_floors(creature_ptr);
     exit_to_wilderness(creature_ptr);
@@ -401,8 +391,7 @@ static void exe_leave_floor(player_type *creature_ptr, saved_floor_type *sf_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void leave_floor(player_type *creature_ptr)
-{
+void leave_floor(player_type* creature_ptr) {
     preserve_pet(creature_ptr);
     remove_all_mirrors(creature_ptr, FALSE);
     if (creature_ptr->special_defense & NINJA_S_STEALTH)
@@ -414,7 +403,7 @@ void leave_floor(player_type *creature_ptr)
         tmp_floor_idx = get_new_floor_id(creature_ptr);
 
     preserve_info(creature_ptr);
-    saved_floor_type *sf_ptr = get_sf_ptr(creature_ptr->floor_id);
+    saved_floor_type* sf_ptr = get_sf_ptr(creature_ptr->floor_id);
     if ((creature_ptr->change_floor_mode & CFM_RAND_CONNECT) && tmp_floor_idx)
         locate_connected_stairs(creature_ptr, creature_ptr->current_floor_ptr, sf_ptr, creature_ptr->change_floor_mode);
 

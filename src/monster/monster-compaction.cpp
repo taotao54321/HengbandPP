@@ -23,24 +23,23 @@
  * @param i2 配列移動先添字
  * @return なし
  */
-static void compact_monsters_aux(player_type *player_ptr, MONSTER_IDX i1, MONSTER_IDX i2)
-{
+static void compact_monsters_aux(player_type* player_ptr, MONSTER_IDX i1, MONSTER_IDX i2) {
     if (i1 == i2)
         return;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    monster_type *m_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    monster_type* m_ptr;
     m_ptr = &floor_ptr->m_list[i1];
 
     POSITION y = m_ptr->fy;
     POSITION x = m_ptr->fx;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &floor_ptr->grid_array[y][x];
     g_ptr->m_idx = i2;
 
     OBJECT_IDX next_o_idx = 0;
     for (OBJECT_IDX this_o_idx = m_ptr->hold_o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         o_ptr->held_m_idx = i2;
@@ -62,7 +61,7 @@ static void compact_monsters_aux(player_type *player_ptr, MONSTER_IDX i1, MONSTE
 
     if (is_pet(m_ptr)) {
         for (int i = 1; i < floor_ptr->m_max; i++) {
-            monster_type *m2_ptr = &floor_ptr->m_list[i];
+            monster_type* m2_ptr = &floor_ptr->m_list[i];
 
             if (m2_ptr->parent_m_idx == i1)
                 m2_ptr->parent_m_idx = i2;
@@ -94,19 +93,18 @@ static void compact_monsters_aux(player_type *player_ptr, MONSTER_IDX i1, MONSTE
  * After "compacting" (if needed), we "reorder" the monsters into a more
  * compact order, and we reset the allocation info, and the "live" array.
  */
-void compact_monsters(player_type *player_ptr, int size)
-{
+void compact_monsters(player_type* player_ptr, int size) {
     if (size)
         msg_print(_("モンスター情報を圧縮しています...", "Compacting monsters..."));
 
     /* Compact at least 'size' objects */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (int num = 0, cnt = 1; num < size; cnt++) {
         int cur_lev = 5 * cnt;
         int cur_dis = 5 * (20 - cnt);
         for (MONSTER_IDX i = 1; i < floor_ptr->m_max; i++) {
-            monster_type *m_ptr = &floor_ptr->m_list[i];
-            monster_race *r_ptr = &r_info[m_ptr->r_idx];
+            monster_type* m_ptr = &floor_ptr->m_list[i];
+            monster_race* r_ptr = &r_info[m_ptr->r_idx];
             if (!monster_is_valid(m_ptr))
                 continue;
             if (r_ptr->level > cur_lev)
@@ -139,7 +137,7 @@ void compact_monsters(player_type *player_ptr, int size)
 
     /* Excise dead monsters (backwards!) */
     for (MONSTER_IDX i = floor_ptr->m_max - 1; i >= 1; i--) {
-        monster_type *m_ptr = &floor_ptr->m_list[i];
+        monster_type* m_ptr = &floor_ptr->m_list[i];
         if (m_ptr->r_idx)
             continue;
         compact_monsters_aux(player_ptr, floor_ptr->m_max - 1, i);

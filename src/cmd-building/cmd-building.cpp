@@ -81,8 +81,7 @@ MONSTER_IDX today_mon;
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void town_history(player_type *player_ptr)
-{
+static void town_history(player_type* player_ptr) {
     screen_save();
     (void)show_file(player_ptr, TRUE, _("jbldg.txt", "bldg.txt"), NULL, 0, 0);
     screen_load();
@@ -95,8 +94,7 @@ static void town_history(player_type *player_ptr)
  * @param i 実行したい施設のサービステーブルの添字
  * @return なし
  */
-static void bldg_process_command(player_type *player_ptr, building_type *bldg, int i)
-{
+static void bldg_process_command(player_type* player_ptr, building_type* bldg, int i) {
     msg_flag = FALSE;
     msg_erase();
 
@@ -298,8 +296,7 @@ static void bldg_process_command(player_type *player_ptr, building_type *bldg, i
  * @param プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_building(player_type *player_ptr)
-{
+void do_cmd_building(player_type* player_ptr) {
     if (player_ptr->wild_mode)
         return;
 
@@ -312,7 +309,7 @@ void do_cmd_building(player_type *player_ptr)
 
     int which = f_info[player_ptr->current_floor_ptr->grid_array[player_ptr->y][player_ptr->x].feat].subtype;
 
-    building_type *bldg;
+    building_type* bldg;
     bldg = &building[which];
 
     reinit_wilderness = FALSE;
@@ -320,10 +317,12 @@ void do_cmd_building(player_type *player_ptr)
     if ((which == 2) && (player_ptr->arena_number < 0)) {
         msg_print(_("「敗者に用はない。」", "'There's no place here for a LOSER like you!'"));
         return;
-    } else if ((which == 2) && player_ptr->current_floor_ptr->inside_arena) {
+    }
+    else if ((which == 2) && player_ptr->current_floor_ptr->inside_arena) {
         if (!player_ptr->exit_bldg && player_ptr->current_floor_ptr->m_cnt > 0) {
             prt(_("ゲートは閉まっている。モンスターがあなたを待っている！", "The gates are closed.  The monster awaits!"), 0, 0);
-        } else {
+        }
+        else {
             prepare_change_floor_mode(player_ptr, CFM_SAVE_FLOORS | CFM_NO_RETURN);
             player_ptr->current_floor_ptr->inside_arena = FALSE;
             player_ptr->leaving = TRUE;
@@ -332,14 +331,16 @@ void do_cmd_building(player_type *player_ptr)
         }
 
         return;
-    } else if (player_ptr->phase_out) {
+    }
+    else if (player_ptr->phase_out) {
         prepare_change_floor_mode(player_ptr, CFM_SAVE_FLOORS | CFM_NO_RETURN);
         player_ptr->leaving = TRUE;
         player_ptr->phase_out = FALSE;
         command_new = SPECIAL_KEY_BUILDING;
         free_turn(player_ptr);
         return;
-    } else {
+    }
+    else {
         player_ptr->oldpy = player_ptr->y;
         player_ptr->oldpx = player_ptr->x;
     }

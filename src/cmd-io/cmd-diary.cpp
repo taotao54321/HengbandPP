@@ -3,9 +3,9 @@
 #include "core/asking-player.h"
 #include "core/show-file.h"
 #include "game-option/play-record-options.h"
-#include "io/record-play-movie.h"
 #include "io/files-util.h"
 #include "io/input-key-acceptor.h"
+#include "io/record-play-movie.h"
 #include "io/write-diary.h"
 #include "main/sound-of-music.h"
 #include "player/player-personality.h"
@@ -21,8 +21,7 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void display_diary(player_type *creature_ptr)
-{
+static void display_diary(player_type* creature_ptr) {
     char diary_title[256];
     GAME_TEXT file_name[MAX_NLEN];
     char buf[1024];
@@ -51,8 +50,7 @@ static void display_diary(player_type *creature_ptr)
  * @brief 日記に任意の内容を表記するコマンドのメインルーチン /
  * @return なし
  */
-static void add_diary_note(player_type *creature_ptr)
-{
+static void add_diary_note(player_type* creature_ptr) {
     char tmp[80] = "\0";
     char bunshou[80] = "\0";
     if (get_string(_("内容: ", "diary note: "), tmp, 79)) {
@@ -65,8 +63,7 @@ static void add_diary_note(player_type *creature_ptr)
  * @brief 最後に取得したアイテムの情報を日記に追加するメインルーチン /
  * @return なし
  */
-static void do_cmd_last_get(player_type *creaute_ptr)
-{
+static void do_cmd_last_get(player_type* creaute_ptr) {
     if (record_o_name[0] == '\0')
         return;
 
@@ -86,11 +83,10 @@ static void do_cmd_last_get(player_type *creaute_ptr)
  * @brief ファイル中の全日記記録を消去する /
  * @return なし
  */
-static void do_cmd_erase_diary(void)
-{
+static void do_cmd_erase_diary(void) {
     GAME_TEXT file_name[MAX_NLEN];
     char buf[256];
-    FILE *fff = NULL;
+    FILE* fff = NULL;
 
     if (!get_check(_("本当に記録を消去しますか？", "Do you really want to delete all your record? ")))
         return;
@@ -102,7 +98,8 @@ static void do_cmd_erase_diary(void)
     if (fff) {
         angband_fclose(fff);
         msg_format(_("記録を消去しました。", "deleted record."));
-    } else {
+    }
+    else {
         msg_format(_("%s の消去に失敗しました。", "failed to delete %s."), buf);
     }
 
@@ -114,8 +111,7 @@ static void do_cmd_erase_diary(void)
  * @param crerature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_diary(player_type *creature_ptr)
-{
+void do_cmd_diary(player_type* creature_ptr) {
     screen_save();
     while (TRUE) {
         term_clear();

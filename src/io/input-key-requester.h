@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "system/angband.h"
 #include "game-option/keymap-directory-getter.h"
+#include "system/angband.h"
 
 extern concptr keymap_act[KEYMAP_MODES][256];
 
@@ -16,4 +16,4 @@ extern TERM_LEN command_gap;
 extern s16b command_wrk;
 extern s16b command_new;
 
-void request_command(player_type *player_ptr, int shopping);
+void request_command(player_type* player_ptr, int shopping);

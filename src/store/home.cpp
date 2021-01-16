@@ -2,9 +2,9 @@
 #include "floor/floor-town.h"
 #include "game-option/birth-options.h"
 #include "game-option/game-play-options.h"
+#include "object/object-generator.h"
 #include "object/object-stack.h"
 #include "object/object-value.h"
-#include "object/object-generator.h"
 #include "player-info/avatar.h"
 #include "store/store-util.h"
 #include "util/object-sort.h"
@@ -22,8 +22,7 @@
  * known, the player may have to pick stuff up and drop it again.
  * </pre>
  */
-int home_carry(player_type *player_ptr, object_type *o_ptr)
-{
+int home_carry(player_type* player_ptr, object_type* o_ptr) {
     bool old_stack_force_notes = stack_force_notes;
     bool old_stack_force_costs = stack_force_costs;
     if (cur_store_num != STORE_HOME) {
@@ -32,7 +31,7 @@ int home_carry(player_type *player_ptr, object_type *o_ptr)
     }
 
     for (int slot = 0; slot < st_ptr->stock_num; slot++) {
-        object_type *j_ptr;
+        object_type* j_ptr;
         j_ptr = &st_ptr->stock[slot];
         if (object_similar(j_ptr, o_ptr)) {
             object_absorb(j_ptr, o_ptr);
@@ -59,7 +58,8 @@ int home_carry(player_type *player_ptr, object_type *o_ptr)
         if (st_ptr->stock_num >= st_ptr->stock_size) {
             return -1;
         }
-    } else {
+    }
+    else {
         if (st_ptr->stock_num >= ((st_ptr->stock_size) / 10)) {
             return -1;
         }
@@ -81,8 +81,7 @@ int home_carry(player_type *player_ptr, object_type *o_ptr)
     return slot;
 }
 
-static bool exe_combine_store_items(object_type *o_ptr, object_type *j_ptr, const int max_num, const int i, bool *combined)
-{
+static bool exe_combine_store_items(object_type* o_ptr, object_type* j_ptr, const int max_num, const int i, bool* combined) {
     if (o_ptr->number + j_ptr->number <= max_num)
         return FALSE;
 
@@ -97,10 +96,9 @@ static bool exe_combine_store_items(object_type *o_ptr, object_type *j_ptr, cons
     return TRUE;
 }
 
-static void sweep_reorder_store_item(object_type *o_ptr, const int i, bool *combined)
-{
+static void sweep_reorder_store_item(object_type* o_ptr, const int i, bool* combined) {
     for (int j = 0; j < i; j++) {
-        object_type *j_ptr;
+        object_type* j_ptr;
         j_ptr = &st_ptr->stock[j];
         if (!j_ptr->k_idx)
             continue;
@@ -119,7 +117,8 @@ static void sweep_reorder_store_item(object_type *o_ptr, const int i, bool *comb
         if (o_ptr->tval == TV_ROD) {
             o_ptr->pval = o_ptr->pval * remain / old_num;
             o_ptr->timeout = o_ptr->timeout * remain / old_num;
-        } else if (o_ptr->tval == TV_WAND) {
+        }
+        else if (o_ptr->tval == TV_WAND) {
             o_ptr->pval = o_ptr->pval * remain / old_num;
         }
 
@@ -128,10 +127,9 @@ static void sweep_reorder_store_item(object_type *o_ptr, const int i, bool *comb
     }
 }
 
-static void exe_reorder_store_item(player_type *player_ptr, bool *flag)
-{
+static void exe_reorder_store_item(player_type* player_ptr, bool* flag) {
     for (int i = 0; i < st_ptr->stock_num; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &st_ptr->stock[i];
         if (!o_ptr->k_idx)
             continue;
@@ -146,7 +144,7 @@ static void exe_reorder_store_item(player_type *player_ptr, bool *flag)
             continue;
 
         *flag = TRUE;
-        object_type *j_ptr;
+        object_type* j_ptr;
         object_type forge;
         j_ptr = &forge;
         object_copy(j_ptr, &st_ptr->stock[i]);
@@ -163,11 +161,10 @@ static void exe_reorder_store_item(player_type *player_ptr, bool *flag)
  * @param store_num 店舗ID
  * @return 実際に整理が行われたならばTRUEを返す。
  */
-bool combine_and_reorder_home(player_type *player_ptr, const int store_num)
-{
+bool combine_and_reorder_home(player_type* player_ptr, const int store_num) {
     bool old_stack_force_notes = stack_force_notes;
     bool old_stack_force_costs = stack_force_costs;
-    store_type *old_st_ptr = st_ptr;
+    store_type* old_st_ptr = st_ptr;
     st_ptr = &town_info[1].store[store_num];
     bool flag = FALSE;
     if (store_num != STORE_HOME) {
@@ -179,7 +176,7 @@ bool combine_and_reorder_home(player_type *player_ptr, const int store_num)
     while (combined) {
         combined = FALSE;
         for (int i = st_ptr->stock_num - 1; i > 0; i--) {
-            object_type *o_ptr;
+            object_type* o_ptr;
             o_ptr = &st_ptr->stock[i];
             if (!o_ptr->k_idx)
                 continue;

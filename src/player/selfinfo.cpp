@@ -26,13 +26,13 @@
 #include "player/player-class.h"
 #include "player/player-race-types.h"
 #include "player/player-race.h"
+#include "player/player-status-flags.h"
 #include "player/player-status-table.h"
 #include "realm/realm-names-table.h"
 #include "realm/realm-song-numbers.h"
 #include "status/element-resistance.h"
 #include "term/screen-processor.h"
 #include "util/bit-flags-calculator.h"
-#include "player/player-status-flags.h"
 
 /*!
  * @brief 自己分析処理(Nethackからのアイデア) / self-knowledge... idea from nethack.
@@ -52,8 +52,7 @@
  * Use the "show_file()" method, perhaps.
  * </pre>
  */
-void self_knowledge(player_type *creature_ptr)
-{
+void self_knowledge(player_type* creature_ptr) {
     int i = 0, j, k;
 
     int v_nr = 0;
@@ -62,7 +61,7 @@ void self_knowledge(player_type *creature_ptr)
 
     BIT_FLAGS flgs[TR_FLAG_SIZE];
 
-    object_type *o_ptr;
+    object_type* o_ptr;
 
     char Dummy[80];
     char buf[2][80];
@@ -180,7 +179,8 @@ void self_knowledge(player_type *creature_ptr)
             }
             break;
         }
-    } else {
+    }
+    else {
         switch (creature_ptr->prace) {
         case RACE_NIBELUNG:
         case RACE_DWARF:
@@ -274,7 +274,8 @@ void self_knowledge(player_type *creature_ptr)
             if (plev > 29) {
                 sprintf(Dummy, _("あなたは %d ダメージのファイア・ボールの呪文を使える。(15 MP)", "You can cast a Fire Ball, dam. %d (cost 15)."), plev);
                 info[i++] = Dummy;
-            } else if (plev > 8) {
+            }
+            else if (plev > 8) {
                 sprintf(Dummy, _("あなたは %d ダメージのファイア・ボルトの呪文を使える。(15 MP)", "You can cast a Fire Bolt, dam. %d (cost 15)."), plev);
                 info[i++] = Dummy;
             }
@@ -357,7 +358,8 @@ void self_knowledge(player_type *creature_ptr)
             if (plev > 34) {
                 info[i++] = _("あなたは武器を祝福することができる。(70 MP)", "You can bless a weapon (cost 70).");
             }
-        } else {
+        }
+        else {
             if (plev > 41) {
                 info[i++] = _("あなたは周りのすべてのモンスターを攻撃することができる。(40 MP)", "You can damage all monsters in sight (cost 40).");
             }
@@ -378,7 +380,8 @@ void self_knowledge(player_type *creature_ptr)
             if (plev > 29) {
                 info[i++] = _("あなたは聖なる槍を放つことができる。(30 MP)", "You can fire a holy spear (cost 30).");
             }
-        } else {
+        }
+        else {
             if (plev > 29) {
                 info[i++] = _("あなたは生命力を減少させる槍を放つことができる。(30 MP)", "You can fire a spear which drains vitality (cost 30).");
             }
@@ -995,17 +998,21 @@ void self_knowledge(player_type *creature_ptr)
 
     if (creature_ptr->immune_acid) {
         info[i++] = _("あなたは酸に対する完全なる免疫を持っている。", "You are completely immune to acid.");
-    } else if (creature_ptr->resist_acid && is_oppose_acid(creature_ptr)) {
+    }
+    else if (creature_ptr->resist_acid && is_oppose_acid(creature_ptr)) {
         info[i++] = _("あなたは酸への強力な耐性を持っている。", "You resist acid exceptionally well.");
-    } else if (creature_ptr->resist_acid || is_oppose_acid(creature_ptr)) {
+    }
+    else if (creature_ptr->resist_acid || is_oppose_acid(creature_ptr)) {
         info[i++] = _("あなたは酸への耐性を持っている。", "You are resistant to acid.");
     }
 
     if (creature_ptr->immune_elec) {
         info[i++] = _("あなたは電撃に対する完全なる免疫を持っている。", "You are completely immune to lightning.");
-    } else if (creature_ptr->resist_elec && is_oppose_elec(creature_ptr)) {
+    }
+    else if (creature_ptr->resist_elec && is_oppose_elec(creature_ptr)) {
         info[i++] = _("あなたは電撃への強力な耐性を持っている。", "You resist lightning exceptionally well.");
-    } else if (creature_ptr->resist_elec || is_oppose_elec(creature_ptr)) {
+    }
+    else if (creature_ptr->resist_elec || is_oppose_elec(creature_ptr)) {
         info[i++] = _("あなたは電撃への耐性を持っている。", "You are resistant to lightning.");
     }
 
@@ -1015,9 +1022,11 @@ void self_knowledge(player_type *creature_ptr)
 
     if (creature_ptr->immune_fire) {
         info[i++] = _("あなたは火に対する完全なる免疫を持っている。", "You are completely immune to fire.");
-    } else if (creature_ptr->resist_fire && is_oppose_fire(creature_ptr)) {
+    }
+    else if (creature_ptr->resist_fire && is_oppose_fire(creature_ptr)) {
         info[i++] = _("あなたは火への強力な耐性を持っている。", "You resist fire exceptionally well.");
-    } else if (creature_ptr->resist_fire || is_oppose_fire(creature_ptr)) {
+    }
+    else if (creature_ptr->resist_fire || is_oppose_fire(creature_ptr)) {
         info[i++] = _("あなたは火への耐性を持っている。", "You are resistant to fire.");
     }
 
@@ -1027,15 +1036,18 @@ void self_knowledge(player_type *creature_ptr)
 
     if (creature_ptr->immune_cold) {
         info[i++] = _("あなたは冷気に対する完全なる免疫を持っている。", "You are completely immune to cold.");
-    } else if (creature_ptr->resist_cold && is_oppose_cold(creature_ptr)) {
+    }
+    else if (creature_ptr->resist_cold && is_oppose_cold(creature_ptr)) {
         info[i++] = _("あなたは冷気への強力な耐性を持っている。", "You resist cold exceptionally well.");
-    } else if (creature_ptr->resist_cold || is_oppose_cold(creature_ptr)) {
+    }
+    else if (creature_ptr->resist_cold || is_oppose_cold(creature_ptr)) {
         info[i++] = _("あなたは冷気への耐性を持っている。", "You are resistant to cold.");
     }
 
     if (creature_ptr->resist_pois && is_oppose_pois(creature_ptr)) {
         info[i++] = _("あなたは毒への強力な耐性を持っている。", "You resist poison exceptionally well.");
-    } else if (creature_ptr->resist_pois || is_oppose_pois(creature_ptr)) {
+    }
+    else if (creature_ptr->resist_pois || is_oppose_pois(creature_ptr)) {
         info[i++] = _("あなたは毒への耐性を持っている。", "You are resistant to poison.");
     }
 
@@ -1076,7 +1088,8 @@ void self_knowledge(player_type *creature_ptr)
 
     if (is_specific_player_race(creature_ptr, RACE_SPECTRE)) {
         info[i++] = _("あなたは地獄の力を吸収できる。", "You can drain nether forces.");
-    } else if (creature_ptr->resist_neth) {
+    }
+    else if (creature_ptr->resist_neth) {
         info[i++] = _("あなたは地獄の力への耐性を持っている。", "You are resistant to nether forces.");
     }
     if (creature_ptr->resist_fear) {
@@ -1192,48 +1205,57 @@ void self_knowledge(player_type *creature_ptr)
         /* Special "slay" flags */
         if (has_flag(flgs, TR_KILL_ANIMAL)) {
             info[i++] = _("あなたの武器は動物の天敵である。", "Your weapon is a great bane of animals.");
-        } else if (has_flag(flgs, TR_SLAY_ANIMAL)) {
+        }
+        else if (has_flag(flgs, TR_SLAY_ANIMAL)) {
             info[i++] = _("あなたの武器は動物に対して強い力を発揮する。", "Your weapon strikes at animals with extra force.");
         }
         if (has_flag(flgs, TR_KILL_EVIL)) {
             info[i++] = _("あなたの武器は邪悪なる存在の天敵である。", "Your weapon is a great bane of evil.");
-        } else if (has_flag(flgs, TR_SLAY_EVIL)) {
+        }
+        else if (has_flag(flgs, TR_SLAY_EVIL)) {
             info[i++] = _("あなたの武器は邪悪なる存在に対して強い力を発揮する。", "Your weapon strikes at evil with extra force.");
         }
         if (has_flag(flgs, TR_KILL_HUMAN)) {
             info[i++] = _("あなたの武器は人間の天敵である。", "Your weapon is a great bane of humans.");
-        } else if (has_flag(flgs, TR_SLAY_HUMAN)) {
+        }
+        else if (has_flag(flgs, TR_SLAY_HUMAN)) {
             info[i++] = _("あなたの武器は人間に対して特に強い力を発揮する。", "Your weapon is especially deadly against humans.");
         }
         if (has_flag(flgs, TR_KILL_UNDEAD)) {
             info[i++] = _("あなたの武器はアンデッドの天敵である。", "Your weapon is a great bane of undead.");
-        } else if (has_flag(flgs, TR_SLAY_UNDEAD)) {
+        }
+        else if (has_flag(flgs, TR_SLAY_UNDEAD)) {
             info[i++] = _("あなたの武器はアンデッドに対して神聖なる力を発揮する。", "Your weapon strikes at undead with holy wrath.");
         }
         if (has_flag(flgs, TR_KILL_DEMON)) {
             info[i++] = _("あなたの武器はデーモンの天敵である。", "Your weapon is a great bane of demons.");
-        } else if (has_flag(flgs, TR_SLAY_DEMON)) {
+        }
+        else if (has_flag(flgs, TR_SLAY_DEMON)) {
             info[i++] = _("あなたの武器はデーモンに対して神聖なる力を発揮する。", "Your weapon strikes at demons with holy wrath.");
         }
         if (has_flag(flgs, TR_KILL_ORC)) {
             info[i++] = _("あなたの武器はオークの天敵である。", "Your weapon is a great bane of orcs.");
-        } else if (has_flag(flgs, TR_SLAY_ORC)) {
+        }
+        else if (has_flag(flgs, TR_SLAY_ORC)) {
             info[i++] = _("あなたの武器はオークに対して特に強い力を発揮する。", "Your weapon is especially deadly against orcs.");
         }
         if (has_flag(flgs, TR_KILL_TROLL)) {
             info[i++] = _("あなたの武器はトロルの天敵である。", "Your weapon is a great bane of trolls.");
-        } else if (has_flag(flgs, TR_SLAY_TROLL)) {
+        }
+        else if (has_flag(flgs, TR_SLAY_TROLL)) {
             info[i++] = _("あなたの武器はトロルに対して特に強い力を発揮する。", "Your weapon is especially deadly against trolls.");
         }
         if (has_flag(flgs, TR_KILL_GIANT)) {
             info[i++] = _("あなたの武器は巨人の天敵である。", "Your weapon is a great bane of giants.");
-        } else if (has_flag(flgs, TR_SLAY_GIANT)) {
+        }
+        else if (has_flag(flgs, TR_SLAY_GIANT)) {
             info[i++] = _("あなたの武器は巨人に対して特に強い力を発揮する。", "Your weapon is especially deadly against giants.");
         }
         /* Special "kill" flags */
         if (has_flag(flgs, TR_KILL_DRAGON)) {
             info[i++] = _("あなたの武器はドラゴンの天敵である。", "Your weapon is a great bane of dragons.");
-        } else if (has_flag(flgs, TR_SLAY_DRAGON)) {
+        }
+        else if (has_flag(flgs, TR_SLAY_DRAGON)) {
             info[i++] = _("あなたの武器はドラゴンに対して特に強い力を発揮する。", "Your weapon is especially deadly against dragons.");
         }
 
@@ -1279,21 +1301,26 @@ void self_knowledge(player_type *creature_ptr)
  * @param dur 効果ターン数
  * @return 効果時間の表現ID
  */
-static int report_magics_aux(int dur)
-{
+static int report_magics_aux(int dur) {
     if (dur <= 5) {
         return 0;
-    } else if (dur <= 10) {
+    }
+    else if (dur <= 10) {
         return 1;
-    } else if (dur <= 20) {
+    }
+    else if (dur <= 20) {
         return 2;
-    } else if (dur <= 50) {
+    }
+    else if (dur <= 50) {
         return 3;
-    } else if (dur <= 100) {
+    }
+    else if (dur <= 100) {
         return 4;
-    } else if (dur <= 200) {
+    }
+    else if (dur <= 200) {
         return 5;
-    } else {
+    }
+    else {
         return 6;
     }
 }
@@ -1312,8 +1339,7 @@ static concptr report_magic_durations[] = {
  * @brief 現在の一時的効果一覧を返す / Report all currently active magical effects.
  * @return なし
  */
-void report_magics(player_type *creature_ptr)
-{
+void report_magics(player_type* creature_ptr) {
     int i = 0, j, k;
     char Dummy[80];
     concptr info[128];

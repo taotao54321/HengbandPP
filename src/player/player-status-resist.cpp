@@ -36,8 +36,7 @@
 /*!
  * @brief 耐性倍率計算の用途に応じた分岐処理
  */
-PERCENTAGE randrate(int dice, int fix, rate_calc_type_mode mode)
-{
+PERCENTAGE randrate(int dice, int fix, rate_calc_type_mode mode) {
     switch (mode) {
     case CALC_RAND:
         return randint1(dice) * 100 + fix * 100;
@@ -60,8 +59,7 @@ PERCENTAGE randrate(int dice, int fix, rate_calc_type_mode mode)
 /*!
  * @brief 酸属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_acid_damage_rate(player_type *creature_ptr)
-{
+PERCENTAGE calc_acid_damage_rate(player_type* creature_ptr) {
     PERCENTAGE per = 100;
 
     if (has_immune_acid(creature_ptr)) {
@@ -73,7 +71,8 @@ PERCENTAGE calc_acid_damage_rate(player_type *creature_ptr)
         if (flgs & (0x01 << i)) {
             if (i == FLAG_CAUSE_MUTATION) {
                 per *= 2;
-            } else {
+            }
+            else {
                 per += per / 3;
             }
         }
@@ -90,8 +89,7 @@ PERCENTAGE calc_acid_damage_rate(player_type *creature_ptr)
 /*!
  * @brief 電撃属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_elec_damage_rate(player_type *creature_ptr)
-{
+PERCENTAGE calc_elec_damage_rate(player_type* creature_ptr) {
     PERCENTAGE per = 100;
 
     if (has_immune_elec(creature_ptr)) {
@@ -103,7 +101,8 @@ PERCENTAGE calc_elec_damage_rate(player_type *creature_ptr)
         if (flgs & (0x01 << i)) {
             if (i == FLAG_CAUSE_MUTATION) {
                 per *= 2;
-            } else {
+            }
+            else {
                 per += per / 3;
             }
         }
@@ -120,15 +119,15 @@ PERCENTAGE calc_elec_damage_rate(player_type *creature_ptr)
 /*!
  * @brief 火炎属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_fire_damage_rate(player_type *creature_ptr)
-{
+PERCENTAGE calc_fire_damage_rate(player_type* creature_ptr) {
     PERCENTAGE per = 100;
     BIT_FLAGS flgs = has_vuln_fire(creature_ptr);
-     for (int i = 0; i < FLAG_CAUSE_MAX; i++) {
+    for (int i = 0; i < FLAG_CAUSE_MAX; i++) {
         if (flgs & (0x01 << i)) {
             if (i == FLAG_CAUSE_MUTATION) {
                 per *= 2;
-            } else {
+            }
+            else {
                 per += per / 3;
             }
         }
@@ -146,15 +145,15 @@ PERCENTAGE calc_fire_damage_rate(player_type *creature_ptr)
 /*!
  * @brief 冷気属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_cold_damage_rate(player_type *creature_ptr)
-{
+PERCENTAGE calc_cold_damage_rate(player_type* creature_ptr) {
     PERCENTAGE per = 100;
     BIT_FLAGS flgs = has_vuln_cold(creature_ptr);
     for (int i = 0; i < FLAG_CAUSE_MAX; i++) {
         if (flgs & (0x01 << i)) {
             if (i == FLAG_CAUSE_MUTATION) {
                 per *= 2;
-            } else {
+            }
+            else {
                 per += per / 3;
             }
         }
@@ -171,8 +170,7 @@ PERCENTAGE calc_cold_damage_rate(player_type *creature_ptr)
 /*!
  * @brief 毒属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_pois_damage_rate(player_type *creature_ptr)
-{
+PERCENTAGE calc_pois_damage_rate(player_type* creature_ptr) {
     PERCENTAGE per = 100;
     if (has_resist_pois(creature_ptr))
         per = (per + 2) / 3;
@@ -185,8 +183,7 @@ PERCENTAGE calc_pois_damage_rate(player_type *creature_ptr)
 /*!
  * @brief 放射性廃棄物攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_nuke_damage_rate(player_type *creature_ptr)
-{
+PERCENTAGE calc_nuke_damage_rate(player_type* creature_ptr) {
 
     PERCENTAGE per = 100;
     if (has_resist_pois(creature_ptr))
@@ -200,8 +197,7 @@ PERCENTAGE calc_nuke_damage_rate(player_type *creature_ptr)
 /*!
  * @brief 死の光線に対するダメージ倍率計算
  */
-PERCENTAGE calc_deathray_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_deathray_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     (void)mode; // unused
     if (creature_ptr->mimic_form) {
         if (mimic_info[creature_ptr->mimic_form].MIMIC_FLAGS & MIMIC_IS_NONLIVING) {
@@ -226,12 +222,12 @@ PERCENTAGE calc_deathray_damage_rate(player_type *creature_ptr, rate_calc_type_m
 /*!
  * @brief 閃光属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_lite_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_lite_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     PERCENTAGE per = 100;
     if (is_specific_player_race(creature_ptr, RACE_VAMPIRE) || (creature_ptr->mimic_form == MIMIC_VAMPIRE)) {
         per *= 2;
-    } else if (is_specific_player_race(creature_ptr, RACE_S_FAIRY)) {
+    }
+    else if (is_specific_player_race(creature_ptr, RACE_S_FAIRY)) {
         per = per * 4 / 3;
     }
 
@@ -249,8 +245,7 @@ PERCENTAGE calc_lite_damage_rate(player_type *creature_ptr, rate_calc_type_mode 
 /*!
  * @brief 暗黒属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_dark_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_dark_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     PERCENTAGE per = 100;
 
     if (is_specific_player_race(creature_ptr, RACE_VAMPIRE) || (creature_ptr->mimic_form == MIMIC_VAMPIRE) || creature_ptr->wraith_form) {
@@ -268,8 +263,7 @@ PERCENTAGE calc_dark_damage_rate(player_type *creature_ptr, rate_calc_type_mode 
 /*!
  * @brief 破片属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_shards_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_shards_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     PERCENTAGE per = 100;
 
     if (has_resist_shard(creature_ptr)) {
@@ -283,8 +277,7 @@ PERCENTAGE calc_shards_damage_rate(player_type *creature_ptr, rate_calc_type_mod
 /*!
  * @brief 轟音属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_sound_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_sound_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     PERCENTAGE per = 100;
 
     if (has_resist_sound(creature_ptr)) {
@@ -298,8 +291,7 @@ PERCENTAGE calc_sound_damage_rate(player_type *creature_ptr, rate_calc_type_mode
 /*!
  * @brief 混乱属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_conf_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_conf_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     PERCENTAGE per = 100;
 
     if (has_resist_conf(creature_ptr)) {
@@ -313,8 +305,7 @@ PERCENTAGE calc_conf_damage_rate(player_type *creature_ptr, rate_calc_type_mode 
 /*!
  * @brief 混沌属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_chaos_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_chaos_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     PERCENTAGE per = 100;
 
     if (has_resist_chaos(creature_ptr)) {
@@ -328,8 +319,7 @@ PERCENTAGE calc_chaos_damage_rate(player_type *creature_ptr, rate_calc_type_mode
 /*!
  * @brief 劣化属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_disenchant_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_disenchant_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     PERCENTAGE per = 100;
 
     if (has_resist_disen(creature_ptr)) {
@@ -343,8 +333,7 @@ PERCENTAGE calc_disenchant_damage_rate(player_type *creature_ptr, rate_calc_type
 /*!
  * @brief 因果混乱属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_nexus_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_nexus_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     PERCENTAGE per = 100;
 
     if (has_resist_disen(creature_ptr)) {
@@ -358,8 +347,7 @@ PERCENTAGE calc_nexus_damage_rate(player_type *creature_ptr, rate_calc_type_mode
 /*!
  * @brief ロケット属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_rocket_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_rocket_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     (void)mode; // unused
     PERCENTAGE per = 100;
 
@@ -373,8 +361,7 @@ PERCENTAGE calc_rocket_damage_rate(player_type *creature_ptr, rate_calc_type_mod
 /*!
  * @brief 地獄属性攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_nether_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_nether_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     PERCENTAGE per = 100;
 
     if (has_resist_neth(creature_ptr)) {
@@ -390,8 +377,7 @@ PERCENTAGE calc_nether_damage_rate(player_type *creature_ptr, rate_calc_type_mod
 /*!
  * @brief 時間逆転攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_time_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_time_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     (void)mode; // unused
     PERCENTAGE per = 100;
 
@@ -406,8 +392,7 @@ PERCENTAGE calc_time_damage_rate(player_type *creature_ptr, rate_calc_type_mode 
 /*!
  * @brief 聖なる火炎攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_holy_fire_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_holy_fire_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     (void)mode; // unused
     PERCENTAGE per = 100;
     if (creature_ptr->align > 10)
@@ -420,8 +405,7 @@ PERCENTAGE calc_holy_fire_damage_rate(player_type *creature_ptr, rate_calc_type_
 /*!
  * @brief 地獄の火炎攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_hell_fire_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_hell_fire_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     (void)mode; // unused
     PERCENTAGE per = 100;
     if (creature_ptr->align > 10)
@@ -432,8 +416,7 @@ PERCENTAGE calc_hell_fire_damage_rate(player_type *creature_ptr, rate_calc_type_
 /*!
  * @brief 重力攻撃に対するダメージ倍率計算
  */
-PERCENTAGE calc_gravity_damage_rate(player_type *creature_ptr, rate_calc_type_mode mode)
-{
+PERCENTAGE calc_gravity_damage_rate(player_type* creature_ptr, rate_calc_type_mode mode) {
     (void)mode; // unused
     PERCENTAGE per = 100;
     if (creature_ptr->levitation) {

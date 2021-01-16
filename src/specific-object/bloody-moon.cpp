@@ -15,8 +15,7 @@
  * @param o_ptr 対象のオブジェクト構造体 (ブラッディムーン)のポインタ
  * @return なし
  */
-void get_bloody_moon_flags(object_type *o_ptr)
-{
+void get_bloody_moon_flags(object_type* o_ptr) {
     for (int i = 0; i < TR_FLAG_SIZE; i++)
         o_ptr->art_flags[i] = a_info[ART_BLOOD].flags[i];
 
@@ -52,8 +51,7 @@ void get_bloody_moon_flags(object_type *o_ptr)
  * @param o_ptr ブラッディ・ムーンへの参照ポインタ
  * @return オブジェクト情報に異常がない限りTRUE
  */
-bool activate_bloody_moon(player_type *user_ptr, object_type *o_ptr)
-{
+bool activate_bloody_moon(player_type* user_ptr, object_type* o_ptr) {
     if (o_ptr->name1 != ART_BLOOD)
         return FALSE;
 

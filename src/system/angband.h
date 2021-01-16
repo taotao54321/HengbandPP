@@ -13,7 +13,6 @@
  * This file has been modified for use with "Angband 2.8.2"
  */
 
-
 #ifndef INCLUDED_ANGBAND_H
 #define INCLUDED_ANGBAND_H
 
@@ -21,24 +20,23 @@
  * First, include the low-level includes.  Be sure to edit "h-config.h"
  * to reflect any hardware, operating system, or compiler nuances.
  */
-
+#include "system/h-basic.h"
 
 /*
  * Then, include the header files for the low-level code
  */
-#include "term/z-util.h"
-#include "term/z-virt.h"
+#include "locale/language-switcher.h"
 #include "term/z-form.h"
 #include "term/z-rand.h"
 #include "term/z-term.h"
-#include "locale/language-switcher.h"
+#include "term/z-util.h"
+#include "term/z-virt.h"
 
 /*
  * Include the "Angband" configuration header
  */
-#include "system/gamevalue.h"
 #include "player/player-status.h"
-
+#include "system/gamevalue.h"
 
 /***** Some copyright messages follow below *****/
 
@@ -51,7 +49,6 @@
 /*
  * UNIX ANGBAND Version 5.0
  */
-
 
 /* Original copyright message follows. */
 
@@ -80,7 +77,6 @@
  *		ucbvax!ucbernie!wilson
  */
 
-
 /*
  *	 ANGBAND may be copied and modified freely as long as the above
  *	 credits are retained.	No one who-so-ever may sell or market
@@ -88,8 +84,4 @@
  *	 of the author Robert Alan Koeneke.
  */
 
-
 #endif
-
-
-

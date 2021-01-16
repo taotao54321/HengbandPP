@@ -1,9 +1,9 @@
 ﻿#include "load/store-loader.h"
-#include "object/object-generator.h"
 #include "floor/floor-town.h"
 #include "load/angband-version-comparer.h"
 #include "load/item-loader.h"
 #include "load/load-util.h"
+#include "object/object-generator.h"
 #include "object/object-stack.h"
 #include "object/object-value.h"
 #include "player-info/avatar.h"
@@ -24,10 +24,9 @@
  * Also note that it may not correctly "adapt" to "knowledge" bacoming
  * known, the player may have to pick stuff up and drop it again.
  */
-static void home_carry_load(player_type *player_ptr, store_type *store_ptr, object_type *o_ptr)
-{
+static void home_carry_load(player_type* player_ptr, store_type* store_ptr, object_type* o_ptr) {
     for (int i = 0; i < store_ptr->stock_num; i++) {
-        object_type *j_ptr;
+        object_type* j_ptr;
         j_ptr = &store_ptr->stock[i];
         if (!object_similar(j_ptr, o_ptr))
             continue;
@@ -62,15 +61,15 @@ static void home_carry_load(player_type *player_ptr, store_type *store_ptr, obje
  * @param store_number 店舗ID
  * @return エラーID
  */
-static errr rd_store(player_type *player_ptr, int town_number, int store_number)
-{
-    store_type *store_ptr;
+static errr rd_store(player_type* player_ptr, int town_number, int store_number) {
+    store_type* store_ptr;
     bool sort = FALSE;
     if (z_older_than(10, 3, 3) && (store_number == STORE_HOME)) {
         store_ptr = &town_info[1].store[store_number];
         if (store_ptr->stock_num)
             sort = TRUE;
-    } else {
+    }
+    else {
         store_ptr = &town_info[town_number].store[store_number];
     }
 
@@ -83,7 +82,8 @@ static errr rd_store(player_type *player_ptr, int town_number, int store_number)
     if (z_older_than(11, 0, 4)) {
         rd_byte(&tmp8u);
         num = tmp8u;
-    } else {
+    }
+    else {
         rd_s16b(&num);
     }
 
@@ -95,20 +95,22 @@ static errr rd_store(player_type *player_ptr, int town_number, int store_number)
 
     for (int j = 0; j < num; j++) {
         object_type forge;
-        object_type *q_ptr;
+        object_type* q_ptr;
         q_ptr = &forge;
         object_wipe(q_ptr);
 
         rd_item(player_ptr, q_ptr);
 
         bool is_valid_item = store_ptr->stock_num
-            < (store_number == STORE_HOME ? STORE_INVEN_MAX * 10 : store_number == STORE_MUSEUM ? STORE_INVEN_MAX * 50 : STORE_INVEN_MAX);
+            < (store_number == STORE_HOME ? STORE_INVEN_MAX * 10 : store_number == STORE_MUSEUM ? STORE_INVEN_MAX * 50
+                                                                                                : STORE_INVEN_MAX);
         if (!is_valid_item)
             continue;
 
         if (sort) {
             home_carry_load(player_ptr, store_ptr, q_ptr);
-        } else {
+        }
+        else {
             int k = store_ptr->stock_num++;
             object_copy(&store_ptr->stock[k], q_ptr);
         }
@@ -117,8 +119,7 @@ static errr rd_store(player_type *player_ptr, int town_number, int store_number)
     return 0;
 }
 
-errr load_store(player_type *creature_ptr)
-{
+errr load_store(player_type* creature_ptr) {
     u16b tmp16u;
     rd_u16b(&tmp16u);
     int town_count = tmp16u;

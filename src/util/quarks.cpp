@@ -8,13 +8,12 @@ STR_OFFSET quark__num;
 /*
  * The pointers to the quarks [QUARK_MAX]
  */
-concptr *quark__str;
+concptr* quark__str;
 
 /*
  * Initialize the quark array
  */
-void quark_init(void)
-{
+void quark_init(void) {
     C_MAKE(quark__str, QUARK_MAX, concptr);
     quark__str[1] = string_make("");
     quark__num = 2;
@@ -23,8 +22,7 @@ void quark_init(void)
 /*
  * Add a new "quark" to the set of quarks.
  */
-u16b quark_add(concptr str)
-{
+u16b quark_add(concptr str) {
     u16b i;
     for (i = 1; i < quark__num; i++) {
         if (streq(quark__str[i], str))
@@ -42,8 +40,7 @@ u16b quark_add(concptr str)
 /*
  * This function looks up a quark
  */
-concptr quark_str(STR_OFFSET i)
-{
+concptr quark_str(STR_OFFSET i) {
     concptr q;
 
     /* Return NULL for an invalid index */

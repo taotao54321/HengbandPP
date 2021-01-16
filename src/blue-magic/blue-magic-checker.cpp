@@ -14,9 +14,9 @@
 #include "main/sound-definitions-table.h"
 #include "main/sound-of-music.h"
 #include "mind/mind-blue-mage.h"
-#include "monster-race/race-flags4.h"
 #include "monster-race/race-flags-ability1.h"
 #include "monster-race/race-flags-ability2.h"
+#include "monster-race/race-flags4.h"
 #include "mspell/monster-power-table.h"
 #include "mspell/mspell-mask-definitions.h"
 #include "player/attack-defense-types.h"
@@ -28,8 +28,7 @@
  * @param monspell ラーニングを試みるモンスター攻撃のID
  * @return なし
  */
-void learn_spell(player_type *learner_ptr, int monspell)
-{
+void learn_spell(player_type* learner_ptr, int monspell) {
     if (learner_ptr->action != ACTION_LEARN)
         return;
     if (monspell < 0)
@@ -60,8 +59,7 @@ void learn_spell(player_type *learner_ptr, int monspell)
  */
 /*
  */
-void set_rf_masks(BIT_FLAGS *f4, BIT_FLAGS *f5, BIT_FLAGS *f6, blue_magic_type mode)
-{
+void set_rf_masks(BIT_FLAGS* f4, BIT_FLAGS* f5, BIT_FLAGS* f6, blue_magic_type mode) {
     switch (mode) {
     case MONSPELL_TYPE_BOLT:
         *f4 = ((RF4_BOLT_MASK | RF4_BEAM_MASK) & ~(RF4_ROCKET));

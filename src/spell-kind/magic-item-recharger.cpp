@@ -46,19 +46,18 @@
  *
  * Beware of "sliding index errors".
  */
-bool recharge(player_type *caster_ptr, int power)
-{
+bool recharge(player_type* caster_ptr, int power) {
     item_tester_hook = item_tester_hook_recharge;
     concptr q = _("どのアイテムに魔力を充填しますか? ", "Recharge which item? ");
     concptr s = _("魔力を充填すべきアイテムがない。", "You have nothing to recharge.");
 
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(caster_ptr, &item, q, s, (USE_INVEN | USE_FLOOR), TV_NONE);
     if (!o_ptr)
         return FALSE;
 
-    object_kind *k_ptr;
+    object_kind* k_ptr;
     k_ptr = &k_info[o_ptr->k_idx];
     DEPTH lev = k_info[o_ptr->k_idx].level;
 
@@ -69,14 +68,16 @@ bool recharge(player_type *caster_ptr, int power)
         recharge_strength = ((power > lev / 2) ? (power - lev / 2) : 0) / 5;
         if (one_in_(recharge_strength)) {
             is_recharge_successful = FALSE;
-        } else {
+        }
+        else {
             recharge_amount = (power * damroll(3, 2));
             if (o_ptr->timeout > recharge_amount)
                 o_ptr->timeout -= recharge_amount;
             else
                 o_ptr->timeout = 0;
         }
-    } else {
+    }
+    else {
         if ((o_ptr->tval == TV_WAND) && (o_ptr->number > 1))
             recharge_strength = (100 + power - lev - (8 * o_ptr->pval / o_ptr->number)) / 15;
         else
@@ -87,7 +88,8 @@ bool recharge(player_type *caster_ptr, int power)
 
         if (one_in_(recharge_strength)) {
             is_recharge_successful = FALSE;
-        } else {
+        }
+        else {
             recharge_amount = randint1(1 + k_ptr->pval / 2);
             if ((o_ptr->tval == TV_WAND) && (o_ptr->number > 1)) {
                 recharge_amount += (randint1(recharge_amount * (o_ptr->number - 1))) / 2;
@@ -149,7 +151,8 @@ bool recharge(player_type *caster_ptr, int power)
             else
                 fail_type = 0;
         }
-    } else {
+    }
+    else {
         /* 33% chance to blow up one rod, otherwise draining. */
         if (o_ptr->tval == TV_ROD) {
             if (one_in_(3))
@@ -176,7 +179,8 @@ bool recharge(player_type *caster_ptr, int power)
 
             if (o_ptr->timeout < 10000)
                 o_ptr->timeout = (o_ptr->timeout + 100) * 2;
-        } else if (o_ptr->tval == TV_WAND) {
+        }
+        else if (o_ptr->tval == TV_WAND) {
             msg_format(_("%sは破損を免れたが、魔力が全て失われた。", "You save your %s from destruction, but all charges are lost."), o_name);
             o_ptr->pval = 0;
         }

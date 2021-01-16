@@ -44,8 +44,7 @@
  * @details
  * Allow absolute file names?
  */
-void do_cmd_pref(player_type *creature_ptr)
-{
+void do_cmd_pref(player_type* creature_ptr) {
     char buf[80];
     strcpy(buf, "");
     if (!get_string(_("設定変更コマンド: ", "Pref: "), buf, 80))
@@ -57,12 +56,11 @@ void do_cmd_pref(player_type *creature_ptr)
 /*
  * Interact with "colors"
  */
-void do_cmd_colors(player_type *creature_ptr, void (*process_autopick_file_command)(char *))
-{
+void do_cmd_colors(player_type* creature_ptr, void (*process_autopick_file_command)(char*)) {
     int i;
     char tmp[160];
     char buf[1024];
-    FILE *auto_dump_stream;
+    FILE* auto_dump_stream;
     screen_save();
     while (TRUE) {
         term_clear();
@@ -85,7 +83,8 @@ void do_cmd_colors(player_type *creature_ptr, void (*process_autopick_file_comma
             (void)process_pref_file(creature_ptr, tmp, process_autopick_file_command);
             term_xtra(TERM_XTRA_REACT, 0);
             term_redraw();
-        } else if (i == '2') {
+        }
+        else if (i == '2') {
             static concptr mark = "Colors";
             prt(_("コマンド: カラーの設定をファイルに書き出します", "Command: Dump colors"), 8, 0);
             prt(_("ファイル: ", "File: "), 10, 0);
@@ -117,7 +116,8 @@ void do_cmd_colors(player_type *creature_ptr, void (*process_autopick_file_comma
 
             close_auto_dump(&auto_dump_stream, mark);
             msg_print(_("カラーの設定をファイルに書き出しました。", "Dumped color redefinitions."));
-        } else if (i == '3') {
+        }
+        else if (i == '3') {
             static byte a = 0;
             prt(_("コマンド: カラーの設定を変更します", "Command: Modify colors"), 8, 0);
             while (TRUE) {
@@ -162,7 +162,8 @@ void do_cmd_colors(player_type *creature_ptr, void (*process_autopick_file_comma
                 term_xtra(TERM_XTRA_REACT, 0);
                 term_redraw();
             }
-        } else {
+        }
+        else {
             bell();
         }
 
@@ -175,8 +176,7 @@ void do_cmd_colors(player_type *creature_ptr, void (*process_autopick_file_comma
 /*
  * Note something in the message recall
  */
-void do_cmd_note(void)
-{
+void do_cmd_note(void) {
     char buf[80];
     strcpy(buf, "");
     if (!get_string(_("メモ: ", "Note: "), buf, 60))
@@ -190,8 +190,7 @@ void do_cmd_note(void)
 /*
  * Mention the current version
  */
-void do_cmd_version(void)
-{
+void do_cmd_version(void) {
     char buf[120];
     put_version(buf);
     msg_print(buf);
@@ -201,8 +200,7 @@ void do_cmd_version(void)
  * Note that "feeling" is set to zero unless some time has passed.
  * Note that this is done when the level is GENERATED, not entered.
  */
-void do_cmd_feeling(player_type *creature_ptr)
-{
+void do_cmd_feeling(player_type* creature_ptr) {
     if (creature_ptr->wild_mode)
         return;
 
@@ -239,8 +237,7 @@ void do_cmd_feeling(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_time(player_type *creature_ptr)
-{
+void do_cmd_time(player_type* creature_ptr) {
     int day, hour, min;
     extract_day_hour_min(creature_ptr, &day, &hour, &min);
 
@@ -259,11 +256,12 @@ void do_cmd_time(player_type *creature_ptr)
     char buf[1024];
     if (!randint0(10) || creature_ptr->image) {
         path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, _("timefun_j.txt", "timefun.txt"));
-    } else {
+    }
+    else {
         path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, _("timenorm_j.txt", "timenorm.txt"));
     }
 
-    FILE *fff;
+    FILE* fff;
     fff = angband_fopen(buf, "rt");
 
     if (!fff)

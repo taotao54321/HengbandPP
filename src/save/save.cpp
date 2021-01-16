@@ -44,12 +44,11 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return 成功すればtrue
  */
-static bool wr_savefile_new(player_type *player_ptr)
-{
+static bool wr_savefile_new(player_type* player_ptr) {
     compact_objects(player_ptr, 0);
     compact_monsters(player_ptr, 0);
 
-    u32b now = (u32b)time((time_t *)0);
+    u32b now = (u32b)time((time_t*)0);
     current_world_ptr->sf_system = 0L;
     current_world_ptr->sf_when = now;
     current_world_ptr->sf_saves++;
@@ -120,7 +119,7 @@ static bool wr_savefile_new(player_type *player_ptr)
     wr_byte(tmp8u);
 
     for (int i = 0; i < max_q_idx; i++) {
-        quest_type *const q_ptr = &quest[i];
+        quest_type* const q_ptr = &quest[i];
         wr_s16b(q_ptr->status);
         wr_s16b((s16b)q_ptr->level);
         wr_byte((byte)q_ptr->complev);
@@ -154,7 +153,7 @@ static bool wr_savefile_new(player_type *player_ptr)
     tmp16u = max_a_idx;
     wr_u16b(tmp16u);
     for (int i = 0; i < tmp16u; i++) {
-        artifact_type *a_ptr = &a_info[i];
+        artifact_type* a_ptr = &a_info[i];
         wr_byte(a_ptr->cur_num);
         wr_s16b(a_ptr->floor_id);
     }
@@ -177,7 +176,7 @@ static bool wr_savefile_new(player_type *player_ptr)
         wr_byte((byte)player_ptr->spell_order[i]);
 
     for (int i = 0; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr = &player_ptr->inventory_list[i];
+        object_type* o_ptr = &player_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
 
@@ -223,8 +222,7 @@ static bool wr_savefile_new(player_type *player_ptr)
  * @details
  * Angband 2.8.0 will use "fd" instead of "fff" if possible
  */
-static bool save_player_aux(player_type *player_ptr, char *name)
-{
+static bool save_player_aux(player_type* player_ptr, char* name) {
     safe_setuid_grab(player_ptr);
     int file_permission = 0644;
     int fd = fd_make(name, file_permission);
@@ -266,8 +264,7 @@ static bool save_player_aux(player_type *player_ptr, char *name)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return 成功すればtrue
  */
-bool save_player(player_type *player_ptr)
-{
+bool save_player(player_type* player_ptr) {
     char safe[1024];
     strcpy(safe, savefile);
     strcat(safe, ".new");

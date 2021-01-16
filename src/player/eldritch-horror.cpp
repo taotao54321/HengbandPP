@@ -5,14 +5,13 @@
  */
 
 #include "player/eldritch-horror.h"
-#include "player/player-status-flags.h"
 #include "core/player-update-types.h"
 #include "core/stuff-handler.h"
+#include "monster-race/monster-race-hook.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-flags1.h"
 #include "monster-race/race-flags2.h"
 #include "monster-race/race-flags3.h"
-#include "monster-race/monster-race-hook.h"
 #include "monster/horror-descriptions.h"
 #include "monster/monster-describer.h"
 #include "monster/monster-info.h"
@@ -20,9 +19,10 @@
 #include "monster/monster-util.h"
 #include "monster/smart-learn-types.h"
 #include "mutation/mutation-flag-types.h"
-#include "status/bad-status-setter.h"
-#include "player/player-status.h"
 #include "player/mimic-info-table.h"
+#include "player/player-status-flags.h"
+#include "player/player-status.h"
+#include "status/bad-status-setter.h"
 #include "status/base-status.h"
 #include "system/floor-type-definition.h"
 #include "view/display-messages.h"
@@ -37,8 +37,7 @@
  * @param r_ptr モンスター情報への参照ポインタ
  * @return
  */
-static concptr decide_horror_message(monster_race *r_ptr)
-{
+static concptr decide_horror_message(monster_race* r_ptr) {
     int horror_num = randint0(MAX_SAN_HORROR_SUM);
     if (horror_num < MAX_SAN_HORROR_COMMON) {
         return horror_desc_common[horror_num];
@@ -58,8 +57,7 @@ static concptr decide_horror_message(monster_race *r_ptr)
  * @param r_ptr モンスター情報への参照ポインタ
  * @return なし
  */
-static void see_eldritch_horror(GAME_TEXT *m_name, monster_race *r_ptr)
-{
+static void see_eldritch_horror(GAME_TEXT* m_name, monster_race* r_ptr) {
     concptr horror_message = decide_horror_message(r_ptr);
     msg_format(_("%s%sの顔を見てしまった！", "You behold the %s visage of %s!"), horror_message, m_name);
     r_ptr->r_flags2 |= RF2_ELDRITCH_HORROR;
@@ -71,8 +69,7 @@ static void see_eldritch_horror(GAME_TEXT *m_name, monster_race *r_ptr)
  * @param r_ptr モンスターへの参照ポインタ
  * @return なし
  */
-static void feel_eldritch_horror(concptr desc, monster_race *r_ptr)
-{
+static void feel_eldritch_horror(concptr desc, monster_race* r_ptr) {
     concptr horror_message = decide_horror_message(r_ptr);
     msg_format(_("%s%sの顔を見てしまった！", "You behold the %s visage of %s!"), horror_message, desc);
     r_ptr->r_flags2 |= RF2_ELDRITCH_HORROR;
@@ -84,21 +81,21 @@ static void feel_eldritch_horror(concptr desc, monster_race *r_ptr)
  * @param necro 暗黒領域魔法の詠唱失敗によるものならばTRUEを返す
  * @return なし
  */
-void sanity_blast(player_type *creature_ptr, monster_type *m_ptr, bool necro)
-{
+void sanity_blast(player_type* creature_ptr, monster_type* m_ptr, bool necro) {
     if (creature_ptr->phase_out || !current_world_ptr->character_dungeon)
         return;
 
     int power = 100;
     if (!necro && m_ptr) {
         GAME_TEXT m_name[MAX_NLEN];
-        monster_race *r_ptr = &r_info[m_ptr->ap_r_idx];
+        monster_race* r_ptr = &r_info[m_ptr->ap_r_idx];
         power = r_ptr->level / 2;
         monster_desc(creature_ptr, m_name, m_ptr, 0);
         if (!(r_ptr->flags1 & RF1_UNIQUE)) {
             if (r_ptr->flags1 & RF1_FRIENDS)
                 power /= 2;
-        } else
+        }
+        else
             power *= 2;
 
         if (!current_world_ptr->is_loading_now)
@@ -140,8 +137,9 @@ void sanity_blast(player_type *creature_ptr, monster_type *m_ptr, bool necro)
             if (saving_throw(25 + creature_ptr->lev))
                 return;
         }
-    } else if (!necro) {
-        monster_race *r_ptr;
+    }
+    else if (!necro) {
+        monster_race* r_ptr;
         GAME_TEXT m_name[MAX_NLEN];
         concptr desc;
         get_mon_num_prep(creature_ptr, get_nightmare, NULL);
@@ -161,7 +159,8 @@ void sanity_blast(player_type *creature_ptr, monster_type *m_ptr, bool necro)
         if (!(r_ptr->flags1 & RF1_UNIQUE)) {
             if (r_ptr->flags1 & RF1_FRIENDS)
                 power /= 2;
-        } else
+        }
+        else
             power *= 2;
 
         if (saving_throw(creature_ptr->skill_sav * 100 / power)) {
@@ -196,16 +195,19 @@ void sanity_blast(player_type *creature_ptr, monster_type *m_ptr, bool necro)
                     return;
                 break;
             }
-        } else {
+        }
+        else {
             if (mimic_info[creature_ptr->mimic_form].MIMIC_FLAGS & MIMIC_IS_DEMON) {
                 if (saving_throw(20 + creature_ptr->lev))
                     return;
-            } else if (mimic_info[creature_ptr->mimic_form].MIMIC_FLAGS & MIMIC_IS_UNDEAD) {
+            }
+            else if (mimic_info[creature_ptr->mimic_form].MIMIC_FLAGS & MIMIC_IS_UNDEAD) {
                 if (saving_throw(10 + creature_ptr->lev))
                     return;
             }
         }
-    } else {
+    }
+    else {
         msg_print(_("ネクロノミコンを読んで正気を失った！", "Your sanity is shaken by reading the Necronomicon!"));
     }
 
@@ -220,7 +222,8 @@ void sanity_blast(player_type *creature_ptr, monster_type *m_ptr, bool necro)
         if (!(creature_ptr->muta3 & MUT3_MORONIC)) {
             if ((creature_ptr->stat_use[A_INT] < 4) && (creature_ptr->stat_use[A_WIS] < 4)) {
                 msg_print(_("あなたは完璧な馬鹿になったような気がした。しかしそれは元々だった。", "You turn into an utter moron!"));
-            } else {
+            }
+            else {
                 msg_print(_("あなたは完璧な馬鹿になった！", "You turn into an utter moron!"));
             }
 

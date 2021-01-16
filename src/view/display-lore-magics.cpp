@@ -2,8 +2,7 @@
 #include "monster-race/race-flags2.h"
 #include "term/term-color-types.h"
 
-void display_monster_breath(lore_type *lore_ptr)
-{
+void display_monster_breath(lore_type* lore_ptr) {
     lore_ptr->breath = FALSE;
     if (lore_ptr->vn <= 0)
         return;
@@ -30,8 +29,7 @@ void display_monster_breath(lore_type *lore_ptr)
 #endif
 }
 
-void display_monster_magic_types(lore_type *lore_ptr)
-{
+void display_monster_magic_types(lore_type* lore_ptr) {
     lore_ptr->magic = FALSE;
     if (lore_ptr->vn == 0)
         return;
@@ -39,7 +37,8 @@ void display_monster_magic_types(lore_type *lore_ptr)
     lore_ptr->magic = TRUE;
     if (lore_ptr->breath) {
         hooked_roff(_("、なおかつ", ", and is also"));
-    } else {
+    }
+    else {
         hooked_roff(format(_("%^sは", "%^s is"), wd_he[lore_ptr->msex]));
     }
 
@@ -74,8 +73,7 @@ void display_monster_magic_types(lore_type *lore_ptr)
 #endif
 }
 
-void display_mosnter_magic_possibility(lore_type *lore_ptr)
-{
+void display_mosnter_magic_possibility(lore_type* lore_ptr) {
     if (!lore_ptr->breath && !lore_ptr->magic)
         return;
 
@@ -83,7 +81,8 @@ void display_mosnter_magic_possibility(lore_type *lore_ptr)
     int n = lore_ptr->r_ptr->freq_spell;
     if (m > 100 || lore_ptr->know_everything) {
         hooked_roff(format(_("(確率:1/%d)", "; 1 time in %d"), 100 / n));
-    } else if (m) {
+    }
+    else if (m) {
         n = ((n + 9) / 10) * 10;
         hooked_roff(format(_("(確率:約1/%d)", "; about 1 time in %d"), 100 / n));
     }

@@ -8,8 +8,7 @@
 #endif
 
 #ifdef JP
-static void display_monster_blows_jp(lore_type *lore_ptr, int attack_numbers, int d1, int d2, int m)
-{
+static void display_monster_blows_jp(lore_type* lore_ptr, int attack_numbers, int d1, int d2, int m) {
     if (attack_numbers == 0) {
         hooked_roff(format("%^sは", wd_he[lore_ptr->msex]));
     }
@@ -44,13 +43,14 @@ static void display_monster_blows_jp(lore_type *lore_ptr, int attack_numbers, in
 }
 #else
 
-static void display_monster_blows_en(lore_type *lore_ptr, int attack_numbers, int d1, int d2, int m)
-{
+static void display_monster_blows_en(lore_type* lore_ptr, int attack_numbers, int d1, int d2, int m) {
     if (attack_numbers == 0) {
         hooked_roff(format("%^s can ", wd_he[lore_ptr->msex]));
-    } else if (attack_numbers < lore_ptr->count - 1) {
+    }
+    else if (attack_numbers < lore_ptr->count - 1) {
         hooked_roff(", ");
-    } else {
+    }
+    else {
         hooked_roff(", and ");
     }
 
@@ -69,16 +69,14 @@ static void display_monster_blows_en(lore_type *lore_ptr, int attack_numbers, in
 }
 #endif
 
-void display_monster_blows(lore_type *lore_ptr, int m, int attack_numbers)
-{
+void display_monster_blows(lore_type* lore_ptr, int m, int attack_numbers) {
     int d1 = lore_ptr->r_ptr->blow[m].d_dice;
     int d2 = lore_ptr->r_ptr->blow[m].d_side;
-    void (*display_monster_blows_pf)(lore_type *, int, int, int, int) = _(display_monster_blows_jp, display_monster_blows_en);
+    void (*display_monster_blows_pf)(lore_type*, int, int, int, int) = _(display_monster_blows_jp, display_monster_blows_en);
     (*display_monster_blows_pf)(lore_ptr, attack_numbers, d1, d2, m);
 }
 
-void display_monster_attacks(lore_type *lore_ptr)
-{
+void display_monster_attacks(lore_type* lore_ptr) {
     const int max_attack_numbers = 4;
     for (int m = 0; m < max_attack_numbers; m++) {
         if (!lore_ptr->r_ptr->blow[m].method || (lore_ptr->r_ptr->blow[m].method == RBM_SHOOT))
@@ -102,9 +100,11 @@ void display_monster_attacks(lore_type *lore_ptr)
 
     if (attack_numbers > 0) {
         hooked_roff(_("。", ".  "));
-    } else if (lore_ptr->flags1 & RF1_NEVER_BLOW) {
+    }
+    else if (lore_ptr->flags1 & RF1_NEVER_BLOW) {
         hooked_roff(format(_("%^sは物理的な攻撃方法を持たない。", "%^s has no physical attacks.  "), wd_he[lore_ptr->msex]));
-    } else {
+    }
+    else {
         hooked_roff(format(_("%s攻撃については何も知らない。", "Nothing is known about %s attack.  "), wd_his[lore_ptr->msex]));
     }
 }

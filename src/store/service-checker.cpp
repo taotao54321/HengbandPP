@@ -18,15 +18,13 @@
  * @param o_ptr 判定したいオブジェクト構造体の参照ポインタ
  * @return アイテムが祝福されたアイテムならばTRUEを返す
  */
-static bool is_blessed_item(player_type *player_ptr, object_type *o_ptr)
-{
+static bool is_blessed_item(player_type* player_ptr, object_type* o_ptr) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     return has_flag(flgs, TR_BLESSED);
 }
 
-static bool check_store_general(object_type *o_ptr)
-{
+static bool check_store_general(object_type* o_ptr) {
     switch (o_ptr->tval) {
     case TV_POTION:
         if (o_ptr->sval != SV_POTION_WATER)
@@ -53,8 +51,7 @@ static bool check_store_general(object_type *o_ptr)
     }
 }
 
-static bool check_store_armoury(object_type *o_ptr)
-{
+static bool check_store_armoury(object_type* o_ptr) {
     switch (o_ptr->tval) {
     case TV_BOOTS:
     case TV_GLOVES:
@@ -71,8 +68,7 @@ static bool check_store_armoury(object_type *o_ptr)
     }
 }
 
-static bool check_store_weapon(object_type *o_ptr)
-{
+static bool check_store_weapon(object_type* o_ptr) {
     switch (o_ptr->tval) {
     case TV_SHOT:
     case TV_BOLT:
@@ -90,8 +86,7 @@ static bool check_store_weapon(object_type *o_ptr)
     }
 }
 
-static bool check_store_temple(player_type *player_ptr, object_type *o_ptr)
-{
+static bool check_store_temple(player_type* player_ptr, object_type* o_ptr) {
     switch (o_ptr->tval) {
     case TV_LIFE_BOOK:
     case TV_CRUSADE_BOOK:
@@ -101,7 +96,7 @@ static bool check_store_temple(player_type *player_ptr, object_type *o_ptr)
         return TRUE;
     case TV_FIGURINE:
     case TV_STATUE: {
-        monster_race *r_ptr = &r_info[o_ptr->pval];
+        monster_race* r_ptr = &r_info[o_ptr->pval];
         if (!(r_ptr->flags3 & RF3_EVIL))
             if (((r_ptr->flags3 & RF3_GOOD) != 0) || ((r_ptr->flags3 & RF3_ANIMAL) != 0) || (angband_strchr("?!", r_ptr->d_char) != NULL))
                 return TRUE;
@@ -118,8 +113,7 @@ static bool check_store_temple(player_type *player_ptr, object_type *o_ptr)
     }
 }
 
-static bool check_store_alchemist(object_type *o_ptr)
-{
+static bool check_store_alchemist(object_type* o_ptr) {
     switch (o_ptr->tval) {
     case TV_SCROLL:
     case TV_POTION:
@@ -129,8 +123,7 @@ static bool check_store_alchemist(object_type *o_ptr)
     }
 }
 
-static bool check_store_magic(object_type *o_ptr)
-{
+static bool check_store_magic(object_type* o_ptr) {
     switch (o_ptr->tval) {
     case TV_SORCERY_BOOK:
     case TV_NATURE_BOOK:
@@ -158,8 +151,7 @@ static bool check_store_magic(object_type *o_ptr)
     }
 }
 
-static bool check_store_book(object_type *o_ptr)
-{
+static bool check_store_book(object_type* o_ptr) {
     switch (o_ptr->tval) {
     case TV_SORCERY_BOOK:
     case TV_NATURE_BOOK:
@@ -179,8 +171,7 @@ static bool check_store_book(object_type *o_ptr)
     }
 }
 
-static bool switch_store_check(player_type *player_ptr, object_type *o_ptr)
-{
+static bool switch_store_check(player_type* player_ptr, object_type* o_ptr) {
     switch (cur_store_num) {
     case STORE_GENERAL:
         return check_store_general(o_ptr);
@@ -209,8 +200,7 @@ static bool switch_store_check(player_type *player_ptr, object_type *o_ptr)
  * @note
  * Note that a shop-keeper must refuse to buy "worthless" items
  */
-bool store_will_buy(player_type *player_ptr, object_type *o_ptr)
-{
+bool store_will_buy(player_type* player_ptr, object_type* o_ptr) {
     if ((cur_store_num == STORE_HOME) || (cur_store_num == STORE_MUSEUM))
         return TRUE;
 
@@ -220,8 +210,7 @@ bool store_will_buy(player_type *player_ptr, object_type *o_ptr)
     return object_value(player_ptr, o_ptr) > 0;
 }
 
-static int mass_lite_produce(const PRICE cost)
-{
+static int mass_lite_produce(const PRICE cost) {
     int size = 1;
     if (cost <= 5L)
         size += damroll(3, 5);
@@ -235,8 +224,7 @@ static int mass_lite_produce(const PRICE cost)
     return size;
 }
 
-static int mass_scroll_produce(object_type *o_ptr, const PRICE cost)
-{
+static int mass_scroll_produce(object_type* o_ptr, const PRICE cost) {
     int size = 1;
     if (cost <= 60L)
         size += damroll(3, 5);
@@ -253,8 +241,7 @@ static int mass_scroll_produce(object_type *o_ptr, const PRICE cost)
     return size;
 }
 
-static int mass_book_produce(const PRICE cost)
-{
+static int mass_book_produce(const PRICE cost) {
     int size = 1;
     if (cost <= 50L)
         size += damroll(2, 3);
@@ -265,8 +252,7 @@ static int mass_book_produce(const PRICE cost)
     return size;
 }
 
-static int mass_equipment_produce(object_type *o_ptr, const PRICE cost)
-{
+static int mass_equipment_produce(object_type* o_ptr, const PRICE cost) {
     int size = 1;
     if (object_is_artifact(o_ptr) || object_is_ego(o_ptr))
         return size;
@@ -280,8 +266,7 @@ static int mass_equipment_produce(object_type *o_ptr, const PRICE cost)
     return size;
 }
 
-static int mass_arrow_produce(const PRICE cost)
-{
+static int mass_arrow_produce(const PRICE cost) {
     int size = 1;
     if (cost <= 5L)
         size += damroll(5, 5);
@@ -295,8 +280,7 @@ static int mass_arrow_produce(const PRICE cost)
     return size;
 }
 
-static int mass_figurine_produce(const PRICE cost)
-{
+static int mass_figurine_produce(const PRICE cost) {
     int size = 1;
     if (cost <= 100L)
         size += damroll(2, 2);
@@ -307,8 +291,7 @@ static int mass_figurine_produce(const PRICE cost)
     return size;
 }
 
-static int mass_magic_produce(const PRICE cost)
-{
+static int mass_magic_produce(const PRICE cost) {
     int size = 1;
     if ((cur_store_num != STORE_BLACK) || !one_in_(3))
         return size;
@@ -321,8 +304,7 @@ static int mass_magic_produce(const PRICE cost)
     return size;
 }
 
-static int switch_mass_production(object_type *o_ptr, const PRICE cost)
-{
+static int switch_mass_production(object_type* o_ptr, const PRICE cost) {
     switch (o_ptr->tval) {
     case TV_FOOD:
     case TV_FLASK:
@@ -379,20 +361,19 @@ static int switch_mass_production(object_type *o_ptr, const PRICE cost)
     }
 }
 
-static DISCOUNT_RATE decide_discount_rate(const PRICE cost)
-{
+static DISCOUNT_RATE decide_discount_rate(const PRICE cost) {
     if (cost < 5)
         return 0;
-    
+
     if (one_in_(25))
         return 25;
-    
+
     if (one_in_(150))
         return 50;
-    
+
     if (one_in_(300))
         return 75;
-    
+
     if (one_in_(500))
         return 90;
 
@@ -409,8 +390,7 @@ static DISCOUNT_RATE decide_discount_rate(const PRICE cost)
  * Some objects can be sold at a "discount" (in small piles)
  * </pre>
  */
-void mass_produce(player_type *player_ptr, object_type *o_ptr)
-{
+void mass_produce(player_type* player_ptr, object_type* o_ptr) {
     const PRICE cost = object_value(player_ptr, o_ptr);
     int size = switch_mass_production(o_ptr, cost);
     DISCOUNT_RATE discount = decide_discount_rate(cost);

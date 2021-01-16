@@ -33,7 +33,7 @@ typedef struct ts_type {
     bool flag;
     char query;
     char info[80];
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     TERM_LEN wid, hgt;
     int m;
     int distance;
@@ -41,8 +41,7 @@ typedef struct ts_type {
     bool move_fast;
 } ts_type;
 
-static ts_type *initialize_target_set_type(player_type *creature_ptr, ts_type *ts_ptr, target_type mode)
-{
+static ts_type* initialize_target_set_type(player_type* creature_ptr, ts_type* ts_ptr, target_type mode) {
     ts_ptr->mode = mode;
     ts_ptr->y = creature_ptr->y;
     ts_ptr->x = creature_ptr->x;
@@ -64,8 +63,7 @@ static ts_type *initialize_target_set_type(player_type *creature_ptr, ts_type *t
  * Also used in do_cmd_locate
  * @return 実際に再描画が必要だった場合TRUEを返す
  */
-static bool change_panel_xy(player_type *creature_ptr, POSITION y, POSITION x)
-{
+static bool change_panel_xy(player_type* creature_ptr, POSITION y, POSITION x) {
     POSITION dy = 0, dx = 0;
     TERM_LEN wid, hgt;
     get_screen_size(&wid, &hgt);
@@ -90,8 +88,7 @@ static bool change_panel_xy(player_type *creature_ptr, POSITION y, POSITION x)
 /*
  * Help "select" a location (see below)
  */
-static POSITION_IDX target_pick(POSITION y1, POSITION x1, POSITION dy, POSITION dx)
-{
+static POSITION_IDX target_pick(POSITION y1, POSITION x1, POSITION dy, POSITION dx) {
     POSITION_IDX b_i = -1, b_v = 9999;
     for (POSITION_IDX i = 0; i < tmp_pos.n; i++) {
         POSITION x2 = tmp_pos.x[i];
@@ -123,8 +120,7 @@ static POSITION_IDX target_pick(POSITION y1, POSITION x1, POSITION dy, POSITION 
     return b_i;
 }
 
-static void describe_projectablity(player_type *creature_ptr, ts_type *ts_ptr)
-{
+static void describe_projectablity(player_type* creature_ptr, ts_type* ts_ptr) {
     ts_ptr->y = tmp_pos.y[ts_ptr->m];
     ts_ptr->x = tmp_pos.x[ts_ptr->m];
     change_panel_xy(creature_ptr, ts_ptr->y, ts_ptr->x);
@@ -146,8 +142,7 @@ static void describe_projectablity(player_type *creature_ptr, ts_type *ts_ptr)
     strcat(ts_ptr->info, cheatinfo);
 }
 
-static void menu_target(ts_type *ts_ptr)
-{
+static void menu_target(ts_type* ts_ptr) {
     if (!use_menu)
         return;
 
@@ -155,8 +150,7 @@ static void menu_target(ts_type *ts_ptr)
         ts_ptr->query = 't';
 }
 
-static void switch_target_input(player_type *creature_ptr, ts_type *ts_ptr)
-{
+static void switch_target_input(player_type* creature_ptr, ts_type* ts_ptr) {
     ts_ptr->distance = 0;
     switch (ts_ptr->query) {
     case ESCAPE:
@@ -236,8 +230,7 @@ static void switch_target_input(player_type *creature_ptr, ts_type *ts_ptr)
     }
 }
 
-static bool check_panel_changed(player_type *creature_ptr, ts_type *ts_ptr)
-{
+static bool check_panel_changed(player_type* creature_ptr, ts_type* ts_ptr) {
     if (!change_panel(creature_ptr, ddy[ts_ptr->distance], ddx[ts_ptr->distance]))
         return FALSE;
 
@@ -252,9 +245,8 @@ static bool check_panel_changed(player_type *creature_ptr, ts_type *ts_ptr)
     return TRUE;
 }
 
-static void sweep_targets(player_type *creature_ptr, ts_type *ts_ptr)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+static void sweep_targets(player_type* creature_ptr, ts_type* ts_ptr) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     while (ts_ptr->flag && (ts_ptr->target_num < 0)) {
         if (check_panel_changed(creature_ptr, ts_ptr))
             continue;
@@ -296,8 +288,7 @@ static void sweep_targets(player_type *creature_ptr, ts_type *ts_ptr)
     }
 }
 
-static bool set_target_grid(player_type *creature_ptr, ts_type *ts_ptr)
-{
+static bool set_target_grid(player_type* creature_ptr, ts_type* ts_ptr) {
     if (!ts_ptr->flag || (tmp_pos.n == 0))
         return FALSE;
 
@@ -321,8 +312,7 @@ static bool set_target_grid(player_type *creature_ptr, ts_type *ts_ptr)
     return TRUE;
 }
 
-static void describe_grid_wizard(player_type *creature_ptr, ts_type *ts_ptr)
-{
+static void describe_grid_wizard(player_type* creature_ptr, ts_type* ts_ptr) {
     if (!cheat_sight)
         return;
 
@@ -332,8 +322,7 @@ static void describe_grid_wizard(player_type *creature_ptr, ts_type *ts_ptr)
     strcat(ts_ptr->info, cheatinfo);
 }
 
-static void switch_next_grid_command(player_type *creature_ptr, ts_type *ts_ptr)
-{
+static void switch_next_grid_command(player_type* creature_ptr, ts_type* ts_ptr) {
     switch (ts_ptr->query) {
     case ESCAPE:
     case 'q':
@@ -393,8 +382,7 @@ static void switch_next_grid_command(player_type *creature_ptr, ts_type *ts_ptr)
     }
 }
 
-static void decide_change_panel(player_type *creature_ptr, ts_type *ts_ptr)
-{
+static void decide_change_panel(player_type* creature_ptr, ts_type* ts_ptr) {
     if (ts_ptr->distance == 0)
         return;
 
@@ -404,7 +392,8 @@ static void decide_change_panel(player_type *creature_ptr, ts_type *ts_ptr)
         int mag = MIN(ts_ptr->wid / 2, ts_ptr->hgt / 2);
         ts_ptr->x += dx * mag;
         ts_ptr->y += dy * mag;
-    } else {
+    }
+    else {
         ts_ptr->x += dx;
         ts_ptr->y += dy;
     }
@@ -421,7 +410,7 @@ static void decide_change_panel(player_type *creature_ptr, ts_type *ts_ptr)
             target_set_prepare(creature_ptr, ts_ptr->mode);
     }
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (ts_ptr->x >= floor_ptr->width - 1)
         ts_ptr->x = floor_ptr->width - 2;
     else if (ts_ptr->x <= 0)
@@ -433,8 +422,7 @@ static void decide_change_panel(player_type *creature_ptr, ts_type *ts_ptr)
         ts_ptr->y = 1;
 }
 
-static void sweep_target_grids(player_type *creature_ptr, ts_type *ts_ptr)
-{
+static void sweep_target_grids(player_type* creature_ptr, ts_type* ts_ptr) {
     while (!ts_ptr->done) {
         if (set_target_grid(creature_ptr, ts_ptr))
             continue;
@@ -463,10 +451,9 @@ static void sweep_target_grids(player_type *creature_ptr, ts_type *ts_ptr)
 /*
  * Handle "target" and "look".
  */
-bool target_set(player_type *creature_ptr, target_type mode)
-{
+bool target_set(player_type* creature_ptr, target_type mode) {
     ts_type tmp_ts;
-    ts_type *ts_ptr = initialize_target_set_type(creature_ptr, &tmp_ts, mode);
+    ts_type* ts_ptr = initialize_target_set_type(creature_ptr, &tmp_ts, mode);
     target_who = 0;
     target_set_prepare(creature_ptr, mode);
     sweep_target_grids(creature_ptr, ts_ptr);

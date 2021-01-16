@@ -27,8 +27,7 @@
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void check_fall_off_horse(player_type *creature_ptr, monap_type *monap_ptr)
-{
+void check_fall_off_horse(player_type* creature_ptr, monap_type* monap_ptr) {
     if ((creature_ptr->riding == 0) || (monap_ptr->damage == 0))
         return;
 
@@ -47,8 +46,7 @@ void check_fall_off_horse(player_type *creature_ptr, monap_type *monap_ptr)
  * @return FALSEなら落馬しないことで確定、TRUEなら処理続行
  * @details レベルの低い乗馬からは落馬しにくい
  */
-static bool calc_fall_off_possibility(player_type *creature_ptr, const HIT_POINT dam, const bool force, monster_race *r_ptr)
-{
+static bool calc_fall_off_possibility(player_type* creature_ptr, const HIT_POINT dam, const bool force, monster_race* r_ptr) {
     if (force)
         return TRUE;
 
@@ -87,13 +85,12 @@ static bool calc_fall_off_possibility(player_type *creature_ptr, const HIT_POINT
  * @param force TRUEならば強制的に落馬する
  * @return 実際に落馬したらTRUEを返す
  */
-bool process_fall_off_horse(player_type *creature_ptr, HIT_POINT dam, bool force)
-{
+bool process_fall_off_horse(player_type* creature_ptr, HIT_POINT dam, bool force) {
     POSITION sy = 0, sx = 0;
     int sn = 0;
     GAME_TEXT m_name[MAX_NLEN];
-    monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     if (!creature_ptr->riding)
         return FALSE;
@@ -108,7 +105,7 @@ bool process_fall_off_horse(player_type *creature_ptr, HIT_POINT dam, bool force
             POSITION y = creature_ptr->y + ddy_ddd[i];
             POSITION x = creature_ptr->x + ddx_ddd[i];
 
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
 
             if (g_ptr->m_idx)
@@ -168,7 +165,8 @@ bool process_fall_off_horse(player_type *creature_ptr, HIT_POINT dam, bool force
     if (creature_ptr->levitation && !force) {
         monster_desc(creature_ptr, m_name, m_ptr, 0);
         msg_format(_("%sから落ちたが、空中でうまく体勢を立て直して着地した。", "You are thrown from %s, but make a good landing."), m_name);
-    } else {
+    }
+    else {
         take_hit(creature_ptr, DAMAGE_NOESCAPE, r_ptr->level + 3, _("落馬", "Falling from riding"), -1);
         fall_dam = TRUE;
     }

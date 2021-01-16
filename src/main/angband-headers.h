@@ -6,7 +6,7 @@
  * @brief 各初期データ用ヘッダ構造体 / Template file header information (see "init.c").
  */
 typedef struct angband_header angband_header;
-typedef errr (*parse_info_txt_func)(char *buf, angband_header *head);
+typedef errr (*parse_info_txt_func)(char* buf, angband_header* head);
 
 struct angband_header {
     byte v_major; /* Version -- major */
@@ -23,14 +23,14 @@ struct angband_header {
     STR_OFFSET text_size; /* Size of the "text" array in bytes */
     STR_OFFSET tag_size; /* Size of the "tag" array in bytes */
 
-    void *info_ptr;
-    char *name_ptr;
-    char *text_ptr;
-    char *tag_ptr;
+    void* info_ptr;
+    char* name_ptr;
+    char* text_ptr;
+    char* tag_ptr;
 
     parse_info_txt_func parse_info_txt;
 
-    void (*retouch)(angband_header *head);
+    void (*retouch)(angband_header* head);
 };
 
 extern angband_header f_head;

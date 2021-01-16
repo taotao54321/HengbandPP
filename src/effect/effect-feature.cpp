@@ -26,9 +26,8 @@
  * Line 2 -- forbid monsters
  * Line 3 -- forbid the player
  */
-static bool cave_naked_bold(player_type *caster_ptr, POSITION y, POSITION x)
-{
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+static bool cave_naked_bold(player_type* caster_ptr, POSITION y, POSITION x) {
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
     return cave_clean_bold(floor_ptr, y, x) && (floor_ptr->grid_array[y][x].m_idx == 0) && !player_bold(caster_ptr, y, x);
 }
 
@@ -58,11 +57,10 @@ static bool cave_naked_bold(player_type *caster_ptr, POSITION y, POSITION x)
  * Perhaps we should affect doors?
  * </pre>
  */
-bool affect_feature(player_type *caster_ptr, MONSTER_IDX who, POSITION r, POSITION y, POSITION x, HIT_POINT dam, EFFECT_ID typ)
-{
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
-    feature_type *f_ptr = &f_info[g_ptr->feat];
+bool affect_feature(player_type* caster_ptr, MONSTER_IDX who, POSITION r, POSITION y, POSITION x, HIT_POINT dam, EFFECT_ID typ) {
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
+    feature_type* f_ptr = &f_info[g_ptr->feat];
 
     bool obvious = FALSE;
     bool known = player_has_los_bold(caster_ptr, y, x);
@@ -213,7 +211,7 @@ bool affect_feature(player_type *caster_ptr, MONSTER_IDX who, POSITION r, POSITI
             break;
 
         s16b old_mimic = g_ptr->mimic;
-        feature_type *mimic_f_ptr = &f_info[get_feat_mimic(g_ptr)];
+        feature_type* mimic_f_ptr = &f_info[get_feat_mimic(g_ptr)];
 
         cave_alter_feat(caster_ptr, y, x, FF_SPIKE);
         g_ptr->mimic = old_mimic;
@@ -289,7 +287,8 @@ bool affect_feature(player_type *caster_ptr, MONSTER_IDX who, POSITION r, POSITI
             if (!has_flag(f_ptr->flags, FF_FLOOR))
                 break;
             cave_set_feat(caster_ptr, y, x, feat_shallow_lava);
-        } else if (dam) {
+        }
+        else if (dam) {
             cave_set_feat(caster_ptr, y, x, feat_deep_lava);
         }
 
@@ -302,7 +301,8 @@ bool affect_feature(player_type *caster_ptr, MONSTER_IDX who, POSITION r, POSITI
             if (!has_flag(f_ptr->flags, FF_FLOOR))
                 break;
             cave_set_feat(caster_ptr, y, x, feat_shallow_water);
-        } else if (dam) {
+        }
+        else if (dam) {
             cave_set_feat(caster_ptr, y, x, feat_deep_water);
         }
 
@@ -344,7 +344,7 @@ bool affect_feature(player_type *caster_ptr, MONSTER_IDX who, POSITION r, POSITI
                 if (!in_bounds2(floor_ptr, by, bx))
                     continue;
 
-                grid_type *cc_ptr = &floor_ptr->grid_array[by][bx];
+                grid_type* cc_ptr = &floor_ptr->grid_array[by][bx];
                 if (has_flag(f_info[get_feat_mimic(cc_ptr)].flags, FF_GLOW)) {
                     do_dark = FALSE;
                     break;

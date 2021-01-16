@@ -10,10 +10,10 @@
 #include "inventory/inventory-slot-types.h"
 #include "object-enchant/object-boost.h"
 #include "object-enchant/object-ego.h"
-#include "object/object-kind-hook.h"
-#include "object/object-kind.h"
 #include "object-enchant/tr-types.h"
 #include "object-enchant/trc-types.h"
+#include "object/object-kind-hook.h"
+#include "object/object-kind.h"
 #include "sv-definition/sv-armor-types.h"
 #include "sv-definition/sv-protector-types.h"
 #include "util/bit-flags-calculator.h"
@@ -30,8 +30,7 @@
  * Hack -- note special processing for crown/helm\n
  * Hack -- note special processing for robe of permanence\n
  */
-void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, int power)
-{
+void apply_magic_armor(player_type* owner_ptr, object_type* o_ptr, DEPTH level, int power) {
     ARMOUR_CLASS toac1 = (ARMOUR_CLASS)randint1(5) + m_bonus(5, level);
     ARMOUR_CLASS toac2 = (ARMOUR_CLASS)m_bonus(10, level);
     if (power > 0) {
@@ -39,7 +38,8 @@ void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, 
         if (power > 1) {
             o_ptr->to_a += toac2;
         }
-    } else if (power < 0) {
+    }
+    else if (power < 0) {
         o_ptr->to_a -= toac1;
         if (power < -1) {
             o_ptr->to_a -= toac2;
@@ -66,7 +66,8 @@ void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, 
                     o_ptr->sval = SV_YOIYAMI_ROBE;
                     o_ptr->ac = 0;
                     o_ptr->to_a = 0;
-                } else {
+                }
+                else {
                     o_ptr->name2 = EGO_PERMANENCE;
                 }
 
@@ -116,8 +117,9 @@ void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, 
             case EGO_A_DEMON:
                 if (one_in_(3))
                     o_ptr->curse_flags |= (TRC_HEAVY_CURSE);
-                one_in_(3) ? add_flag(o_ptr->art_flags, TR_DRAIN_EXP)
-                           : one_in_(2) ? add_flag(o_ptr->art_flags, TR_DRAIN_HP) : add_flag(o_ptr->art_flags, TR_DRAIN_MANA);
+                one_in_(3)       ? add_flag(o_ptr->art_flags, TR_DRAIN_EXP)
+                    : one_in_(2) ? add_flag(o_ptr->art_flags, TR_DRAIN_HP)
+                                 : add_flag(o_ptr->art_flags, TR_DRAIN_MANA);
 
                 if (one_in_(3))
                     add_flag(o_ptr->art_flags, TR_AGGRAVATE);
@@ -215,7 +217,8 @@ void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, 
                 break;
             }
             o_ptr->name2 = get_random_ego(INVEN_HANDS, TRUE);
-        } else if (power < -1) {
+        }
+        else if (power < -1) {
             o_ptr->name2 = get_random_ego(INVEN_HANDS, FALSE);
         }
 
@@ -245,7 +248,8 @@ void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, 
 
                 break;
             }
-        } else if (power < -1) {
+        }
+        else if (power < -1) {
             o_ptr->name2 = get_random_ego(INVEN_FEET, FALSE);
         }
 
@@ -294,7 +298,8 @@ void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, 
             }
 
             break;
-        } else if (power < -1) {
+        }
+        else if (power < -1) {
             while (TRUE) {
                 bool ok_flag = TRUE;
                 o_ptr->name2 = get_random_ego(INVEN_HEAD, FALSE);
@@ -364,8 +369,9 @@ void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, 
                 case EGO_H_DEMON:
                     if (one_in_(3))
                         o_ptr->curse_flags |= (TRC_HEAVY_CURSE);
-                    one_in_(3) ? add_flag(o_ptr->art_flags, TR_DRAIN_EXP)
-                               : one_in_(2) ? add_flag(o_ptr->art_flags, TR_DRAIN_HP) : add_flag(o_ptr->art_flags, TR_DRAIN_MANA);
+                    one_in_(3)       ? add_flag(o_ptr->art_flags, TR_DRAIN_EXP)
+                        : one_in_(2) ? add_flag(o_ptr->art_flags, TR_DRAIN_HP)
+                                     : add_flag(o_ptr->art_flags, TR_DRAIN_MANA);
 
                     if (one_in_(3))
                         add_flag(o_ptr->art_flags, TR_AGGRAVATE);
@@ -393,7 +399,8 @@ void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, 
             }
 
             break;
-        } else if (power < -1) {
+        }
+        else if (power < -1) {
             while (TRUE) {
                 bool ok_flag = TRUE;
                 o_ptr->name2 = get_random_ego(INVEN_HEAD, FALSE);
@@ -437,8 +444,8 @@ void apply_magic_armor(player_type *owner_ptr, object_type *o_ptr, DEPTH level, 
                     add_flag(o_ptr->art_flags, TR_DRAIN_EXP);
                 break;
             }
-
-        } else if (power < -1) {
+        }
+        else if (power < -1) {
             o_ptr->name2 = get_random_ego(INVEN_OUTER, FALSE);
         }
 

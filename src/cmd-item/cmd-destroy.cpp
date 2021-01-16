@@ -37,22 +37,20 @@ typedef struct destroy_type {
     QUANTITY amt;
     QUANTITY old_number;
     bool force;
-    object_type *o_ptr;
-    object_type *q_ptr;
+    object_type* o_ptr;
+    object_type* q_ptr;
     GAME_TEXT o_name[MAX_NLEN];
     char out_val[MAX_NLEN + 40];
 } destroy_type;
 
-static destroy_type *initialize_destroy_type(destroy_type *destroy_ptr, object_type *o_ptr)
-{
+static destroy_type* initialize_destroy_type(destroy_type* destroy_ptr, object_type* o_ptr) {
     destroy_ptr->amt = 1;
     destroy_ptr->force = FALSE;
     destroy_ptr->q_ptr = o_ptr;
     return destroy_ptr;
 }
 
-static bool check_destory_item(player_type *creature_ptr, destroy_type *destroy_ptr)
-{
+static bool check_destory_item(player_type* creature_ptr, destroy_type* destroy_ptr) {
     if (destroy_ptr->force || (!confirm_destroy && (object_value(creature_ptr, destroy_ptr->o_ptr) <= 0)))
         return TRUE;
 
@@ -82,8 +80,7 @@ static bool check_destory_item(player_type *creature_ptr, destroy_type *destroy_
     }
 }
 
-static bool select_destroying_item(player_type *creature_ptr, destroy_type *destroy_ptr)
-{
+static bool select_destroying_item(player_type* creature_ptr, destroy_type* destroy_ptr) {
     concptr q = _("どのアイテムを壊しますか? ", "Destroy which item? ");
     concptr s = _("壊せるアイテムを持っていない。", "You have nothing to destroy.");
     destroy_ptr->o_ptr = choose_object(creature_ptr, &destroy_ptr->item, q, s, USE_INVEN | USE_FLOOR, TV_NONE);
@@ -106,8 +103,7 @@ static bool select_destroying_item(player_type *creature_ptr, destroy_type *dest
  * @param destory_ptr アイテム破壊構造体への参照ポインタ
  * return 魔法書の破壊によって経験値が入るならばTRUE
  */
-static bool decide_magic_book_exp(player_type *creature_ptr, destroy_type *destroy_ptr)
-{
+static bool decide_magic_book_exp(player_type* creature_ptr, destroy_type* destroy_ptr) {
     if (creature_ptr->prace == RACE_ANDROID)
         return FALSE;
 
@@ -121,7 +117,8 @@ static bool decide_magic_book_exp(player_type *creature_ptr, destroy_type *destr
     if (is_good_realm(creature_ptr->realm1)) {
         if (!is_good_realm(tval2realm(destroy_ptr->q_ptr->tval)))
             gain_expr = TRUE;
-    } else {
+    }
+    else {
         if (is_good_realm(tval2realm(destroy_ptr->q_ptr->tval)))
             gain_expr = TRUE;
     }
@@ -129,8 +126,7 @@ static bool decide_magic_book_exp(player_type *creature_ptr, destroy_type *destr
     return gain_expr;
 }
 
-static void gain_exp_by_destroying_magic_book(player_type *creature_ptr, destroy_type *destroy_ptr)
-{
+static void gain_exp_by_destroying_magic_book(player_type* creature_ptr, destroy_type* destroy_ptr) {
     bool gain_expr = decide_magic_book_exp(creature_ptr, destroy_ptr);
     if (!gain_expr || (creature_ptr->exp >= PY_MAX_EXP))
         return;
@@ -149,8 +145,7 @@ static void gain_exp_by_destroying_magic_book(player_type *creature_ptr, destroy
     gain_exp(creature_ptr, tester_exp * destroy_ptr->amt);
 }
 
-static void process_destroy_magic_book(player_type *creature_ptr, destroy_type *destroy_ptr)
-{
+static void process_destroy_magic_book(player_type* creature_ptr, destroy_type* destroy_ptr) {
     if (!item_tester_high_level_book(destroy_ptr->q_ptr))
         return;
 
@@ -158,7 +153,8 @@ static void process_destroy_magic_book(player_type *creature_ptr, destroy_type *
     if (item_tester_high_level_book(destroy_ptr->q_ptr) && destroy_ptr->q_ptr->tval == TV_LIFE_BOOK) {
         chg_virtue(creature_ptr, V_UNLIFE, 1);
         chg_virtue(creature_ptr, V_VITALITY, -1);
-    } else if (item_tester_high_level_book(destroy_ptr->q_ptr) && destroy_ptr->q_ptr->tval == TV_DEATH_BOOK) {
+    }
+    else if (item_tester_high_level_book(destroy_ptr->q_ptr) && destroy_ptr->q_ptr->tval == TV_DEATH_BOOK) {
         chg_virtue(creature_ptr, V_UNLIFE, -1);
         chg_virtue(creature_ptr, V_VITALITY, 1);
     }
@@ -172,8 +168,7 @@ static void process_destroy_magic_book(player_type *creature_ptr, destroy_type *
         chg_virtue(creature_ptr, V_SACRIFICE, 1);
 }
 
-static void exe_destroy_item(player_type *creature_ptr, destroy_type *destroy_ptr)
-{
+static void exe_destroy_item(player_type* creature_ptr, destroy_type* destroy_ptr) {
     object_copy(destroy_ptr->q_ptr, destroy_ptr->o_ptr);
     msg_format(_("%sを壊した。", "You destroy %s."), destroy_ptr->o_name);
     sound(SOUND_DESTITEM);
@@ -192,14 +187,13 @@ static void exe_destroy_item(player_type *creature_ptr, destroy_type *destroy_pt
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_destroy(player_type *creature_ptr)
-{
+void do_cmd_destroy(player_type* creature_ptr) {
     if (creature_ptr->special_defense & KATA_MUSOU)
         set_action(creature_ptr, ACTION_NONE);
 
     object_type forge;
     destroy_type tmp_destroy;
-    destroy_type *destroy_ptr = initialize_destroy_type(&tmp_destroy, &forge);
+    destroy_type* destroy_ptr = initialize_destroy_type(&tmp_destroy, &forge);
     if (command_arg > 0)
         destroy_ptr->force = TRUE;
 

@@ -12,10 +12,10 @@
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_leveling(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_leveling(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -24,11 +24,13 @@ bool set_leveling(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tsubureru && !do_dec) {
             if (creature_ptr->tsubureru > v)
                 return FALSE;
-        } else if (!creature_ptr->tsubureru) {
+        }
+        else if (!creature_ptr->tsubureru) {
             msg_print(_("横に伸びた。", "Your body expands horizontally."));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tsubureru) {
             msg_print(_("もう横に伸びていない。", "Your body returns to normal."));
             notice = TRUE;

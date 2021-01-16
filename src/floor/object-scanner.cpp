@@ -1,6 +1,6 @@
 ﻿#include "floor/object-scanner.h"
-#include "floor/cave.h"
 #include "flavor/flavor-describer.h"
+#include "floor/cave.h"
 #include "game-option/text-display-options.h"
 #include "grid/grid.h"
 #include "inventory/inventory-util.h"
@@ -27,16 +27,15 @@
  *		mode & 0x02 -- Marked items only
  *		mode & 0x04 -- Stop after first
  */
-ITEM_NUMBER scan_floor_items(player_type *owner_ptr, OBJECT_IDX *items, POSITION y, POSITION x, BIT_FLAGS mode, tval_type item_tester_tval)
-{
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
+ITEM_NUMBER scan_floor_items(player_type* owner_ptr, OBJECT_IDX* items, POSITION y, POSITION x, BIT_FLAGS mode, tval_type item_tester_tval) {
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
     if (!in_bounds(floor_ptr, y, x))
         return 0;
 
     OBJECT_IDX this_o_idx, next_o_idx;
     ITEM_NUMBER num = 0;
     for (this_o_idx = floor_ptr->grid_array[y][x].o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         if ((mode & 0x01) && !item_tester_okay(owner_ptr, o_ptr, item_tester_tval))
@@ -66,8 +65,7 @@ ITEM_NUMBER scan_floor_items(player_type *owner_ptr, OBJECT_IDX *items, POSITION
  */
 /*
  */
-static void prepare_label_string_floor(floor_type *floor_ptr, char *label, FLOOR_IDX floor_list[], ITEM_NUMBER floor_num)
-{
+static void prepare_label_string_floor(floor_type* floor_ptr, char* label, FLOOR_IDX floor_list[], ITEM_NUMBER floor_num) {
     concptr alphabet_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     strcpy(label, alphabet_chars);
     for (int i = 0; i < 52; i++) {
@@ -92,11 +90,10 @@ static void prepare_label_string_floor(floor_type *floor_ptr, char *label, FLOOR
  * @return 選択したアイテムの添え字
  * @details
  */
-COMMAND_CODE show_floor_items(player_type *owner_ptr, int target_item, POSITION y, POSITION x, TERM_LEN *min_width, tval_type item_tester_tval)
-{
+COMMAND_CODE show_floor_items(player_type* owner_ptr, int target_item, POSITION y, POSITION x, TERM_LEN* min_width, tval_type item_tester_tval) {
     COMMAND_CODE i, m;
     int j, k, l;
-    object_type *o_ptr;
+    object_type* o_ptr;
     GAME_TEXT o_name[MAX_NLEN];
     char tmp_val[80];
     COMMAND_CODE out_index[23];
@@ -111,7 +108,7 @@ COMMAND_CODE show_floor_items(player_type *owner_ptr, int target_item, POSITION 
     term_get_size(&wid, &hgt);
     int len = MAX((*min_width), 20);
     floor_num = scan_floor_items(owner_ptr, floor_list, y, x, 0x03, item_tester_tval);
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
     for (k = 0, i = 0; i < floor_num && i < 23; i++) {
         o_ptr = &floor_ptr->o_list[floor_list[i]];
         describe_flavor(owner_ptr, o_name, o_ptr, 0);
@@ -145,9 +142,11 @@ COMMAND_CODE show_floor_items(player_type *owner_ptr, int target_item, POSITION 
             if (j == (target_item - 1)) {
                 strcpy(tmp_val, _("》", "> "));
                 target_item_label = m;
-            } else
+            }
+            else
                 strcpy(tmp_val, "   ");
-        } else {
+        }
+        else {
             sprintf(tmp_val, "%c)", floor_label[j]);
         }
 

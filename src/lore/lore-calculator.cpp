@@ -14,8 +14,7 @@
  * @param msg 文字列を格納するポインタ
  * @return なし
  */
-void dice_to_string(int base_damage, int dice_num, int dice_side, int dice_mult, int dice_div, char *msg)
-{
+void dice_to_string(int base_damage, int dice_num, int dice_side, int dice_mult, int dice_div, char* msg) {
     char base[80] = "", dice[80] = "", mult[80] = "";
 
     if (dice_num == 0) {
@@ -48,9 +47,8 @@ void dice_to_string(int base_damage, int dice_num, int dice_side, int dice_mult,
  * @details
  * The higher the level, the fewer kills needed.
  */
-bool know_armour(MONRACE_IDX r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+bool know_armour(MONRACE_IDX r_idx) {
+    monster_race* r_ptr = &r_info[r_idx];
     DEPTH level = r_ptr->level;
     MONSTER_NUMBER kills = r_ptr->r_tkills;
 
@@ -79,9 +77,8 @@ bool know_armour(MONRACE_IDX r_idx)
  * the more damage an attack does, the more attacks you need
  * </pre>
  */
-bool know_damage(MONRACE_IDX r_idx, int i)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+bool know_damage(MONRACE_IDX r_idx, int i) {
+    monster_race* r_ptr = &r_info[r_idx];
     DEPTH level = r_ptr->level;
     s32b a = r_ptr->r_blows[i];
 
@@ -109,8 +106,7 @@ bool know_damage(MONRACE_IDX r_idx, int i)
  * @param tmp 返すメッセージを格納する配列
  * @return なし
  */
-void set_damage(player_type *player_ptr, MONRACE_IDX r_idx, monster_spell_type ms_type, const char *msg, char *tmp)
-{
+void set_damage(player_type* player_ptr, MONRACE_IDX r_idx, monster_spell_type ms_type, const char* msg, char* tmp) {
     int base_damage = monspell_race_damage(player_ptr, ms_type, r_idx, BASE_DAM);
     int dice_num = monspell_race_damage(player_ptr, ms_type, r_idx, DICE_NUM);
     int dice_side = monspell_race_damage(player_ptr, ms_type, r_idx, DICE_SIDE);
@@ -126,8 +122,7 @@ void set_damage(player_type *player_ptr, MONRACE_IDX r_idx, monster_spell_type m
         sprintf(tmp, msg, "");
 }
 
-void set_drop_flags(lore_type *lore_ptr)
-{
+void set_drop_flags(lore_type* lore_ptr) {
     if (!lore_ptr->know_everything)
         return;
 

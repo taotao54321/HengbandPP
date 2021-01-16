@@ -19,8 +19,7 @@
  * @brief 現在フロアに残っている敵モンスターの数を返す /
  * @return 現在の敵モンスターの数
  */
-static MONSTER_NUMBER count_all_hostile_monsters(floor_type *floor_ptr)
-{
+static MONSTER_NUMBER count_all_hostile_monsters(floor_type* floor_ptr) {
     MONSTER_NUMBER number_mon = 0;
     for (POSITION x = 0; x < floor_ptr->width; ++x) {
         for (POSITION y = 0; y < floor_ptr->height; ++y) {
@@ -40,16 +39,15 @@ static MONSTER_NUMBER count_all_hostile_monsters(floor_type *floor_ptr)
  * @param m_ptr 撃破したモンスターの構造体参照ポインタ
  * @return なし
  */
-void check_quest_completion(player_type *player_ptr, monster_type *m_ptr)
-{
+void check_quest_completion(player_type* player_ptr, monster_type* m_ptr) {
     POSITION y = m_ptr->fy;
     POSITION x = m_ptr->fx;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     QUEST_IDX quest_num = floor_ptr->inside_quest;
     if (!quest_num) {
         QUEST_IDX i;
         for (i = max_q_idx - 1; i > 0; i--) {
-            quest_type *const q_ptr = &quest[i];
+            quest_type* const q_ptr = &quest[i];
             if (q_ptr->status != QUEST_STATUS_TAKEN)
                 continue;
 
@@ -76,7 +74,7 @@ void check_quest_completion(player_type *player_ptr, monster_type *m_ptr)
     bool create_stairs = FALSE;
     bool reward = FALSE;
     if (quest_num && (quest[quest_num].status == QUEST_STATUS_TAKEN)) {
-        quest_type *const q_ptr = &quest[quest_num];
+        quest_type* const q_ptr = &quest[quest_num];
         switch (q_ptr->type) {
         case QUEST_TYPE_KILL_NUMBER: {
             q_ptr->cur_num++;
@@ -93,7 +91,8 @@ void check_quest_completion(player_type *player_ptr, monster_type *m_ptr)
 
             if (q_ptr->flags & QUEST_FLAG_SILENT) {
                 q_ptr->status = QUEST_STATUS_FINISHED;
-            } else {
+            }
+            else {
                 complete_quest(player_ptr, quest_num);
             }
 
@@ -169,7 +168,7 @@ void check_quest_completion(player_type *player_ptr, monster_type *m_ptr)
         return;
 
     object_type forge;
-    object_type *o_ptr;
+    object_type* o_ptr;
     for (int i = 0; i < (floor_ptr->dun_level / 15) + 1; i++) {
         o_ptr = &forge;
         object_wipe(o_ptr);

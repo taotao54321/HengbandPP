@@ -11,8 +11,7 @@
 * @param m_idx モンスターID
 * @return プレイヤーがモンスターを見ることができるならTRUE、そうでなければFALSEを返す。
 */
-bool see_monster(player_type* player_ptr, MONSTER_IDX m_idx)
-{
+bool see_monster(player_type* player_ptr, MONSTER_IDX m_idx) {
     monster_type* m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
     return is_seen(player_ptr, m_ptr);
 }
@@ -24,8 +23,7 @@ bool see_monster(player_type* player_ptr, MONSTER_IDX m_idx)
  * @param t_idx モンスターID二体目
  * @return モンスター2体のどちらかがプレイヤーの近くに居ればTRUE、どちらも遠ければFALSEを返す。
  */
-bool monster_near_player(floor_type* floor_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx)
-{
+bool monster_near_player(floor_type* floor_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx) {
     monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     monster_type* t_ptr = &floor_ptr->m_list[t_idx];
     return (m_ptr->cdis <= MAX_SIGHT) || (t_ptr->cdis <= MAX_SIGHT);
@@ -43,8 +41,7 @@ bool monster_near_player(floor_type* floor_ptr, MONSTER_IDX m_idx, MONSTER_IDX t
  * @param msg_flag_aux メッセージを分岐するためのフラグ
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void monspell_message_base(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1, concptr msg2, concptr msg3, concptr msg4, bool msg_flag_aux, int TARGET_TYPE)
-{
+void monspell_message_base(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1, concptr msg2, concptr msg3, concptr msg4, bool msg_flag_aux, int TARGET_TYPE) {
     floor_type* floor_ptr = target_ptr->current_floor_ptr;
     bool known = monster_near_player(floor_ptr, m_idx, t_idx);
     bool see_either = see_monster(target_ptr, m_idx) || see_monster(target_ptr, t_idx);
@@ -62,10 +59,12 @@ void monspell_message_base(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_I
             msg_format(msg1, m_name);
         else if (mon_to_mon && known && see_either)
             msg_format(msg2, m_name);
-    } else {
+    }
+    else {
         if (mon_to_player) {
             msg_format(msg3, m_name);
-        } else if (mon_to_mon && known && see_either) {
+        }
+        else if (mon_to_mon && known && see_either) {
             msg_format(msg4, m_name, t_name);
         }
     }
@@ -84,8 +83,7 @@ void monspell_message_base(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_I
 * @param msg3 プレイヤーが盲目でなく、モンスター対象とする場合のメッセージ
 * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
 */
-void monspell_message(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1, concptr msg2, concptr msg3, int TARGET_TYPE)
-{
+void monspell_message(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1, concptr msg2, concptr msg3, int TARGET_TYPE) {
     monspell_message_base(target_ptr, m_idx, t_idx, msg1, msg1, msg2, msg3, target_ptr->blind > 0, TARGET_TYPE);
 }
 
@@ -98,7 +96,6 @@ void monspell_message(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_
 * @param msg2 モンスター対象とする場合のメッセージ
 * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
 */
-void simple_monspell_message(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1, concptr msg2, int TARGET_TYPE)
-{
+void simple_monspell_message(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1, concptr msg2, int TARGET_TYPE) {
     monspell_message_base(target_ptr, m_idx, t_idx, msg1, msg2, msg1, msg2, target_ptr->blind > 0, TARGET_TYPE);
 }

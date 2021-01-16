@@ -1,9 +1,9 @@
 ﻿#include "window/display-sub-window-spells.h"
 #include "core/window-redrawer.h"
 #include "game-option/option-flags.h"
-#include "mind/mind-sniper.h"
 #include "mind/mind-explanations-table.h"
 #include "mind/mind-info.h"
+#include "mind/mind-sniper.h"
 #include "mind/mind-types.h"
 #include "player/player-class.h"
 #include "player/player-status-table.h"
@@ -25,11 +25,10 @@
  * Need to analyze size of the window.
  * Need more color coding.
  */
-static void display_spell_list(player_type *caster_ptr)
-{
+static void display_spell_list(player_type* caster_ptr) {
     TERM_LEN y, x;
     int m[9];
-    const magic_type *s_ptr;
+    const magic_type* s_ptr;
     GAME_TEXT name[MAX_NLEN];
     char out_val[160];
 
@@ -99,7 +98,8 @@ static void display_spell_list(player_type *caster_ptr)
                     chance += 5 * (spell.mana_cost - caster_ptr->csp);
                     a = TERM_ORANGE;
                 }
-            } else {
+            }
+            else {
                 if (spell.mana_cost > caster_ptr->chp) {
                     chance += 100;
                     a = TERM_RED;
@@ -140,7 +140,8 @@ static void display_spell_list(player_type *caster_ptr)
 
             if (!is_magic((j < 1) ? caster_ptr->realm1 : caster_ptr->realm2)) {
                 s_ptr = &technic_info[((j < 1) ? caster_ptr->realm1 : caster_ptr->realm2) - MIN_TECHNIC][i % 32];
-            } else {
+            }
+            else {
                 s_ptr = &mp_ptr->info[((j < 1) ? caster_ptr->realm1 : caster_ptr->realm2) - 1][i % 32];
             }
 
@@ -149,11 +150,14 @@ static void display_spell_list(player_type *caster_ptr)
             if (s_ptr->slevel >= 99) {
                 strcpy(name, _("(判読不能)", "(illegible)"));
                 a = TERM_L_DARK;
-            } else if ((j < 1) ? ((caster_ptr->spell_forgotten1 & (1L << i))) : ((caster_ptr->spell_forgotten2 & (1L << (i % 32))))) {
+            }
+            else if ((j < 1) ? ((caster_ptr->spell_forgotten1 & (1L << i))) : ((caster_ptr->spell_forgotten2 & (1L << (i % 32))))) {
                 a = TERM_ORANGE;
-            } else if (!((j < 1) ? (caster_ptr->spell_learned1 & (1L << i)) : (caster_ptr->spell_learned2 & (1L << (i % 32))))) {
+            }
+            else if (!((j < 1) ? (caster_ptr->spell_learned1 & (1L << i)) : (caster_ptr->spell_learned2 & (1L << (i % 32))))) {
                 a = TERM_RED;
-            } else if (!((j < 1) ? (caster_ptr->spell_worked1 & (1L << i)) : (caster_ptr->spell_worked2 & (1L << (i % 32))))) {
+            }
+            else if (!((j < 1) ? (caster_ptr->spell_worked1 & (1L << i)) : (caster_ptr->spell_worked2 & (1L << (i % 32))))) {
                 a = TERM_YELLOW;
             }
 
@@ -172,10 +176,9 @@ static void display_spell_list(player_type *caster_ptr)
  * Hack -- display spells in sub-windows
  * @return なし
  */
-void fix_spell(player_type *player_ptr)
-{
+void fix_spell(player_type* player_ptr) {
     for (int j = 0; j < 8; j++) {
-        term_type *old = Term;
+        term_type* old = Term;
         if (!angband_term[j])
             continue;
 

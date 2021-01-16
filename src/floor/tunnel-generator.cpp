@@ -12,8 +12,7 @@
  * @param cdir X方向に取るべきベクトル値を返す参照ポインタ
  * @return なし
  */
-static void rand_dir(POSITION *rdir, POSITION *cdir)
-{
+static void rand_dir(POSITION* rdir, POSITION* cdir) {
     int i = randint0(4);
     *rdir = ddy_ddd[i];
     *cdir = ddx_ddd[i];
@@ -29,10 +28,11 @@ static void rand_dir(POSITION *rdir, POSITION *cdir)
  * @param x2 終点X座標
  * @return なし
  */
-static void correct_dir(POSITION *rdir, POSITION *cdir, POSITION y1, POSITION x1, POSITION y2, POSITION x2)
-{
-    *rdir = (y1 == y2) ? 0 : (y1 < y2) ? 1 : -1;
-    *cdir = (x1 == x2) ? 0 : (x1 < x2) ? 1 : -1;
+static void correct_dir(POSITION* rdir, POSITION* cdir, POSITION y1, POSITION x1, POSITION y2, POSITION x2) {
+    *rdir = (y1 == y2) ? 0 : (y1 < y2) ? 1
+                                       : -1;
+    *cdir = (x1 == x2) ? 0 : (x1 < x2) ? 1
+                                       : -1;
     if (*rdir && *cdir) {
         if (randint0(100) < 50)
             *rdir = 0;
@@ -50,18 +50,17 @@ static void correct_dir(POSITION *rdir, POSITION *cdir, POSITION y1, POSITION x1
  * @param col2 終点X座標
  * @return 生成に成功したらTRUEを返す
  */
-bool build_tunnel(player_type *player_ptr, dun_data_type *dd_ptr, dt_type *dt_ptr, POSITION row1, POSITION col1, POSITION row2, POSITION col2)
-{
+bool build_tunnel(player_type* player_ptr, dun_data_type* dd_ptr, dt_type* dt_ptr, POSITION row1, POSITION col1, POSITION row2, POSITION col2) {
     POSITION tmp_row, tmp_col;
     POSITION row_dir, col_dir;
     POSITION start_row, start_col;
     int main_loop_count = 0;
     bool door_flag = FALSE;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     start_row = row1;
     start_col = col1;
     correct_dir(&row_dir, &col_dir, row1, col1, row2, col2);
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     while ((row1 != row2) || (col1 != col2)) {
         if (main_loop_count++ > 2000)
             return FALSE;
@@ -105,11 +104,12 @@ bool build_tunnel(player_type *player_ptr, dun_data_type *dd_ptr, dt_type *dt_pt
                 for (x = col1 - 1; x <= col1 + 1; x++)
                     if (is_outer_bold(floor_ptr, y, x))
                         place_bold(player_ptr, y, x, GB_SOLID_NOPERM);
-
-        } else if (g_ptr->info & (CAVE_ROOM)) {
+        }
+        else if (g_ptr->info & (CAVE_ROOM)) {
             row1 = tmp_row;
             col1 = tmp_col;
-        } else if (is_extra_grid(g_ptr) || is_inner_grid(g_ptr) || is_solid_grid(g_ptr)) {
+        }
+        else if (is_extra_grid(g_ptr) || is_inner_grid(g_ptr) || is_solid_grid(g_ptr)) {
             row1 = tmp_row;
             col1 = tmp_col;
             if (dd_ptr->tunn_n >= TUNN_MAX)
@@ -119,7 +119,8 @@ bool build_tunnel(player_type *player_ptr, dun_data_type *dd_ptr, dt_type *dt_pt
             dd_ptr->tunn[dd_ptr->tunn_n].x = col1;
             dd_ptr->tunn_n++;
             door_flag = FALSE;
-        } else {
+        }
+        else {
             row1 = tmp_row;
             col1 = tmp_col;
             if (!door_flag) {
@@ -159,10 +160,9 @@ bool build_tunnel(player_type *player_ptr, dun_data_type *dd_ptr, dt_type *dt_pt
  * @param affectwall (調査中)
  * @return なし
  */
-static bool set_tunnel(player_type *player_ptr, dun_data_type *dd_ptr, POSITION *x, POSITION *y, bool affectwall)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[*y][*x];
+static bool set_tunnel(player_type* player_ptr, dun_data_type* dd_ptr, POSITION* x, POSITION* y, bool affectwall) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[*y][*x];
     if (!in_bounds(floor_ptr, *y, *x) || is_inner_grid(g_ptr))
         return TRUE;
 
@@ -232,8 +232,7 @@ static bool set_tunnel(player_type *player_ptr, dun_data_type *dd_ptr, POSITION 
  * @param y 基準点のY座標
  * @return なし
  */
-static void create_cata_tunnel(player_type *player_ptr, dun_data_type *dd_ptr, POSITION x, POSITION y)
-{
+static void create_cata_tunnel(player_type* player_ptr, dun_data_type* dd_ptr, POSITION x, POSITION y) {
     POSITION x1 = x - 1;
     POSITION y1 = y;
     set_tunnel(player_ptr, dd_ptr, &x1, &y1, FALSE);
@@ -258,8 +257,7 @@ static void create_cata_tunnel(player_type *player_ptr, dun_data_type *dd_ptr, P
  * @return なし
  */
 static void short_seg_hack(
-    player_type *player_ptr, dun_data_type *dd_ptr, const POSITION x1, const POSITION y1, const POSITION x2, const POSITION y2, int type, int count, bool *fail)
-{
+    player_type* player_ptr, dun_data_type* dd_ptr, const POSITION x1, const POSITION y1, const POSITION x2, const POSITION y2, int type, int count, bool* fail) {
     if (!(*fail))
         return;
 
@@ -299,7 +297,8 @@ static void short_seg_hack(
             if ((type == 3) && ((x + y) % 2))
                 create_cata_tunnel(player_ptr, dd_ptr, i, y1);
         }
-    } else {
+    }
+    else {
         for (int i = x2; i <= x1; i++) {
             x = i;
             y = y1;
@@ -325,7 +324,8 @@ static void short_seg_hack(
             if ((type == 3) && ((x + y) % 2))
                 create_cata_tunnel(player_ptr, dd_ptr, x2, i);
         }
-    } else {
+    }
+    else {
         for (int i = y2; i <= y1; i++) {
             x = x2;
             y = i;
@@ -345,15 +345,14 @@ static void short_seg_hack(
  * @brief 特定の壁(永久壁など)を避けながら部屋間の通路を作成する / This routine maps a path from (x1, y1) to (x2, y2) avoiding SOLID walls.
  * @return なし
  */
-bool build_tunnel2(player_type *player_ptr, dun_data_type *dd_ptr, POSITION x1, POSITION y1, POSITION x2, POSITION y2, int type, int cutoff)
-{
+bool build_tunnel2(player_type* player_ptr, dun_data_type* dd_ptr, POSITION x1, POSITION y1, POSITION x2, POSITION y2, int type, int cutoff) {
     POSITION x3, y3, dx, dy;
     POSITION changex, changey;
     bool retval, firstsuccede;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
 
     int length = distance(x1, y1, x2, y2);
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (length <= cutoff) {
         retval = TRUE;
         short_seg_hack(player_ptr, dd_ptr, x1, y1, x2, y2, type, 0, &retval);
@@ -401,7 +400,8 @@ bool build_tunnel2(player_type *player_ptr, dun_data_type *dd_ptr, POSITION x1, 
         if (build_tunnel2(player_ptr, dd_ptr, x1, y1, x3, y3, type, cutoff)) {
             if ((floor_ptr->grid_array[y3][x3].info & CAVE_ROOM) || (randint1(100) > 95)) {
                 retval = build_tunnel2(player_ptr, dd_ptr, x3, y3, x2, y2, type, cutoff);
-            } else {
+            }
+            else {
                 retval = FALSE;
                 if (dd_ptr->door_n >= DOOR_MAX)
                     return FALSE;
@@ -412,15 +412,18 @@ bool build_tunnel2(player_type *player_ptr, dun_data_type *dd_ptr, POSITION x1, 
             }
 
             firstsuccede = TRUE;
-        } else {
+        }
+        else {
             retval = FALSE;
             firstsuccede = FALSE;
         }
-    } else {
+    }
+    else {
         if (build_tunnel2(player_ptr, dd_ptr, x1, y1, x3, y3, type, cutoff)) {
             retval = build_tunnel2(player_ptr, dd_ptr, x3, y3, x2, y2, type, cutoff);
             firstsuccede = TRUE;
-        } else {
+        }
+        else {
             retval = FALSE;
             firstsuccede = FALSE;
         }

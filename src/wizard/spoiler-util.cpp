@@ -6,7 +6,7 @@ const int max_evolution_depth = 64;
 concptr spoiler_indent = "    ";
 
 /* The spoiler file being created */
-FILE *spoiler_file = NULL;
+FILE* spoiler_file = NULL;
 
 /*!
  * @brief ファイルポインタ先に同じ文字を複数出力する /
@@ -15,8 +15,7 @@ FILE *spoiler_file = NULL;
  * @param c 出力するキャラクタ
  * @return なし
  */
-static void spoiler_out_n_chars(int n, char c)
-{
+static void spoiler_out_n_chars(int n, char c) {
     while (--n >= 0)
         fputc(c, spoiler_file);
 }
@@ -35,8 +34,7 @@ void spoiler_blanklines(int n) { spoiler_out_n_chars(n, '\n'); }
  * @param str 出力したい文字列
  * @return なし
  */
-void spoiler_underline(concptr str)
-{
+void spoiler_underline(concptr str) {
     fprintf(spoiler_file, "%s\n", str);
     spoiler_out_n_chars(strlen(str), '-');
     fprintf(spoiler_file, "\n");
@@ -49,8 +47,7 @@ void spoiler_underline(concptr str)
  * @param str 文字列参照ポインタ
  * @return なし
  */
-void spoil_out(concptr str)
-{
+void spoil_out(concptr str) {
     concptr r;
     static char roff_buf[256];
     static char roff_waiting_buf[256];
@@ -59,8 +56,8 @@ void spoil_out(concptr str)
     bool iskanji_flag = FALSE;
 #endif
 
-    static char *roff_p = roff_buf;
-    static char *roff_s = NULL;
+    static char* roff_p = roff_buf;
+    static char* roff_s = NULL;
     static bool waiting_output = FALSE;
     if (!str) {
         if (waiting_output) {
@@ -191,7 +188,8 @@ void spoil_out(concptr str)
         if (!k_flag) {
             if ((ch == ' ') || (ch == '('))
                 roff_s = roff_p;
-        } else {
+        }
+        else {
             if (iskanji_flag && strncmp(str, "。", 2) != 0 && strncmp(str, "、", 2) != 0 && strncmp(str, "ィ", 2) != 0 && strncmp(str, "ー", 2) != 0)
                 roff_s = roff_p;
         }

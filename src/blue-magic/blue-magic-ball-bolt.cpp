@@ -7,8 +7,7 @@
 #include "target/target-getter.h"
 #include "view/display-messages.h"
 
-bool cast_blue_ball_acid(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_acid(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -18,8 +17,7 @@ bool cast_blue_ball_acid(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_elec(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_elec(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -29,8 +27,7 @@ bool cast_blue_ball_elec(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_fire(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_fire(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -40,8 +37,7 @@ bool cast_blue_ball_fire(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_cold(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_cold(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -51,8 +47,7 @@ bool cast_blue_ball_cold(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_pois(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_pois(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -62,8 +57,7 @@ bool cast_blue_ball_pois(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_nuke(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_nuke(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -73,8 +67,7 @@ bool cast_blue_ball_nuke(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_nether(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_nether(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -84,8 +77,7 @@ bool cast_blue_ball_nether(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_chaos(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_chaos(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -102,8 +94,7 @@ bool cast_blue_ball_chaos(player_type *caster_ptr, bmc_type *bmc_ptr)
  * @param bmc_ptr 青魔法詠唱への参照ポインタ
  * @details All my worries are blown away.
  */
-bool cast_blue_ball_water(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_water(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -113,8 +104,7 @@ bool cast_blue_ball_water(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_star_burst(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_star_burst(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -124,8 +114,7 @@ bool cast_blue_ball_star_burst(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_dark_storm(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_dark_storm(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -135,8 +124,7 @@ bool cast_blue_ball_dark_storm(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_ball_mana_storm(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_ball_mana_storm(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -146,8 +134,7 @@ bool cast_blue_ball_mana_storm(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_acid(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_acid(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -157,8 +144,7 @@ bool cast_blue_bolt_acid(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_elec(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_elec(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -168,8 +154,7 @@ bool cast_blue_bolt_elec(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_fire(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_fire(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -179,8 +164,7 @@ bool cast_blue_bolt_fire(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_cold(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_cold(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -190,8 +174,7 @@ bool cast_blue_bolt_cold(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_nether(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_nether(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -201,8 +184,7 @@ bool cast_blue_bolt_nether(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_water(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_water(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -212,8 +194,7 @@ bool cast_blue_bolt_water(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_mana(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_mana(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -223,8 +204,7 @@ bool cast_blue_bolt_mana(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_plasma(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_plasma(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -234,8 +214,7 @@ bool cast_blue_bolt_plasma(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_icee(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_icee(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -245,8 +224,7 @@ bool cast_blue_bolt_icee(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-bool cast_blue_bolt_missile(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+bool cast_blue_bolt_missile(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 

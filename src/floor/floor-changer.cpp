@@ -47,8 +47,7 @@
  * @brief 階段移動先のフロアが生成できない時に簡単な行き止まりマップを作成する / Builds the dead end
  * @return なし
  */
-static void build_dead_end(player_type *creature_ptr)
-{
+static void build_dead_end(player_type* creature_ptr) {
     clear_cave(creature_ptr);
     creature_ptr->x = creature_ptr->y = 0;
     set_floor_and_wall(0);
@@ -64,9 +63,8 @@ static void build_dead_end(player_type *creature_ptr)
     wipe_generate_random_floor_flags(creature_ptr->current_floor_ptr);
 }
 
-static MONSTER_IDX decide_pet_index(player_type *master_ptr, const int current_monster, POSITION *cy, POSITION *cx)
-{
-    floor_type *floor_ptr = master_ptr->current_floor_ptr;
+static MONSTER_IDX decide_pet_index(player_type* master_ptr, const int current_monster, POSITION* cy, POSITION* cx) {
+    floor_type* floor_ptr = master_ptr->current_floor_ptr;
     if (current_monster == 0) {
         MONSTER_IDX m_idx = m_pop(floor_ptr);
         master_ptr->riding = m_idx;
@@ -94,9 +92,8 @@ static MONSTER_IDX decide_pet_index(player_type *master_ptr, const int current_m
     return (d == 6) ? 0 : m_pop(floor_ptr);
 }
 
-static void set_pet_params(player_type *master_ptr, monster_race **r_ptr, const int current_monster, MONSTER_IDX m_idx, const POSITION cy, const POSITION cx)
-{
-    monster_type *m_ptr = &master_ptr->current_floor_ptr->m_list[m_idx];
+static void set_pet_params(player_type* master_ptr, monster_race** r_ptr, const int current_monster, MONSTER_IDX m_idx, const POSITION cy, const POSITION cx) {
+    monster_type* m_ptr = &master_ptr->current_floor_ptr->m_list[m_idx];
     master_ptr->current_floor_ptr->grid_array[cy][cx].m_idx = m_idx;
     m_ptr->r_idx = party_mon[current_monster].r_idx;
     *m_ptr = party_mon[current_monster];
@@ -119,8 +116,7 @@ static void set_pet_params(player_type *master_ptr, monster_race **r_ptr, const 
  * @param master_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void place_pet(player_type *master_ptr)
-{
+static void place_pet(player_type* master_ptr) {
     int max_num = master_ptr->wild_mode ? 1 : MAX_PARTY_MON;
     for (int current_monster = 0; current_monster < max_num; current_monster++) {
         POSITION cy = 0;
@@ -130,15 +126,16 @@ static void place_pet(player_type *master_ptr)
 
         MONSTER_IDX m_idx = decide_pet_index(master_ptr, current_monster, &cy, &cx);
         if (m_idx != 0) {
-            monster_race *r_ptr;
+            monster_race* r_ptr;
             set_pet_params(master_ptr, &r_ptr, current_monster, m_idx, cy, cx);
             update_monster(master_ptr, m_idx, TRUE);
             lite_spot(master_ptr, cy, cx);
             if (r_ptr->flags2 & RF2_MULTIPLY)
                 master_ptr->current_floor_ptr->num_repro++;
-        } else {
-            monster_type *m_ptr = &party_mon[current_monster];
-            monster_race *r_ptr = real_r_ptr(m_ptr);
+        }
+        else {
+            monster_type* m_ptr = &party_mon[current_monster];
+            monster_race* r_ptr = real_r_ptr(m_ptr);
             GAME_TEXT m_name[MAX_NLEN];
             monster_desc(master_ptr, m_name, m_ptr, 0);
             msg_format(_("%sとはぐれてしまった。", "You have lost sight of %s."), m_name);
@@ -164,11 +161,10 @@ static void place_pet(player_type *master_ptr)
  * while new floor creation since dungeons may be re-created by\n
  * auto-scum option.\n
  */
-static void update_unique_artifact(floor_type *floor_ptr, s16b cur_floor_id)
-{
+static void update_unique_artifact(floor_type* floor_ptr, s16b cur_floor_id) {
     for (int i = 1; i < floor_ptr->m_max; i++) {
-        monster_race *r_ptr;
-        monster_type *m_ptr = &floor_ptr->m_list[i];
+        monster_race* r_ptr;
+        monster_type* m_ptr = &floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -178,7 +174,7 @@ static void update_unique_artifact(floor_type *floor_ptr, s16b cur_floor_id)
     }
 
     for (int i = 1; i < floor_ptr->o_max; i++) {
-        object_type *o_ptr = &floor_ptr->o_list[i];
+        object_type* o_ptr = &floor_ptr->o_list[i];
         if (!object_is_valid(o_ptr))
             continue;
 
@@ -187,8 +183,7 @@ static void update_unique_artifact(floor_type *floor_ptr, s16b cur_floor_id)
     }
 }
 
-static void check_visited_floor(player_type *creature_ptr, saved_floor_type *sf_ptr, bool *loaded)
-{
+static void check_visited_floor(player_type* creature_ptr, saved_floor_type* sf_ptr, bool* loaded) {
     if ((sf_ptr->last_visit == 0) || !load_floor(creature_ptr, sf_ptr, 0))
         return;
 
@@ -196,7 +191,7 @@ static void check_visited_floor(player_type *creature_ptr, saved_floor_type *sf_
     if ((creature_ptr->change_floor_mode & CFM_NO_RETURN) == 0)
         return;
 
-    grid_type *g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
+    grid_type* g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
     if (feat_uses_special(g_ptr->feat))
         return;
 
@@ -206,8 +201,7 @@ static void check_visited_floor(player_type *creature_ptr, saved_floor_type *sf_
     g_ptr->special = 0;
 }
 
-static void update_floor_id(player_type *creature_ptr, saved_floor_type *sf_ptr)
-{
+static void update_floor_id(player_type* creature_ptr, saved_floor_type* sf_ptr) {
     if (creature_ptr->floor_id == 0) {
         if (creature_ptr->change_floor_mode & CFM_UP)
             sf_ptr->lower_floor_id = 0;
@@ -217,7 +211,7 @@ static void update_floor_id(player_type *creature_ptr, saved_floor_type *sf_ptr)
         return;
     }
 
-    saved_floor_type *cur_sf_ptr = get_sf_ptr(creature_ptr->floor_id);
+    saved_floor_type* cur_sf_ptr = get_sf_ptr(creature_ptr->floor_id);
     if (creature_ptr->change_floor_mode & CFM_UP) {
         if (cur_sf_ptr->upper_floor_id == new_floor_id)
             sf_ptr->lower_floor_id = creature_ptr->floor_id;
@@ -229,12 +223,11 @@ static void update_floor_id(player_type *creature_ptr, saved_floor_type *sf_ptr)
         sf_ptr->upper_floor_id = creature_ptr->floor_id;
 }
 
-static void reset_unique_by_floor_change(player_type *creature_ptr)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+static void reset_unique_by_floor_change(player_type* creature_ptr) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     for (MONSTER_IDX i = 1; i < floor_ptr->m_max; i++) {
-        monster_race *r_ptr;
-        monster_type *m_ptr = &floor_ptr->m_list[i];
+        monster_race* r_ptr;
+        monster_type* m_ptr = &floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -257,8 +250,7 @@ static void reset_unique_by_floor_change(player_type *creature_ptr)
     }
 }
 
-static void new_floor_allocation(player_type *creature_ptr, saved_floor_type *sf_ptr)
-{
+static void new_floor_allocation(player_type* creature_ptr, saved_floor_type* sf_ptr) {
     GAME_TURN tmp_last_visit = sf_ptr->last_visit;
     int alloc_chance = d_info[creature_ptr->dungeon_idx].max_m_alloc_chance;
     while (tmp_last_visit > current_world_ptr->game_turn)
@@ -267,7 +259,7 @@ static void new_floor_allocation(player_type *creature_ptr, saved_floor_type *sf
     GAME_TURN absence_ticks = (current_world_ptr->game_turn - tmp_last_visit) / TURNS_PER_TICK;
     reset_unique_by_floor_change(creature_ptr);
     for (MONSTER_IDX i = 1; i < creature_ptr->current_floor_ptr->o_max; i++) {
-        object_type *o_ptr = &creature_ptr->current_floor_ptr->o_list[i];
+        object_type* o_ptr = &creature_ptr->current_floor_ptr->o_list[i];
         if (!object_is_valid(o_ptr) || !object_is_fixed_artifact(o_ptr))
             continue;
 
@@ -286,8 +278,7 @@ static void new_floor_allocation(player_type *creature_ptr, saved_floor_type *sf
         (void)alloc_monster(creature_ptr, 0, 0, summon_specific);
 }
 
-static void check_dead_end(player_type *creature_ptr, saved_floor_type *sf_ptr)
-{
+static void check_dead_end(player_type* creature_ptr, saved_floor_type* sf_ptr) {
     if (sf_ptr->last_visit == 0) {
         generate_floor(creature_ptr);
         return;
@@ -301,8 +292,7 @@ static void check_dead_end(player_type *creature_ptr, saved_floor_type *sf_ptr)
         sf_ptr->lower_floor_id = 0;
 }
 
-static void update_new_floor_feature(player_type *creature_ptr, saved_floor_type *sf_ptr, const bool loaded)
-{
+static void update_new_floor_feature(player_type* creature_ptr, saved_floor_type* sf_ptr, const bool loaded) {
     if (loaded) {
         new_floor_allocation(creature_ptr, sf_ptr);
         return;
@@ -314,7 +304,7 @@ static void update_new_floor_feature(player_type *creature_ptr, saved_floor_type
     if ((creature_ptr->change_floor_mode & CFM_NO_RETURN) != 0)
         return;
 
-    grid_type *g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
+    grid_type* g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
     if ((creature_ptr->change_floor_mode & CFM_UP) && !quest_number(creature_ptr, creature_ptr->current_floor_ptr->dun_level))
         g_ptr->feat = (creature_ptr->change_floor_mode & CFM_SHAFT) ? feat_state(creature_ptr, feat_down_stair, FF_SHAFT) : feat_down_stair;
     else if ((creature_ptr->change_floor_mode & CFM_DOWN) && !ironman_downward)
@@ -324,13 +314,12 @@ static void update_new_floor_feature(player_type *creature_ptr, saved_floor_type
     g_ptr->special = creature_ptr->floor_id;
 }
 
-static void cut_off_the_upstair(player_type *creature_ptr)
-{
+static void cut_off_the_upstair(player_type* creature_ptr) {
     if (creature_ptr->change_floor_mode & CFM_RAND_PLACE) {
         (void)new_player_spot(creature_ptr);
         return;
     }
-    
+
     if (((creature_ptr->change_floor_mode & CFM_NO_RETURN) == 0) || ((creature_ptr->change_floor_mode & (CFM_DOWN | CFM_UP)) == 0))
         return;
 
@@ -340,8 +329,7 @@ static void cut_off_the_upstair(player_type *creature_ptr)
         msg_print(_("ゴトゴトと何か音がした。", "You hear some noises."));
 }
 
-static void update_floor(player_type *creature_ptr)
-{
+static void update_floor(player_type* creature_ptr) {
     if (!(creature_ptr->change_floor_mode & CFM_SAVE_FLOORS) && !(creature_ptr->change_floor_mode & CFM_FIRST_FLOOR)) {
         generate_floor(creature_ptr);
         new_floor_id = 0;
@@ -351,7 +339,7 @@ static void update_floor(player_type *creature_ptr)
     if (new_floor_id == 0)
         new_floor_id = get_new_floor_id(creature_ptr);
 
-    saved_floor_type *sf_ptr;
+    saved_floor_type* sf_ptr;
     bool loaded = FALSE;
     sf_ptr = get_sf_ptr(new_floor_id);
     check_visited_floor(creature_ptr, sf_ptr, &loaded);
@@ -370,8 +358,7 @@ static void update_floor(player_type *creature_ptr)
  * restored from the temporary file.  If the floor is new one, new floor\n
  * will be generated.\n
  */
-void change_floor(player_type *creature_ptr)
-{
+void change_floor(player_type* creature_ptr) {
     current_world_ptr->character_dungeon = FALSE;
     creature_ptr->dtrap = FALSE;
     panel_row_min = 0;

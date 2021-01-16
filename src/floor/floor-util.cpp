@@ -47,8 +47,7 @@ static int scent_when = 0;
  * Whenever the age count loops, most of the scent trail is erased and
  * the age of the remainder is recalculated.
  */
-void update_smell(floor_type *floor_ptr, player_type *subject_ptr)
-{
+void update_smell(floor_type* floor_ptr, player_type* subject_ptr) {
     /* Create a table that controls the spread of scent */
     const int scent_adjust[5][5] = {
         { -1, 0, 0, 0, -1 },
@@ -71,7 +70,7 @@ void update_smell(floor_type *floor_ptr, player_type *subject_ptr)
 
     for (POSITION i = 0; i < 5; i++) {
         for (POSITION j = 0; j < 5; j++) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             POSITION y = i + subject_ptr->y - 2;
             POSITION x = j + subject_ptr->x - 2;
             if (!in_bounds(floor_ptr, y, x))
@@ -93,8 +92,7 @@ void update_smell(floor_type *floor_ptr, player_type *subject_ptr)
 /*
  * Hack -- forget the "flow" information
  */
-void forget_flow(floor_type *floor_ptr)
-{
+void forget_flow(floor_type* floor_ptr) {
     for (POSITION y = 0; y < floor_ptr->height; y++) {
         for (POSITION x = 0; x < floor_ptr->width; x++) {
             floor_ptr->grid_array[y][x].dist = 0;
@@ -116,10 +114,9 @@ void forget_flow(floor_type *floor_ptr)
  * and we clear it once for every such object.
  * @return なし
  */
-void wipe_o_list(floor_type *floor_ptr)
-{
+void wipe_o_list(floor_type* floor_ptr) {
     for (int i = 1; i < floor_ptr->o_max; i++) {
-        object_type *o_ptr = &floor_ptr->o_list[i];
+        object_type* o_ptr = &floor_ptr->o_list[i];
         if (!object_is_valid(o_ptr))
             continue;
 
@@ -130,14 +127,14 @@ void wipe_o_list(floor_type *floor_ptr)
         }
 
         if (object_is_held_monster(o_ptr)) {
-            monster_type *m_ptr;
+            monster_type* m_ptr;
             m_ptr = &floor_ptr->m_list[o_ptr->held_m_idx];
             m_ptr->hold_o_idx = 0;
             object_wipe(o_ptr);
             continue;
         }
 
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         POSITION y = o_ptr->iy;
         POSITION x = o_ptr->ix;
 
@@ -161,9 +158,8 @@ void wipe_o_list(floor_type *floor_ptr)
  *
  * Currently the "m" parameter is unused.
  */
-void scatter(player_type *player_ptr, POSITION *yp, POSITION *xp, POSITION y, POSITION x, POSITION d, BIT_FLAGS mode)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void scatter(player_type* player_ptr, POSITION* yp, POSITION* xp, POSITION y, POSITION x, POSITION d, BIT_FLAGS mode) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     POSITION nx, ny;
     while (TRUE) {
         ny = rand_spread(y, d);
@@ -192,9 +188,8 @@ void scatter(player_type *player_ptr, POSITION *yp, POSITION *xp, POSITION y, PO
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return マップ名の文字列参照ポインタ
  */
-concptr map_name(player_type *creature_ptr)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+concptr map_name(player_type* creature_ptr) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (floor_ptr->inside_quest && is_fixed_quest_idx(floor_ptr->inside_quest) && (quest[floor_ptr->inside_quest].flags & QUEST_FLAG_PRESET))
         return _("クエスト", "Quest");
     else if (creature_ptr->wild_mode)

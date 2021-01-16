@@ -10,10 +10,9 @@
  * Charge a lite (torch or latern)
  * @return なし
  */
-void phlogiston(player_type *caster_ptr)
-{
+void phlogiston(player_type* caster_ptr) {
     GAME_TURN max_flog = 0;
-    object_type *o_ptr = &caster_ptr->inventory_list[INVEN_LITE];
+    object_type* o_ptr = &caster_ptr->inventory_list[INVEN_LITE];
     if ((o_ptr->tval == TV_LITE) && (o_ptr->sval == SV_LITE_LANTERN))
         max_flog = FUEL_LAMP;
     else if ((o_ptr->tval == TV_LITE) && (o_ptr->sval == SV_LITE_TORCH))

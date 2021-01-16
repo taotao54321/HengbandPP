@@ -9,8 +9,7 @@
 #include "system/floor-type-definition.h"
 #include "system/monster-type-definition.h"
 
-static void add_cheat_remove_flags(player_type *target_ptr, msr_type *msr_ptr)
-{
+static void add_cheat_remove_flags(player_type* target_ptr, msr_type* msr_ptr) {
     if (!smart_cheat)
         return;
 
@@ -27,17 +26,16 @@ static void add_cheat_remove_flags(player_type *target_ptr, msr_type *msr_ptr)
  * @param f6p モンスター魔法のフラグリスト3
  * @return なし
  */
-void remove_bad_spells(MONSTER_IDX m_idx, player_type *target_ptr, u32b *f4p, u32b *f5p, u32b *f6p)
-{
+void remove_bad_spells(MONSTER_IDX m_idx, player_type* target_ptr, u32b* f4p, u32b* f5p, u32b* f6p) {
     msr_type tmp_msr;
-    msr_type *msr_ptr = initialize_msr_type(target_ptr, &tmp_msr, m_idx, *f4p, *f5p, *f6p);
+    msr_type* msr_ptr = initialize_msr_type(target_ptr, &tmp_msr, m_idx, *f4p, *f5p, *f6p);
     if (msr_ptr->r_ptr->flags2 & RF2_STUPID)
         return;
 
     if (!smart_cheat && !smart_learn)
         return;
 
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
     if (smart_learn) {
         if (m_ptr->smart && (randint0(100) < 1))
             m_ptr->smart &= SM_FRIENDLY | SM_PET | SM_CLONED;

@@ -49,8 +49,7 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return エラーコード
  */
-static errr load_town_quest(player_type *creature_ptr)
-{
+static errr load_town_quest(player_type* creature_ptr) {
     if (z_older_than(12, 1, 3))
         return 0;
 
@@ -76,12 +75,11 @@ static errr load_town_quest(player_type *creature_ptr)
     return analyze_wilderness();
 }
 
-static void load_player_world(player_type *creature_ptr)
-{
+static void load_player_world(player_type* creature_ptr) {
     rd_base_info(creature_ptr);
     rd_player_info(creature_ptr);
-    rd_byte((byte *)&preserve_mode);
-    rd_byte((byte *)&creature_ptr->wait_report_score);
+    rd_byte((byte*)&preserve_mode);
+    rd_byte((byte*)&creature_ptr->wait_report_score);
     rd_dummy2();
     rd_global_configurations(creature_ptr);
     rd_extra(creature_ptr);
@@ -93,8 +91,7 @@ static void load_player_world(player_type *creature_ptr)
         load_note(_("特別情報をロードしました", "Loaded extra information"));
 }
 
-static errr load_hp(player_type *creature_ptr)
-{
+static errr load_hp(player_type* creature_ptr) {
     u16b tmp16u;
     rd_u16b(&tmp16u);
     if (tmp16u > PY_MAX_LEVEL) {
@@ -111,8 +108,7 @@ static errr load_hp(player_type *creature_ptr)
     return 0;
 }
 
-static void load_spells(player_type *creature_ptr)
-{
+static void load_spells(player_type* creature_ptr) {
     rd_u32b(&creature_ptr->spell_learned1);
     rd_u32b(&creature_ptr->spell_learned2);
     rd_u32b(&creature_ptr->spell_worked1);
@@ -131,8 +127,7 @@ static void load_spells(player_type *creature_ptr)
         rd_s16b(&creature_ptr->add_spells);
 }
 
-static errr verify_checksum()
-{
+static errr verify_checksum() {
     u32b n_v_check = v_check;
     u32b o_v_check;
     rd_u32b(&o_v_check);
@@ -143,8 +138,7 @@ static errr verify_checksum()
     return 11;
 }
 
-static errr verify_encoded_checksum()
-{
+static errr verify_encoded_checksum() {
     u32b n_x_check = x_check;
     u32b o_x_check;
     rd_u32b(&o_x_check);
@@ -159,8 +153,7 @@ static errr verify_encoded_checksum()
  * @brief セーブファイル読み込み処理の実体 / Actually read the savefile
  * @return エラーコード
  */
-static errr exe_reading_savefile(player_type *creature_ptr)
-{
+static errr exe_reading_savefile(player_type* creature_ptr) {
     rd_version_info();
     rd_dummy3();
     rd_system_info();
@@ -241,8 +234,7 @@ static errr exe_reading_savefile(player_type *creature_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return エラーコード
  */
-static errr rd_savefile(player_type *player_ptr)
-{
+static errr rd_savefile(player_type* player_ptr) {
     safe_setuid_grab(player_ptr);
     loading_savefile = angband_fopen(savefile, "rb");
     safe_setuid_drop();
@@ -264,8 +256,7 @@ static errr rd_savefile(player_type *player_ptr)
  * @param new_game セーブデータの新規作成が必要か否か
  * @return セーブデータが読み込めればtrue
  */
-bool load_savedata(player_type *player_ptr, bool *new_game)
-{
+bool load_savedata(player_type* player_ptr, bool* new_game) {
     concptr what = "generic";
     current_world_ptr->game_turn = 0;
     player_ptr->is_dead = FALSE;
@@ -294,7 +285,7 @@ bool load_savedata(player_type *player_ptr, bool *new_game)
     }
 
     if (!err) {
-        if (fd_read(fd, (char *)(vvv), 4))
+        if (fd_read(fd, (char*)(vvv), 4))
             err = -1;
 
         if (err)
@@ -335,7 +326,8 @@ bool load_savedata(player_type *player_ptr, bool *new_game)
     if ((FAKE_VER_MAJOR != current_world_ptr->z_major) || (FAKE_VER_MINOR != current_world_ptr->z_minor) || (FAKE_VER_PATCH != current_world_ptr->z_patch)) {
         if (current_world_ptr->z_major == 2 && current_world_ptr->z_minor == 0 && current_world_ptr->z_patch == 6) {
             msg_print(_("バージョン 2.0.* 用のセーブファイルを変換しました。", "Converted a 2.0.* savefile."));
-        } else {
+        }
+        else {
             msg_format(_("バージョン %d.%d.%d 用のセーブ・ファイルを変換しました。", "Converted a %d.%d.%d savefile."),
                 (current_world_ptr->z_major > 9) ? current_world_ptr->z_major - 10 : current_world_ptr->z_major, current_world_ptr->z_minor,
                 current_world_ptr->z_patch);

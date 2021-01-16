@@ -11,8 +11,8 @@
 #include "system/floor-type-definition.h"
 #include "term/screen-processor.h"
 #include "term/term-color-types.h"
-#include "window/main-window-row-column.h"
 #include "view/status-bars-table.h"
+#include "window/main-window-row-column.h"
 #include "world/world.h"
 
 /*!
@@ -34,14 +34,14 @@
  * @param stat 描画するステータスのID
  * @return なし
  */
-void print_stat(player_type *creature_ptr, int stat)
-{
+void print_stat(player_type* creature_ptr, int stat) {
     GAME_TEXT tmp[32];
     if (creature_ptr->stat_cur[stat] < creature_ptr->stat_max[stat]) {
         put_str(stat_names_reduced[stat], ROW_STAT + stat, 0);
         cnv_stat(creature_ptr->stat_use[stat], tmp);
         c_put_str(TERM_YELLOW, tmp, ROW_STAT + stat, COL_STAT + 6);
-    } else {
+    }
+    else {
         put_str(stat_names[stat], ROW_STAT + stat, 0);
         cnv_stat(creature_ptr->stat_use[stat], tmp);
         c_put_str(TERM_L_GREEN, tmp, ROW_STAT + stat, COL_STAT + 6);
@@ -62,8 +62,7 @@ void print_stat(player_type *creature_ptr, int stat)
  * @brief プレイヤーの負傷状態を表示する
  * @return なし
  */
-void print_cut(player_type *creature_ptr)
-{
+void print_cut(player_type* creature_ptr) {
     int c = creature_ptr->cut;
     if (c > 1000) {
         c_put_str(TERM_L_RED, _("致命傷      ", "Mortal wound"), ROW_CUT, COL_CUT);
@@ -107,8 +106,7 @@ void print_cut(player_type *creature_ptr)
  * @brief プレイヤーの朦朧状態を表示する
  * @return なし
  */
-void print_stun(player_type *creature_ptr)
-{
+void print_stun(player_type* creature_ptr) {
     int s = creature_ptr->stun;
     if (s > 100) {
         c_put_str(TERM_RED, _("意識不明瞭  ", "Knocked out "), ROW_STUN, COL_STUN);
@@ -133,8 +131,7 @@ void print_stun(player_type *creature_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void print_hunger(player_type *player_ptr)
-{
+void print_hunger(player_type* player_ptr) {
     if (current_world_ptr->wizard && player_ptr->current_floor_ptr->inside_arena)
         return;
 
@@ -175,14 +172,14 @@ void print_hunger(player_type *player_ptr)
  * This function was a major bottleneck when resting, so a lot of
  * the text formatting code was optimized in place below.
  */
-void print_state(player_type *player_ptr)
-{
+void print_state(player_type* player_ptr) {
     TERM_COLOR attr = TERM_WHITE;
     GAME_TEXT text[16];
     if (command_rep) {
         if (command_rep > 999) {
             (void)sprintf(text, "%2d00", command_rep / 100);
-        } else {
+        }
+        else {
             (void)sprintf(text, "  %2d", command_rep);
         }
 
@@ -199,9 +196,11 @@ void print_state(player_type *player_ptr)
         strcpy(text, _("    ", "    "));
         if (player_ptr->resting > 0) {
             sprintf(text, "%4d", player_ptr->resting);
-        } else if (player_ptr->resting == COMMAND_ARG_REST_FULL_HEALING) {
+        }
+        else if (player_ptr->resting == COMMAND_ARG_REST_FULL_HEALING) {
             text[0] = text[1] = text[2] = text[3] = '*';
-        } else if (player_ptr->resting == COMMAND_ARG_REST_UNTIL_DONE) {
+        }
+        else if (player_ptr->resting == COMMAND_ARG_REST_UNTIL_DONE) {
             text[0] = text[1] = text[2] = text[3] = '&';
         }
 
@@ -275,8 +274,7 @@ void print_state(player_type *player_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void print_speed(player_type *player_ptr)
-{
+void print_speed(player_type* player_ptr) {
     TERM_LEN wid, hgt;
     term_get_size(&wid, &hgt);
     TERM_LEN col_speed = wid + COL_SPEED;
@@ -286,43 +284,47 @@ void print_speed(player_type *player_ptr)
     if (player_ptr->action == ACTION_SEARCH && !player_ptr->lightspeed)
         i += 10;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     bool is_player_fast = is_fast(player_ptr);
     char buf[32] = "";
     TERM_COLOR attr = TERM_WHITE;
     if (i > 110) {
         if (player_ptr->riding) {
-            monster_type *m_ptr = &floor_ptr->m_list[player_ptr->riding];
+            monster_type* m_ptr = &floor_ptr->m_list[player_ptr->riding];
             if (monster_fast_remaining(m_ptr) && !monster_slow_remaining(m_ptr))
                 attr = TERM_L_BLUE;
             else if (monster_slow_remaining(m_ptr) && !monster_fast_remaining(m_ptr))
                 attr = TERM_VIOLET;
             else
                 attr = TERM_GREEN;
-        } else if ((is_player_fast && !player_ptr->slow) || player_ptr->lightspeed)
+        }
+        else if ((is_player_fast && !player_ptr->slow) || player_ptr->lightspeed)
             attr = TERM_YELLOW;
         else if (player_ptr->slow && !is_player_fast)
             attr = TERM_VIOLET;
         else
             attr = TERM_L_GREEN;
         sprintf(buf, "%s(+%d)", (player_ptr->riding ? _("乗馬", "Ride") : _("加速", "Fast")), (i - 110));
-    } else if (i < 110) {
+    }
+    else if (i < 110) {
         if (player_ptr->riding) {
-            monster_type *m_ptr = &floor_ptr->m_list[player_ptr->riding];
+            monster_type* m_ptr = &floor_ptr->m_list[player_ptr->riding];
             if (monster_fast_remaining(m_ptr) && !monster_slow_remaining(m_ptr))
                 attr = TERM_L_BLUE;
             else if (monster_slow_remaining(m_ptr) && !monster_fast_remaining(m_ptr))
                 attr = TERM_VIOLET;
             else
                 attr = TERM_RED;
-        } else if (is_player_fast && !player_ptr->slow)
+        }
+        else if (is_player_fast && !player_ptr->slow)
             attr = TERM_YELLOW;
         else if (player_ptr->slow && !is_player_fast)
             attr = TERM_VIOLET;
         else
             attr = TERM_L_UMBER;
         sprintf(buf, "%s(-%d)", (player_ptr->riding ? _("乗馬", "Ride") : _("減速", "Slow")), (110 - i));
-    } else if (player_ptr->riding) {
+    }
+    else if (player_ptr->riding) {
         attr = TERM_GREEN;
         strcpy(buf, _("乗馬中", "Riding"));
     }
@@ -335,8 +337,7 @@ void print_speed(player_type *player_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void print_study(player_type *player_ptr)
-{
+void print_study(player_type* player_ptr) {
     TERM_LEN wid, hgt;
     term_get_size(&wid, &hgt);
     TERM_LEN col_study = wid + COL_STUDY;
@@ -344,7 +345,8 @@ void print_study(player_type *player_ptr)
 
     if (player_ptr->new_spells) {
         put_str(_("学習", "Stud"), row_study, col_study);
-    } else {
+    }
+    else {
         put_str("    ", row_study, col_study);
     }
 }
@@ -354,8 +356,7 @@ void print_study(player_type *player_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void print_imitation(player_type *player_ptr)
-{
+void print_imitation(player_type* player_ptr) {
     TERM_LEN wid, hgt;
     term_get_size(&wid, &hgt);
     TERM_LEN col_study = wid + COL_STUDY;
@@ -381,8 +382,7 @@ void print_imitation(player_type *player_ptr)
  * @brief 下部に状態表示を行う / Show status bar
  * @return なし
  */
-void print_status(player_type *creature_ptr)
-{
+void print_status(player_type* creature_ptr) {
     TERM_LEN wid, hgt;
     term_get_size(&wid, &hgt);
     TERM_LEN row_statbar = hgt + ROW_STATBAR;
@@ -414,8 +414,7 @@ void print_status(player_type *creature_ptr)
     if (creature_ptr->tim_invis)
         ADD_BAR_FLAG(BAR_SENSEUNSEEN);
 
-    if (creature_ptr->concent >= CONCENT_RADAR_THRESHOLD)
-    {
+    if (creature_ptr->concent >= CONCENT_RADAR_THRESHOLD) {
         ADD_BAR_FLAG(BAR_SENSEUNSEEN);
         ADD_BAR_FLAG(BAR_NIGHTSIGHT);
     }
@@ -643,8 +642,7 @@ void print_status(player_type *creature_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void print_frame_extra(player_type *player_ptr)
-{
+void print_frame_extra(player_type* player_ptr) {
     print_cut(player_ptr);
     print_stun(player_ptr);
     print_hunger(player_ptr);

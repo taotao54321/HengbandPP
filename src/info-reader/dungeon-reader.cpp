@@ -16,8 +16,7 @@
  * @param what 参照元の文字列ポインタ
  * @return エラーコード
  */
-static errr grab_one_dungeon_flag(dungeon_type *d_ptr, concptr what)
-{
+static errr grab_one_dungeon_flag(dungeon_type* d_ptr, concptr what) {
     if (grab_one_flag(&d_ptr->flags1, d_info_flags1, what) == 0)
         return 0;
 
@@ -32,8 +31,7 @@ static errr grab_one_dungeon_flag(dungeon_type *d_ptr, concptr what)
  * @param what 参照元の文字列ポインタ
  * @return エラーコード
  */
-static errr grab_one_basic_monster_flag(dungeon_type *d_ptr, concptr what)
-{
+static errr grab_one_basic_monster_flag(dungeon_type* d_ptr, concptr what) {
     if (grab_one_flag(&d_ptr->mflags1, r_info_flags1, what) == 0)
         return 0;
 
@@ -66,8 +64,7 @@ static errr grab_one_basic_monster_flag(dungeon_type *d_ptr, concptr what)
  * @param what 参照元の文字列ポインタ
  * @return エラーコード
  */
-static errr grab_one_spell_monster_flag(dungeon_type *d_ptr, concptr what)
-{
+static errr grab_one_spell_monster_flag(dungeon_type* d_ptr, concptr what) {
     if (grab_one_flag(&d_ptr->mflags4, r_info_flags4, what) == 0)
         return 0;
 
@@ -88,9 +85,8 @@ static errr grab_one_spell_monster_flag(dungeon_type *d_ptr, concptr what)
  * @param head ヘッダ構造体
  * @return エラーコード
  */
-errr parse_d_info(char *buf, angband_header *head)
-{
-    static dungeon_type *d_ptr = NULL;
+errr parse_d_info(char* buf, angband_header* head) {
+    static dungeon_type* d_ptr = NULL;
     char *s, *t;
     if (buf[0] == 'N') {
         s = angband_strchr(buf + 2, ':');
@@ -141,7 +137,8 @@ errr parse_d_info(char *buf, angband_header *head)
 #endif
         if (!add_text(&d_ptr->text, head, s, TRUE))
             return 7;
-    } else if (buf[0] == 'W') {
+    }
+    else if (buf[0] == 'W') {
         int min_lev, max_lev;
         int min_plev, mode;
         int min_alloc, max_chance;
@@ -150,7 +147,7 @@ errr parse_d_info(char *buf, angband_header *head)
 
         if (10
             != sscanf(buf + 2, "%d:%d:%d:%d:%d:%d:%d:%d:%x:%x", &min_lev, &max_lev, &min_plev, &mode, &min_alloc, &max_chance, &obj_good, &obj_great,
-                (unsigned int *)&pit, (unsigned int *)&nest))
+                (unsigned int*)&pit, (unsigned int*)&nest))
             return 1;
 
         d_ptr->mindepth = (DEPTH)min_lev;
@@ -163,15 +160,17 @@ errr parse_d_info(char *buf, angband_header *head)
         d_ptr->obj_great = obj_great;
         d_ptr->pit = (BIT_FLAGS16)pit;
         d_ptr->nest = (BIT_FLAGS16)nest;
-    } else if (buf[0] == 'P') {
+    }
+    else if (buf[0] == 'P') {
         int dy, dx;
         if (2 != sscanf(buf + 2, "%d:%d", &dy, &dx))
             return 1;
 
         d_ptr->dy = dy;
         d_ptr->dx = dx;
-    } else if (buf[0] == 'L') {
-        char *zz[16];
+    }
+    else if (buf[0] == 'L') {
+        char* zz[16];
         if (tokenize(buf + 2, DUNGEON_FEAT_PROB_NUM * 2 + 1, zz, 0) != (DUNGEON_FEAT_PROB_NUM * 2 + 1))
             return 1;
 
@@ -184,8 +183,9 @@ errr parse_d_info(char *buf, angband_header *head)
         }
 
         d_ptr->tunnel_percent = atoi(zz[DUNGEON_FEAT_PROB_NUM * 2]);
-    } else if (buf[0] == 'A') {
-        char *zz[16];
+    }
+    else if (buf[0] == 'A') {
+        char* zz[16];
         if (tokenize(buf + 2, DUNGEON_FEAT_PROB_NUM * 2 + 4, zz, 0) != (DUNGEON_FEAT_PROB_NUM * 2 + 4))
             return 1;
 
@@ -212,7 +212,8 @@ errr parse_d_info(char *buf, angband_header *head)
         d_ptr->stream2 = f_tag_to_index(zz[DUNGEON_FEAT_PROB_NUM * 2 + 3]);
         if (d_ptr->stream2 < 0)
             return PARSE_ERROR_UNDEFINED_TERRAIN_TAG;
-    } else if (buf[0] == 'F') {
+    }
+    else if (buf[0] == 'F') {
         int artif = 0, monst = 0;
 
         for (s = buf + 2; *s;) {
@@ -255,7 +256,8 @@ errr parse_d_info(char *buf, angband_header *head)
 
             s = t;
         }
-    } else if (buf[0] == 'M') {
+    }
+    else if (buf[0] == 'M') {
         for (s = buf + 2; *s;) {
             /* loop */
             for (t = s; *t && (*t != ' ') && (*t != '|'); ++t)
@@ -279,7 +281,8 @@ errr parse_d_info(char *buf, angband_header *head)
 
             s = t;
         }
-    } else if (buf[0] == 'S') {
+    }
+    else if (buf[0] == 'S') {
         for (s = buf + 2; *s;) {
             /* loop */
             for (t = s; *t && (*t != ' ') && (*t != '|'); ++t)
@@ -302,7 +305,8 @@ errr parse_d_info(char *buf, angband_header *head)
 
             s = t;
         }
-    } else {
+    }
+    else {
         return 6;
     }
 

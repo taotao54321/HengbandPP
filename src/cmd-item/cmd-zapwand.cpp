@@ -13,8 +13,8 @@
 #include "object/object-info.h"
 #include "object/object-kind.h"
 #include "perception/object-perception.h"
-#include "player/attack-defense-types.h"
 #include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
 #include "player/player-class.h"
 #include "player/player-status.h"
 #include "player/special-defense-types.h"
@@ -44,8 +44,7 @@
  * @param magic 魔道具術上の処理ならばTRUE
  * @return 発動により効果内容が確定したならばTRUEを返す
  */
-bool wand_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, DIRECTION dir, bool powerful, bool magic)
-{
+bool wand_effect(player_type* creature_ptr, OBJECT_SUBTYPE_VALUE sval, DIRECTION dir, bool powerful, bool magic) {
     bool ident = FALSE;
     PLAYER_LEVEL lev = powerful ? creature_ptr->lev * 2 : creature_ptr->lev;
     POSITION rad = powerful ? 3 : 2;
@@ -61,7 +60,8 @@ bool wand_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, DIRECTION
                     sval++;
                 if (sval > SV_WAND_COLD_BALL)
                     sval = randint0(4) + SV_WAND_ACID_BALL;
-            } else {
+            }
+            else {
                 while (randint1(300) < (0 - creature_ptr->virtues[vir - 1]))
                     sval--;
                 if (sval < SV_WAND_HEAL_MONSTER)
@@ -329,12 +329,11 @@ bool wand_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, DIRECTION
  * as the basic "ball" rods.
  * </pre>
  */
-void exe_aim_wand(player_type *creature_ptr, INVENTORY_IDX item)
-{
+void exe_aim_wand(player_type* creature_ptr, INVENTORY_IDX item) {
     DEPTH lev;
     int ident, chance;
     DIRECTION dir;
-    object_type *o_ptr;
+    object_type* o_ptr;
     bool old_target_pet = target_pet;
 
     o_ptr = ref_item(creature_ptr, item);
@@ -445,8 +444,7 @@ void exe_aim_wand(player_type *creature_ptr, INVENTORY_IDX item)
  * @brief 魔法棒を使うコマンドのメインルーチン /
  * @return なし
  */
-void do_cmd_aim_wand(player_type *creature_ptr)
-{
+void do_cmd_aim_wand(player_type* creature_ptr) {
     OBJECT_IDX item;
     concptr q, s;
 

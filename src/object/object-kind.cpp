@@ -12,9 +12,9 @@
 /*
  * The object kind arrays
  */
-object_kind *k_info;
-char *k_name;
-char *k_text;
+object_kind* k_info;
+char* k_name;
+char* k_text;
 
 /*
  * Maximum number of items in k_info.txt
@@ -26,7 +26,6 @@ KIND_OBJECT_IDX max_k_idx;
  * Use "flavor" if available.
  * Default to user definitions.
  */
-SYMBOL_CODE object_char(object_type *o_ptr)
-{
+SYMBOL_CODE object_char(object_type* o_ptr) {
     return k_info[o_ptr->k_idx].flavor ? k_info[k_info[o_ptr->k_idx].flavor].x_char : k_info[o_ptr->k_idx].x_char;
 }

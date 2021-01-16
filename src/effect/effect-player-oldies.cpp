@@ -7,8 +7,7 @@
 #include "status/buff-setter.h"
 #include "view/display-messages.h"
 
-void effect_player_old_heal(player_type *target_ptr, effect_player_type *ep_ptr)
-{
+void effect_player_old_heal(player_type* target_ptr, effect_player_type* ep_ptr) {
     if (target_ptr->blind)
         msg_print(_("何らかの攻撃によって気分がよくなった。", "You are hit by something invigorating!"));
 
@@ -16,8 +15,7 @@ void effect_player_old_heal(player_type *target_ptr, effect_player_type *ep_ptr)
     ep_ptr->dam = 0;
 }
 
-void effect_player_old_speed(player_type *target_ptr, effect_player_type *ep_ptr)
-{
+void effect_player_old_speed(player_type* target_ptr, effect_player_type* ep_ptr) {
     if (target_ptr->blind)
         msg_print(_("何かで攻撃された！", "You are hit by something!"));
 
@@ -25,16 +23,14 @@ void effect_player_old_speed(player_type *target_ptr, effect_player_type *ep_ptr
     ep_ptr->dam = 0;
 }
 
-void effect_player_old_slow(player_type *target_ptr)
-{
+void effect_player_old_slow(player_type* target_ptr) {
     if (target_ptr->blind)
         msg_print(_("何か遅いもので攻撃された！", "You are hit by something slow!"));
 
     (void)set_slow(target_ptr, target_ptr->slow + randint0(4) + 4, FALSE);
 }
 
-void effect_player_old_sleep(player_type *target_ptr, effect_player_type *ep_ptr)
-{
+void effect_player_old_sleep(player_type* target_ptr, effect_player_type* ep_ptr) {
     if (target_ptr->free_act)
         return;
 

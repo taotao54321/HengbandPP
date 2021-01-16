@@ -3,8 +3,7 @@
 #include "realm/realm-names-table.h"
 #include "realm/realm-types.h"
 
-void switch_class_racial(player_type *creature_ptr, rc_type *rc_ptr)
-{
+void switch_class_racial(player_type* creature_ptr, rc_type* rc_ptr) {
     switch (creature_ptr->pclass) {
     case CLASS_WARRIOR:
         strcpy(rc_ptr->power_desc[rc_ptr->num].racial_name, _("剣の舞い", "Sword Dancing"));
@@ -42,7 +41,8 @@ void switch_class_racial(player_type *creature_ptr, rc_type *rc_ptr)
             rc_ptr->power_desc[rc_ptr->num].stat = A_WIS;
             rc_ptr->power_desc[rc_ptr->num].fail = 50;
             rc_ptr->power_desc[rc_ptr->num++].number = -3;
-        } else {
+        }
+        else {
             strcpy(rc_ptr->power_desc[rc_ptr->num].racial_name, _("召魂", "Evocation"));
             rc_ptr->power_desc[rc_ptr->num].min_level = 42;
             rc_ptr->power_desc[rc_ptr->num].cost = 40;
@@ -77,7 +77,8 @@ void switch_class_racial(player_type *creature_ptr, rc_type *rc_ptr)
             rc_ptr->power_desc[rc_ptr->num].stat = A_WIS;
             rc_ptr->power_desc[rc_ptr->num].fail = 30;
             rc_ptr->power_desc[rc_ptr->num++].number = -3;
-        } else {
+        }
+        else {
             strcpy(rc_ptr->power_desc[rc_ptr->num].racial_name, _("ヘル・ランス", "Hell Lance"));
             rc_ptr->power_desc[rc_ptr->num].min_level = 30;
             rc_ptr->power_desc[rc_ptr->num].cost = 30;

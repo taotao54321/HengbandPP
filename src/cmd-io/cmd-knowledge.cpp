@@ -21,8 +21,7 @@
 /*
  * Interact with "knowledge"
  */
-void do_cmd_knowledge(player_type *creature_ptr)
-{
+void do_cmd_knowledge(player_type* creature_ptr) {
     int i, p = 0;
     bool need_redraw = FALSE;
     screen_save();
@@ -42,7 +41,8 @@ void do_cmd_knowledge(player_type *creature_ptr)
             prt(_("(8) 現在のペット                         の一覧", "(7) Display current pets"), 13, 5);
             prt(_("(9) 我が家のアイテム                     の一覧", "(8) Display home inventory"), 14, 5);
             prt(_("(0) *鑑定*済み装備の耐性                 の一覧", "(9) Display *identified* equip."), 15, 5);
-        } else {
+        }
+        else {
             prt(_("(a) 地形の表示文字/タイル                の一覧", "(0) Display terrain symbols"), 6, 5);
             prt(_("(b) 自分に関する情報                     の一覧", "(a) Display about yourself"), 7, 5);
             prt(_("(c) 突然変異                             の一覧", "(b) Display mutations"), 8, 5);

@@ -1,3 +1,3 @@
 ﻿#pragma once
 
-void process_autopick_file_command(char *buf);
+void process_autopick_file_command(char* buf);

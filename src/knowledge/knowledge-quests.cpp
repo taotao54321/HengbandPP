@@ -30,8 +30,7 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_checkquest(player_type *creature_ptr)
-{
+void do_cmd_checkquest(player_type* creature_ptr) {
     screen_save();
     do_cmd_knowledge_quests(creature_ptr);
     screen_load();
@@ -43,12 +42,11 @@ void do_cmd_checkquest(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void do_cmd_knowledge_quests_current(player_type *creature_ptr, FILE *fff)
-{
+static void do_cmd_knowledge_quests_current(player_type* creature_ptr, FILE* fff) {
     char tmp_str[120];
     char rand_tmp_str[120] = "\0";
     GAME_TEXT name[MAX_NLEN];
-    monster_race *r_ptr;
+    monster_race* r_ptr;
     int rand_level = 100;
     int total = 0;
 
@@ -90,15 +88,16 @@ static void do_cmd_knowledge_quests_current(player_type *creature_ptr, FILE *fff
                         plural_aux(name);
                         sprintf(note, " - kill %d %s, have killed %d.", (int)quest[i].max_num, name, (int)quest[i].cur_num);
 #endif
-                    } else
+                    }
+                    else
                         sprintf(note, _(" - %sを倒す。", " - kill %s."), name);
                     break;
 
                 case QUEST_TYPE_FIND_ARTIFACT:
                     if (quest[i].k_idx) {
-                        artifact_type *a_ptr = &a_info[quest[i].k_idx];
+                        artifact_type* a_ptr = &a_info[quest[i].k_idx];
                         object_type forge;
-                        object_type *q_ptr = &forge;
+                        object_type* q_ptr = &forge;
                         KIND_OBJECT_IDX k_idx = lookup_kind(a_ptr->tval, a_ptr->sval);
                         object_prep(creature_ptr, q_ptr, k_idx);
                         q_ptr->name1 = quest[i].k_idx;
@@ -175,13 +174,12 @@ static void do_cmd_knowledge_quests_current(player_type *creature_ptr, FILE *fff
         fprintf(fff, _("  なし\n", "  Nothing.\n"));
 }
 
-static bool do_cmd_knowledge_quests_aux(player_type *player_ptr, FILE *fff, IDX q_idx)
-{
+static bool do_cmd_knowledge_quests_aux(player_type* player_ptr, FILE* fff, IDX q_idx) {
     char tmp_str[120];
     char playtime_str[16];
-    quest_type *const q_ptr = &quest[q_idx];
+    quest_type* const q_ptr = &quest[q_idx];
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (is_fixed_quest_idx(q_idx)) {
         IDX old_quest = floor_ptr->inside_quest;
         floor_ptr->inside_quest = q_idx;
@@ -221,13 +219,12 @@ static bool do_cmd_knowledge_quests_aux(player_type *player_ptr, FILE *fff, IDX 
  * @param quest_num[] 受注したことのあるクエスト群
  * @return なし
  */
-void do_cmd_knowledge_quests_completed(player_type *creature_ptr, FILE *fff, QUEST_IDX quest_num[])
-{
+void do_cmd_knowledge_quests_completed(player_type* creature_ptr, FILE* fff, QUEST_IDX quest_num[]) {
     fprintf(fff, _("《達成したクエスト》\n", "< Completed Quest >\n"));
     QUEST_IDX total = 0;
     for (QUEST_IDX i = 1; i < max_q_idx; i++) {
         QUEST_IDX q_idx = quest_num[i];
-        quest_type *const q_ptr = &quest[q_idx];
+        quest_type* const q_ptr = &quest[q_idx];
 
         if (q_ptr->status == QUEST_STATUS_FINISHED && do_cmd_knowledge_quests_aux(creature_ptr, fff, q_idx)) {
             ++total;
@@ -245,13 +242,12 @@ void do_cmd_knowledge_quests_completed(player_type *creature_ptr, FILE *fff, QUE
  * @param quest_num[] 受注したことのあるクエスト群
  * @return なし
  */
-void do_cmd_knowledge_quests_failed(player_type *creature_ptr, FILE *fff, QUEST_IDX quest_num[])
-{
+void do_cmd_knowledge_quests_failed(player_type* creature_ptr, FILE* fff, QUEST_IDX quest_num[]) {
     fprintf(fff, _("《失敗したクエスト》\n", "< Failed Quest >\n"));
     QUEST_IDX total = 0;
     for (QUEST_IDX i = 1; i < max_q_idx; i++) {
         QUEST_IDX q_idx = quest_num[i];
-        quest_type *const q_ptr = &quest[q_idx];
+        quest_type* const q_ptr = &quest[q_idx];
 
         if (((q_ptr->status == QUEST_STATUS_FAILED_DONE) || (q_ptr->status == QUEST_STATUS_FAILED)) && do_cmd_knowledge_quests_aux(creature_ptr, fff, q_idx)) {
             ++total;
@@ -265,8 +261,7 @@ void do_cmd_knowledge_quests_failed(player_type *creature_ptr, FILE *fff, QUEST_
 /*
  * Print all random quests
  */
-static void do_cmd_knowledge_quests_wiz_random(FILE *fff)
-{
+static void do_cmd_knowledge_quests_wiz_random(FILE* fff) {
     fprintf(fff, _("《残りのランダムクエスト》\n", "< Remaining Random Quest >\n"));
     GAME_TEXT tmp_str[120];
     QUEST_IDX total = 0;
@@ -290,14 +285,13 @@ static void do_cmd_knowledge_quests_wiz_random(FILE *fff)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_knowledge_quests(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_quests(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
 
-    IDX *quest_num;
+    IDX* quest_num;
     C_MAKE(quest_num, max_q_idx, QUEST_IDX);
 
     for (IDX i = 1; i < max_q_idx; i++)

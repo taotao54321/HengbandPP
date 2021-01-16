@@ -13,12 +13,11 @@
  * @param trapped TRUEならばトラップが存在する箱のみ、FALSEならば空でない箱全てを対象にする
  * @return 箱が存在する場合そのオブジェクトID、存在しない場合0を返す。
  */
-OBJECT_IDX chest_check(floor_type *floor_ptr, POSITION y, POSITION x, bool trapped)
-{
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+OBJECT_IDX chest_check(floor_type* floor_ptr, POSITION y, POSITION x, bool trapped) {
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     OBJECT_IDX this_o_idx, next_o_idx = 0;
     for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         if ((o_ptr->tval == TV_CHEST)
@@ -40,8 +39,7 @@ OBJECT_IDX chest_check(floor_type *floor_ptr, POSITION y, POSITION x, bool trapp
  * @details
  * If requested, count only trapped chests.
  */
-int count_chests(player_type *creature_ptr, POSITION *y, POSITION *x, bool trapped)
-{
+int count_chests(player_type* creature_ptr, POSITION* y, POSITION* x, bool trapped) {
     int count = 0;
     for (DIRECTION d = 0; d < 9; d++) {
         POSITION yy = creature_ptr->y + ddy_ddd[d];
@@ -50,7 +48,7 @@ int count_chests(player_type *creature_ptr, POSITION *y, POSITION *x, bool trapp
         if (!o_idx)
             continue;
 
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->current_floor_ptr->o_list[o_idx];
         if (o_ptr->pval == 0)
             continue;

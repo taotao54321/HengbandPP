@@ -30,8 +30,7 @@
  * Hack -- note special "pval boost" code for ring of speed\n
  * Hack -- note that some items must be cursed (or blessed)\n
  */
-void apply_magic_accessary(player_type *owner_ptr, object_type *o_ptr, DEPTH level, int power)
-{
+void apply_magic_accessary(player_type* owner_ptr, object_type* o_ptr, DEPTH level, int power) {
     switch (o_ptr->tval) {
     case TV_RING: {
         switch (o_ptr->sval) {
@@ -198,10 +197,11 @@ void apply_magic_accessary(player_type *owner_ptr, object_type *o_ptr, DEPTH lev
         if ((one_in_(400) && (power > 0) && !object_is_cursed(o_ptr) && (level > 79)) || (power > 2)) {
             o_ptr->pval = MIN(o_ptr->pval, 4);
             become_random_artifact(owner_ptr, o_ptr, FALSE);
-        } else if ((power == 2) && one_in_(2)) {
+        }
+        else if ((power == 2) && one_in_(2)) {
             while (!o_ptr->name2) {
                 int tmp = m_bonus(10, level);
-                object_kind *k_ptr = &k_info[o_ptr->k_idx];
+                object_kind* k_ptr = &k_info[o_ptr->k_idx];
                 switch (randint1(28)) {
                 case 1:
                 case 2:
@@ -396,7 +396,8 @@ void apply_magic_accessary(player_type *owner_ptr, object_type *o_ptr, DEPTH lev
             }
 
             o_ptr->curse_flags = 0L;
-        } else if ((power == -2) && one_in_(2)) {
+        }
+        else if ((power == -2) && one_in_(2)) {
             if (o_ptr->to_h > 0)
                 o_ptr->to_h = 0 - o_ptr->to_h;
             if (o_ptr->to_d > 0)
@@ -408,7 +409,7 @@ void apply_magic_accessary(player_type *owner_ptr, object_type *o_ptr, DEPTH lev
             o_ptr->art_flags[0] = 0;
             o_ptr->art_flags[1] = 0;
             while (!o_ptr->name2) {
-                object_kind *k_ptr = &k_info[o_ptr->k_idx];
+                object_kind* k_ptr = &k_info[o_ptr->k_idx];
                 switch (randint1(5)) {
                 case 1:
                     if (has_flag(k_ptr->flags, TR_DRAIN_EXP))
@@ -524,9 +525,10 @@ void apply_magic_accessary(player_type *owner_ptr, object_type *o_ptr, DEPTH lev
         if ((one_in_(150) && (power > 0) && !object_is_cursed(o_ptr) && (level > 79)) || (power > 2)) {
             o_ptr->pval = MIN(o_ptr->pval, 4);
             become_random_artifact(owner_ptr, o_ptr, FALSE);
-        } else if ((power == 2) && one_in_(2)) {
+        }
+        else if ((power == 2) && one_in_(2)) {
             while (!o_ptr->name2) {
-                object_kind *k_ptr = &k_info[o_ptr->k_idx];
+                object_kind* k_ptr = &k_info[o_ptr->k_idx];
                 switch (randint1(21)) {
                 case 1:
                 case 2:
@@ -644,7 +646,8 @@ void apply_magic_accessary(player_type *owner_ptr, object_type *o_ptr, DEPTH lev
                 }
             }
             o_ptr->curse_flags = 0L;
-        } else if ((power == -2) && one_in_(2)) {
+        }
+        else if ((power == -2) && one_in_(2)) {
             if (o_ptr->to_h > 0)
                 o_ptr->to_h = 0 - o_ptr->to_h;
             if (o_ptr->to_d > 0)
@@ -656,7 +659,7 @@ void apply_magic_accessary(player_type *owner_ptr, object_type *o_ptr, DEPTH lev
             o_ptr->art_flags[0] = 0;
             o_ptr->art_flags[1] = 0;
             while (!o_ptr->name2) {
-                object_kind *k_ptr = &k_info[o_ptr->k_idx];
+                object_kind* k_ptr = &k_info[o_ptr->k_idx];
                 switch (randint1(5)) {
                 case 1:
                     if (has_flag(k_ptr->flags, TR_DRAIN_EXP))

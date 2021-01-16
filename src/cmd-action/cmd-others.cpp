@@ -40,8 +40,7 @@
  * @brief 探索コマンドのメインルーチン / Simple command to "search" for one turn
  * @return なし
  */
-void do_cmd_search(player_type *creature_ptr)
-{
+void do_cmd_search(player_type* creature_ptr) {
     if (command_arg) {
         command_rep = command_arg - 1;
         creature_ptr->redraw |= PR_STATE;
@@ -52,18 +51,17 @@ void do_cmd_search(player_type *creature_ptr)
     search(creature_ptr);
 }
 
-static bool exe_alter(player_type *creature_ptr)
-{
+static bool exe_alter(player_type* creature_ptr) {
     DIRECTION dir;
     if (!get_rep_dir(creature_ptr, &dir, TRUE))
         return FALSE;
 
     POSITION y = creature_ptr->y + ddy[dir];
     POSITION x = creature_ptr->x + ddx[dir];
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
     FEAT_IDX feat = get_feat_mimic(g_ptr);
-    feature_type *f_ptr;
+    feature_type* f_ptr;
     f_ptr = &f_info[feat];
     take_turn(creature_ptr, 100);
     if (g_ptr->m_idx) {
@@ -95,8 +93,7 @@ static bool exe_alter(player_type *creature_ptr)
  * @return なし
  * @details
  */
-void do_cmd_alter(player_type *creature_ptr)
-{
+void do_cmd_alter(player_type* creature_ptr) {
     if (creature_ptr->special_defense & KATA_MUSOU)
         set_action(creature_ptr, ACTION_NONE);
 
@@ -115,8 +112,7 @@ void do_cmd_alter(player_type *creature_ptr)
  * @param なし
  * @return 自殺/引退/切腹を実施するならTRUE、キャンセルならFALSE
  */
-static bool decide_suicide(void)
-{
+static bool decide_suicide(void) {
     if (current_world_ptr->noscore)
         return TRUE;
 
@@ -127,8 +123,7 @@ static bool decide_suicide(void)
     return i == '@';
 }
 
-static void accept_winner_message(player_type *creature_ptr)
-{
+static void accept_winner_message(player_type* creature_ptr) {
     if (!current_world_ptr->total_winner || !last_words)
         return;
 
@@ -151,13 +146,13 @@ static void accept_winner_message(player_type *creature_ptr)
  * @return なし
  * @details
  */
-void do_cmd_suicide(player_type *creature_ptr)
-{
+void do_cmd_suicide(player_type* creature_ptr) {
     flush();
     if (current_world_ptr->total_winner) {
         if (!get_check_strict(creature_ptr, _("引退しますか? ", "Do you want to retire? "), CHECK_NO_HISTORY))
             return;
-    } else {
+    }
+    else {
         if (!get_check(_("本当に自殺しますか？", "Do you really want to commit suicide? ")))
             return;
     }

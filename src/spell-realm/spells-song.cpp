@@ -18,8 +18,7 @@
  * @brief プレイヤーの歌に関する継続処理
  * @return なし
  */
-void check_music(player_type *caster_ptr)
-{
+void check_music(player_type* caster_ptr) {
     if (caster_ptr->pclass != CLASS_BARD)
         return;
     if (!SINGING_SONG_EFFECT(caster_ptr) && !INTERUPTING_SONG_EFFECT(caster_ptr))
@@ -31,7 +30,7 @@ void check_music(player_type *caster_ptr)
     }
 
     int spell = SINGING_SONG_ID(caster_ptr);
-    const magic_type *s_ptr;
+    const magic_type* s_ptr;
     s_ptr = &technic_info[REALM_MUSIC - MIN_TECHNIC][spell];
 
     MANA_POINT need_mana = mod_need_mana(caster_ptr, s_ptr->smana, spell, REALM_MUSIC);
@@ -41,7 +40,8 @@ void check_music(player_type *caster_ptr)
     if (s64b_cmp(caster_ptr->csp, caster_ptr->csp_frac, need_mana, need_mana_frac) < 0) {
         stop_singing(caster_ptr);
         return;
-    } else {
+    }
+    else {
         s64b_sub(&(caster_ptr->csp), &(caster_ptr->csp_frac), need_mana, need_mana_frac);
 
         caster_ptr->redraw |= PR_MANA;
@@ -61,11 +61,13 @@ void check_music(player_type *caster_ptr)
     else if (caster_ptr->spell_exp[spell] < SPELL_EXP_SKILLED) {
         if (one_in_(2) && (caster_ptr->current_floor_ptr->dun_level > 4) && ((caster_ptr->current_floor_ptr->dun_level + 10) > caster_ptr->lev))
             caster_ptr->spell_exp[spell] += 1;
-    } else if (caster_ptr->spell_exp[spell] < SPELL_EXP_EXPERT) {
+    }
+    else if (caster_ptr->spell_exp[spell] < SPELL_EXP_EXPERT) {
         if (one_in_(5) && ((caster_ptr->current_floor_ptr->dun_level + 5) > caster_ptr->lev)
             && ((caster_ptr->current_floor_ptr->dun_level + 5) > s_ptr->slevel))
             caster_ptr->spell_exp[spell] += 1;
-    } else if (caster_ptr->spell_exp[spell] < SPELL_EXP_MASTER) {
+    }
+    else if (caster_ptr->spell_exp[spell] < SPELL_EXP_MASTER) {
         if (one_in_(5) && ((caster_ptr->current_floor_ptr->dun_level + 5) > caster_ptr->lev) && (caster_ptr->current_floor_ptr->dun_level > s_ptr->slevel))
             caster_ptr->spell_exp[spell] += 1;
     }
@@ -79,10 +81,10 @@ void check_music(player_type *caster_ptr)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_tim_stealth(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_tim_stealth(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -91,11 +93,13 @@ bool set_tim_stealth(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tim_stealth && !do_dec) {
             if (creature_ptr->tim_stealth > v)
                 return FALSE;
-        } else if (!is_time_limit_stealth(creature_ptr)) {
+        }
+        else if (!is_time_limit_stealth(creature_ptr)) {
             msg_print(_("足音が小さくなった！", "You begin to walk silently!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tim_stealth && !music_singing(creature_ptr, MUSIC_STEALTH)) {
             msg_print(_("足音が大きくなった。", "You no longer walk silently."));
             notice = TRUE;

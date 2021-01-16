@@ -50,8 +50,7 @@
  * @param magic 魔道具術上の処理ならばTRUE
  * @return 発動により効果内容が確定したならばTRUEを返す
  */
-int rod_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, DIRECTION dir, bool *use_charge, bool powerful, bool magic)
-{
+int rod_effect(player_type* creature_ptr, OBJECT_SUBTYPE_VALUE sval, DIRECTION dir, bool* use_charge, bool powerful, bool magic) {
     int ident = FALSE;
     PLAYER_LEVEL lev = powerful ? creature_ptr->lev * 2 : creature_ptr->lev;
     POSITION detect_rad = powerful ? DETECT_RAD_DEFAULT * 3 / 2 : DETECT_RAD_DEFAULT;
@@ -80,7 +79,8 @@ int rod_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, DIRECTION d
         if (powerful) {
             if (!identify_fully(creature_ptr, FALSE, TV_NONE))
                 *use_charge = FALSE;
-        } else {
+        }
+        else {
             if (!ident_spell(creature_ptr, FALSE, TV_NONE))
                 *use_charge = FALSE;
         }
@@ -284,17 +284,16 @@ int rod_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, DIRECTION d
  * pvals are defined for each rod in k_info. -LM-
  * </pre>
  */
-void exe_zap_rod(player_type *creature_ptr, INVENTORY_IDX item)
-{
+void exe_zap_rod(player_type* creature_ptr, INVENTORY_IDX item) {
     int ident, chance, lev, fail;
     DIRECTION dir = 0;
-    object_type *o_ptr;
+    object_type* o_ptr;
     bool success;
 
     /* Hack -- let perception get aborted */
     bool use_charge = TRUE;
 
-    object_kind *k_ptr;
+    object_kind* k_ptr;
 
     o_ptr = ref_item(creature_ptr, item);
 
@@ -343,7 +342,8 @@ void exe_zap_rod(player_type *creature_ptr, INVENTORY_IDX item)
             success = FALSE;
         else
             success = TRUE;
-    } else {
+    }
+    else {
         if (randint0(fail * 2) < chance)
             success = TRUE;
         else
@@ -408,8 +408,7 @@ void exe_zap_rod(player_type *creature_ptr, INVENTORY_IDX item)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_zap_rod(player_type *creature_ptr)
-{
+void do_cmd_zap_rod(player_type* creature_ptr) {
     OBJECT_IDX item;
     concptr q, s;
 

@@ -65,7 +65,7 @@ typedef struct player_type {
     int player_euid;
     int player_egid;
 
-    floor_type *current_floor_ptr;
+    floor_type* current_floor_ptr;
     POSITION oldpy; /* Previous player location -KMW- */
     POSITION oldpx; /* Previous player location -KMW- */
 
@@ -281,7 +281,7 @@ typedef struct player_type {
     byte feeling; /* Most recent dungeon feeling */
     s32b feeling_turn; /* The turn of the last dungeon feeling */
 
-    object_type *inventory_list; /* The player's inventory */
+    object_type* inventory_list; /* The player's inventory */
     s16b inven_cnt; /* Number of items in inventory */
     s16b equip_cnt; /* Number of items in equipment */
 
@@ -464,46 +464,46 @@ typedef struct player_type {
 
 } player_type;
 
-extern player_type *p_ptr;
+extern player_type* p_ptr;
 
-extern concptr your_alignment(player_type *creature_ptr);
+extern concptr your_alignment(player_type* creature_ptr);
 extern int weapon_exp_level(int weapon_exp);
 extern int riding_exp_level(int riding_exp);
 extern int spell_exp_level(int spell_exp);
 
-extern int calc_weapon_weight_limit(player_type *creature_ptr);
-extern WEIGHT calc_inventory_weight(player_type *creature_ptr);
+extern int calc_weapon_weight_limit(player_type* creature_ptr);
+extern WEIGHT calc_inventory_weight(player_type* creature_ptr);
 
-extern s16b calc_num_fire(player_type *creature_ptr, object_type *o_ptr);
-extern void calc_bonuses(player_type *creature_ptr);
-extern WEIGHT calc_weight_limit(player_type *creature_ptr);
-extern bool has_melee_weapon(player_type *creature_ptr, int i);
+extern s16b calc_num_fire(player_type* creature_ptr, object_type* o_ptr);
+extern void calc_bonuses(player_type* creature_ptr);
+extern WEIGHT calc_weight_limit(player_type* creature_ptr);
+extern bool has_melee_weapon(player_type* creature_ptr, int i);
 
-extern bool heavy_armor(player_type *creature_ptr);
-extern void update_creature(player_type *creature_ptr);
-extern BIT_FLAGS16 empty_hands(player_type *creature_ptr, bool riding_control);
-extern bool player_has_no_spellbooks(player_type *creature_ptr);
+extern bool heavy_armor(player_type* creature_ptr);
+extern void update_creature(player_type* creature_ptr);
+extern BIT_FLAGS16 empty_hands(player_type* creature_ptr, bool riding_control);
+extern bool player_has_no_spellbooks(player_type* creature_ptr);
 
-extern void take_turn(player_type *creature_ptr, PERCENTAGE need_cost);
-extern void free_turn(player_type *creature_ptr);
+extern void take_turn(player_type* creature_ptr, PERCENTAGE need_cost);
+extern void free_turn(player_type* creature_ptr);
 
-extern bool player_place(player_type *creature_ptr, POSITION y, POSITION x);
+extern bool player_place(player_type* creature_ptr, POSITION y, POSITION x);
 
-extern void check_experience(player_type *creature_ptr);
-extern void wreck_the_pattern(player_type *creature_ptr);
-extern void cnv_stat(int val, char *out_val);
+extern void check_experience(player_type* creature_ptr);
+extern void wreck_the_pattern(player_type* creature_ptr);
+extern void cnv_stat(int val, char* out_val);
 extern s16b modify_stat_value(int value, int amount);
-extern long calc_score(player_type *creature_ptr);
+extern long calc_score(player_type* creature_ptr);
 
-extern bool is_blessed(player_type *creature_ptr);
-extern bool is_time_limit_esp(player_type *creature_ptr);
-extern bool is_time_limit_stealth(player_type *creature_ptr);
-extern bool can_two_hands_wielding(player_type *creature_ptr);
-bool is_fast(player_type *creature_ptr);
-bool is_invuln(player_type *creature_ptr);
-bool is_hero(player_type *creature_ptr);
-bool is_shero(player_type *creature_ptr);
-bool is_echizen(player_type *creature_ptr);
+extern bool is_blessed(player_type* creature_ptr);
+extern bool is_time_limit_esp(player_type* creature_ptr);
+extern bool is_time_limit_stealth(player_type* creature_ptr);
+extern bool can_two_hands_wielding(player_type* creature_ptr);
+bool is_fast(player_type* creature_ptr);
+bool is_invuln(player_type* creature_ptr);
+bool is_hero(player_type* creature_ptr);
+bool is_shero(player_type* creature_ptr);
+bool is_echizen(player_type* creature_ptr);
 
 /*
  * Player "food" crucial values
@@ -524,10 +524,10 @@ bool is_echizen(player_type *creature_ptr);
 #define PY_REGEN_HPBASE 1442 /* Min amount hp regen*2^16 */
 #define PY_REGEN_MNBASE 524 /* Min amount mana regen*2^16 */
 
-extern void stop_singing(player_type *creature_ptr);
-extern void stop_mouth(player_type *caster_ptr);
-extern PERCENTAGE calculate_upkeep(player_type *creature_ptr);
-extern bool music_singing(player_type *caster_ptr, int music_songs);
+extern void stop_singing(player_type* creature_ptr);
+extern void stop_mouth(player_type* caster_ptr);
+extern PERCENTAGE calculate_upkeep(player_type* creature_ptr);
+extern bool music_singing(player_type* caster_ptr, int music_songs);
 
 #define SINGING_SONG_EFFECT(P_PTR) ((P_PTR)->magic_num1[0])
 #define INTERUPTING_SONG_EFFECT(P_PTR) ((P_PTR)->magic_num1[1])

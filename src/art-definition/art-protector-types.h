@@ -1,7 +1,7 @@
 #pragma once
 
 typedef enum art_shield_type {
-	ART_THORIN = 30,
+    ART_THORIN = 30,
     ART_CELEGORM = 31,
     ART_ANARION = 32,
     ART_GIL_GALAD = 138,

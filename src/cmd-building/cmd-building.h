@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#include "system/angband.h"
 #include "object/tval-types.h"
+#include "system/angband.h"
 
 #define BUILDING_NON_MEMBER 0 /*!< 不明(現在未使用) */
-#define BUILDING_MEMBER     1 /*!< 不明(現在未使用) */
-#define BUILDING_OWNER      2 /*!< 施設の種族/職業条件が一致している状態値 */
+#define BUILDING_MEMBER 1 /*!< 不明(現在未使用) */
+#define BUILDING_OWNER 2 /*!< 施設の種族/職業条件が一致している状態値 */
 
 /*
  * Arena constants
@@ -20,4 +20,4 @@ extern int battle_odds;
 extern PRICE kakekin;
 extern int sel_monster;
 
-void do_cmd_building(player_type *player_ptr);
+void do_cmd_building(player_type* player_ptr);

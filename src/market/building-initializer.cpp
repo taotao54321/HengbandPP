@@ -13,13 +13,12 @@
  * Initialize town array
  * @return エラーコード
  */
-errr init_towns(void)
-{
+errr init_towns(void) {
     C_MAKE(town_info, max_towns, town_type);
     for (int i = 1; i < max_towns; i++) {
         C_MAKE(town_info[i].store, MAX_STORES, store_type);
         for (int j = 0; j < MAX_STORES; j++) {
-            store_type *store_ptr = &town_info[i].store[j];
+            store_type* store_ptr = &town_info[i].store[j];
             if ((i > 1) && (j == STORE_MUSEUM || j == STORE_HOME))
                 continue;
 
@@ -29,9 +28,11 @@ errr init_towns(void)
              */
             if (j == STORE_HOME) {
                 store_ptr->stock_size = STORE_INVEN_MAX * 10;
-            } else if (j == STORE_MUSEUM) {
+            }
+            else if (j == STORE_MUSEUM) {
                 store_ptr->stock_size = STORE_INVEN_MAX * 50;
-            } else {
+            }
+            else {
                 store_ptr->stock_size = STORE_INVEN_MAX;
             }
 
@@ -46,7 +47,7 @@ errr init_towns(void)
                 int tv = store_table[j][k][0];
                 int sv = store_table[j][k][1];
                 for (k_idx = 1; k_idx < max_k_idx; k_idx++) {
-                    object_kind *k_ptr = &k_info[k_idx];
+                    object_kind* k_ptr = &k_info[k_idx];
                     if ((k_ptr->tval == tv) && (k_ptr->sval == sv))
                         break;
                 }
@@ -67,8 +68,7 @@ errr init_towns(void)
  * Initialize buildings
  * @return エラーコード
  */
-errr init_buildings(void)
-{
+errr init_buildings(void) {
     for (int i = 0; i < MAX_BLDG; i++) {
         building[i].name[0] = '\0';
         building[i].owner_name[0] = '\0';

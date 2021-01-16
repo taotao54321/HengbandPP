@@ -35,8 +35,7 @@
 #include "target/target-types.h"
 #include "view/display-messages.h"
 
-static bool cast_blue_dispel(player_type *caster_ptr)
-{
+static bool cast_blue_dispel(player_type* caster_ptr) {
     if (!target_set(caster_ptr, TARGET_KILL))
         return FALSE;
 
@@ -49,8 +48,7 @@ static bool cast_blue_dispel(player_type *caster_ptr)
     return TRUE;
 }
 
-static bool cast_blue_rocket(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+static bool cast_blue_rocket(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -60,8 +58,7 @@ static bool cast_blue_rocket(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-static bool cast_blue_shoot(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+static bool cast_blue_shoot(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -71,8 +68,7 @@ static bool cast_blue_shoot(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-static bool cast_blue_hand_doom(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+static bool cast_blue_hand_doom(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -81,11 +77,10 @@ static bool cast_blue_hand_doom(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-static bool exe_blue_teleport_back(player_type *caster_ptr, GAME_TEXT *m_name)
-{
-    monster_type *m_ptr;
-    monster_race *r_ptr;
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+static bool exe_blue_teleport_back(player_type* caster_ptr, GAME_TEXT* m_name) {
+    monster_type* m_ptr;
+    monster_race* r_ptr;
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
     if ((floor_ptr->grid_array[target_row][target_col].m_idx == 0) || !player_has_los_bold(caster_ptr, target_row, target_col)
         || !projectable(caster_ptr, caster_ptr->y, caster_ptr->x, target_row, target_col))
         return TRUE;
@@ -103,7 +98,7 @@ static bool exe_blue_teleport_back(player_type *caster_ptr, GAME_TEXT *m_name)
         msg_format(_("%sには効果がなかった！", "%s is unaffected!"), m_name);
         return TRUE;
     }
-    
+
     if (r_ptr->level <= randint1(100))
         return FALSE;
 
@@ -114,8 +109,7 @@ static bool exe_blue_teleport_back(player_type *caster_ptr, GAME_TEXT *m_name)
     return TRUE;
 }
 
-static bool cast_blue_teleport_back(player_type *caster_ptr)
-{
+static bool cast_blue_teleport_back(player_type* caster_ptr) {
     if (!target_set(caster_ptr, TARGET_KILL))
         return FALSE;
 
@@ -129,8 +123,7 @@ static bool cast_blue_teleport_back(player_type *caster_ptr)
     return TRUE;
 }
 
-static bool cast_blue_teleport_away(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+static bool cast_blue_teleport_away(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -138,8 +131,7 @@ static bool cast_blue_teleport_away(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-static bool cast_blue_psy_spear(player_type *caster_ptr, bmc_type *bmc_ptr)
-{
+static bool cast_blue_psy_spear(player_type* caster_ptr, bmc_type* bmc_ptr) {
     if (!get_aim_dir(caster_ptr, &bmc_ptr->dir))
         return FALSE;
 
@@ -149,8 +141,7 @@ static bool cast_blue_psy_spear(player_type *caster_ptr, bmc_type *bmc_ptr)
     return TRUE;
 }
 
-static bool cast_blue_make_trap(player_type *caster_ptr)
-{
+static bool cast_blue_make_trap(player_type* caster_ptr) {
     if (!target_set(caster_ptr, TARGET_KILL))
         return FALSE;
 
@@ -159,8 +150,7 @@ static bool cast_blue_make_trap(player_type *caster_ptr)
     return TRUE;
 }
 
-bool switch_cast_blue_magic(player_type *caster_ptr, bmc_type *bmc_ptr, SPELL_IDX spell)
-{
+bool switch_cast_blue_magic(player_type* caster_ptr, bmc_type* bmc_ptr, SPELL_IDX spell) {
     switch (spell) {
     case MS_SHRIEK:
         msg_print(_("かん高い金切り声をあげた。", "You make a high pitched shriek."));
@@ -381,10 +371,9 @@ bool switch_cast_blue_magic(player_type *caster_ptr, bmc_type *bmc_ptr, SPELL_ID
  * @param success TRUEは成功時、FALSEは失敗時の処理を行う
  * @return 処理を実行したらTRUE、キャンセルした場合FALSEを返す。
  */
-bool cast_learned_spell(player_type *caster_ptr, SPELL_IDX spell, const bool success)
-{
+bool cast_learned_spell(player_type* caster_ptr, SPELL_IDX spell, const bool success) {
     bmc_type tmp_bm;
-    bmc_type *bmc_ptr = initialize_blue_magic_type(caster_ptr, &tmp_bm, success, get_pseudo_monstetr_level);
+    bmc_type* bmc_ptr = initialize_blue_magic_type(caster_ptr, &tmp_bm, success, get_pseudo_monstetr_level);
     if (switch_cast_blue_magic(caster_ptr, bmc_ptr, spell))
         return FALSE;
 

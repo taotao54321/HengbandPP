@@ -18,10 +18,9 @@
  *
  * NB: The keys added here will be interpreted by any macros or keymaps.
  */
-errr type_string(concptr str, uint len)
-{
+errr type_string(concptr str, uint len) {
     errr err = 0;
-    term_type *old = Term;
+    term_type* old = Term;
     if (!str)
         return -1;
     if (!len)

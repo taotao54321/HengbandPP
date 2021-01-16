@@ -1,9 +1,9 @@
 ﻿#include "inventory/inventory-describer.h"
 #include "game-option/birth-options.h"
 #include "inventory/inventory-slot-types.h"
-#include "system/object-type-definition.h"
 #include "player/player-status-flags.h"
 #include "player/player-status-table.h"
+#include "system/object-type-definition.h"
 
 /*!
  * @brief 所持/装備オブジェクトIDの部位表現を返す /
@@ -12,8 +12,7 @@
  * @param i 部位表現を求めるプレイヤーの所持/装備オブジェクトID
  * @return 部位表現の文字列ポインタ
  */
-concptr mention_use(player_type *owner_ptr, int i)
-{
+concptr mention_use(player_type* owner_ptr, int i) {
     concptr p;
 
     /* Examine the location */
@@ -84,8 +83,7 @@ concptr mention_use(player_type *owner_ptr, int i)
  * @details
  * Currently, only used for items in the equipment, inventory.
  */
-concptr describe_use(player_type *owner_ptr, int i)
-{
+concptr describe_use(player_type* owner_ptr, int i) {
     concptr p;
     switch (i) {
 #ifdef JP

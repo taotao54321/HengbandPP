@@ -12,8 +12,7 @@
 #include "util/bit-flags-calculator.h"
 #include "util/quarks.h"
 
-flavor_type *initialize_flavor_type(flavor_type *flavor_ptr, char *buf, object_type *o_ptr, BIT_FLAGS mode)
-{
+flavor_type* initialize_flavor_type(flavor_type* flavor_ptr, char* buf, object_type* o_ptr, BIT_FLAGS mode) {
     flavor_ptr->buf = buf;
     flavor_ptr->o_ptr = o_ptr;
     flavor_ptr->mode = mode;
@@ -45,8 +44,7 @@ flavor_type *initialize_flavor_type(flavor_type *flavor_ptr, char *buf, object_t
  * Print a char "c" into a string "t", as if by sprintf(t, "%c", c),\n
  * and return a pointer to the terminator (t + 1).\n
  */
-char *object_desc_chr(char *t, char c)
-{
+char* object_desc_chr(char* t, char c) {
     *t++ = c;
     *t = '\0';
     return t;
@@ -61,8 +59,7 @@ char *object_desc_chr(char *t, char c)
  * Print a string "s" into a string "t", as if by strcpy(t, s),
  * and return a pointer to the terminator.
  */
-char *object_desc_str(char *t, concptr s)
-{
+char* object_desc_str(char* t, concptr s) {
     while (*s)
         *t++ = *s++;
 
@@ -79,8 +76,7 @@ char *object_desc_str(char *t, concptr s)
  * Print an unsigned number "n" into a string "t", as if by
  * sprintf(t, "%u", n), and return a pointer to the terminator.
  */
-char *object_desc_num(char *t, uint n)
-{
+char* object_desc_num(char* t, uint n) {
     /* loop */
     uint p;
     for (p = 1; n >= p * 10; p = p * 10)
@@ -106,13 +102,13 @@ char *object_desc_num(char *t, uint n)
  * sprintf(t, "%+d", n), and return a pointer to the terminator.
  * Note that we always print a sign, either "+" or "-".
  */
-char *object_desc_int(char *t, int v)
-{
+char* object_desc_int(char* t, int v) {
     uint p, n;
     if (v < 0) {
         n = 0 - v;
         *t++ = '-';
-    } else {
+    }
+    else {
         n = v;
         *t++ = '+';
     }
@@ -137,7 +133,7 @@ char *object_desc_int(char *t, int v)
  * @param ptr 特性短縮表記を格納する文字列ポインタ
  * @return なし
  */
-static void add_inscription(char **short_flavor, concptr str) { *short_flavor = object_desc_str(*short_flavor, str); }
+static void add_inscription(char** short_flavor, concptr str) { *short_flavor = object_desc_str(*short_flavor, str); }
 
 /*!
  * @brief get_inscriptionのサブセットとしてオブジェクトの特性フラグを返す / Helper function for get_inscription()
@@ -151,8 +147,7 @@ static void add_inscription(char **short_flavor, concptr str) { *short_flavor = 
  * sprintf(t, "%+d", n), and return a pointer to the terminator.
  * Note that we always print a sign, either "+" or "-".
  */
-static char *inscribe_flags_aux(flag_insc_table *fi_ptr, BIT_FLAGS flgs[TR_FLAG_SIZE], bool kanji, char *ptr)
-{
+static char* inscribe_flags_aux(flag_insc_table* fi_ptr, BIT_FLAGS flgs[TR_FLAG_SIZE], bool kanji, char* ptr) {
 #ifdef JP
 #else
     (void)kanji;
@@ -175,8 +170,7 @@ static char *inscribe_flags_aux(flag_insc_table *fi_ptr, BIT_FLAGS flgs[TR_FLAG_
  * @param flgs 対応するオブジェクトのフラグ文字列
  * @return 1つでも該当の特性があったらTRUEを返す。
  */
-static bool has_flag_of(flag_insc_table *fi_ptr, BIT_FLAGS flgs[TR_FLAG_SIZE])
-{
+static bool has_flag_of(flag_insc_table* fi_ptr, BIT_FLAGS flgs[TR_FLAG_SIZE]) {
     while (fi_ptr->english) {
         if (has_flag(flgs, fi_ptr->flag) && (fi_ptr->except_flag == -1 || !has_flag(flgs, fi_ptr->except_flag)))
             return TRUE;
@@ -195,24 +189,23 @@ static bool has_flag_of(flag_insc_table *fi_ptr, BIT_FLAGS flgs[TR_FLAG_SIZE])
  * @param all TRUEならばベースアイテム上で明らかなフラグは省略する
  * @return ptrと同じアドレス
  */
-char *get_ability_abbreviation(player_type *player_ptr, char *short_flavor, object_type *o_ptr, bool kanji, bool all)
-{
-    char *prev_ptr = short_flavor;
+char* get_ability_abbreviation(player_type* player_ptr, char* short_flavor, object_type* o_ptr, bool kanji, bool all) {
+    char* prev_ptr = short_flavor;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     if (!all) {
-        object_kind *k_ptr = &k_info[o_ptr->k_idx];
+        object_kind* k_ptr = &k_info[o_ptr->k_idx];
         for (int j = 0; j < TR_FLAG_SIZE; j++)
             flgs[j] &= ~k_ptr->flags[j];
 
         if (object_is_fixed_artifact(o_ptr)) {
-            artifact_type *a_ptr = &a_info[o_ptr->name1];
+            artifact_type* a_ptr = &a_info[o_ptr->name1];
             for (int j = 0; j < TR_FLAG_SIZE; j++)
                 flgs[j] &= ~a_ptr->flags[j];
         }
 
         if (object_is_ego(o_ptr)) {
-            ego_item_type *e_ptr = &e_info[o_ptr->name2];
+            ego_item_type* e_ptr = &e_info[o_ptr->name2];
             for (int j = 0; j < TR_FLAG_SIZE; j++)
                 flgs[j] &= ~e_ptr->flags[j];
         }
@@ -227,7 +220,8 @@ char *get_ability_abbreviation(player_type *player_ptr, char *short_flavor, obje
 
         if (has_flag(flgs, TR_LITE_3))
             remove_flag(flgs, TR_LITE_3);
-    } else if (has_lite_flag(flgs)) {
+    }
+    else if (has_lite_flag(flgs)) {
         add_flag(flgs, TR_LITE_1);
         if (has_flag(flgs, TR_LITE_2))
             remove_flag(flgs, TR_LITE_2);
@@ -296,7 +290,8 @@ char *get_ability_abbreviation(player_type *player_ptr, char *short_flavor, obje
 
         short_flavor = inscribe_flags_aux(flag_insc_esp1, flgs, kanji, short_flavor);
         short_flavor = inscribe_flags_aux(flag_insc_esp2, flgs, kanji, short_flavor);
-    } else {
+    }
+    else {
         if (has_flag_of(flag_insc_esp1, flgs))
             add_inscription(&short_flavor, "~");
 
@@ -322,10 +317,9 @@ char *get_ability_abbreviation(player_type *player_ptr, char *short_flavor, obje
  * @param o_ptr 特性短縮表記を得たいオブジェクト構造体の参照ポインタ
  * @return なし
  */
-void get_inscription(player_type *player_ptr, char *buff, object_type *o_ptr)
-{
+void get_inscription(player_type* player_ptr, char* buff, object_type* o_ptr) {
     concptr insc = quark_str(o_ptr->inscription);
-    char *ptr = buff;
+    char* ptr = buff;
     if (!object_is_fully_known(o_ptr)) {
         while (*insc) {
             if (*insc == '#')
@@ -356,20 +350,23 @@ void get_inscription(player_type *player_ptr, char *buff, object_type *o_ptr)
             if ('%' == insc[1]) {
                 insc++;
                 kanji = FALSE;
-            } else
+            }
+            else
                 kanji = TRUE;
 #endif
 
             if ('a' == insc[1] && 'l' == insc[2] && 'l' == insc[3]) {
                 all = TRUE;
                 insc += 3;
-            } else
+            }
+            else
                 all = FALSE;
 
             ptr = get_ability_abbreviation(player_ptr, ptr, o_ptr, kanji, all);
             if (ptr == start)
                 add_inscription(&ptr, " ");
-        } else
+        }
+        else
             *ptr++ = *insc;
     }
 
@@ -385,8 +382,7 @@ void get_inscription(player_type *player_ptr, char *buff, object_type *o_ptr)
  * @details
  * cmd1.c で流用するために object_desc_japanese から移動した。
  */
-char *object_desc_count_japanese(char *t, object_type *o_ptr)
-{
+char* object_desc_count_japanese(char* t, object_type* o_ptr) {
     t = object_desc_num(t, o_ptr->number);
     switch (o_ptr->tval) {
     case TV_BOLT:
@@ -454,7 +450,8 @@ char *object_desc_count_japanese(char *t, object_type *o_ptr)
     default: {
         if (o_ptr->number < 10) {
             t = object_desc_str(t, "つ");
-        } else {
+        }
+        else {
             t = object_desc_str(t, "個");
         }
         break;
@@ -464,6 +461,6 @@ char *object_desc_count_japanese(char *t, object_type *o_ptr)
 }
 #endif
 
-bool has_lite_flag(BIT_FLAGS *flags) { return has_flag(flags, TR_LITE_1) || has_flag(flags, TR_LITE_2) || has_flag(flags, TR_LITE_3); }
+bool has_lite_flag(BIT_FLAGS* flags) { return has_flag(flags, TR_LITE_1) || has_flag(flags, TR_LITE_2) || has_flag(flags, TR_LITE_3); }
 
-bool has_dark_flag(BIT_FLAGS *flags) { return has_flag(flags, TR_LITE_M1) || has_flag(flags, TR_LITE_M2) || has_flag(flags, TR_LITE_M3); }
+bool has_dark_flag(BIT_FLAGS* flags) { return has_flag(flags, TR_LITE_M1) || has_flag(flags, TR_LITE_M2) || has_flag(flags, TR_LITE_M3); }

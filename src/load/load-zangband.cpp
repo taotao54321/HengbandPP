@@ -21,8 +21,7 @@
 #include "system/system-variables.h"
 #include "world/world.h"
 
-void load_zangband_options(void)
-{
+void load_zangband_options(void) {
     if (option_flag[5] & (0x00000001 << 4))
         option_flag[5] &= ~(0x00000001 << 4);
     else
@@ -69,8 +68,7 @@ void load_zangband_options(void)
         option_flag[5] |= (0x00000001 << 3);
 }
 
-void set_zangband_realm(player_type *creature_ptr)
-{
+void set_zangband_realm(player_type* creature_ptr) {
     if (creature_ptr->realm1 == 9)
         creature_ptr->realm1 = REALM_MUSIC;
 
@@ -84,16 +82,14 @@ void set_zangband_realm(player_type *creature_ptr)
         creature_ptr->realm2 = REALM_HISSATSU;
 }
 
-void set_zangband_skill(player_type *creature_ptr)
-{
+void set_zangband_skill(player_type* creature_ptr) {
     if (creature_ptr->pclass != CLASS_BEASTMASTER)
         creature_ptr->skill_exp[GINOU_RIDING] /= 2;
 
     creature_ptr->skill_exp[GINOU_RIDING] = MIN(creature_ptr->skill_exp[GINOU_RIDING], s_info[creature_ptr->pclass].s_max[GINOU_RIDING]);
 }
 
-void set_zangband_spells(player_type *creature_ptr)
-{
+void set_zangband_spells(player_type* creature_ptr) {
     for (int i = 0; i < MAX_SPELLS; i++)
         creature_ptr->magic_num1[i] = 0;
 
@@ -101,16 +97,14 @@ void set_zangband_spells(player_type *creature_ptr)
         creature_ptr->magic_num2[i] = 0;
 }
 
-void set_zangband_race(player_type *creature_ptr)
-{
+void set_zangband_race(player_type* creature_ptr) {
     creature_ptr->start_race = creature_ptr->prace;
     creature_ptr->old_race1 = 0L;
     creature_ptr->old_race2 = 0L;
     creature_ptr->old_realm = 0;
 }
 
-void set_zangband_bounty_uniques(player_type *creature_ptr)
-{
+void set_zangband_bounty_uniques(player_type* creature_ptr) {
     determine_bounty_uniques(creature_ptr);
     for (int i = 0; i < MAX_BOUNTY; i++) {
         /* Is this bounty unique already dead? */
@@ -125,8 +119,7 @@ void set_zangband_bounty_uniques(player_type *creature_ptr)
  * @return なし
  * @details 厳密にv2.0.6しか見ていないため、ZAngband v2.0.5 以前のセーブデータは非対応
  */
-void set_zangband_timed_effects(player_type *creature_ptr)
-{
+void set_zangband_timed_effects(player_type* creature_ptr) {
     creature_ptr->tim_esp = 0;
     creature_ptr->wraith_form = 0;
     creature_ptr->resist_magic = 0;
@@ -152,51 +145,44 @@ void set_zangband_timed_effects(player_type *creature_ptr)
     get_virtues(creature_ptr);
 }
 
-void set_zangband_mimic(player_type *creature_ptr)
-{
+void set_zangband_mimic(player_type* creature_ptr) {
     creature_ptr->tim_res_time = 0;
     creature_ptr->mimic_form = 0;
     creature_ptr->tim_mimic = 0;
     creature_ptr->tim_sh_fire = 0;
 }
 
-void set_zangband_holy_aura(player_type *creature_ptr)
-{
+void set_zangband_holy_aura(player_type* creature_ptr) {
     creature_ptr->tim_sh_holy = 0;
     creature_ptr->tim_eyeeye = 0;
 }
 
-void set_zangband_reflection(player_type *creature_ptr)
-{
+void set_zangband_reflection(player_type* creature_ptr) {
     creature_ptr->tim_reflect = 0;
     creature_ptr->multishadow = 0;
     creature_ptr->dustrobe = 0;
 }
 
-void rd_zangband_dungeon()
-{
+void rd_zangband_dungeon() {
     s16b tmp16s;
     rd_s16b(&tmp16s);
     max_dlv[DUNGEON_ANGBAND] = tmp16s;
 }
 
-void set_zangband_game_turns(player_type *creature_ptr)
-{
+void set_zangband_game_turns(player_type* creature_ptr) {
     creature_ptr->current_floor_ptr->generated_turn /= 2;
     creature_ptr->feeling_turn /= 2;
     current_world_ptr->game_turn /= 2;
     current_world_ptr->dungeon_turn /= 2;
 }
 
-void set_zangband_gambling_monsters(int i)
-{
+void set_zangband_gambling_monsters(int i) {
     s16b tmp16s;
     rd_s16b(&tmp16s);
     mon_odds[i] = tmp16s;
 }
 
-void set_zangband_special_attack(player_type *creature_ptr)
-{
+void set_zangband_special_attack(player_type* creature_ptr) {
     byte tmp8u;
     rd_byte(&tmp8u);
     if (tmp8u)
@@ -205,29 +191,25 @@ void set_zangband_special_attack(player_type *creature_ptr)
     creature_ptr->ele_attack = 0;
 }
 
-void set_zangband_special_defense(player_type *creature_ptr)
-{
+void set_zangband_special_defense(player_type* creature_ptr) {
     creature_ptr->ele_immune = 0;
     creature_ptr->special_defense = 0;
 }
 
-void set_zangband_action(player_type *creature_ptr)
-{
+void set_zangband_action(player_type* creature_ptr) {
     byte tmp8u;
     rd_byte(&tmp8u);
     if (tmp8u)
         creature_ptr->action = ACTION_LEARN;
 }
 
-void set_zangband_visited_towns(player_type *creature_ptr)
-{
+void set_zangband_visited_towns(player_type* creature_ptr) {
     s32b tmp32s;
     rd_s32b(&tmp32s);
     creature_ptr->visit = 1L;
 }
 
-void set_zangband_quest(player_type *creature_ptr, quest_type *const q_ptr, int loading_quest_index, const QUEST_IDX old_inside_quest)
-{
+void set_zangband_quest(player_type* creature_ptr, quest_type* const q_ptr, int loading_quest_index, const QUEST_IDX old_inside_quest) {
     if (q_ptr->flags & QUEST_FLAG_PRESET) {
         q_ptr->dungeon = 0;
         return;
@@ -239,8 +221,7 @@ void set_zangband_quest(player_type *creature_ptr, quest_type *const q_ptr, int 
     creature_ptr->current_floor_ptr->inside_quest = old_inside_quest;
 }
 
-void set_zangband_class(player_type *creature_ptr)
-{
+void set_zangband_class(player_type* creature_ptr) {
     if (z_older_than(10, 2, 2) && (creature_ptr->pclass == CLASS_BEASTMASTER) && !creature_ptr->is_dead) {
         creature_ptr->hitdie = rp_ptr->r_mhp + cp_ptr->c_mhp + ap_ptr->a_mhp;
         roll_hitdice(creature_ptr, spell_operation(0L));
@@ -262,16 +243,14 @@ void set_zangband_class(player_type *creature_ptr)
     }
 }
 
-void set_zangband_learnt_spells(player_type *creature_ptr)
-{
+void set_zangband_learnt_spells(player_type* creature_ptr) {
     creature_ptr->learned_spells = 0;
     for (int i = 0; i < 64; i++)
         if ((i < 32) ? (creature_ptr->spell_learned1 & (1L << i)) : (creature_ptr->spell_learned2 & (1L << (i - 32))))
             creature_ptr->learned_spells++;
 }
 
-void set_zangband_pet(player_type *creature_ptr)
-{
+void set_zangband_pet(player_type* creature_ptr) {
     creature_ptr->pet_extra_flags = 0;
     byte tmp8u;
     rd_byte(&tmp8u);

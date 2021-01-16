@@ -10,8 +10,7 @@
 #include "system/floor-type-definition.h"
 #include "world/world.h"
 
-static void rd_hengband_dungeons(void)
-{
+static void rd_hengband_dungeons(void) {
     byte max = (byte)current_world_ptr->max_d_idx;
     rd_byte(&max);
     s16b tmp16s;
@@ -23,8 +22,7 @@ static void rd_hengband_dungeons(void)
     }
 }
 
-void rd_dungeons(player_type *creature_ptr)
-{
+void rd_dungeons(player_type* creature_ptr) {
     if (z_older_than(10, 3, 8))
         rd_zangband_dungeon();
     else
@@ -39,8 +37,7 @@ void rd_dungeons(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void rd_alter_reality(player_type *creature_ptr)
-{
+void rd_alter_reality(player_type* creature_ptr) {
     s16b tmp16s;
     if (z_older_than(10, 3, 8))
         creature_ptr->recall_dungeon = DUNGEON_ANGBAND;
@@ -55,8 +52,7 @@ void rd_alter_reality(player_type *creature_ptr)
         rd_s16b(&creature_ptr->alter_reality);
 }
 
-void set_gambling_monsters(void)
-{
+void set_gambling_monsters(void) {
     const int max_gambling_monsters = 4;
     for (int i = 0; i < max_gambling_monsters; i++) {
         rd_s16b(&battle_mon[i]);
@@ -70,15 +66,13 @@ void set_gambling_monsters(void)
 /*!
  * @details 自動拾い関係はこれしかないのでworldに突っ込むことにする。必要があれば再分割する
  */
-void rd_autopick(player_type *creature_ptr)
-{
+void rd_autopick(player_type* creature_ptr) {
     byte tmp8u;
     rd_byte(&tmp8u);
     creature_ptr->autopick_autoregister = tmp8u != 0;
 }
 
-static void set_undead_turn_limit(player_type *creature_ptr)
-{
+static void set_undead_turn_limit(player_type* creature_ptr) {
     switch (creature_ptr->start_race) {
     case RACE_VAMPIRE:
     case RACE_SKELETON:
@@ -92,8 +86,7 @@ static void set_undead_turn_limit(player_type *creature_ptr)
     }
 }
 
-static void rd_world_info(player_type *creature_ptr)
-{
+static void rd_world_info(player_type* creature_ptr) {
     set_undead_turn_limit(creature_ptr);
     current_world_ptr->dungeon_turn_limit = TURNS_PER_TICK * TOWN_DAWN * (MAX_DAYS - 1) + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
     rd_s32b(&creature_ptr->current_floor_ptr->generated_turn);
@@ -124,8 +117,7 @@ static void rd_world_info(player_type *creature_ptr)
     }
 }
 
-void rd_visited_towns(player_type *creature_ptr)
-{
+void rd_visited_towns(player_type* creature_ptr) {
     if (z_older_than(10, 3, 9)) {
         creature_ptr->visit = 1L;
         return;
@@ -141,8 +133,7 @@ void rd_visited_towns(player_type *creature_ptr)
     creature_ptr->visit = (BIT_FLAGS)tmp32s;
 }
 
-void rd_global_configurations(player_type *creature_ptr)
-{
+void rd_global_configurations(player_type* creature_ptr) {
     rd_u32b(&current_world_ptr->seed_flavor);
     rd_u32b(&current_world_ptr->seed_town);
 
@@ -158,8 +149,7 @@ void rd_global_configurations(player_type *creature_ptr)
     rd_world_info(creature_ptr);
 }
 
-void load_wilderness_info(player_type *creature_ptr)
-{
+void load_wilderness_info(player_type* creature_ptr) {
     rd_s32b(&creature_ptr->wilderness_x);
     rd_s32b(&creature_ptr->wilderness_y);
     if (z_older_than(10, 3, 13)) {
@@ -170,16 +160,15 @@ void load_wilderness_info(player_type *creature_ptr)
     if (z_older_than(10, 3, 7))
         creature_ptr->wild_mode = FALSE;
     else
-        rd_byte((byte *)&creature_ptr->wild_mode);
+        rd_byte((byte*)&creature_ptr->wild_mode);
 
     if (z_older_than(10, 3, 7))
         creature_ptr->ambush_flag = FALSE;
     else
-        rd_byte((byte *)&creature_ptr->ambush_flag);
+        rd_byte((byte*)&creature_ptr->ambush_flag);
 }
 
-errr analyze_wilderness(void)
-{
+errr analyze_wilderness(void) {
     s32b wild_x_size;
     s32b wild_y_size;
     rd_s32b(&wild_x_size);

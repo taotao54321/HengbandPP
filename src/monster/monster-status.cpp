@@ -61,10 +61,9 @@
  * @param m_idx モンスターID
  * @return POWERFULフラグがあればTRUE、なければFALSEを返す。
  */
-bool monster_is_powerful(floor_type *floor_ptr, MONSTER_IDX m_idx)
-{
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+bool monster_is_powerful(floor_type* floor_ptr, MONSTER_IDX m_idx) {
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     bool powerful = r_ptr->flags2 & RF2_POWERFUL ? TRUE : FALSE;
     return powerful;
 }
@@ -74,10 +73,9 @@ bool monster_is_powerful(floor_type *floor_ptr, MONSTER_IDX m_idx)
  * @param m_idx モンスターID
  * @return モンスターのレベル
  */
-DEPTH monster_level_idx(floor_type *floor_ptr, MONSTER_IDX m_idx)
-{
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+DEPTH monster_level_idx(floor_type* floor_ptr, MONSTER_IDX m_idx) {
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     DEPTH rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
     return rlev;
 }
@@ -98,9 +96,8 @@ DEPTH monster_level_idx(floor_type *floor_ptr, MONSTER_IDX m_idx)
  * "type" is not yet used and should be 0.
  * </pre>
  */
-HIT_POINT mon_damage_mod(player_type *target_ptr, monster_type *m_ptr, HIT_POINT dam, bool is_psy_spear)
-{
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+HIT_POINT mon_damage_mod(player_type* target_ptr, monster_type* m_ptr, HIT_POINT dam, bool is_psy_spear) {
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     if ((r_ptr->flagsr & RFR_RES_ALL) && dam > 0) {
         dam /= 100;
@@ -113,7 +110,8 @@ HIT_POINT mon_damage_mod(player_type *target_ptr, monster_type *m_ptr, HIT_POINT
             if (!target_ptr->blind && is_seen(target_ptr, m_ptr)) {
                 msg_print(_("バリアを切り裂いた！", "The barrier is penetrated!"));
             }
-        } else if (!one_in_(PENETRATE_INVULNERABILITY)) {
+        }
+        else if (!one_in_(PENETRATE_INVULNERABILITY)) {
             return 0;
         }
     }
@@ -135,9 +133,8 @@ HIT_POINT mon_damage_mod(player_type *target_ptr, monster_type *m_ptr, HIT_POINT
  * experience point of a monster later.
  * </pre>
  */
-static void get_exp_from_mon(player_type *target_ptr, HIT_POINT dam, monster_type *m_ptr)
-{
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+static void get_exp_from_mon(player_type* target_ptr, HIT_POINT dam, monster_type* m_ptr) {
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     if (!monster_is_valid(m_ptr))
         return;
@@ -212,9 +209,8 @@ static void get_exp_from_mon(player_type *target_ptr, HIT_POINT dam, monster_typ
  * @return mproc_type モンスターの時限ステータスID
  * @return 残りターン値
  */
-int get_mproc_idx(floor_type *floor_ptr, MONSTER_IDX m_idx, int mproc_type)
-{
-    s16b *cur_mproc_list = floor_ptr->mproc_list[mproc_type];
+int get_mproc_idx(floor_type* floor_ptr, MONSTER_IDX m_idx, int mproc_type) {
+    s16b* cur_mproc_list = floor_ptr->mproc_list[mproc_type];
     for (int i = floor_ptr->mproc_max[mproc_type] - 1; i >= 0; i--) {
         if (cur_mproc_list[i] == m_idx)
             return i;
@@ -230,8 +226,7 @@ int get_mproc_idx(floor_type *floor_ptr, MONSTER_IDX m_idx, int mproc_type)
  * @return mproc_type 追加したいモンスターの時限ステータスID
  * @return なし
  */
-void mproc_add(floor_type *floor_ptr, MONSTER_IDX m_idx, int mproc_type)
-{
+void mproc_add(floor_type* floor_ptr, MONSTER_IDX m_idx, int mproc_type) {
     if (floor_ptr->mproc_max[mproc_type] < current_world_ptr->max_m_idx) {
         floor_ptr->mproc_list[mproc_type][floor_ptr->mproc_max[mproc_type]++] = (s16b)m_idx;
     }
@@ -242,8 +237,7 @@ void mproc_add(floor_type *floor_ptr, MONSTER_IDX m_idx, int mproc_type)
  * @param floor_ptr 現在フロアへの参照ポインタ
  * @return なし
  */
-void mproc_init(floor_type *floor_ptr)
-{
+void mproc_init(floor_type* floor_ptr) {
     /* Reset "target_ptr->current_floor_ptr->mproc_max[]" */
     for (int i = 0; i < MAX_MTIMED; i++) {
         floor_ptr->mproc_max[i] = 0;
@@ -251,7 +245,7 @@ void mproc_init(floor_type *floor_ptr)
 
     /* Process the monsters (backwards) */
     for (MONSTER_IDX i = floor_ptr->m_max - 1; i >= 1; i--) {
-        monster_type *m_ptr;
+        monster_type* m_ptr;
         m_ptr = &floor_ptr->m_list[i];
 
         /* Ignore "dead" monsters */
@@ -274,13 +268,12 @@ static u32b csleep_noise;
  * @param mtimed_idx 更新するモンスターの時限ステータスID
  * @return なし
  */
-static void process_monsters_mtimed_aux(player_type *target_ptr, MONSTER_IDX m_idx, int mtimed_idx)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+static void process_monsters_mtimed_aux(player_type* target_ptr, MONSTER_IDX m_idx, int mtimed_idx) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
 
     switch (mtimed_idx) {
     case MTIMED_CSLEEP: {
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
         /* Assume does not wake up */
         bool test = FALSE;
@@ -457,10 +450,9 @@ static void process_monsters_mtimed_aux(player_type *target_ptr, MONSTER_IDX m_i
  * Process the counters of monsters (once per 10 game turns)\n
  * These functions are to process monsters' counters same as player's.
  */
-void process_monsters_mtimed(player_type *target_ptr, int mtimed_idx)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    s16b *cur_mproc_list = floor_ptr->mproc_list[mtimed_idx];
+void process_monsters_mtimed(player_type* target_ptr, int mtimed_idx) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    s16b* cur_mproc_list = floor_ptr->mproc_list[mtimed_idx];
 
     /* Hack -- calculate the "player noise" */
     if (mtimed_idx == MTIMED_CSLEEP)
@@ -478,9 +470,8 @@ void process_monsters_mtimed(player_type *target_ptr, int mtimed_idx)
  * @param m_idx 魔力消去を受けるモンスターの参照ID
  * @return なし
  */
-void dispel_monster_status(player_type *target_ptr, MONSTER_IDX m_idx)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+void dispel_monster_status(player_type* target_ptr, MONSTER_IDX m_idx) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
     GAME_TEXT m_name[MAX_NLEN];
 
     monster_desc(target_ptr, m_name, m_ptr, 0);
@@ -507,15 +498,14 @@ void dispel_monster_status(player_type *target_ptr, MONSTER_IDX m_idx)
  * @param s_idx 撃破されたモンスター種族の参照ID
  * @return なし
  */
-void monster_gain_exp(player_type *target_ptr, MONSTER_IDX m_idx, MONRACE_IDX s_idx)
-{
-    monster_type *m_ptr;
-    monster_race *r_ptr;
-    monster_race *s_ptr;
+void monster_gain_exp(player_type* target_ptr, MONSTER_IDX m_idx, MONRACE_IDX s_idx) {
+    monster_type* m_ptr;
+    monster_race* r_ptr;
+    monster_race* s_ptr;
     if (m_idx <= 0 || s_idx <= 0)
         return;
 
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     m_ptr = &floor_ptr->m_list[m_idx];
 
     if (!monster_is_valid(m_ptr))
@@ -565,7 +555,8 @@ void monster_gain_exp(player_type *target_ptr, MONSTER_IDX m_idx, MONRACE_IDX s_
 
     if (r_ptr->flags1 & RF1_FORCE_MAXHP) {
         m_ptr->max_maxhp = maxroll(r_ptr->hdice, r_ptr->hside);
-    } else {
+    }
+    else {
         m_ptr->max_maxhp = damroll(r_ptr->hdice, r_ptr->hside);
     }
     if (ironman_nightmare) {
@@ -598,13 +589,14 @@ void monster_gain_exp(player_type *target_ptr, MONSTER_IDX m_idx, MONRACE_IDX s_
     if (is_pet(m_ptr) || m_ptr->ml) {
         if (!ignore_unview || player_can_see_bold(target_ptr, m_ptr->fy, m_ptr->fx)) {
             if (target_ptr->image) {
-                monster_race *hallu_race;
+                monster_race* hallu_race;
 
                 do {
                     hallu_race = &r_info[randint1(max_r_idx - 1)];
                 } while (!hallu_race->name || (hallu_race->flags1 & RF1_UNIQUE));
                 msg_format(_("%sは%sに進化した。", "%^s evolved into %s."), m_name, r_name + hallu_race->name);
-            } else {
+            }
+            else {
                 msg_format(_("%sは%sに進化した。", "%^s evolved into %s."), m_name, r_name + r_ptr->name);
             }
         }
@@ -652,10 +644,9 @@ void monster_gain_exp(player_type *target_ptr, MONSTER_IDX m_idx, MONRACE_IDX s_
  * to induce changes in the monster recall code.
  * </pre>
  */
-bool mon_take_hit(player_type *target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, bool *fear, concptr note)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+bool mon_take_hit(player_type* target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, bool* fear, concptr note) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     monster_type exp_mon;
 
     /* Innocent until proven otherwise */
@@ -731,7 +722,8 @@ bool mon_take_hit(player_type *target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, boo
                     r_info[MON_BANORLUPART].r_akills++;
                     if (r_info[MON_BANORLUPART].r_tkills < MAX_SHORT)
                         r_info[MON_BANORLUPART].r_tkills++;
-                } else if (m_ptr->r_idx == MON_BANORLUPART) {
+                }
+                else if (m_ptr->r_idx == MON_BANORLUPART) {
                     r_info[MON_BANOR].max_num = 0;
                     r_info[MON_BANOR].r_pkills++;
                     r_info[MON_BANOR].r_akills++;
@@ -798,7 +790,8 @@ bool mon_take_hit(player_type *target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, boo
         if (!(d_info[target_ptr->dungeon_idx].flags1 & DF1_BEGINNER)) {
             if (!target_ptr->current_floor_ptr->dun_level && !target_ptr->ambush_flag && !target_ptr->current_floor_ptr->inside_arena) {
                 chg_virtue(target_ptr, V_VALOUR, -1);
-            } else if (r_ptr->level > target_ptr->current_floor_ptr->dun_level) {
+            }
+            else if (r_ptr->level > target_ptr->current_floor_ptr->dun_level) {
                 if (randint1(10) <= (r_ptr->level - target_ptr->current_floor_ptr->dun_level))
                     chg_virtue(target_ptr, V_VALOUR, 1);
             }
@@ -838,7 +831,8 @@ bool mon_take_hit(player_type *target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, boo
                 else
                     chg_virtue(target_ptr, V_FAITH, 1);
             }
-        } else if (r_ptr->flags3 & RF3_DEMON) {
+        }
+        else if (r_ptr->flags3 & RF3_DEMON) {
             if (r_ptr->flags1 & RF1_UNIQUE)
                 chg_virtue(target_ptr, V_FAITH, 2);
             else if ((r_ptr->level) / 10 + (3 * target_ptr->current_floor_ptr->dun_level) >= randint1(100))
@@ -851,7 +845,8 @@ bool mon_take_hit(player_type *target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, boo
         if (r_ptr->r_deaths) {
             if (r_ptr->flags1 & RF1_UNIQUE) {
                 chg_virtue(target_ptr, V_HONOUR, 10);
-            } else if ((r_ptr->level) / 10 + (2 * target_ptr->current_floor_ptr->dun_level) >= randint1(100)) {
+            }
+            else if ((r_ptr->level) / 10 + (2 * target_ptr->current_floor_ptr->dun_level) >= randint1(100)) {
                 chg_virtue(target_ptr, V_HONOUR, 1);
             }
         }
@@ -877,7 +872,8 @@ bool mon_take_hit(player_type *target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, boo
                 chg_virtue(target_ptr, V_JUSTICE, 3);
             else if (1 + ((r_ptr->level) / 10 + (2 * target_ptr->current_floor_ptr->dun_level)) >= randint1(100))
                 chg_virtue(target_ptr, V_JUSTICE, 1);
-        } else if (innocent) {
+        }
+        else if (innocent) {
             chg_virtue(target_ptr, V_JUSTICE, -1);
         }
 
@@ -911,7 +907,6 @@ bool mon_take_hit(player_type *target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, boo
 #else
             msg_format("You have killed %s.", m_name);
 #endif
-
         }
 
         /* Death by Physical attack -- non-living monster */
@@ -972,7 +967,8 @@ bool mon_take_hit(player_type *target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, boo
             if (summon_named_creature(target_ptr, 0, dummy_y, dummy_x, MON_BIKETAL, mode)) {
                 msg_print(_("「ハァッハッハッハ！！私がバイケタルだ！！」", "Uwa-hahaha!  *I* am Biketal!"));
             }
-        } else {
+        }
+        else {
             delete_monster_idx(target_ptr, m_idx);
         }
 
@@ -1016,18 +1012,18 @@ bool mon_take_hit(player_type *target_ptr, MONSTER_IDX m_idx, HIT_POINT dam, boo
     return FALSE;
 }
 
-bool monster_is_valid(monster_type *m_ptr) { return (m_ptr->r_idx != 0); }
+bool monster_is_valid(monster_type* m_ptr) { return (m_ptr->r_idx != 0); }
 
-TIME_EFFECT monster_csleep_remaining(monster_type *m_ptr) { return m_ptr->mtimed[MTIMED_CSLEEP]; }
+TIME_EFFECT monster_csleep_remaining(monster_type* m_ptr) { return m_ptr->mtimed[MTIMED_CSLEEP]; }
 
-TIME_EFFECT monster_fast_remaining(monster_type *m_ptr) { return m_ptr->mtimed[MTIMED_FAST]; }
+TIME_EFFECT monster_fast_remaining(monster_type* m_ptr) { return m_ptr->mtimed[MTIMED_FAST]; }
 
-TIME_EFFECT monster_slow_remaining(monster_type *m_ptr) { return m_ptr->mtimed[MTIMED_SLOW]; }
+TIME_EFFECT monster_slow_remaining(monster_type* m_ptr) { return m_ptr->mtimed[MTIMED_SLOW]; }
 
-TIME_EFFECT monster_stunned_remaining(monster_type *m_ptr) { return m_ptr->mtimed[MTIMED_STUNNED]; }
+TIME_EFFECT monster_stunned_remaining(monster_type* m_ptr) { return m_ptr->mtimed[MTIMED_STUNNED]; }
 
-TIME_EFFECT monster_confused_remaining(monster_type *m_ptr) { return m_ptr->mtimed[MTIMED_CONFUSED]; }
+TIME_EFFECT monster_confused_remaining(monster_type* m_ptr) { return m_ptr->mtimed[MTIMED_CONFUSED]; }
 
-TIME_EFFECT monster_fear_remaining(monster_type *m_ptr) { return m_ptr->mtimed[MTIMED_MONFEAR]; }
+TIME_EFFECT monster_fear_remaining(monster_type* m_ptr) { return m_ptr->mtimed[MTIMED_MONFEAR]; }
 
-TIME_EFFECT monster_invulner_remaining(monster_type *m_ptr) { return m_ptr->mtimed[MTIMED_INVULNER]; }
+TIME_EFFECT monster_invulner_remaining(monster_type* m_ptr) { return m_ptr->mtimed[MTIMED_INVULNER]; }

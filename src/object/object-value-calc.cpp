@@ -17,11 +17,10 @@
  * @param plusses フラグに与える価格の基本重み
  * @return オブジェクトのフラグ価格
  */
-PRICE flag_cost(player_type *player_ptr, object_type *o_ptr, int plusses)
-{
+PRICE flag_cost(player_type* player_ptr, object_type* o_ptr, int plusses) {
     PRICE total = 0;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
-    object_kind *k_ptr = &k_info[o_ptr->k_idx];
+    object_kind* k_ptr = &k_info[o_ptr->k_idx];
     object_flags(player_ptr, o_ptr, flgs);
 
     /*
@@ -32,12 +31,13 @@ PRICE flag_cost(player_type *player_ptr, object_type *o_ptr, int plusses)
         flgs[i] &= ~(k_ptr->flags[i]);
 
     if (object_is_fixed_artifact(o_ptr)) {
-        artifact_type *a_ptr = &a_info[o_ptr->name1];
+        artifact_type* a_ptr = &a_info[o_ptr->name1];
 
         for (int i = 0; i < TR_FLAG_SIZE; i++)
             flgs[i] &= ~(a_ptr->flags[i]);
-    } else if (object_is_ego(o_ptr)) {
-        ego_item_type *e_ptr = &e_info[o_ptr->name2];
+    }
+    else if (object_is_ego(o_ptr)) {
+        ego_item_type* e_ptr = &e_info[o_ptr->name2];
 
         for (int i = 0; i < TR_FLAG_SIZE; i++)
             flgs[i] &= ~(e_ptr->flags[i]);
@@ -90,63 +90,72 @@ PRICE flag_cost(player_type *player_ptr, object_type *o_ptr, int plusses)
     if (has_flag(flgs, TR_KILL_ANIMAL)) {
         tmp_cost += 2800;
         count++;
-    } else if (has_flag(flgs, TR_SLAY_ANIMAL)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_ANIMAL)) {
         tmp_cost += 1800;
         count++;
     }
     if (has_flag(flgs, TR_KILL_EVIL)) {
         tmp_cost += 3300;
         count++;
-    } else if (has_flag(flgs, TR_SLAY_EVIL)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_EVIL)) {
         tmp_cost += 2300;
         count++;
     }
     if (has_flag(flgs, TR_KILL_HUMAN)) {
         tmp_cost += 2800;
         count++;
-    } else if (has_flag(flgs, TR_SLAY_HUMAN)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_HUMAN)) {
         tmp_cost += 1800;
         count++;
     }
     if (has_flag(flgs, TR_KILL_UNDEAD)) {
         tmp_cost += 2800;
         count++;
-    } else if (has_flag(flgs, TR_SLAY_UNDEAD)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_UNDEAD)) {
         tmp_cost += 1800;
         count++;
     }
     if (has_flag(flgs, TR_KILL_DEMON)) {
         tmp_cost += 2800;
         count++;
-    } else if (has_flag(flgs, TR_SLAY_DEMON)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_DEMON)) {
         tmp_cost += 1800;
         count++;
     }
     if (has_flag(flgs, TR_KILL_ORC)) {
         tmp_cost += 2500;
         count++;
-    } else if (has_flag(flgs, TR_SLAY_ORC)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_ORC)) {
         tmp_cost += 1500;
         count++;
     }
     if (has_flag(flgs, TR_KILL_TROLL)) {
         tmp_cost += 2800;
         count++;
-    } else if (has_flag(flgs, TR_SLAY_TROLL)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_TROLL)) {
         tmp_cost += 1800;
         count++;
     }
     if (has_flag(flgs, TR_KILL_GIANT)) {
         tmp_cost += 2800;
         count++;
-    } else if (has_flag(flgs, TR_SLAY_GIANT)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_GIANT)) {
         tmp_cost += 1800;
         count++;
     }
     if (has_flag(flgs, TR_KILL_DRAGON)) {
         tmp_cost += 2800;
         count++;
-    } else if (has_flag(flgs, TR_SLAY_DRAGON)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_DRAGON)) {
         tmp_cost += 1800;
         count++;
     }
@@ -422,7 +431,7 @@ PRICE flag_cost(player_type *player_ptr, object_type *o_ptr, int plusses)
 
     /* Also, give some extra for activatable powers... */
     if (o_ptr->art_name && (has_flag(o_ptr->art_flags, TR_ACTIVATE))) {
-        const activation_type *const act_ptr = find_activation_info(player_ptr, o_ptr);
+        const activation_type* const act_ptr = find_activation_info(player_ptr, o_ptr);
         if (act_ptr) {
             total += act_ptr->value;
         }

@@ -20,8 +20,7 @@
  * @param flgs 特別に追加するフラグを返す参照ポインタ
  * @return なし
  */
-void torch_flags(object_type *o_ptr, BIT_FLAGS *flgs)
-{
+void torch_flags(object_type* o_ptr, BIT_FLAGS* flgs) {
     if ((o_ptr->tval != TV_LITE) || (o_ptr->sval != SV_LITE_TORCH) || (o_ptr->xtra4 <= 0))
         return;
 
@@ -38,8 +37,7 @@ void torch_flags(object_type *o_ptr, BIT_FLAGS *flgs)
  * @param ds 特別なダイス面数を返す参照ポインタ
  * @return なし
  */
-void torch_dice(object_type *o_ptr, DICE_NUMBER *dd, DICE_SID *ds)
-{
+void torch_dice(object_type* o_ptr, DICE_NUMBER* dd, DICE_SID* ds) {
     if ((o_ptr->tval != TV_LITE) || (o_ptr->sval != SV_LITE_TORCH) || (o_ptr->xtra4 <= 0))
         return;
 
@@ -53,8 +51,7 @@ void torch_dice(object_type *o_ptr, DICE_NUMBER *dd, DICE_SID *ds)
  * @param o_ptr 投擲するオブジェクトの構造体参照ポインタ
  * @return なし
  */
-void torch_lost_fuel(object_type *o_ptr)
-{
+void torch_lost_fuel(object_type* o_ptr) {
     if ((o_ptr->tval != TV_LITE) || (o_ptr->sval != SV_LITE_TORCH))
         return;
 
@@ -69,11 +66,10 @@ void torch_lost_fuel(object_type *o_ptr)
  * @details
  * SWD: Experimental modification: multiple light sources have additive effect.
  */
-void calc_lite_radius(player_type *creature_ptr)
-{
+void calc_lite_radius(player_type* creature_ptr) {
     creature_ptr->cur_lite = 0;
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[i];
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         object_flags(creature_ptr, o_ptr, flgs);
@@ -162,11 +158,10 @@ void calc_lite_radius(player_type *creature_ptr)
  *                 ***         *****
  *                              ***
  */
-void update_lite(player_type *subject_ptr)
-{
+void update_lite(player_type* subject_ptr) {
     POSITION p = subject_ptr->cur_lite;
-    grid_type *g_ptr;
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
+    grid_type* g_ptr;
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
     for (int i = 0; i < floor_ptr->lite_n; i++) {
         POSITION y = floor_ptr->lite_y[i];
         POSITION x = floor_ptr->lite_x[i];

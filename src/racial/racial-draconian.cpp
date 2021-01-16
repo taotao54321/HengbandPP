@@ -4,8 +4,7 @@
 #include "target/target-getter.h"
 #include "view/display-messages.h"
 
-static void decide_breath_kind(player_type *creature_ptr, int *breath_type, concptr *breath_type_description)
-{
+static void decide_breath_kind(player_type* creature_ptr, int* breath_type, concptr* breath_type_description) {
     if (randint1(100) >= creature_ptr->lev)
         return;
 
@@ -20,7 +19,8 @@ static void decide_breath_kind(player_type *creature_ptr, int *breath_type, conc
         if (one_in_(3)) {
             *breath_type = GF_MISSILE;
             *breath_type_description = _("エレメント", "the elements");
-        } else {
+        }
+        else {
             *breath_type = GF_SHARDS;
             *breath_type_description = _("破片", "shards");
         }
@@ -37,7 +37,8 @@ static void decide_breath_kind(player_type *creature_ptr, int *breath_type, conc
         if (one_in_(3)) {
             *breath_type = GF_MANA;
             *breath_type_description = _("魔力", "mana");
-        } else {
+        }
+        else {
             *breath_type = GF_DISENCHANT;
             *breath_type_description = _("劣化", "disenchantment");
         }
@@ -47,7 +48,8 @@ static void decide_breath_kind(player_type *creature_ptr, int *breath_type, conc
         if (!one_in_(3)) {
             *breath_type = GF_CONFUSION;
             *breath_type_description = _("混乱", "confusion");
-        } else {
+        }
+        else {
             *breath_type = GF_CHAOS;
             *breath_type_description = _("カオス", "chaos");
         }
@@ -59,7 +61,8 @@ static void decide_breath_kind(player_type *creature_ptr, int *breath_type, conc
         if (!one_in_(3)) {
             *breath_type = GF_CONFUSION;
             *breath_type_description = _("混乱", "confusion");
-        } else {
+        }
+        else {
             *breath_type = GF_SOUND;
             *breath_type_description = _("轟音", "sound");
         }
@@ -69,7 +72,8 @@ static void decide_breath_kind(player_type *creature_ptr, int *breath_type, conc
         if (!one_in_(3)) {
             *breath_type = GF_CONFUSION;
             *breath_type_description = _("混乱", "confusion");
-        } else {
+        }
+        else {
             *breath_type = GF_PSI;
             *breath_type_description = _("精神エネルギー", "mental energy");
         }
@@ -80,7 +84,8 @@ static void decide_breath_kind(player_type *creature_ptr, int *breath_type, conc
         if (one_in_(3)) {
             *breath_type = GF_HELL_FIRE;
             *breath_type_description = _("地獄の劫火", "hellfire");
-        } else {
+        }
+        else {
             *breath_type = GF_HOLY_FIRE;
             *breath_type_description = _("聖なる炎", "holy fire");
         }
@@ -91,7 +96,8 @@ static void decide_breath_kind(player_type *creature_ptr, int *breath_type, conc
         if (one_in_(3)) {
             *breath_type = GF_DARK;
             *breath_type_description = _("暗黒", "darkness");
-        } else {
+        }
+        else {
             *breath_type = GF_POIS;
             *breath_type_description = _("毒", "poison");
         }
@@ -101,7 +107,8 @@ static void decide_breath_kind(player_type *creature_ptr, int *breath_type, conc
         if (!one_in_(3)) {
             *breath_type = GF_SOUND;
             *breath_type_description = _("轟音", "sound");
-        } else {
+        }
+        else {
             *breath_type = GF_CONFUSION;
             *breath_type_description = _("混乱", "confusion");
         }
@@ -110,8 +117,7 @@ static void decide_breath_kind(player_type *creature_ptr, int *breath_type, conc
     }
 }
 
-bool draconian_breath(player_type *creature_ptr)
-{
+bool draconian_breath(player_type* creature_ptr) {
     int breath_type = (one_in_(3) ? GF_COLD : GF_FIRE);
     concptr breath_type_description = ((breath_type == GF_COLD) ? _("冷気", "cold") : _("炎", "fire"));
     DIRECTION dir;

@@ -19,8 +19,8 @@ extern u32b message__next;
 extern u32b message__last;
 extern u32b message__head;
 extern u32b message__tail;
-extern u32b *message__ptr;
-extern char *message__buf;
+extern u32b* message__ptr;
+extern char* message__buf;
 
 extern bool msg_flag;
 extern COMMAND_CODE now_message;

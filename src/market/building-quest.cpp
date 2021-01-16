@@ -20,15 +20,14 @@
  * @param do_init クエストの開始処理(TRUE)、結果処理か(FALSE)
  * @return なし
  */
-static void get_questinfo(player_type *player_ptr, IDX questnum, bool do_init)
-{
+static void get_questinfo(player_type* player_ptr, IDX questnum, bool do_init) {
     for (int i = 0; i < 10; i++) {
         quest_text[i][0] = '\0';
     }
 
     quest_text_line = 0;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     QUEST_IDX old_quest = floor_ptr->inside_quest;
     floor_ptr->inside_quest = questnum;
 
@@ -54,8 +53,7 @@ static void get_questinfo(player_type *player_ptr, IDX questnum, bool do_init)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void castle_quest(player_type *player_ptr)
-{
+void castle_quest(player_type* player_ptr) {
     clear_bldg(4, 18);
     QUEST_IDX q_index = player_ptr->current_floor_ptr->grid_array[player_ptr->y][player_ptr->x].special;
 
@@ -64,7 +62,7 @@ void castle_quest(player_type *player_ptr)
         return;
     }
 
-    quest_type *q_ptr;
+    quest_type* q_ptr;
     q_ptr = &quest[q_index];
     if (q_ptr->status == QUEST_STATUS_COMPLETED) {
         q_ptr->status = QUEST_STATUS_REWARDED;
@@ -101,7 +99,7 @@ void castle_quest(player_type *player_ptr)
         q_ptr->r_idx = get_mon_num(player_ptr, q_ptr->level + 4 + randint1(6), 0);
     }
 
-    monster_race *r_ptr;
+    monster_race* r_ptr;
     r_ptr = &r_info[q_ptr->r_idx];
     while ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->rarity != 1)) {
         q_ptr->r_idx = get_mon_num(player_ptr, q_ptr->level + 4 + randint1(6), 0);

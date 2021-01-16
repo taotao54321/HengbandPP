@@ -32,9 +32,8 @@
  * @param pa_ptr 直接攻撃構造体への参照ポインタ
  * @return 朦朧への抵抗値
  */
-static int calc_stun_resistance(player_attack_type *pa_ptr)
-{
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+static int calc_stun_resistance(player_attack_type* pa_ptr) {
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     int resist_stun = 0;
     if (r_ptr->flags1 & RF1_UNIQUE)
         resist_stun += 88;
@@ -60,8 +59,7 @@ static int calc_stun_resistance(player_attack_type *pa_ptr)
  * @return 技のランダム選択回数
  * @details ランダム選択は一番強い技が最終的に選択されるので、回数が多いほど有利
  */
-static int calc_max_blow_selection_times(player_type *attacker_ptr)
-{
+static int calc_max_blow_selection_times(player_type* attacker_ptr) {
     if (attacker_ptr->special_defense & KAMAE_BYAKKO)
         return (attacker_ptr->lev < 3 ? 1 : attacker_ptr->lev / 3);
 
@@ -80,10 +78,9 @@ static int calc_max_blow_selection_times(player_type *attacker_ptr)
  * @return 技のランダム選択回数
  * @return 技の行使に必要な最低レベル
  */
-static int select_blow(player_type *attacker_ptr, player_attack_type *pa_ptr, int max_blow_selection_times)
-{
+static int select_blow(player_type* attacker_ptr, player_attack_type* pa_ptr, int max_blow_selection_times) {
     int min_level = 1;
-    const martial_arts *old_ptr = &ma_blows[0];
+    const martial_arts* old_ptr = &ma_blows[0];
     for (int times = 0; times < max_blow_selection_times; times++) {
         do {
             pa_ptr->ma_ptr = &ma_blows[randint0(MAX_MA)];
@@ -111,16 +108,16 @@ static int select_blow(player_type *attacker_ptr, player_attack_type *pa_ptr, in
     return min_level;
 }
 
-static int process_monk_additional_effect(player_attack_type *pa_ptr, int *stun_effect)
-{
+static int process_monk_additional_effect(player_attack_type* pa_ptr, int* stun_effect) {
     int special_effect = 0;
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if (pa_ptr->ma_ptr->effect == MA_KNEE) {
         if (r_ptr->flags1 & RF1_MALE) {
             msg_format(_("%sに金的膝蹴りをくらわした！", "You hit %s in the groin with your knee!"), pa_ptr->m_name);
             sound(SOUND_PAIN);
             special_effect = MA_KNEE;
-        } else
+        }
+        else
             msg_format(pa_ptr->ma_ptr->desc, pa_ptr->m_name);
     }
 
@@ -128,9 +125,11 @@ static int process_monk_additional_effect(player_attack_type *pa_ptr, int *stun_
         if (!((r_ptr->flags1 & RF1_NEVER_MOVE) || angband_strchr("~#{}.UjmeEv$,DdsbBFIJQSXclnw!=?", r_ptr->d_char))) {
             msg_format(_("%sの足首に関節蹴りをくらわした！", "You kick %s in the ankle."), pa_ptr->m_name);
             special_effect = MA_SLOW;
-        } else
+        }
+        else
             msg_format(pa_ptr->ma_ptr->desc, pa_ptr->m_name);
-    } else {
+    }
+    else {
         if (pa_ptr->ma_ptr->effect) {
             *stun_effect = (pa_ptr->ma_ptr->effect / 2) + randint1(pa_ptr->ma_ptr->effect / 2);
         }
@@ -146,8 +145,7 @@ static int process_monk_additional_effect(player_attack_type *pa_ptr, int *stun_
  * @param attacker_ptr プレーヤーへの参照ポインタ
  * @return 重さ
  */
-static WEIGHT calc_monk_attack_weight(player_type *attacker_ptr)
-{
+static WEIGHT calc_monk_attack_weight(player_type* attacker_ptr) {
     WEIGHT weight = 8;
     if (attacker_ptr->special_defense & KAMAE_SUZAKU)
         weight = 4;
@@ -170,9 +168,8 @@ static WEIGHT calc_monk_attack_weight(player_type *attacker_ptr)
  * @param special_effect 技を繰り出した時の追加効果
  * @return なし
  */
-static void process_attack_vital_spot(player_type *attacker_ptr, player_attack_type *pa_ptr, int *stun_effect, int *resist_stun, const int special_effect)
-{
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+static void process_attack_vital_spot(player_type* attacker_ptr, player_attack_type* pa_ptr, int* stun_effect, int* resist_stun, const int special_effect) {
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if ((special_effect == MA_KNEE) && ((pa_ptr->attack_damage + attacker_ptr->to_d[pa_ptr->hand]) < pa_ptr->m_ptr->hp)) {
         msg_format(_("%^sは苦痛にうめいている！", "%^s moans in agony!"), pa_ptr->m_name);
         *stun_effect = 7 + randint1(13);
@@ -197,14 +194,14 @@ static void process_attack_vital_spot(player_type *attacker_ptr, player_attack_t
  * @param resist_stun 朦朧への抵抗値
  * @return なし
  */
-static void print_stun_effect(player_type *attacker_ptr, player_attack_type *pa_ptr, const int stun_effect, const int resist_stun)
-{
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+static void print_stun_effect(player_type* attacker_ptr, player_attack_type* pa_ptr, const int stun_effect, const int resist_stun) {
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if (stun_effect && ((pa_ptr->attack_damage + attacker_ptr->to_d[pa_ptr->hand]) < pa_ptr->m_ptr->hp)) {
         if (attacker_ptr->lev > randint1(r_ptr->level + resist_stun + 10)) {
             if (set_monster_stunned(attacker_ptr, pa_ptr->g_ptr->m_idx, stun_effect + monster_stunned_remaining(pa_ptr->m_ptr))) {
                 msg_format(_("%^sはフラフラになった。", "%^s is stunned."), pa_ptr->m_name);
-            } else {
+            }
+            else {
                 msg_format(_("%^sはさらにフラフラになった。", "%^s is more stunned."), pa_ptr->m_name);
             }
         }
@@ -218,8 +215,7 @@ static void print_stun_effect(player_type *attacker_ptr, player_attack_type *pa_
  * @param g_ptr グリッドへの参照ポインタ
  * @return なし
  */
-void process_monk_attack(player_type *attacker_ptr, player_attack_type *pa_ptr)
-{
+void process_monk_attack(player_type* attacker_ptr, player_attack_type* pa_ptr) {
     int resist_stun = calc_stun_resistance(pa_ptr);
     int max_blow_selection_times = calc_max_blow_selection_times(attacker_ptr);
     int min_level = select_blow(attacker_ptr, pa_ptr, max_blow_selection_times);
@@ -236,8 +232,7 @@ void process_monk_attack(player_type *attacker_ptr, player_attack_type *pa_ptr)
     print_stun_effect(attacker_ptr, pa_ptr, stun_effect, resist_stun);
 }
 
-bool double_attack(player_type *creature_ptr)
-{
+bool double_attack(player_type* creature_ptr) {
     DIRECTION dir;
     if (!get_rep_dir(creature_ptr, &dir, FALSE))
         return FALSE;

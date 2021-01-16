@@ -17,9 +17,8 @@
 #include "player/player-class.h"
 #endif
 
-static void describe_monster_ball(flavor_type *flavor_ptr)
-{
-    monster_race *r_ptr = &r_info[flavor_ptr->o_ptr->pval];
+static void describe_monster_ball(flavor_type* flavor_ptr) {
+    monster_race* r_ptr = &r_info[flavor_ptr->o_ptr->pval];
     if (!flavor_ptr->known)
         return;
 
@@ -36,16 +35,16 @@ static void describe_monster_ball(flavor_type *flavor_ptr)
     if (!(r_ptr->flags1 & RF1_UNIQUE)) {
         sprintf(flavor_ptr->tmp_val2, " (%s%s)", (is_a_vowel(*flavor_ptr->t) ? "an " : "a "), flavor_ptr->t);
         flavor_ptr->modstr = flavor_ptr->tmp_val2;
-    } else {
+    }
+    else {
         sprintf(flavor_ptr->tmp_val2, "(%s)", flavor_ptr->t);
         flavor_ptr->modstr = flavor_ptr->t;
     }
 #endif
 }
 
-static void describe_statue(flavor_type *flavor_ptr)
-{
-    monster_race *r_ptr = &r_info[flavor_ptr->o_ptr->pval];
+static void describe_statue(flavor_type* flavor_ptr) {
+    monster_race* r_ptr = &r_info[flavor_ptr->o_ptr->pval];
 #ifdef JP
     flavor_ptr->modstr = r_name + r_ptr->name;
 #else
@@ -53,14 +52,14 @@ static void describe_statue(flavor_type *flavor_ptr)
     if (!(r_ptr->flags1 & RF1_UNIQUE)) {
         sprintf(flavor_ptr->tmp_val2, "%s%s", (is_a_vowel(*flavor_ptr->t) ? "an " : "a "), flavor_ptr->t);
         flavor_ptr->modstr = flavor_ptr->tmp_val2;
-    } else
+    }
+    else
         flavor_ptr->modstr = flavor_ptr->t;
 #endif
 }
 
-static void describe_corpse(flavor_type *flavor_ptr)
-{
-    monster_race *r_ptr = &r_info[flavor_ptr->o_ptr->pval];
+static void describe_corpse(flavor_type* flavor_ptr) {
+    monster_race* r_ptr = &r_info[flavor_ptr->o_ptr->pval];
     flavor_ptr->modstr = r_name + r_ptr->name;
 #ifdef JP
     flavor_ptr->basenm = "#%";
@@ -72,8 +71,7 @@ static void describe_corpse(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_amulet(flavor_type *flavor_ptr)
-{
+static void describe_amulet(flavor_type* flavor_ptr) {
     if (flavor_ptr->aware && (object_is_fixed_artifact(flavor_ptr->o_ptr) || ((flavor_ptr->k_ptr->gen_flags & TRG_INSTA_ART) != 0)))
         return;
 
@@ -86,8 +84,7 @@ static void describe_amulet(flavor_type *flavor_ptr)
         flavor_ptr->basenm = _("#アミュレット", "& # Amulet~");
 }
 
-static void describe_ring(flavor_type *flavor_ptr)
-{
+static void describe_ring(flavor_type* flavor_ptr) {
     if (flavor_ptr->aware && (object_is_fixed_artifact(flavor_ptr->o_ptr) || (flavor_ptr->k_ptr->gen_flags & TRG_INSTA_ART) != 0))
         return;
 
@@ -103,8 +100,7 @@ static void describe_ring(flavor_type *flavor_ptr)
         flavor_ptr->show_weapon = TRUE;
 }
 
-static void describe_staff(flavor_type *flavor_ptr)
-{
+static void describe_staff(flavor_type* flavor_ptr) {
     flavor_ptr->modstr = k_name + flavor_ptr->flavor_k_ptr->flavor_name;
     if (!flavor_ptr->flavor)
         flavor_ptr->basenm = _("%の杖", "& Staff~ of %");
@@ -114,8 +110,7 @@ static void describe_staff(flavor_type *flavor_ptr)
         flavor_ptr->basenm = _("#杖", "& # Staff~");
 }
 
-static void describe_wand(flavor_type *flavor_ptr)
-{
+static void describe_wand(flavor_type* flavor_ptr) {
     flavor_ptr->modstr = k_name + flavor_ptr->flavor_k_ptr->flavor_name;
     if (!flavor_ptr->flavor)
         flavor_ptr->basenm = _("%の魔法棒", "& Wand~ of %");
@@ -125,8 +120,7 @@ static void describe_wand(flavor_type *flavor_ptr)
         flavor_ptr->basenm = _("#魔法棒", "& # Wand~");
 }
 
-static void describe_rod(flavor_type *flavor_ptr)
-{
+static void describe_rod(flavor_type* flavor_ptr) {
     flavor_ptr->modstr = k_name + flavor_ptr->flavor_k_ptr->flavor_name;
     if (!flavor_ptr->flavor)
         flavor_ptr->basenm = _("%のロッド", "& Rod~ of %");
@@ -136,8 +130,7 @@ static void describe_rod(flavor_type *flavor_ptr)
         flavor_ptr->basenm = _("#ロッド", "& # Rod~");
 }
 
-static void describe_scroll(flavor_type *flavor_ptr)
-{
+static void describe_scroll(flavor_type* flavor_ptr) {
     flavor_ptr->modstr = k_name + flavor_ptr->flavor_k_ptr->flavor_name;
     if (!flavor_ptr->flavor)
         flavor_ptr->basenm = _("%の巻物", "& Scroll~ of %");
@@ -147,8 +140,7 @@ static void describe_scroll(flavor_type *flavor_ptr)
         flavor_ptr->basenm = _("「#」と書かれた巻物", "& Scroll~ titled \"#\"");
 }
 
-static void describe_potion(flavor_type *flavor_ptr)
-{
+static void describe_potion(flavor_type* flavor_ptr) {
     flavor_ptr->modstr = k_name + flavor_ptr->flavor_k_ptr->flavor_name;
     if (!flavor_ptr->flavor)
         flavor_ptr->basenm = _("%の薬", "& Potion~ of %");
@@ -158,8 +150,7 @@ static void describe_potion(flavor_type *flavor_ptr)
         flavor_ptr->basenm = _("#薬", "& # Potion~");
 }
 
-static void describe_food(flavor_type *flavor_ptr)
-{
+static void describe_food(flavor_type* flavor_ptr) {
     if (!flavor_ptr->k_ptr->flavor_name)
         return;
 
@@ -172,8 +163,7 @@ static void describe_food(flavor_type *flavor_ptr)
         flavor_ptr->basenm = _("#キノコ", "& # Mushroom~");
 }
 
-static void describe_book_life(flavor_type *flavor_ptr)
-{
+static void describe_book_life(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "生命の魔法書%";
 #else
@@ -184,8 +174,7 @@ static void describe_book_life(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_sorcery(flavor_type *flavor_ptr)
-{
+static void describe_book_sorcery(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "仙術の魔法書%";
 #else
@@ -196,8 +185,7 @@ static void describe_book_sorcery(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_nature(flavor_type *flavor_ptr)
-{
+static void describe_book_nature(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "自然の魔法書%";
 #else
@@ -208,8 +196,7 @@ static void describe_book_nature(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_chaos(flavor_type *flavor_ptr)
-{
+static void describe_book_chaos(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "カオスの魔法書%";
 #else
@@ -220,8 +207,7 @@ static void describe_book_chaos(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_death(flavor_type *flavor_ptr)
-{
+static void describe_book_death(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "暗黒の魔法書%";
 #else
@@ -232,8 +218,7 @@ static void describe_book_death(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_trump(flavor_type *flavor_ptr)
-{
+static void describe_book_trump(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "トランプの魔法書%";
 #else
@@ -244,8 +229,7 @@ static void describe_book_trump(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_arcane(flavor_type *flavor_ptr)
-{
+static void describe_book_arcane(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "秘術の魔法書%";
 #else
@@ -256,8 +240,7 @@ static void describe_book_arcane(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_craft(flavor_type *flavor_ptr)
-{
+static void describe_book_craft(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "匠の魔法書%";
 #else
@@ -268,8 +251,7 @@ static void describe_book_craft(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_demon(flavor_type *flavor_ptr)
-{
+static void describe_book_demon(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "悪魔の魔法書%";
 #else
@@ -280,8 +262,7 @@ static void describe_book_demon(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_crusade(flavor_type *flavor_ptr)
-{
+static void describe_book_crusade(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "破邪の魔法書%";
 #else
@@ -292,8 +273,7 @@ static void describe_book_crusade(flavor_type *flavor_ptr)
 #endif
 }
 
-static void describe_book_hex(flavor_type *flavor_ptr)
-{
+static void describe_book_hex(flavor_type* flavor_ptr) {
 #ifdef JP
     flavor_ptr->basenm = "呪術の魔法書%";
 #else
@@ -304,8 +284,7 @@ static void describe_book_hex(flavor_type *flavor_ptr)
 #endif
 }
 
-void switch_tval_description(flavor_type *flavor_ptr)
-{
+void switch_tval_description(flavor_type* flavor_ptr) {
     switch (flavor_ptr->o_ptr->tval) {
     case TV_NONE:
         flavor_ptr->basenm = _("(なし)", "(Nothing)");

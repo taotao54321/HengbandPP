@@ -20,8 +20,7 @@
  * @return 劣化処理に関するメッセージが発せられた場合はTRUEを返す /
  * Return "TRUE" if the player notices anything
  */
-bool apply_disenchant(player_type *target_ptr, BIT_FLAGS mode)
-{
+bool apply_disenchant(player_type* target_ptr, BIT_FLAGS mode) {
     int t = 0;
     switch (randint1(8)) {
     case 1:
@@ -50,7 +49,7 @@ bool apply_disenchant(player_type *target_ptr, BIT_FLAGS mode)
         break;
     }
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &target_ptr->inventory_list[t];
     if (!o_ptr->k_idx)
         return FALSE;

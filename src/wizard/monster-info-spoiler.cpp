@@ -17,8 +17,7 @@
  * @param r_ptr モンスター種族の構造体ポインタ
  * @return シンボル職の記述名
  */
-static concptr attr_to_text(monster_race *r_ptr)
-{
+static concptr attr_to_text(monster_race* r_ptr) {
     if (r_ptr->flags1 & RF1_ATTR_CLEAR)
         return _("透明な", "Clear");
 
@@ -72,10 +71,9 @@ static concptr attr_to_text(monster_race *r_ptr)
  * @param fname 生成ファイル名
  * @return なし
  */
-void spoil_mon_desc(player_type *player_ptr, concptr fname)
-{
+void spoil_mon_desc(player_type* player_ptr, concptr fname) {
     u16b why = 2;
-    MONRACE_IDX *who;
+    MONRACE_IDX* who;
     char buf[1024];
     char nam[80];
     char lev[80];
@@ -99,14 +97,14 @@ void spoil_mon_desc(player_type *player_ptr, concptr fname)
 
     int n = 0;
     for (int i = 1; i < max_r_idx; i++) {
-        monster_race *r_ptr = &r_info[i];
+        monster_race* r_ptr = &r_info[i];
         if (r_ptr->name)
             who[n++] = (s16b)i;
     }
 
     ang_sort(player_ptr, who, &why, n, ang_sort_comp_hook, ang_sort_swap_hook);
     for (int i = 0; i < n; i++) {
-        monster_race *r_ptr = &r_info[who[i]];
+        monster_race* r_ptr = &r_info[who[i]];
         concptr name = (r_name + r_ptr->name);
         if (r_ptr->flags7 & RF7_KAGE)
             continue;
@@ -150,8 +148,7 @@ void spoil_mon_desc(player_type *player_ptr, concptr fname)
  * @param str 文字列参照ポインタ
  * @return なし
  */
-static void roff_func(TERM_COLOR attr, concptr str)
-{
+static void roff_func(TERM_COLOR attr, concptr str) {
     (void)attr;
     spoil_out(str);
 }
@@ -162,8 +159,7 @@ static void roff_func(TERM_COLOR attr, concptr str)
  * @param fname ファイル名
  * @return なし
  */
-void spoil_mon_info(player_type *player_ptr, concptr fname)
-{
+void spoil_mon_info(player_type* player_ptr, concptr fname) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, fname);
     spoiler_file = angband_fopen(buf, "w");
@@ -176,11 +172,11 @@ void spoil_mon_info(player_type *player_ptr, concptr fname)
     spoil_out(buf);
     spoil_out("------------------------------------------\n\n");
 
-    MONRACE_IDX *who;
+    MONRACE_IDX* who;
     C_MAKE(who, max_r_idx, MONRACE_IDX);
     int n = 0;
     for (int i = 1; i < max_r_idx; i++) {
-        monster_race *r_ptr = &r_info[i];
+        monster_race* r_ptr = &r_info[i];
         if (r_ptr->name)
             who[n++] = (s16b)i;
     }
@@ -188,11 +184,12 @@ void spoil_mon_info(player_type *player_ptr, concptr fname)
     u16b why = 2;
     ang_sort(player_ptr, who, &why, n, ang_sort_comp_hook, ang_sort_swap_hook);
     for (int i = 0; i < n; i++) {
-        monster_race *r_ptr = &r_info[who[i]];
+        monster_race* r_ptr = &r_info[who[i]];
         BIT_FLAGS flags1 = r_ptr->flags1;
         if (flags1 & (RF1_UNIQUE)) {
             spoil_out("[U] ");
-        } else {
+        }
+        else {
 #ifdef JP
 #else
             spoil_out("The ");

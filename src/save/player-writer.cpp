@@ -13,8 +13,7 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void wr_player(player_type *creature_ptr)
-{
+void wr_player(player_type* creature_ptr) {
     wr_string(creature_ptr->name);
     wr_string(creature_ptr->died_from);
     wr_string(creature_ptr->last_message ? creature_ptr->last_message : "");

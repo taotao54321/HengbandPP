@@ -24,11 +24,10 @@
  * モンスターを削除するとそのモンスターが拾っていたアイテムも同時に削除される。 /
  * When a monster is deleted, all of its objects are deleted.
  */
-void delete_monster_idx(player_type *player_ptr, MONSTER_IDX i)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[i];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+void delete_monster_idx(player_type* player_ptr, MONSTER_IDX i) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[i];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     POSITION y = m_ptr->fy;
     POSITION x = m_ptr->fx;
@@ -68,7 +67,7 @@ void delete_monster_idx(player_type *player_ptr, MONSTER_IDX i)
     floor_ptr->grid_array[y][x].m_idx = 0;
     OBJECT_IDX next_o_idx = 0;
     for (OBJECT_IDX this_o_idx = m_ptr->hold_o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         delete_object_idx(player_ptr, this_o_idx);
@@ -90,8 +89,7 @@ void delete_monster_idx(player_type *player_ptr, MONSTER_IDX i)
  * This is an efficient method of simulating multiple calls to the
  * "delete_monster()" function, with no visual effects.
  */
-void wipe_monsters_list(player_type *player_ptr)
-{
+void wipe_monsters_list(player_type* player_ptr) {
     if (!r_info[MON_BANORLUPART].max_num) {
         if (r_info[MON_BANOR].max_num) {
             r_info[MON_BANOR].max_num = 0;
@@ -110,9 +108,9 @@ void wipe_monsters_list(player_type *player_ptr)
         }
     }
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (int i = floor_ptr->m_max - 1; i >= 1; i--) {
-        monster_type *m_ptr = &floor_ptr->m_list[i];
+        monster_type* m_ptr = &floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -147,10 +145,9 @@ void wipe_monsters_list(player_type *player_ptr)
  * @param y 削除位置y座標
  * @return なし
  */
-void delete_monster(player_type *player_ptr, POSITION y, POSITION x)
-{
-    grid_type *g_ptr;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void delete_monster(player_type* player_ptr, POSITION y, POSITION x) {
+    grid_type* g_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!in_bounds(floor_ptr, y, x))
         return;
 

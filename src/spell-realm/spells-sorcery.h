@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool alchemy(player_type *caster_ptr);
+bool alchemy(player_type* caster_ptr);

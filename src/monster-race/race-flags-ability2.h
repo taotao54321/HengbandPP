@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum race_flags_ability2 {
-	RF6_HASTE = 0x00000001, /* Speed self */
+    RF6_HASTE = 0x00000001, /* Speed self */
     RF6_HAND_DOOM = 0x00000002, /* Hand of Doom */
     RF6_HEAL = 0x00000004, /* Heal self */
     RF6_INVULNER = 0x00000008, /* INVULNERABILITY! */

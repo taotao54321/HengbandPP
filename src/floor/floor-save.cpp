@@ -22,13 +22,12 @@
 #include "util/angband-files.h"
 #include "view/display-messages.h"
 
-static void check_saved_tmp_files(const int fd, bool *force)
-{
+static void check_saved_tmp_files(const int fd, bool* force) {
     if (fd >= 0) {
         (void)fd_close(fd);
         return;
     }
-    
+
     if (*force)
         return;
 
@@ -49,13 +48,12 @@ static void check_saved_tmp_files(const int fd, bool *force)
  * @details Make sure that old temporary files are not remaining as gurbages.
  * @return なし
  */
-void init_saved_floors(player_type *creature_ptr, bool force)
-{
+void init_saved_floors(player_type* creature_ptr, bool force) {
     char floor_savefile[1024];
     int fd = -1;
     BIT_FLAGS mode = 0644;
     for (int i = 0; i < MAX_SAVED_FLOORS; i++) {
-        saved_floor_type *sf_ptr = &saved_floors[i];
+        saved_floor_type* sf_ptr = &saved_floors[i];
         sprintf(floor_savefile, "%s.F%02d", savefile, i);
         safe_setuid_grab(creature_ptr);
         fd = fd_make(floor_savefile, mode);
@@ -80,11 +78,10 @@ void init_saved_floors(player_type *creature_ptr, bool force)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void clear_saved_floor_files(player_type *creature_ptr)
-{
+void clear_saved_floor_files(player_type* creature_ptr) {
     char floor_savefile[1024];
     for (int i = 0; i < MAX_SAVED_FLOORS; i++) {
-        saved_floor_type *sf_ptr = &saved_floors[i];
+        saved_floor_type* sf_ptr = &saved_floors[i];
         if ((sf_ptr->floor_id == 0) || (sf_ptr->floor_id == creature_ptr->floor_id))
             continue;
 
@@ -100,13 +97,12 @@ void clear_saved_floor_files(player_type *creature_ptr)
  * @param floor_id 保存フロアID
  * @return IDに対応する保存フロアのポインタ、ない場合はNULLを返す。
  */
-saved_floor_type *get_sf_ptr(FLOOR_IDX floor_id)
-{
+saved_floor_type* get_sf_ptr(FLOOR_IDX floor_id) {
     if (!floor_id)
         return NULL;
 
     for (int i = 0; i < MAX_SAVED_FLOORS; i++) {
-        saved_floor_type *sf_ptr = &saved_floors[i];
+        saved_floor_type* sf_ptr = &saved_floors[i];
         if (sf_ptr->floor_id == floor_id)
             return sf_ptr;
     }
@@ -120,8 +116,7 @@ saved_floor_type *get_sf_ptr(FLOOR_IDX floor_id)
  * @param sf_ptr 保存フロアの参照ポインタ
  * @return なし
  */
-void kill_saved_floor(player_type *creature_ptr, saved_floor_type *sf_ptr)
-{
+void kill_saved_floor(player_type* creature_ptr, saved_floor_type* sf_ptr) {
     char floor_savefile[1024];
     if (!sf_ptr || (sf_ptr->floor_id == 0))
         return;
@@ -139,8 +134,7 @@ void kill_saved_floor(player_type *creature_ptr, saved_floor_type *sf_ptr)
     sf_ptr->floor_id = 0;
 }
 
-static void find_oldest_floor_id(player_type *creature_ptr, saved_floor_type *sf_ptr, FLOOR_IDX *fl_idx)
-{
+static void find_oldest_floor_id(player_type* creature_ptr, saved_floor_type* sf_ptr, FLOOR_IDX* fl_idx) {
     if (*fl_idx != MAX_SAVED_FLOORS)
         return;
 
@@ -167,9 +161,8 @@ static void find_oldest_floor_id(player_type *creature_ptr, saved_floor_type *sf
  * @details
  * If number of saved floors are already MAX_SAVED_FLOORS, kill the oldest one.
  */
-FLOOR_IDX get_new_floor_id(player_type *creature_ptr)
-{
-    saved_floor_type *sf_ptr = NULL;
+FLOOR_IDX get_new_floor_id(player_type* creature_ptr) {
+    saved_floor_type* sf_ptr = NULL;
     FLOOR_IDX fl_idx;
     for (fl_idx = 0; fl_idx < MAX_SAVED_FLOORS; fl_idx++) {
         sf_ptr = &saved_floors[fl_idx];
@@ -200,9 +193,8 @@ FLOOR_IDX get_new_floor_id(player_type *creature_ptr)
  * @details
  * To prevent multiple generation of unique monster who is the minion of player
  */
-void precalc_cur_num_of_pet(player_type *player_ptr)
-{
-    monster_type *m_ptr;
+void precalc_cur_num_of_pet(player_type* player_ptr) {
+    monster_type* m_ptr;
     int max_num = player_ptr->wild_mode ? 1 : MAX_PARTY_MON;
     for (int i = 0; i < max_num; i++) {
         m_ptr = &party_mon[i];

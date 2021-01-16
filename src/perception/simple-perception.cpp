@@ -23,8 +23,8 @@
 #include "object/object-info.h"
 #include "perception/object-perception.h"
 #include "player-info/avatar.h"
-#include "view/display-messages.h"
 #include "player/player-status-flags.h"
+#include "view/display-messages.h"
 
 /*!
  * @brief 擬似鑑定を実際に行い判定を反映する
@@ -33,9 +33,8 @@
  * @param heavy 重度の擬似鑑定を行うならばTRUE
  * @return なし
  */
-static void sense_inventory_aux(player_type *creature_ptr, INVENTORY_IDX slot, bool heavy)
-{
-    object_type *o_ptr = &creature_ptr->inventory_list[slot];
+static void sense_inventory_aux(player_type* creature_ptr, INVENTORY_IDX slot, bool heavy) {
+    object_type* o_ptr = &creature_ptr->inventory_list[slot];
     GAME_TEXT o_name[MAX_NLEN];
     if (o_ptr->ident & (IDENT_SENSE))
         return;
@@ -96,8 +95,8 @@ static void sense_inventory_aux(player_type *creature_ptr, INVENTORY_IDX slot, b
         msg_format("You feel the %s (%c) you are %s %s %s...", o_name, index_to_label(slot), describe_use(creature_ptr, slot),
             ((o_ptr->number == 1) ? "is" : "are"), game_inscriptions[feel]);
 #endif
-
-    } else {
+    }
+    else {
 #ifdef JP
         msg_format("ザックの中の%s(%c)は%sという感じがする...", o_name, index_to_label(slot), game_inscriptions[feel]);
 #else
@@ -126,11 +125,10 @@ static void sense_inventory_aux(player_type *creature_ptr, INVENTORY_IDX slot, b
  *   Class 4 = Ranger  --> slow but heavy  (changed!)\n
  *   Class 5 = Paladin --> slow but heavy\n
  */
-void sense_inventory1(player_type *creature_ptr)
-{
+void sense_inventory1(player_type* creature_ptr) {
     PLAYER_LEVEL plev = creature_ptr->lev;
     bool heavy = FALSE;
-    object_type *o_ptr;
+    object_type* o_ptr;
     if (creature_ptr->confused)
         return;
 
@@ -292,10 +290,9 @@ void sense_inventory1(player_type *creature_ptr)
  * @brief 1プレイヤーターン毎に武器、防具以外の擬似鑑定が行われるかを判定する。
  * @return なし
  */
-void sense_inventory2(player_type *creature_ptr)
-{
+void sense_inventory2(player_type* creature_ptr) {
     PLAYER_LEVEL plev = creature_ptr->lev;
-    object_type *o_ptr;
+    object_type* o_ptr;
 
     if (creature_ptr->confused)
         return;
@@ -388,8 +385,7 @@ void sense_inventory2(player_type *creature_ptr)
  * @param o_ptr 擬似鑑定を行うオブジェクトの参照ポインタ。
  * @return 擬似鑑定結果のIDを返す。
  */
-item_feel_type pseudo_value_check_heavy(object_type *o_ptr)
-{
+item_feel_type pseudo_value_check_heavy(object_type* o_ptr) {
     if (object_is_artifact(o_ptr)) {
         if (object_is_cursed(o_ptr) || object_is_broken(o_ptr))
             return FEEL_TERRIBLE;
@@ -423,8 +419,7 @@ item_feel_type pseudo_value_check_heavy(object_type *o_ptr)
  * @param o_ptr 擬似鑑定を行うオブジェクトの参照ポインタ。
  * @return 擬似鑑定結果のIDを返す。
  */
-item_feel_type pseudo_value_check_light(object_type *o_ptr)
-{
+item_feel_type pseudo_value_check_light(object_type* o_ptr) {
     if (object_is_cursed(o_ptr))
         return FEEL_CURSED;
     if (object_is_broken(o_ptr))

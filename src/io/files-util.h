@@ -19,15 +19,15 @@ extern concptr ANGBAND_DIR_SAVE;
 extern concptr ANGBAND_DIR_USER;
 extern concptr ANGBAND_DIR_XTRA;
 
-typedef void(*display_player_pf)(player_type*, int);
-typedef void(*update_playtime_pf)(void);
+typedef void (*display_player_pf)(player_type*, int);
+typedef void (*update_playtime_pf)(void);
 
-extern errr file_character(player_type *creature_ptr, concptr name, update_playtime_pf update_playtime, display_player_pf display_player);
-extern errr get_rnd_line(concptr file_name, int entry, char *output);
+extern errr file_character(player_type* creature_ptr, concptr name, update_playtime_pf update_playtime, display_player_pf display_player);
+extern errr get_rnd_line(concptr file_name, int entry, char* output);
 void read_dead_file(char* buf, size_t buf_size);
 
 #ifdef JP
-extern errr get_rnd_line_jonly(concptr file_name, int entry, char *output, int count);
+extern errr get_rnd_line_jonly(concptr file_name, int entry, char* output, int count);
 #endif
-extern errr counts_write(player_type *creature_ptr, int where, u32b count);
-extern u32b counts_read(player_type *creature_ptr, int where);
+extern errr counts_write(player_type* creature_ptr, int where, u32b count);
+extern u32b counts_read(player_type* creature_ptr, int where);

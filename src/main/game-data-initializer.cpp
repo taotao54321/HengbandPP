@@ -28,8 +28,7 @@ static const int MACRO_MAX = 256;
  * Initialize quest array
  * @return エラーコード
  */
-errr init_quests(void)
-{
+errr init_quests(void) {
     C_MAKE(quest, max_q_idx, quest_type);
     for (int i = 0; i < max_q_idx; i++)
         quest[i].status = QUEST_STATUS_UNTAKEN;
@@ -42,10 +41,9 @@ errr init_quests(void)
  * Initialize some other arrays
  * @return エラーコード
  */
-errr init_other(player_type *player_ptr)
-{
+errr init_other(player_type* player_ptr) {
     player_ptr->current_floor_ptr = &floor_info; // TODO:本当はこんなところで初期化したくない
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     C_MAKE(floor_ptr->o_list, current_world_ptr->max_o_idx, object_type);
     C_MAKE(floor_ptr->m_list, current_world_ptr->max_m_idx, monster_type);
     for (int i = 0; i < MAX_MTIMED; i++)
@@ -99,8 +97,7 @@ errr init_other(player_type *player_ptr)
  * Initialize some other arrays
  * @return エラーコード
  */
-errr init_object_alloc(void)
-{
+errr init_object_alloc(void) {
     s16b aux[MAX_DEPTH];
     (void)C_WIPE(&aux, MAX_DEPTH, s16b);
 
@@ -112,7 +109,7 @@ errr init_object_alloc(void)
 
     alloc_kind_size = 0;
     for (int i = 1; i < max_k_idx; i++) {
-        object_kind *k_ptr;
+        object_kind* k_ptr;
         k_ptr = &k_info[i];
         for (int j = 0; j < 4; j++) {
             if (k_ptr->chance[j]) {
@@ -129,10 +126,10 @@ errr init_object_alloc(void)
         quit(_("町のアイテムがない！", "No town objects!"));
 
     C_MAKE(alloc_kind_table, alloc_kind_size, alloc_entry);
-    alloc_entry *table;
+    alloc_entry* table;
     table = alloc_kind_table;
     for (int i = 1; i < max_k_idx; i++) {
-        object_kind *k_ptr;
+        object_kind* k_ptr;
         k_ptr = &k_info[i];
         for (int j = 0; j < 4; j++) {
             if (k_ptr->chance[j] == 0)
@@ -159,10 +156,9 @@ errr init_object_alloc(void)
  * Initialize some other arrays
  * @return エラーコード
  */
-errr init_alloc(void)
-{
-    monster_race *r_ptr;
-    tag_type *elements;
+errr init_alloc(void) {
+    monster_race* r_ptr;
+    tag_type* elements;
     C_MAKE(elements, max_r_idx, tag_type);
     for (int i = 1; i < max_r_idx; i++) {
         elements[i].tag = r_info[i].level;

@@ -16,11 +16,10 @@
  * @return 解呪されたアイテムの数
  * @details 永遠の呪いは解呪できない
  */
-static int exe_curse_removal(player_type *creature_ptr, int all)
-{
+static int exe_curse_removal(player_type* creature_ptr, int all) {
     int cnt = 0;
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
         if (!object_is_cursed(o_ptr))
@@ -53,11 +52,11 @@ static int exe_curse_removal(player_type *creature_ptr, int all)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 解呪に成功した装備数
  */
-int remove_curse(player_type *caster_ptr) { return exe_curse_removal(caster_ptr, FALSE); }
+int remove_curse(player_type* caster_ptr) { return exe_curse_removal(caster_ptr, FALSE); }
 
 /*!
  * @brief 装備の重い呪い解呪処理 /
  * Remove all curses
  * @return 解呪に成功した装備数
  */
-int remove_all_curse(player_type *caster_ptr) { return exe_curse_removal(caster_ptr, TRUE); }
+int remove_all_curse(player_type* caster_ptr) { return exe_curse_removal(caster_ptr, TRUE); }

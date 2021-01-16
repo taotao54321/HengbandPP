@@ -12,8 +12,7 @@
  * @param int 倍率
  * @return なし
  */
-static void print_vorpal_message(player_attack_type *pa_ptr, const int magnification)
-{
+static void print_vorpal_message(player_attack_type* pa_ptr, const int magnification) {
     switch (magnification) {
     case 2:
         msg_format(_("%sを斬った！", "You gouge %s!"), pa_ptr->m_name);
@@ -44,8 +43,7 @@ static void print_vorpal_message(player_attack_type *pa_ptr, const int magnifica
  * @param o_ptr チェンソーへの参照ポインタ
  * @return なし
  */
-static void print_chainsword_noise(object_type *o_ptr)
-{
+static void print_chainsword_noise(object_type* o_ptr) {
     if ((o_ptr->name1 != ART_CHAINSWORD) || one_in_(2))
         return;
 
@@ -62,12 +60,11 @@ static void print_chainsword_noise(object_type *o_ptr)
  * @param vorpal_chance ヴォーパル倍率上昇の機会値
  * @return なし
  */
-void process_vorpal_attack(player_type *attacker_ptr, player_attack_type *pa_ptr, const bool vorpal_cut, const int vorpal_chance)
-{
+void process_vorpal_attack(player_type* attacker_ptr, player_attack_type* pa_ptr, const bool vorpal_cut, const int vorpal_chance) {
     if (!vorpal_cut)
         return;
 
-    object_type *o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
+    object_type* o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
     int vorpal_magnification = 2;
     print_chainsword_noise(o_ptr);
     if (o_ptr->name1 == ART_VORPAL_BLADE)
@@ -79,7 +76,7 @@ void process_vorpal_attack(player_type *attacker_ptr, player_attack_type *pa_ptr
         vorpal_magnification++;
 
     pa_ptr->attack_damage *= (HIT_POINT)vorpal_magnification;
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if (((r_ptr->flagsr & RFR_RES_ALL) ? pa_ptr->attack_damage / 100 : pa_ptr->attack_damage) > pa_ptr->m_ptr->hp)
         msg_format(_("%sを真っ二つにした！", "You cut %s in half!"), pa_ptr->m_name);
     else

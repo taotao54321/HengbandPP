@@ -4,7 +4,7 @@
 #include "locale/japanese.h"
 #endif
 
-FILE *loading_savefile;
+FILE* loading_savefile;
 byte load_xor_byte; // Old "encryption" byte.
 u32b v_check = 0L; // Simple "checksum" on the actual values.
 u32b x_check = 0L; // Simple "checksum" on the encoded bytes.
@@ -25,8 +25,7 @@ byte kanji_code = 0;
  * @details
  * Avoid the top two lines, to avoid interference with "msg_print()".
  */
-void load_note(concptr msg)
-{
+void load_note(concptr msg) {
     static TERM_LEN y = 2;
     prt(msg, y, 0);
     if (++y >= 24)
@@ -42,8 +41,7 @@ void load_note(concptr msg)
  * The following functions are used to load the basic building blocks
  * of savefiles.  They also maintain the "checksum" info for 2.7.0+
  */
-byte sf_get(void)
-{
+byte sf_get(void) {
     byte c = getc(loading_savefile) & 0xFF;
     byte v = c ^ load_xor_byte;
     load_xor_byte = c;
@@ -58,15 +56,14 @@ byte sf_get(void)
  * @param ip 読み込みポインタ
  * @return なし
  */
-void rd_byte(byte *ip) { *ip = sf_get(); }
+void rd_byte(byte* ip) { *ip = sf_get(); }
 
 /*!
  * @brief ロードファイルポインタから符号なし16bit値を読み込んでポインタに渡す
  * @param ip 読み込みポインタ
  * @return なし
  */
-void rd_u16b(u16b *ip)
-{
+void rd_u16b(u16b* ip) {
     (*ip) = sf_get();
     (*ip) |= ((u16b)(sf_get()) << 8);
 }
@@ -76,15 +73,14 @@ void rd_u16b(u16b *ip)
  * @param ip 読み込みポインタ
  * @return なし
  */
-void rd_s16b(s16b *ip) { rd_u16b((u16b *)ip); }
+void rd_s16b(s16b* ip) { rd_u16b((u16b*)ip); }
 
 /*!
  * @brief ロードファイルポインタから符号なし32bit値を読み込んでポインタに渡す
  * @param ip 読み込みポインタ
  * @return なし
  */
-void rd_u32b(u32b *ip)
-{
+void rd_u32b(u32b* ip) {
     (*ip) = sf_get();
     (*ip) |= ((u32b)(sf_get()) << 8);
     (*ip) |= ((u32b)(sf_get()) << 16);
@@ -96,7 +92,7 @@ void rd_u32b(u32b *ip)
  * @param ip 読み込みポインタ
  * @return なし
  */
-void rd_s32b(s32b *ip) { rd_u32b((u32b *)ip); }
+void rd_s32b(s32b* ip) { rd_u32b((u32b*)ip); }
 
 /*!
  * @brief ロードファイルポインタから文字列を読み込んでポインタに渡す / Hack -- read a string
@@ -104,8 +100,7 @@ void rd_s32b(s32b *ip) { rd_u32b((u32b *)ip); }
  * @param max 最大読み取りバイト数
  * @return なし
  */
-void rd_string(char *str, int max)
-{
+void rd_string(char* str, int max) {
     for (int i = 0; TRUE; i++) {
         byte tmp8u;
         rd_byte(&tmp8u);
@@ -151,8 +146,7 @@ void rd_string(char *str, int max)
  * @param n スキップバイト数
  * @return なし
  */
-void strip_bytes(int n)
-{
+void strip_bytes(int n) {
     byte tmp8u;
     while (n--)
         rd_byte(&tmp8u);

@@ -2,8 +2,7 @@
 #include "player/player-race.h"
 #include "racial/racial-util.h"
 
-void set_mimic_racial_command(player_type *creature_ptr, rc_type *rc_ptr)
-{
+void set_mimic_racial_command(player_type* creature_ptr, rc_type* rc_ptr) {
     switch (creature_ptr->mimic_form) {
     case MIMIC_DEMON:
     case MIMIC_DEMON_LORD:
@@ -25,8 +24,7 @@ void set_mimic_racial_command(player_type *creature_ptr, rc_type *rc_ptr)
     }
 }
 
-void set_race_racial_command(player_type *creature_ptr, rc_type *rc_ptr)
-{
+void set_race_racial_command(player_type* creature_ptr, rc_type* rc_ptr) {
     switch (creature_ptr->prace) {
     case RACE_DWARF:
         strcpy(rc_ptr->power_desc[rc_ptr->num].racial_name, _("ドアと罠 感知", "Detect Doors+Traps"));
@@ -251,22 +249,26 @@ void set_race_racial_command(player_type *creature_ptr, rc_type *rc_ptr)
             rc_ptr->power_desc[rc_ptr->num].min_level = 1;
             rc_ptr->power_desc[rc_ptr->num].cost = 7;
             rc_ptr->power_desc[rc_ptr->num].fail = 8;
-        } else if (creature_ptr->lev < 25) {
+        }
+        else if (creature_ptr->lev < 25) {
             strcpy(rc_ptr->power_desc[rc_ptr->num].racial_name, _("ブラスター", "Blaster"));
             rc_ptr->power_desc[rc_ptr->num].min_level = 10;
             rc_ptr->power_desc[rc_ptr->num].cost = 13;
             rc_ptr->power_desc[rc_ptr->num].fail = 10;
-        } else if (creature_ptr->lev < 35) {
+        }
+        else if (creature_ptr->lev < 35) {
             strcpy(rc_ptr->power_desc[rc_ptr->num].racial_name, _("バズーカ", "Bazooka"));
             rc_ptr->power_desc[rc_ptr->num].min_level = 25;
             rc_ptr->power_desc[rc_ptr->num].cost = 26;
             rc_ptr->power_desc[rc_ptr->num].fail = 12;
-        } else if (creature_ptr->lev < 45) {
+        }
+        else if (creature_ptr->lev < 45) {
             strcpy(rc_ptr->power_desc[rc_ptr->num].racial_name, _("ビームキャノン", "Beam Cannon"));
             rc_ptr->power_desc[rc_ptr->num].min_level = 35;
             rc_ptr->power_desc[rc_ptr->num].cost = 40;
             rc_ptr->power_desc[rc_ptr->num].fail = 15;
-        } else {
+        }
+        else {
             strcpy(rc_ptr->power_desc[rc_ptr->num].racial_name, _("ロケット", "Rocket"));
             rc_ptr->power_desc[rc_ptr->num].min_level = 45;
             rc_ptr->power_desc[rc_ptr->num].cost = 60;

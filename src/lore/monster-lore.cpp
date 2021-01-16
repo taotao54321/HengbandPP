@@ -23,8 +23,7 @@
 #include "view/display-lore-status.h"
 #include "view/display-lore.h"
 
-static void set_msex_flags(lore_type *lore_ptr)
-{
+static void set_msex_flags(lore_type* lore_ptr) {
     lore_ptr->msex = MSEX_NONE;
     if (lore_ptr->r_ptr->flags1 & RF1_FEMALE) {
         lore_ptr->msex = MSEX_FEMALE;
@@ -35,8 +34,7 @@ static void set_msex_flags(lore_type *lore_ptr)
         lore_ptr->msex = MSEX_MALE;
 }
 
-static void set_flags1(lore_type *lore_ptr)
-{
+static void set_flags1(lore_type* lore_ptr) {
     if (lore_ptr->r_ptr->flags1 & RF1_UNIQUE)
         lore_ptr->flags1 |= (RF1_UNIQUE);
 
@@ -59,8 +57,7 @@ static void set_flags1(lore_type *lore_ptr)
         lore_ptr->flags1 |= (RF1_ESCORTS);
 }
 
-static void set_race_flags(lore_type *lore_ptr)
-{
+static void set_race_flags(lore_type* lore_ptr) {
     if (!lore_ptr->r_ptr->r_tkills && !lore_ptr->know_everything)
         return;
 
@@ -118,10 +115,9 @@ static void set_race_flags(lore_type *lore_ptr)
  * left edge of the screen, on a cleared line, in which the recall is
  * to take place.  One extra blank line is left after the recall.
  */
-void process_monster_lore(player_type *player_ptr, MONRACE_IDX r_idx, BIT_FLAGS mode)
-{
+void process_monster_lore(player_type* player_ptr, MONRACE_IDX r_idx, BIT_FLAGS mode) {
     lore_type tmp_lore;
-    lore_type *lore_ptr = initialize_lore_type(&tmp_lore, r_idx, mode);
+    lore_type* lore_ptr = initialize_lore_type(&tmp_lore, r_idx, mode);
     for (int n = 0; n < A_MAX; n++) {
         if (lore_ptr->r_ptr->reinforce_id[n] > 0)
             lore_ptr->reinforce = TRUE;

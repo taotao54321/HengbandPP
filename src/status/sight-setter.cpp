@@ -13,10 +13,10 @@
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_tim_esp(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_tim_esp(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -25,11 +25,13 @@ bool set_tim_esp(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tim_esp && !do_dec) {
             if (creature_ptr->tim_esp > v)
                 return FALSE;
-        } else if (!is_time_limit_esp(creature_ptr)) {
+        }
+        else if (!is_time_limit_esp(creature_ptr)) {
             msg_print(_("意識が広がった気がする！", "You feel your consciousness expand!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tim_esp && !music_singing(creature_ptr, MUSIC_MIND)) {
             msg_print(_("意識は元に戻った。", "Your consciousness contracts again."));
             notice = TRUE;
@@ -56,10 +58,10 @@ bool set_tim_esp(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_tim_invis(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_tim_invis(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -68,11 +70,13 @@ bool set_tim_invis(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tim_invis && !do_dec) {
             if (creature_ptr->tim_invis > v)
                 return FALSE;
-        } else if (!creature_ptr->tim_invis) {
+        }
+        else if (!creature_ptr->tim_invis) {
             msg_print(_("目が非常に敏感になった気がする！", "Your eyes feel very sensitive!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tim_invis) {
             msg_print(_("目の敏感さがなくなったようだ。", "Your eyes feel less sensitive."));
             notice = TRUE;
@@ -99,10 +103,10 @@ bool set_tim_invis(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_tim_infra(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_tim_infra(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -111,11 +115,13 @@ bool set_tim_infra(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tim_infra && !do_dec) {
             if (creature_ptr->tim_infra > v)
                 return FALSE;
-        } else if (!creature_ptr->tim_infra) {
+        }
+        else if (!creature_ptr->tim_infra) {
             msg_print(_("目がランランと輝き始めた！", "Your eyes begin to tingle!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tim_infra) {
             msg_print(_("目の輝きがなくなった。", "Your eyes stop tingling."));
             notice = TRUE;

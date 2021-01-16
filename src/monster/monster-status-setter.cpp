@@ -1,7 +1,7 @@
 ﻿#include "monster/monster-status-setter.h"
 #include "cmd-visual/cmd-draw.h"
-#include "core/player-update-types.h"
 #include "core/player-redraw-types.h"
+#include "core/player-update-types.h"
 #include "core/speed-table.h"
 #include "core/stuff-handler.h"
 #include "core/window-redrawer.h"
@@ -30,8 +30,7 @@
  * @param m_ptr モンスター情報構造体の参照ポインタ
  * @return なし
  */
-void set_pet(player_type *player_ptr, monster_type *m_ptr)
-{
+void set_pet(player_type* player_ptr, monster_type* m_ptr) {
     check_quest_completion(player_ptr, m_ptr);
     m_ptr->smart |= SM_PET;
     if (!(r_info[m_ptr->r_idx].flags3 & (RF3_EVIL | RF3_GOOD)))
@@ -44,8 +43,7 @@ void set_pet(player_type *player_ptr, monster_type *m_ptr)
  * @param m_ptr モンスター情報構造体の参照ポインタ
  * @return なし
  */
-void set_hostile(player_type *player_ptr, monster_type *m_ptr)
-{
+void set_hostile(player_type* player_ptr, monster_type* m_ptr) {
     if (player_ptr->phase_out)
         return;
 
@@ -59,8 +57,7 @@ void set_hostile(player_type *player_ptr, monster_type *m_ptr)
  * @param m_ptr モンスター情報構造体の参照ポインタ
  * @return なし
  */
-void anger_monster(player_type *player_ptr, monster_type *m_ptr)
-{
+void anger_monster(player_type* player_ptr, monster_type* m_ptr) {
     if (player_ptr->phase_out || !is_friendly(m_ptr))
         return;
 
@@ -81,8 +78,7 @@ void anger_monster(player_type *player_ptr, monster_type *m_ptr)
  * @return mproc_type 削除したいモンスターの時限ステータスID
  * @return なし
  */
-static void mproc_remove(floor_type *floor_ptr, MONSTER_IDX m_idx, int mproc_type)
-{
+static void mproc_remove(floor_type* floor_ptr, MONSTER_IDX m_idx, int mproc_type) {
     int mproc_idx = get_mproc_idx(floor_ptr, m_idx, mproc_type);
     if (mproc_idx >= 0)
         floor_ptr->mproc_list[mproc_type][mproc_idx] = floor_ptr->mproc_list[mproc_type][--floor_ptr->mproc_max[mproc_type]];
@@ -96,18 +92,19 @@ static void mproc_remove(floor_type *floor_ptr, MONSTER_IDX m_idx, int mproc_typ
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_csleep(player_type *target_ptr, MONSTER_IDX m_idx, int v)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+bool set_monster_csleep(player_type* target_ptr, MONSTER_IDX m_idx, int v) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
     if (v) {
         if (!monster_csleep_remaining(m_ptr)) {
             mproc_add(floor_ptr, m_idx, MTIMED_CSLEEP);
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (monster_csleep_remaining(m_ptr)) {
             mproc_remove(floor_ptr, m_idx, MTIMED_CSLEEP);
             notice = TRUE;
@@ -140,18 +137,19 @@ bool set_monster_csleep(player_type *target_ptr, MONSTER_IDX m_idx, int v)
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_fast(player_type *target_ptr, MONSTER_IDX m_idx, int v)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+bool set_monster_fast(player_type* target_ptr, MONSTER_IDX m_idx, int v) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     bool notice = FALSE;
-    v = (v > 200) ? 200 : (v < 0) ? 0 : v;
+    v = (v > 200) ? 200 : (v < 0) ? 0
+                                  : v;
     if (v) {
         if (!monster_fast_remaining(m_ptr)) {
             mproc_add(floor_ptr, m_idx, MTIMED_FAST);
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (monster_fast_remaining(m_ptr)) {
             mproc_remove(floor_ptr, m_idx, MTIMED_FAST);
             notice = TRUE;
@@ -171,18 +169,19 @@ bool set_monster_fast(player_type *target_ptr, MONSTER_IDX m_idx, int v)
 /*
  * Set "m_ptr->mtimed[MTIMED_SLOW]", notice observable changes
  */
-bool set_monster_slow(player_type *target_ptr, MONSTER_IDX m_idx, int v)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+bool set_monster_slow(player_type* target_ptr, MONSTER_IDX m_idx, int v) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     bool notice = FALSE;
-    v = (v > 200) ? 200 : (v < 0) ? 0 : v;
+    v = (v > 200) ? 200 : (v < 0) ? 0
+                                  : v;
     if (v) {
         if (!monster_slow_remaining(m_ptr)) {
             mproc_add(floor_ptr, m_idx, MTIMED_SLOW);
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (monster_slow_remaining(m_ptr)) {
             mproc_remove(floor_ptr, m_idx, MTIMED_SLOW);
             notice = TRUE;
@@ -207,18 +206,19 @@ bool set_monster_slow(player_type *target_ptr, MONSTER_IDX m_idx, int v)
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_stunned(player_type *target_ptr, MONSTER_IDX m_idx, int v)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+bool set_monster_stunned(player_type* target_ptr, MONSTER_IDX m_idx, int v) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     bool notice = FALSE;
-    v = (v > 200) ? 200 : (v < 0) ? 0 : v;
+    v = (v > 200) ? 200 : (v < 0) ? 0
+                                  : v;
     if (v) {
         if (!monster_stunned_remaining(m_ptr)) {
             mproc_add(floor_ptr, m_idx, MTIMED_STUNNED);
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (monster_stunned_remaining(m_ptr)) {
             mproc_remove(floor_ptr, m_idx, MTIMED_STUNNED);
             notice = TRUE;
@@ -237,18 +237,19 @@ bool set_monster_stunned(player_type *target_ptr, MONSTER_IDX m_idx, int v)
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_confused(player_type *target_ptr, MONSTER_IDX m_idx, int v)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+bool set_monster_confused(player_type* target_ptr, MONSTER_IDX m_idx, int v) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     bool notice = FALSE;
-    v = (v > 200) ? 200 : (v < 0) ? 0 : v;
+    v = (v > 200) ? 200 : (v < 0) ? 0
+                                  : v;
     if (v) {
         if (!monster_confused_remaining(m_ptr)) {
             mproc_add(floor_ptr, m_idx, MTIMED_CONFUSED);
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (monster_confused_remaining(m_ptr)) {
             mproc_remove(floor_ptr, m_idx, MTIMED_CONFUSED);
             notice = TRUE;
@@ -267,18 +268,19 @@ bool set_monster_confused(player_type *target_ptr, MONSTER_IDX m_idx, int v)
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_monfear(player_type *target_ptr, MONSTER_IDX m_idx, int v)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+bool set_monster_monfear(player_type* target_ptr, MONSTER_IDX m_idx, int v) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     bool notice = FALSE;
-    v = (v > 200) ? 200 : (v < 0) ? 0 : v;
+    v = (v > 200) ? 200 : (v < 0) ? 0
+                                  : v;
     if (v) {
         if (!monster_fear_remaining(m_ptr)) {
             mproc_add(floor_ptr, m_idx, MTIMED_MONFEAR);
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (monster_fear_remaining(m_ptr)) {
             mproc_remove(floor_ptr, m_idx, MTIMED_MONFEAR);
             notice = TRUE;
@@ -310,18 +312,19 @@ bool set_monster_monfear(player_type *target_ptr, MONSTER_IDX m_idx, int v)
  * @param energy_need TRUEならば無敵解除時に行動ターン消費を行う
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_invulner(player_type *target_ptr, MONSTER_IDX m_idx, int v, bool energy_need)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+bool set_monster_invulner(player_type* target_ptr, MONSTER_IDX m_idx, int v, bool energy_need) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     bool notice = FALSE;
-    v = (v > 200) ? 200 : (v < 0) ? 0 : v;
+    v = (v > 200) ? 200 : (v < 0) ? 0
+                                  : v;
     if (v) {
         if (!monster_invulner_remaining(m_ptr)) {
             mproc_add(floor_ptr, m_idx, MTIMED_INVULNER);
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (monster_invulner_remaining(m_ptr)) {
             mproc_remove(floor_ptr, m_idx, MTIMED_INVULNER);
             if (energy_need && !target_ptr->wild_mode)
@@ -353,9 +356,8 @@ bool set_monster_invulner(player_type *target_ptr, MONSTER_IDX m_idx, int v, boo
  * @param vs_player TRUEならば時間停止開始処理を行う
  * @return 時間停止が行われている状態ならばTRUEを返す
  */
-bool set_monster_timewalk(player_type *target_ptr, int num, MONSTER_IDX who, bool vs_player)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[hack_m_idx];
+bool set_monster_timewalk(player_type* target_ptr, int num, MONSTER_IDX who, bool vs_player) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[hack_m_idx];
     if (current_world_ptr->timewalk_m_idx)
         return FALSE;
 

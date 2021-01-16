@@ -12,8 +12,7 @@ concptr wd_his[3] = { _("それの", "its"), _("彼の", "his"), _("彼女の", 
  */
 hook_c_roff_pf hook_c_roff = c_roff;
 
-lore_type *initialize_lore_type(lore_type *lore_ptr, MONRACE_IDX r_idx, BIT_FLAGS mode)
-{
+lore_type* initialize_lore_type(lore_type* lore_ptr, MONRACE_IDX r_idx, BIT_FLAGS mode) {
 #ifdef JP
 #else
     lore_ptr->sin = FALSE;

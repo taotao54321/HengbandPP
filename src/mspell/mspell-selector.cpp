@@ -14,8 +14,8 @@
 #include "monster/monster-status.h"
 #include "mspell/mspell-attack-util.h"
 #include "mspell/mspell-judgement.h"
-#include "system/monster-type-definition.h"
 #include "system/floor-type-definition.h"
+#include "system/monster-type-definition.h"
 #include "world/world.h"
 
 /*!
@@ -24,8 +24,7 @@
  * @param spell 判定対象のID
  * @return 正しいIDならばTRUEを返す。
  */
-static bool spell_attack(byte spell)
-{
+static bool spell_attack(byte spell) {
     /* All RF4 spells hurt (except for shriek and dispel) */
     if (spell < 128 && spell > 98)
         return TRUE;
@@ -56,8 +55,7 @@ static bool spell_attack(byte spell)
  * @param spell 判定対象のID
  * @return 適した魔法のIDならばTRUEを返す。
  */
-static bool spell_escape(byte spell)
-{
+static bool spell_escape(byte spell) {
     /* Blink or Teleport */
     if (spell == 160 + 4 || spell == 160 + 5)
         return TRUE;
@@ -76,8 +74,7 @@ static bool spell_escape(byte spell)
  * @param spell 判定対象のID
  * @return 適した魔法のIDならばTRUEを返す。
  */
-static bool spell_annoy(byte spell)
-{
+static bool spell_annoy(byte spell) {
     /* Shriek */
     if (spell == 96 + 0)
         return TRUE;
@@ -161,8 +158,7 @@ static bool spell_world(byte spell) { return spell == 160 + 6; }
  * @param spell 判定対象のID
  * @return 特別効果魔法のIDならばTRUEを返す。
  */
-static bool spell_special(player_type *target_ptr, byte spell)
-{
+static bool spell_special(player_type* target_ptr, byte spell) {
     if (target_ptr->phase_out)
         return FALSE;
 
@@ -214,8 +210,7 @@ static bool spell_dispel(byte spell) { return spell == 96 + 2; }
  *\n
  * This function may well be an efficiency bottleneck.\n
  */
-int choose_attack_spell(player_type *target_ptr, msa_type *msa_ptr)
-{
+int choose_attack_spell(player_type* target_ptr, msa_type* msa_ptr) {
     byte escape[96], escape_num = 0;
     byte attack[96], attack_num = 0;
     byte summon[96], summon_num = 0;
@@ -230,8 +225,8 @@ int choose_attack_spell(player_type *target_ptr, msa_type *msa_ptr)
     byte heal[96], heal_num = 0;
     byte dispel[96], dispel_num = 0;
 
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[msa_ptr->m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[msa_ptr->m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     if (r_ptr->flags2 & RF2_STUPID)
         return (msa_ptr->mspells[randint0(msa_ptr->num)]);
 
@@ -350,10 +345,12 @@ int choose_attack_spell(player_type *target_ptr, msa_type *msa_ptr)
     if (is_invuln(target_ptr)) {
         if (psy_spe_num && (randint0(100) < 50)) {
             return (psy_spe[randint0(psy_spe_num)]);
-        } else if (attack_num && (randint0(100) < 40)) {
+        }
+        else if (attack_num && (randint0(100) < 40)) {
             return (attack[randint0(attack_num)]);
         }
-    } else if (attack_num && (randint0(100) < 85)) {
+    }
+    else if (attack_num && (randint0(100) < 85)) {
         return (attack[randint0(attack_num)]);
     }
 

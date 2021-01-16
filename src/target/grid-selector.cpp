@@ -1,8 +1,8 @@
 ﻿#include "target/grid-selector.h"
 #include "core/player-redraw-types.h"
 #include "core/player-update-types.h"
-#include "core/window-redrawer.h"
 #include "core/stuff-handler.h"
+#include "core/window-redrawer.h"
 #include "floor/cave.h"
 #include "game-option/game-play-options.h"
 #include "game-option/keymap-directory-getter.h"
@@ -23,9 +23,8 @@
  * XAngband: determine if a given location is "interesting"
  * based on target_set_accept function.
  */
-static bool tgt_pt_accept(player_type *creature_ptr, POSITION y, POSITION x)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+static bool tgt_pt_accept(player_type* creature_ptr, POSITION y, POSITION x) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (!(in_bounds(floor_ptr, y, x)))
         return FALSE;
 
@@ -35,7 +34,7 @@ static bool tgt_pt_accept(player_type *creature_ptr, POSITION y, POSITION x)
     if (creature_ptr->image)
         return FALSE;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &floor_ptr->grid_array[y][x];
     if (!(g_ptr->info & (CAVE_MARK)))
         return FALSE;
@@ -51,13 +50,12 @@ static bool tgt_pt_accept(player_type *creature_ptr, POSITION y, POSITION x)
  * XAngband: Prepare the "temp" array for "tget_pt"
  * based on target_set_prepare funciton.
  */
-static void tgt_pt_prepare(player_type *creature_ptr)
-{
+static void tgt_pt_prepare(player_type* creature_ptr) {
     tmp_pos.n = 0;
     if (!expand_list)
         return;
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     for (POSITION y = 1; y < floor_ptr->height; y++) {
         for (POSITION x = 1; x < floor_ptr->width; x++) {
             if (!tgt_pt_accept(creature_ptr, y, x))
@@ -75,8 +73,7 @@ static void tgt_pt_prepare(player_type *creature_ptr)
 /*
  * old -- from PsiAngband.
  */
-bool tgt_pt(player_type *creature_ptr, POSITION *x_ptr, POSITION *y_ptr)
-{
+bool tgt_pt(player_type* creature_ptr, POSITION* x_ptr, POSITION* y_ptr) {
     TERM_LEN wid, hgt;
     get_screen_size(&wid, &hgt);
 
@@ -119,7 +116,7 @@ bool tgt_pt(player_type *creature_ptr, POSITION *x_ptr, POSITION *y_ptr)
             int cy = (panel_row_min + panel_row_max) / 2;
             n++;
             for (; n < tmp_pos.n; ++n) {
-                grid_type *g_ptr = &creature_ptr->current_floor_ptr->grid_array[tmp_pos.y[n]][tmp_pos.x[n]];
+                grid_type* g_ptr = &creature_ptr->current_floor_ptr->grid_array[tmp_pos.y[n]][tmp_pos.x[n]];
                 if (cave_has_flag_grid(g_ptr, FF_STAIRS) && cave_has_flag_grid(g_ptr, ch == '>' ? FF_MORE : FF_LESS))
                     break;
             }
@@ -133,7 +130,8 @@ bool tgt_pt(player_type *creature_ptr, POSITION *x_ptr, POSITION *y_ptr)
                 creature_ptr->redraw |= PR_MAP;
                 creature_ptr->window |= PW_OVERHEAD;
                 handle_stuff(creature_ptr);
-            } else {
+            }
+            else {
                 y = tmp_pos.y[n];
                 x = tmp_pos.x[n];
                 dy = 2 * (y - cy) / hgt;
@@ -158,7 +156,8 @@ bool tgt_pt(player_type *creature_ptr, POSITION *x_ptr, POSITION *y_ptr)
                 int mag = MIN(wid / 2, hgt / 2);
                 x += dx * mag;
                 y += dy * mag;
-            } else {
+            }
+            else {
                 x += dx;
                 y += dy;
             }

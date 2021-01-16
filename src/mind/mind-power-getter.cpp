@@ -1,7 +1,7 @@
 ﻿#include "mind/mind-power-getter.h"
 #include "core/asking-player.h"
-#include "core/window-redrawer.h"
 #include "core/stuff-handler.h"
+#include "core/window-redrawer.h"
 #include "game-option/text-display-options.h"
 #include "inventory/inventory-slot-types.h"
 #include "io/command-repeater.h"
@@ -12,9 +12,9 @@
 #include "mind/mind-info.h"
 #include "mind/mind-types.h"
 #include "player/player-class.h"
+#include "player/player-status-table.h"
 #include "term/screen-processor.h"
 #include "util/int-char-converter.h"
-#include "player/player-status-table.h"
 
 /*!
  * @brief 使用可能な特殊技能を選択する /
@@ -34,8 +34,7 @@
  * when you run it. It's probably easy to fix but I haven't tried,\n
  * sorry.\n
  */
-bool get_mind_power(player_type *caster_ptr, SPELL_IDX *sn, bool only_browse)
-{
+bool get_mind_power(player_type* caster_ptr, SPELL_IDX* sn, bool only_browse) {
     SPELL_IDX i;
     int num = 0;
     TERM_LEN y = 1;
@@ -50,7 +49,7 @@ bool get_mind_power(player_type *caster_ptr, SPELL_IDX *sn, bool only_browse)
     concptr p;
     COMMAND_CODE code;
     mind_type spell;
-    const mind_power *mind_ptr;
+    const mind_power* mind_ptr;
     bool flag, redraw;
     int use_mind;
     int menu_line = (use_menu ? 1 : 0);
@@ -236,7 +235,8 @@ bool get_mind_power(player_type *caster_ptr, SPELL_IDX *sn, bool only_browse)
                             strcpy(psi_desc, _("  》 ", "  >  "));
                         else
                             strcpy(psi_desc, "     ");
-                    } else
+                    }
+                    else
                         sprintf(psi_desc, "  %c) ", I2A(i));
 
                     strcat(psi_desc,
@@ -246,7 +246,8 @@ bool get_mind_power(player_type *caster_ptr, SPELL_IDX *sn, bool only_browse)
                 }
 
                 prt("", y + i + 1, x);
-            } else if (!only_browse) {
+            }
+            else if (!only_browse) {
                 redraw = FALSE;
                 screen_load();
             }

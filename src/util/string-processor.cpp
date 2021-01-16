@@ -28,8 +28,7 @@ static char hexify(uint i) { return (hexsym[i % 16]); }
 /*
  * Convert a octal-digit into a decimal
  */
-static int deoct(char c)
-{
+static int deoct(char c) {
     if (isdigit(c))
         return (D2I(c));
     return 0;
@@ -38,8 +37,7 @@ static int deoct(char c)
 /*
  * Convert a hexidecimal-digit into a decimal
  */
-static int dehex(char c)
-{
+static int dehex(char c) {
     if (isdigit(c))
         return (D2I(c));
     if (islower(c))
@@ -51,8 +49,7 @@ static int dehex(char c)
 
 static char force_upper(char a) { return (islower(a)) ? toupper(a) : a; }
 
-static int angband_stricmp(concptr a, concptr b)
-{
+static int angband_stricmp(concptr a, concptr b) {
     for (concptr s1 = a, s2 = b; TRUE; s1++, s2++) {
         char z1 = force_upper(*s1);
         char z2 = force_upper(*s2);
@@ -65,8 +62,7 @@ static int angband_stricmp(concptr a, concptr b)
     }
 }
 
-static int angband_strnicmp(concptr a, concptr b, int n)
-{
+static int angband_strnicmp(concptr a, concptr b, int n) {
     for (concptr s1 = a, s2 = b; n > 0; s1++, s2++, n--) {
         char z1 = force_upper(*s1);
         char z2 = force_upper(*s2);
@@ -81,9 +77,8 @@ static int angband_strnicmp(concptr a, concptr b, int n)
     return 0;
 }
 
-static void trigger_text_to_ascii(char **bufptr, concptr *strptr)
-{
-    char *s = *bufptr;
+static void trigger_text_to_ascii(char** bufptr, concptr* strptr) {
+    char* s = *bufptr;
     concptr str = *strptr;
     bool mod_status[MAX_MACRO_MOD];
 
@@ -172,9 +167,8 @@ static void trigger_text_to_ascii(char **bufptr, concptr *strptr)
  * parsing "\xFF" into a (signed) char.  Whoever thought of making
  * the "sign" of a "char" undefined is a complete moron.  Oh well.
  */
-void text_to_ascii(char *buf, concptr str)
-{
-    char *s = buf;
+void text_to_ascii(char* buf, concptr str) {
+    char* s = buf;
     while (*str) {
         if (*str == '\\') {
             str++;
@@ -183,46 +177,61 @@ void text_to_ascii(char *buf, concptr str)
 
             if (*str == '[') {
                 trigger_text_to_ascii(&s, &str);
-            } else {
+            }
+            else {
                 if (*str == 'x') {
                     *s = 16 * (char)dehex(*++str);
                     *s++ += (char)dehex(*++str);
-                } else if (*str == '\\') {
+                }
+                else if (*str == '\\') {
                     *s++ = '\\';
-                } else if (*str == '^') {
+                }
+                else if (*str == '^') {
                     *s++ = '^';
-                } else if (*str == 's') {
+                }
+                else if (*str == 's') {
                     *s++ = ' ';
-                } else if (*str == 'e') {
+                }
+                else if (*str == 'e') {
                     *s++ = ESCAPE;
-                } else if (*str == 'b') {
+                }
+                else if (*str == 'b') {
                     *s++ = '\b';
-                } else if (*str == 'n') {
+                }
+                else if (*str == 'n') {
                     *s++ = '\n';
-                } else if (*str == 'r') {
+                }
+                else if (*str == 'r') {
                     *s++ = '\r';
-                } else if (*str == 't') {
+                }
+                else if (*str == 't') {
                     *s++ = '\t';
-                } else if (*str == '0') {
+                }
+                else if (*str == '0') {
                     *s = 8 * (char)deoct(*++str);
                     *s++ += (char)deoct(*++str);
-                } else if (*str == '1') {
+                }
+                else if (*str == '1') {
                     *s = 64 + 8 * (char)deoct(*++str);
                     *s++ += (char)deoct(*++str);
-                } else if (*str == '2') {
+                }
+                else if (*str == '2') {
                     *s = 64 * 2 + 8 * (char)deoct(*++str);
                     *s++ += (char)deoct(*++str);
-                } else if (*str == '3') {
+                }
+                else if (*str == '3') {
                     *s = 64 * 3 + 8 * (char)deoct(*++str);
                     *s++ += (char)deoct(*++str);
                 }
             }
 
             str++;
-        } else if (*str == '^') {
+        }
+        else if (*str == '^') {
             str++;
             *s++ = (*str++ & 037);
-        } else {
+        }
+        else {
             *s++ = *str++;
         }
     }
@@ -230,9 +239,8 @@ void text_to_ascii(char *buf, concptr str)
     *s = '\0';
 }
 
-static bool trigger_ascii_to_text(char **bufptr, concptr *strptr)
-{
-    char *s = *bufptr;
+static bool trigger_ascii_to_text(char** bufptr, concptr* strptr) {
+    char* s = *bufptr;
     concptr str = *strptr;
     char key_code[100];
     int i;
@@ -296,9 +304,8 @@ static bool trigger_ascii_to_text(char **bufptr, concptr *strptr)
 /*
  * Hack -- convert a string into a printable form
  */
-void ascii_to_text(char *buf, concptr str)
-{
-    char *s = buf;
+void ascii_to_text(char* buf, concptr str) {
+    char* s = buf;
     while (*str) {
         byte i = (byte)(*str++);
         if (i == 31) {
@@ -306,42 +313,54 @@ void ascii_to_text(char *buf, concptr str)
                 *s++ = '^';
                 *s++ = '_';
             }
-        } else {
+        }
+        else {
             if (i == ESCAPE) {
                 *s++ = '\\';
                 *s++ = 'e';
-            } else if (i == ' ') {
+            }
+            else if (i == ' ') {
                 *s++ = '\\';
                 *s++ = 's';
-            } else if (i == '\b') {
+            }
+            else if (i == '\b') {
                 *s++ = '\\';
                 *s++ = 'b';
-            } else if (i == '\t') {
+            }
+            else if (i == '\t') {
                 *s++ = '\\';
                 *s++ = 't';
-            } else if (i == '\n') {
+            }
+            else if (i == '\n') {
                 *s++ = '\\';
                 *s++ = 'n';
-            } else if (i == '\r') {
+            }
+            else if (i == '\r') {
                 *s++ = '\\';
                 *s++ = 'r';
-            } else if (i == '^') {
+            }
+            else if (i == '^') {
                 *s++ = '\\';
                 *s++ = '^';
-            } else if (i == '\\') {
+            }
+            else if (i == '\\') {
                 *s++ = '\\';
                 *s++ = '\\';
-            } else if (i < 32) {
+            }
+            else if (i < 32) {
                 *s++ = '^';
                 *s++ = i + 64;
-            } else if (i < 127) {
+            }
+            else if (i < 127) {
                 *s++ = i;
-            } else if (i < 64) {
+            }
+            else if (i < 64) {
                 *s++ = '\\';
                 *s++ = '0';
                 *s++ = octify(i / 8);
                 *s++ = octify(i % 8);
-            } else {
+            }
+            else {
                 *s++ = '\\';
                 *s++ = 'x';
                 *s++ = hexify(i / 16);
@@ -363,10 +382,9 @@ void ascii_to_text(char *buf, concptr str)
  *
  * This function should be equivalent to the strlcpy() function in BSD.
  */
-size_t angband_strcpy(char *buf, concptr src, size_t bufsize)
-{
+size_t angband_strcpy(char* buf, concptr src, size_t bufsize) {
 #ifdef JP
-    char *d = buf;
+    char* d = buf;
     concptr s = src;
     size_t len = 0;
 
@@ -382,7 +400,8 @@ size_t angband_strcpy(char *buf, concptr src, size_t bufsize)
                 *d++ = *s++;
                 *d++ = *s++;
                 len += 2;
-            } else {
+            }
+            else {
                 *d++ = *s++;
                 len++;
             }
@@ -420,12 +439,12 @@ size_t angband_strcpy(char *buf, concptr src, size_t bufsize)
  *
  * This function should be equivalent to the strlcat() function in BSD.
  */
-size_t angband_strcat(char *buf, concptr src, size_t bufsize)
-{
+size_t angband_strcat(char* buf, concptr src, size_t bufsize) {
     size_t dlen = strlen(buf);
     if (dlen < bufsize - 1) {
         return (dlen + angband_strcpy(buf + dlen, src, bufsize - dlen));
-    } else {
+    }
+    else {
         return (dlen + strlen(src));
     }
 }
@@ -435,15 +454,14 @@ size_t angband_strcat(char *buf, concptr src, size_t bufsize)
  *
  * angband_strstr() can handle Kanji strings correctly.
  */
-char *angband_strstr(concptr haystack, concptr needle)
-{
+char* angband_strstr(concptr haystack, concptr needle) {
     int l1 = strlen(haystack);
     int l2 = strlen(needle);
 
     if (l1 >= l2) {
         for (int i = 0; i <= l1 - l2; i++) {
             if (!strncmp(haystack + i, needle, l2))
-                return (char *)haystack + i;
+                return (char*)haystack + i;
 
 #ifdef JP
             if (iskanji(*(haystack + i)))
@@ -460,11 +478,10 @@ char *angband_strstr(concptr haystack, concptr needle)
  *
  * angband_strchr() can handle Kanji strings correctly.
  */
-char *angband_strchr(concptr ptr, char ch)
-{
+char* angband_strchr(concptr ptr, char ch) {
     for (; *ptr != '\0'; ptr++) {
         if (*ptr == ch)
-            return (char *)ptr;
+            return (char*)ptr;
 
 #ifdef JP
         if (iskanji(*ptr))

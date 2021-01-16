@@ -43,8 +43,7 @@ static fill_data_type fill_data;
  * Store routine for the fractal floor generator
  * this routine probably should be an inline function or a macro.
  */
-static void store_height(floor_type *floor_ptr, POSITION x, POSITION y, FEAT_IDX val)
-{
+static void store_height(floor_type* floor_ptr, POSITION x, POSITION y, FEAT_IDX val) {
     if (((x == fill_data.xmin) || (y == fill_data.ymin) || (x == fill_data.xmax) || (y == fill_data.ymax)) && (val <= fill_data.c1))
         val = fill_data.c1 + 1;
 
@@ -52,8 +51,7 @@ static void store_height(floor_type *floor_ptr, POSITION x, POSITION y, FEAT_IDX
     return;
 }
 
-void generate_hmap(floor_type *floor_ptr, POSITION y0, POSITION x0, POSITION xsiz, POSITION ysiz, int grd, int roug, int cutoff)
-{
+void generate_hmap(floor_type* floor_ptr, POSITION y0, POSITION x0, POSITION xsiz, POSITION ysiz, int grd, int roug, int cutoff) {
     POSITION xsize = xsiz;
     POSITION ysize = ysiz;
 
@@ -172,10 +170,9 @@ void generate_hmap(floor_type *floor_ptr, POSITION y0, POSITION x0, POSITION xsi
     }
 }
 
-static bool hack_isnt_wall(player_type *player_ptr, POSITION y, POSITION x, int c1, int c2, int c3, FEAT_IDX feat1, FEAT_IDX feat2, FEAT_IDX feat3,
-    BIT_FLAGS info1, BIT_FLAGS info2, BIT_FLAGS info3)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static bool hack_isnt_wall(player_type* player_ptr, POSITION y, POSITION x, int c1, int c2, int c3, FEAT_IDX feat1, FEAT_IDX feat2, FEAT_IDX feat3,
+    BIT_FLAGS info1, BIT_FLAGS info2, BIT_FLAGS info3) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (floor_ptr->grid_array[y][x].info & CAVE_ICKY)
         return FALSE;
 
@@ -186,7 +183,8 @@ static bool hack_isnt_wall(player_type *player_ptr, POSITION y, POSITION x, int 
             floor_ptr->grid_array[y][x].info &= ~(CAVE_MASK);
             floor_ptr->grid_array[y][x].info |= info1;
             return TRUE;
-        } else {
+        }
+        else {
             floor_ptr->grid_array[y][x].feat = feat2;
             floor_ptr->grid_array[y][x].info &= ~(CAVE_MASK);
             floor_ptr->grid_array[y][x].info |= info2;
@@ -200,7 +198,8 @@ static bool hack_isnt_wall(player_type *player_ptr, POSITION y, POSITION x, int 
             floor_ptr->grid_array[y][x].info &= ~(CAVE_MASK);
             floor_ptr->grid_array[y][x].info |= info2;
             return TRUE;
-        } else {
+        }
+        else {
             floor_ptr->grid_array[y][x].feat = feat1;
             floor_ptr->grid_array[y][x].info &= ~(CAVE_MASK);
             floor_ptr->grid_array[y][x].info |= info1;
@@ -223,13 +222,12 @@ static bool hack_isnt_wall(player_type *player_ptr, POSITION y, POSITION x, int 
  * Quick and nasty fill routine used to find the connected region
  * of floor in the middle of the grids
  */
-static void cave_fill(player_type *player_ptr, POSITION y, POSITION x)
-{
+static void cave_fill(player_type* player_ptr, POSITION y, POSITION x) {
     int flow_tail_room = 1;
     int flow_head_room = 0;
     tmp_pos.y[0] = y;
     tmp_pos.x[0] = x;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     while (flow_head_room != flow_tail_room) {
         POSITION ty = tmp_pos.y[flow_head_room];
         POSITION tx = tmp_pos.x[flow_head_room];
@@ -269,8 +267,7 @@ static void cave_fill(player_type *player_ptr, POSITION y, POSITION x)
     }
 }
 
-bool generate_fracave(player_type *player_ptr, POSITION y0, POSITION x0, POSITION xsize, POSITION ysize, int cutoff, bool light, bool room)
-{
+bool generate_fracave(player_type* player_ptr, POSITION y0, POSITION x0, POSITION xsize, POSITION ysize, int cutoff, bool light, bool room) {
     POSITION xhsize = xsize / 2;
     POSITION yhsize = ysize / 2;
     fill_data.c1 = cutoff;
@@ -283,7 +280,7 @@ bool generate_fracave(player_type *player_ptr, POSITION y0, POSITION x0, POSITIO
     fill_data.info2 = CAVE_FLOOR;
     fill_data.info3 = CAVE_FLOOR;
     fill_data.amount = 0;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     cave_fill(player_ptr, (byte)y0, (byte)x0);
     if (fill_data.amount < 10) {
         for (POSITION x = 0; x <= xsize; ++x) {
@@ -304,7 +301,8 @@ bool generate_fracave(player_type *player_ptr, POSITION y0, POSITION x0, POSITIO
 
             floor_ptr->grid_array[y0 + 0 - yhsize][x0 + i - xhsize].info |= (CAVE_ROOM);
             place_bold(player_ptr, y0 + 0 - yhsize, x0 + i - xhsize, GB_OUTER);
-        } else {
+        }
+        else {
             place_bold(player_ptr, y0 + 0 - yhsize, x0 + i - xhsize, GB_EXTRA);
         }
 
@@ -315,7 +313,8 @@ bool generate_fracave(player_type *player_ptr, POSITION y0, POSITION x0, POSITIO
 
             floor_ptr->grid_array[y0 + ysize - yhsize][x0 + i - xhsize].info |= (CAVE_ROOM);
             place_bold(player_ptr, y0 + ysize - yhsize, x0 + i - xhsize, GB_OUTER);
-        } else {
+        }
+        else {
             place_bold(player_ptr, y0 + ysize - yhsize, x0 + i - xhsize, GB_EXTRA);
         }
 
@@ -331,7 +330,8 @@ bool generate_fracave(player_type *player_ptr, POSITION y0, POSITION x0, POSITIO
 
             floor_ptr->grid_array[y0 + i - yhsize][x0 + 0 - xhsize].info |= (CAVE_ROOM);
             place_bold(player_ptr, y0 + i - yhsize, x0 + 0 - xhsize, GB_OUTER);
-        } else {
+        }
+        else {
             place_bold(player_ptr, y0 + i - yhsize, x0 + 0 - xhsize, GB_EXTRA);
         }
 
@@ -342,7 +342,8 @@ bool generate_fracave(player_type *player_ptr, POSITION y0, POSITION x0, POSITIO
 
             floor_ptr->grid_array[y0 + i - yhsize][x0 + xsize - xhsize].info |= (CAVE_ROOM);
             place_bold(player_ptr, y0 + i - yhsize, x0 + xsize - xhsize, GB_OUTER);
-        } else {
+        }
+        else {
             place_bold(player_ptr, y0 + i - yhsize, x0 + xsize - xhsize, GB_EXTRA);
         }
 
@@ -370,7 +371,8 @@ bool generate_fracave(player_type *player_ptr, POSITION y0, POSITION x0, POSITIO
 
                 if (room) {
                     floor_ptr->grid_array[y0 + y - yhsize][x0 + x - xhsize].info |= (CAVE_ROOM);
-                } else {
+                }
+                else {
                     place_bold(player_ptr, y0 + y - yhsize, x0 + x - xhsize, GB_EXTRA);
                     floor_ptr->grid_array[y0 + y - yhsize][x0 + x - xhsize].info &= ~(CAVE_ROOM);
                 }
@@ -386,8 +388,7 @@ bool generate_fracave(player_type *player_ptr, POSITION y0, POSITION x0, POSITIO
     return TRUE;
 }
 
-bool generate_lake(player_type *player_ptr, POSITION y0, POSITION x0, POSITION xsize, POSITION ysize, int c1, int c2, int c3, int type)
-{
+bool generate_lake(player_type* player_ptr, POSITION y0, POSITION x0, POSITION xsize, POSITION ysize, int c1, int c2, int c3, int type) {
     FEAT_IDX feat1, feat2, feat3;
     POSITION xhsize = xsize / 2;
     POSITION yhsize = ysize / 2;
@@ -442,7 +443,7 @@ bool generate_lake(player_type *player_ptr, POSITION y0, POSITION x0, POSITION x
     fill_data.info3 = 0;
     fill_data.amount = 0;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     cave_fill(player_ptr, (byte)y0, (byte)x0);
     if (fill_data.amount < 10) {
         for (POSITION x = 0; x <= xsize; ++x) {

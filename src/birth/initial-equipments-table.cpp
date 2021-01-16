@@ -121,54 +121,45 @@ byte player_init[MAX_CLASS][3][2] = {
     { /* Samurai */
         { TV_HISSATSU_BOOK, 0 },
         { TV_HARD_ARMOR, SV_CHAIN_MAIL },
-        { TV_SWORD, SV_BROAD_SWORD }
-    },
+        { TV_SWORD, SV_BROAD_SWORD } },
 
     { /* ForceTrainer */
         { TV_SORCERY_BOOK, 0 },
         { TV_POTION, SV_POTION_SPEED },
-        { TV_POTION, SV_POTION_RESTORE_MANA }
-    },
+        { TV_POTION, SV_POTION_RESTORE_MANA } },
 
     { /* Blue Mage */
         { TV_SOFT_ARMOR, SV_ROBE },
         { TV_WAND, SV_WAND_MAGIC_MISSILE },
-        { TV_SWORD, SV_DAGGER }
-    },
+        { TV_SWORD, SV_DAGGER } },
 
     { /* Cavalry */
         { TV_BOW, SV_SHORT_BOW },
         { TV_SOFT_ARMOR, SV_LEATHER_SCALE_MAIL },
-        { TV_POLEARM, SV_BROAD_SPEAR }
-    },
+        { TV_POLEARM, SV_BROAD_SPEAR } },
 
     { /* Berserker */
         { TV_POTION, SV_POTION_HEALING },
         { TV_HARD_ARMOR, SV_AUGMENTED_CHAIN_MAIL },
-        { TV_POLEARM, SV_BROAD_AXE }
-    },
+        { TV_POLEARM, SV_BROAD_AXE } },
 
     { /* Weaponsmith */
         { TV_RING, SV_RING_RES_FEAR },
         { TV_HARD_ARMOR, SV_CHAIN_MAIL },
-        { TV_POLEARM, SV_BROAD_AXE }
-    },
+        { TV_POLEARM, SV_BROAD_AXE } },
 
     { /* Mirror-Master */
         { TV_POTION, SV_POTION_SPEED },
         { TV_RING, SV_RING_SUSTAIN_INT },
-        { TV_SWORD, SV_DAGGER }
-    },
+        { TV_SWORD, SV_DAGGER } },
 
     { /* Ninja */
         { TV_POTION, SV_POTION_SPEED },
         { TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR },
-        { TV_SWORD, SV_DAGGER }
-    },
+        { TV_SWORD, SV_DAGGER } },
 
     { /* Sniper */
         { TV_BOW, SV_LIGHT_XBOW },
         { TV_SOFT_ARMOR, SV_SOFT_LEATHER_ARMOR },
-        { TV_SWORD, SV_DAGGER }
-    },
+        { TV_SWORD, SV_DAGGER } },
 };

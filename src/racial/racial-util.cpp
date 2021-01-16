@@ -1,8 +1,7 @@
 ﻿#include "racial/racial-util.h"
 #include "io/input-key-requester.h"
 
-rc_type *initialize_rc_type(player_type *creature_ptr, rc_type *rc_ptr)
-{
+rc_type* initialize_rc_type(player_type* creature_ptr, rc_type* rc_ptr) {
     rc_ptr->num = 0;
     rc_ptr->command_code = 0;
     rc_ptr->ask = TRUE;

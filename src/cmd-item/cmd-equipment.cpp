@@ -46,8 +46,7 @@
  * @brief 装備一覧を表示するコマンドのメインルーチン / Display equipment
  * @return なし
  */
-void do_cmd_equip(player_type *creature_ptr)
-{
+void do_cmd_equip(player_type* creature_ptr) {
     char out_val[160];
     command_wrk = TRUE;
     if (easy_floor)
@@ -84,12 +83,11 @@ void do_cmd_equip(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_wield(player_type *creature_ptr)
-{
+void do_cmd_wield(player_type* creature_ptr) {
     OBJECT_IDX item, slot;
     object_type forge;
-    object_type *q_ptr;
-    object_type *o_ptr;
+    object_type* q_ptr;
+    object_type* o_ptr;
     concptr act;
     GAME_TEXT o_name[MAX_NLEN];
     OBJECT_IDX need_switch_wielding = 0;
@@ -118,7 +116,8 @@ void do_cmd_wield(player_type *creature_ptr)
 
             if (slot == INVEN_RARM)
                 need_switch_wielding = INVEN_LARM;
-        } else if (has_melee_weapon(creature_ptr, INVEN_LARM))
+        }
+        else if (has_melee_weapon(creature_ptr, INVEN_LARM))
             slot = INVEN_RARM;
         else if (creature_ptr->inventory_list[INVEN_RARM].k_idx && !object_is_melee_weapon(&creature_ptr->inventory_list[INVEN_RARM])
             && creature_ptr->inventory_list[INVEN_LARM].k_idx && !object_is_melee_weapon(&creature_ptr->inventory_list[INVEN_LARM])) {
@@ -137,10 +136,12 @@ void do_cmd_wield(player_type *creature_ptr)
         if (slot == INVEN_LARM) {
             if (!get_check(_("二刀流で戦いますか？", "Dual wielding? ")))
                 slot = INVEN_RARM;
-        } else if (!creature_ptr->inventory_list[INVEN_RARM].k_idx && has_melee_weapon(creature_ptr, INVEN_LARM)) {
+        }
+        else if (!creature_ptr->inventory_list[INVEN_RARM].k_idx && has_melee_weapon(creature_ptr, INVEN_LARM)) {
             if (!get_check(_("二刀流で戦いますか？", "Dual wielding? ")))
                 slot = INVEN_LARM;
-        } else if (creature_ptr->inventory_list[INVEN_LARM].k_idx && creature_ptr->inventory_list[INVEN_RARM].k_idx) {
+        }
+        else if (creature_ptr->inventory_list[INVEN_LARM].k_idx && creature_ptr->inventory_list[INVEN_RARM].k_idx) {
             item_tester_hook = item_tester_hook_mochikae;
             q = _("どちらの手に装備しますか?", "Equip which hand? ");
             s = _("おっと。", "Oops.");
@@ -202,10 +203,10 @@ void do_cmd_wield(player_type *creature_ptr)
     }
 
     if (need_switch_wielding && !object_is_cursed(&creature_ptr->inventory_list[need_switch_wielding])) {
-        object_type *slot_o_ptr = &creature_ptr->inventory_list[slot];
-        object_type *switch_o_ptr = &creature_ptr->inventory_list[need_switch_wielding];
+        object_type* slot_o_ptr = &creature_ptr->inventory_list[slot];
+        object_type* switch_o_ptr = &creature_ptr->inventory_list[need_switch_wielding];
         object_type object_tmp;
-        object_type *otmp_ptr = &object_tmp;
+        object_type* otmp_ptr = &object_tmp;
         GAME_TEXT switch_name[MAX_NLEN];
         describe_flavor(creature_ptr, switch_name, switch_o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
         object_copy(otmp_ptr, switch_o_ptr);
@@ -229,7 +230,8 @@ void do_cmd_wield(player_type *creature_ptr)
     if (item >= 0) {
         inven_item_increase(creature_ptr, item, -1);
         inven_item_optimize(creature_ptr, item);
-    } else {
+    }
+    else {
         floor_item_increase(creature_ptr->current_floor_ptr, 0 - item, -1);
         floor_item_optimize(creature_ptr, 0 - item);
     }
@@ -293,10 +295,9 @@ void do_cmd_wield(player_type *creature_ptr)
  * @brief 装備を外すコマンドのメインルーチン / Take off an item
  * @return なし
  */
-void do_cmd_takeoff(player_type *creature_ptr)
-{
+void do_cmd_takeoff(player_type* creature_ptr) {
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     if (creature_ptr->special_defense & KATA_MUSOU)
         set_action(creature_ptr, ACTION_NONE);
 
@@ -320,7 +321,8 @@ void do_cmd_takeoff(player_type *creature_ptr)
             creature_ptr->update |= PU_BONUS;
             creature_ptr->window |= PW_EQUIP;
             msg_print(_("呪いを打ち破った。", "You break the curse."));
-        } else {
+        }
+        else {
             msg_print(_("装備を外せなかった。", "You couldn't remove the equipment."));
             take_turn(creature_ptr, 50);
             return;

@@ -25,16 +25,16 @@
 #include "monster/monster-describer.h"
 #include "monster/monster-flag-types.h"
 #include "monster/smart-learn-types.h"
+#include "player/player-status-flags.h"
 #include "system/floor-type-definition.h"
 #include "util/bit-flags-calculator.h"
-#include "player/player-status-flags.h"
 
 /*!
  * @brief モンスターを友好的にする
  * @param m_ptr モンスター情報構造体の参照ポインタ
  * @return なし
  */
-void set_friendly(monster_type *m_ptr) { m_ptr->smart |= SM_FRIENDLY; }
+void set_friendly(monster_type* m_ptr) { m_ptr->smart |= SM_FRIENDLY; }
 
 /*!
  * @brief モンスターが地形を踏破できるかどうかを返す
@@ -45,15 +45,15 @@ void set_friendly(monster_type *m_ptr) { m_ptr->smart |= SM_FRIENDLY; }
  * @param mode オプション
  * @return 踏破可能ならばTRUEを返す
  */
-bool monster_can_cross_terrain(player_type *player_ptr, FEAT_IDX feat, monster_race *r_ptr, BIT_FLAGS16 mode)
-{
-    feature_type *f_ptr = &f_info[feat];
+bool monster_can_cross_terrain(player_type* player_ptr, FEAT_IDX feat, monster_race* r_ptr, BIT_FLAGS16 mode) {
+    feature_type* f_ptr = &f_info[feat];
 
     if (has_flag(f_ptr->flags, FF_PATTERN)) {
         if (!(mode & CEM_RIDING)) {
             if (!(r_ptr->flags7 & RF7_CAN_FLY))
                 return FALSE;
-        } else {
+        }
+        else {
             if (!(mode & CEM_P_CAN_ENTER_PATTERN))
                 return FALSE;
         }
@@ -81,7 +81,8 @@ bool monster_can_cross_terrain(player_type *player_ptr, FEAT_IDX feat, monster_r
             else if (r_ptr->flags2 & RF2_AURA_FIRE)
                 return FALSE;
         }
-    } else if (r_ptr->flags7 & RF7_AQUATIC)
+    }
+    else if (r_ptr->flags7 & RF7_AQUATIC)
         return FALSE;
 
     if (has_flag(f_ptr->flags, FF_LAVA)) {
@@ -122,9 +123,8 @@ bool monster_can_cross_terrain(player_type *player_ptr, FEAT_IDX feat, monster_r
  * @param mode オプション
  * @return 踏破可能ならばTRUEを返す
  */
-bool monster_can_enter(player_type *player_ptr, POSITION y, POSITION x, monster_race *r_ptr, BIT_FLAGS16 mode)
-{
-    grid_type *g_ptr = &player_ptr->current_floor_ptr->grid_array[y][x];
+bool monster_can_enter(player_type* player_ptr, POSITION y, POSITION x, monster_race* r_ptr, BIT_FLAGS16 mode) {
+    grid_type* g_ptr = &player_ptr->current_floor_ptr->grid_array[y][x];
     if (player_bold(player_ptr, y, x))
         return FALSE;
     if (g_ptr->m_idx)
@@ -140,8 +140,7 @@ bool monster_can_enter(player_type *player_ptr, POSITION y, POSITION x, monster_
  * @param sub_align2 モンスター2のサブフラグ
  * @return 敵対関係にあるならばTRUEを返す
  */
-static bool check_hostile_align(byte sub_align1, byte sub_align2)
-{
+static bool check_hostile_align(byte sub_align1, byte sub_align2) {
     if (sub_align1 != sub_align2) {
         if (((sub_align1 & SUB_ALIGN_EVIL) && (sub_align2 & SUB_ALIGN_GOOD)) || ((sub_align1 & SUB_ALIGN_GOOD) && (sub_align2 & SUB_ALIGN_EVIL)))
             return TRUE;
@@ -157,10 +156,9 @@ static bool check_hostile_align(byte sub_align1, byte sub_align2)
  * @param n_ptr モンスター2の構造体参照ポインタ
  * @return 敵対関係にあるならばTRUEを返す
  */
-bool are_enemies(player_type *player_ptr, monster_type *m_ptr, monster_type *n_ptr)
-{
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
-    monster_race *s_ptr = &r_info[n_ptr->r_idx];
+bool are_enemies(player_type* player_ptr, monster_type* m_ptr, monster_type* n_ptr) {
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
+    monster_race* s_ptr = &r_info[n_ptr->r_idx];
 
     if (player_ptr->phase_out) {
         if (is_pet(m_ptr) || is_pet(n_ptr))
@@ -197,15 +195,15 @@ bool are_enemies(player_type *player_ptr, monster_type *m_ptr, monster_type *n_p
  * @details
  * If user is player, m_ptr == NULL.
  */
-bool monster_has_hostile_align(player_type *player_ptr, monster_type *m_ptr, int pa_good, int pa_evil, monster_race *r_ptr)
-{
+bool monster_has_hostile_align(player_type* player_ptr, monster_type* m_ptr, int pa_good, int pa_evil, monster_race* r_ptr) {
     byte sub_align1 = SUB_ALIGN_NEUTRAL;
     byte sub_align2 = SUB_ALIGN_NEUTRAL;
 
     if (m_ptr) /* For a monster */
     {
         sub_align1 = m_ptr->sub_align;
-    } else /* For player */
+    }
+    else /* For player */
     {
         if (player_ptr->align >= pa_good)
             sub_align1 |= SUB_ALIGN_GOOD;
@@ -225,27 +223,26 @@ bool monster_has_hostile_align(player_type *player_ptr, monster_type *m_ptr, int
     return FALSE;
 }
 
-bool is_original_ap_and_seen(player_type *player_ptr, monster_type *m_ptr) { return m_ptr->ml && !player_ptr->image && (m_ptr->ap_r_idx == m_ptr->r_idx); }
+bool is_original_ap_and_seen(player_type* player_ptr, monster_type* m_ptr) { return m_ptr->ml && !player_ptr->image && (m_ptr->ap_r_idx == m_ptr->r_idx); }
 
 /*  Determine monster race appearance index is same as race index */
-bool is_original_ap(monster_type *m_ptr) { return m_ptr->ap_r_idx == m_ptr->r_idx; }
+bool is_original_ap(monster_type* m_ptr) { return m_ptr->ap_r_idx == m_ptr->r_idx; }
 
-bool is_friendly(monster_type *m_ptr) { return (m_ptr->smart & SM_FRIENDLY) != 0; }
+bool is_friendly(monster_type* m_ptr) { return (m_ptr->smart & SM_FRIENDLY) != 0; }
 
-bool is_pet(monster_type *m_ptr) { return (m_ptr->smart & SM_PET) != 0; }
+bool is_pet(monster_type* m_ptr) { return (m_ptr->smart & SM_PET) != 0; }
 
-bool is_hostile(monster_type *m_ptr) { return !is_friendly(m_ptr) && !is_pet(m_ptr); }
+bool is_hostile(monster_type* m_ptr) { return !is_friendly(m_ptr) && !is_pet(m_ptr); }
 
 /*!
  * @brief モンスターの真の種族を返す / Extract monster race pointer of a monster's true form
  * @param m_ptr モンスターの参照ポインタ
  * @return 本当のモンスター種族参照ポインタ
  */
-monster_race *real_r_ptr(monster_type *m_ptr) { return &r_info[real_r_idx(m_ptr)]; }
+monster_race* real_r_ptr(monster_type* m_ptr) { return &r_info[real_r_idx(m_ptr)]; }
 
-MONRACE_IDX real_r_idx(monster_type *m_ptr)
-{
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+MONRACE_IDX real_r_idx(monster_type* m_ptr) {
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     if (m_ptr->mflag2 & MFLAG2_CHAMELEON) {
         if (r_ptr->flags1 & RF1_UNIQUE)
             return MON_CHAMELEON_K;
@@ -262,8 +259,7 @@ MONRACE_IDX real_r_idx(monster_type *m_ptr)
  * @param m_idx モンスターID
  * @param m_name モンスター名を入力する配列
  */
-void monster_name(player_type *player_ptr, MONSTER_IDX m_idx, char *m_name)
-{
-    monster_type *m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
+void monster_name(player_type* player_ptr, MONSTER_IDX m_idx, char* m_name) {
+    monster_type* m_ptr = &player_ptr->current_floor_ptr->m_list[m_idx];
     monster_desc(player_ptr, m_name, m_ptr, 0x00);
 }

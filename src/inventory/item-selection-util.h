@@ -5,7 +5,7 @@
 
 /* Floor Item Selection*/
 typedef struct fis_type {
-    COMMAND_CODE *cp;
+    COMMAND_CODE* cp;
     BIT_FLAGS mode;
     tval_type tval;
     char n1;
@@ -40,7 +40,7 @@ typedef struct fis_type {
 } fis_type;
 
 typedef struct item_selection_type {
-    COMMAND_CODE *cp;
+    COMMAND_CODE* cp;
     BIT_FLAGS mode;
     tval_type tval;
     OBJECT_IDX this_o_idx;
@@ -67,5 +67,5 @@ typedef struct item_selection_type {
     char cur_tag;
 } item_selection_type;
 
-fis_type *initialize_fis_type(fis_type *fis_ptr, COMMAND_CODE *cp, BIT_FLAGS mode, tval_type tval);
-item_selection_type *initialize_item_selection_type(item_selection_type *item_selection_ptr, COMMAND_CODE *cp, BIT_FLAGS mode, tval_type tval);
+fis_type* initialize_fis_type(fis_type* fis_ptr, COMMAND_CODE* cp, BIT_FLAGS mode, tval_type tval);
+item_selection_type* initialize_item_selection_type(item_selection_type* item_selection_ptr, COMMAND_CODE* cp, BIT_FLAGS mode, tval_type tval);

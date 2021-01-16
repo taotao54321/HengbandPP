@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum art_lite_type {
-	ART_GALADRIEL = 1,
+    ART_GALADRIEL = 1,
     ART_ELENDIL = 2,
     ART_JUDGE = 3,
     ART_EDISON = 7,

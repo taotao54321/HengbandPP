@@ -9,17 +9,17 @@
 #include "artifact/random-art-generator.h"
 #include "game-option/cheat-options.h"
 #include "inventory/inventory-slot-types.h"
+#include "monster-race/monster-race-hook.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-flags9.h"
 #include "monster-race/race-indice-types.h"
-#include "monster-race/monster-race-hook.h"
 #include "monster/monster-list.h"
 #include "monster/monster-util.h"
 #include "object-enchant/object-ego.h"
 #include "object-enchant/tr-types.h"
 #include "object-enchant/trc-types.h"
-#include "perception/object-perception.h"
 #include "object/object-kind.h"
+#include "perception/object-perception.h"
 #include "sv-definition/sv-lite-types.h"
 #include "sv-definition/sv-other-types.h"
 #include "system/floor-type-definition.h"
@@ -36,11 +36,10 @@
  * @details
  * Hack -- note the special code for various items
  */
-void apply_magic_others(player_type *owner_ptr, object_type *o_ptr, int power)
-{
-    object_kind *k_ptr = &k_info[o_ptr->k_idx];
+void apply_magic_others(player_type* owner_ptr, object_type* o_ptr, int power) {
+    object_kind* k_ptr = &k_info[o_ptr->k_idx];
 
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
     switch (o_ptr->tval) {
     case TV_WHISTLE: {
         break;
@@ -66,7 +65,8 @@ void apply_magic_others(player_type *owner_ptr, object_type *o_ptr, int power)
         /* power > 2 is debug only */
         if (power > 2) {
             become_random_artifact(owner_ptr, o_ptr, FALSE);
-        } else if ((power == 2) || ((power == 1) && one_in_(3))) {
+        }
+        else if ((power == 2) || ((power == 1) && one_in_(3))) {
             while (!o_ptr->name2) {
                 while (TRUE) {
                     bool okay_flag = TRUE;
@@ -83,7 +83,8 @@ void apply_magic_others(player_type *owner_ptr, object_type *o_ptr, int power)
                         break;
                 }
             }
-        } else if (power == -2) {
+        }
+        else if (power == -2) {
             o_ptr->name2 = get_random_ego(INVEN_LITE, FALSE);
             switch (o_ptr->name2) {
             case EGO_LITE_DARKNESS:
@@ -91,9 +92,11 @@ void apply_magic_others(player_type *owner_ptr, object_type *o_ptr, int power)
 
                 if (o_ptr->sval == SV_LITE_TORCH) {
                     add_flag(o_ptr->art_flags, TR_LITE_M1);
-                } else if (o_ptr->sval == SV_LITE_LANTERN) {
+                }
+                else if (o_ptr->sval == SV_LITE_LANTERN) {
                     add_flag(o_ptr->art_flags, TR_LITE_M2);
-                } else if (o_ptr->sval == SV_LITE_FEANOR) {
+                }
+                else if (o_ptr->sval == SV_LITE_FEANOR) {
                     add_flag(o_ptr->art_flags, TR_LITE_M3);
                 }
                 break;
@@ -123,7 +126,7 @@ void apply_magic_others(player_type *owner_ptr, object_type *o_ptr, int power)
     case TV_FIGURINE: {
         PARAMETER_VALUE i = 1;
         int check;
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         while (TRUE) {
             i = randint1(max_r_idx - 1);
 
@@ -154,10 +157,11 @@ void apply_magic_others(player_type *owner_ptr, object_type *o_ptr, int power)
         PARAMETER_VALUE i = 1;
         int check;
         u32b match = 0;
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         if (o_ptr->sval == SV_SKELETON) {
             match = RF9_DROP_SKELETON;
-        } else if (o_ptr->sval == SV_CORPSE) {
+        }
+        else if (o_ptr->sval == SV_CORPSE) {
             match = RF9_DROP_CORPSE;
         }
 
@@ -183,7 +187,7 @@ void apply_magic_others(player_type *owner_ptr, object_type *o_ptr, int power)
     }
     case TV_STATUE: {
         PARAMETER_VALUE i = 1;
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         while (TRUE) {
             i = randint1(max_r_idx - 1);
             r_ptr = &r_info[i];

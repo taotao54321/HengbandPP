@@ -12,8 +12,7 @@
  * Special display, part 2a
  * @return なし
  */
-void display_player_misc_info(player_type *creature_ptr)
-{
+void display_player_misc_info(player_type* creature_ptr) {
     put_str(_("名前  :", "Name  :"), 1, 26);
     put_str(_("性別  :", "Sex   :"), 3, 1);
     put_str(_("種族  :", "Race  :"), 4, 1);

@@ -14,8 +14,7 @@
  * @param what 参照元の文字列ポインタ
  * @return エラーがあった場合1、エラーがない場合0を返す
  */
-static bool grab_one_ego_item_flag(ego_item_type *e_ptr, concptr what)
-{
+static bool grab_one_ego_item_flag(ego_item_type* e_ptr, concptr what) {
     for (int i = 0; i < TR_FLAG_MAX; i++) {
         if (streq(what, k_info_flags[i])) {
             add_flag(e_ptr->flags, i);
@@ -37,9 +36,8 @@ static bool grab_one_ego_item_flag(ego_item_type *e_ptr, concptr what)
  * @param head ヘッダ構造体
  * @return エラーコード
  */
-errr parse_e_info(char *buf, angband_header *head)
-{
-    static ego_item_type *e_ptr = NULL;
+errr parse_e_info(char* buf, angband_header* head) {
+    static ego_item_type* e_ptr = NULL;
     error_idx = -1;
     error_line = -1;
     char *s, *t;
@@ -65,7 +63,8 @@ errr parse_e_info(char *buf, angband_header *head)
         if (!add_name(&e_ptr->name, head, s))
             return 7;
 #endif
-    } else if (!e_ptr) {
+    }
+    else if (!e_ptr) {
         return 3;
     }
 #ifdef JP
@@ -88,7 +87,8 @@ errr parse_e_info(char *buf, angband_header *head)
 
         e_ptr->slot = (INVENTORY_IDX)slot;
         e_ptr->rating = (PRICE)rating;
-    } else if (buf[0] == 'W') {
+    }
+    else if (buf[0] == 'W') {
         int level, rarity, pad2;
         long cost;
 
@@ -98,7 +98,8 @@ errr parse_e_info(char *buf, angband_header *head)
         e_ptr->level = level;
         e_ptr->rarity = (RARITY)rarity;
         e_ptr->cost = cost;
-    } else if (buf[0] == 'C') {
+    }
+    else if (buf[0] == 'C') {
         int th, td, ta, pval;
 
         if (4 != sscanf(buf + 2, "%d:%d:%d:%d", &th, &td, &ta, &pval))
@@ -108,15 +109,18 @@ errr parse_e_info(char *buf, angband_header *head)
         e_ptr->max_to_d = (HIT_POINT)td;
         e_ptr->max_to_a = (ARMOUR_CLASS)ta;
         e_ptr->max_pval = (PARAMETER_VALUE)pval;
-    } else if (buf[0] == 'U') {
+    }
+    else if (buf[0] == 'U') {
         byte n;
         n = grab_one_activation_flag(buf + 2);
         if (n > 0) {
             e_ptr->act_idx = n;
-        } else {
+        }
+        else {
             return 5;
         }
-    } else if (buf[0] == 'F') {
+    }
+    else if (buf[0] == 'F') {
         for (s = buf + 2; *s;) {
             /* loop */
             for (t = s; *t && (*t != ' ') && (*t != '|'); ++t)
@@ -133,7 +137,8 @@ errr parse_e_info(char *buf, angband_header *head)
 
             s = t;
         }
-    } else {
+    }
+    else {
         return 6;
     }
 

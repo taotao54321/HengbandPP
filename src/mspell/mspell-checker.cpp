@@ -64,9 +64,8 @@
  * @param x1 判定を行いたいマスのX座標
  * @return 召還に相応しいならばTRUEを返す
  */
-bool summon_possible(player_type *target_ptr, POSITION y1, POSITION x1)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+bool summon_possible(player_type* target_ptr, POSITION y1, POSITION x1) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     for (POSITION y = y1 - 2; y <= y1 + 2; y++) {
         for (POSITION x = x1 - 2; x <= x1 + 2; x++) {
             if (!in_bounds(floor_ptr, y, x))
@@ -93,13 +92,12 @@ bool summon_possible(player_type *target_ptr, POSITION y1, POSITION x1)
  * @param m_ptr 判定を行いたいモンスターの構造体参照ポインタ
  * @return 死者復活が有効な状態ならばTRUEを返す。
  */
-bool raise_possible(player_type *target_ptr, monster_type *m_ptr)
-{
+bool raise_possible(player_type* target_ptr, monster_type* m_ptr) {
     POSITION y = m_ptr->fy;
     POSITION x = m_ptr->fx;
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     for (POSITION xx = x - 5; xx <= x + 5; xx++) {
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         for (POSITION yy = y - 5; yy <= y + 5; yy++) {
             if (distance(y, x, yy, xx) > 5)
                 continue;
@@ -111,7 +109,7 @@ bool raise_possible(player_type *target_ptr, monster_type *m_ptr)
             g_ptr = &floor_ptr->grid_array[yy][xx];
             OBJECT_IDX this_o_idx, next_o_idx = 0;
             for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-                object_type *o_ptr = &floor_ptr->o_list[this_o_idx];
+                object_type* o_ptr = &floor_ptr->o_list[this_o_idx];
                 next_o_idx = o_ptr->next_o_idx;
                 if (o_ptr->tval == TV_CORPSE) {
                     if (!monster_has_hostile_align(target_ptr, m_ptr, 0, 0, &r_info[o_ptr->pval]))
@@ -144,9 +142,8 @@ bool raise_possible(player_type *target_ptr, monster_type *m_ptr)
  * no equally friendly monster is\n
  * between the attacker and target.\n
  */
-bool clean_shot(player_type *target_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, bool is_friend)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+bool clean_shot(player_type* target_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, bool is_friend) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     u16b grid_g[512];
     int grid_n = projection_path(target_ptr, grid_g, get_max_range(target_ptr), y1, x1, y2, x2, 0);
     if (!grid_n)
@@ -162,7 +159,7 @@ bool clean_shot(player_type *target_ptr, POSITION y1, POSITION x1, POSITION y2, 
         x = get_grid_x(grid_g[i]);
 
         if ((floor_ptr->grid_array[y][x].m_idx > 0) && !((y == y2) && (x == x2))) {
-            monster_type *m_ptr = &floor_ptr->m_list[floor_ptr->grid_array[y][x].m_idx];
+            monster_type* m_ptr = &floor_ptr->m_list[floor_ptr->grid_array[y][x].m_idx];
             if (is_friend == is_pet(m_ptr)) {
                 return FALSE;
             }
@@ -188,8 +185,7 @@ bool clean_shot(player_type *target_ptr, POSITION y1, POSITION x1, POSITION y2, 
  * @param target_type モンスターからモンスターへ撃つならMONSTER_TO_MONSTER、モンスターからプレイヤーならMONSTER_TO_PLAYER
  * @return なし
  */
-void bolt(player_type *target_ptr, MONSTER_IDX m_idx, POSITION y, POSITION x, EFFECT_ID typ, int dam_hp, int monspell, int target_type)
-{
+void bolt(player_type* target_ptr, MONSTER_IDX m_idx, POSITION y, POSITION x, EFFECT_ID typ, int dam_hp, int monspell, int target_type) {
     BIT_FLAGS flg = 0;
     switch (target_type) {
     case MONSTER_TO_MONSTER:
@@ -219,8 +215,7 @@ void bolt(player_type *target_ptr, MONSTER_IDX m_idx, POSITION y, POSITION x, EF
  * @param target_type モンスターからモンスターへ撃つならMONSTER_TO_MONSTER、モンスターからプレイヤーならMONSTER_TO_PLAYER
  * @return なし
  */
-void beam(player_type *target_ptr, MONSTER_IDX m_idx, POSITION y, POSITION x, EFFECT_ID typ, int dam_hp, int monspell, int target_type)
-{
+void beam(player_type* target_ptr, MONSTER_IDX m_idx, POSITION y, POSITION x, EFFECT_ID typ, int dam_hp, int monspell, int target_type) {
     BIT_FLAGS flg = 0;
     switch (target_type) {
     case MONSTER_TO_MONSTER:
@@ -251,10 +246,9 @@ void beam(player_type *target_ptr, MONSTER_IDX m_idx, POSITION y, POSITION x, EF
  * @return なし
  */
 void breath(
-    player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, EFFECT_ID typ, int dam_hp, POSITION rad, bool breath, int monspell, int target_type)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, EFFECT_ID typ, int dam_hp, POSITION rad, bool breath, int monspell, int target_type) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     BIT_FLAGS flg = 0x00;
     switch (target_type) {
     case MONSTER_TO_MONSTER:
@@ -297,8 +291,7 @@ void breath(
  * @param spell 判定対象のID
  * @return 非魔術的な特殊技能ならばTRUEを返す。
  */
-bool spell_is_inate(SPELL_IDX spell)
-{
+bool spell_is_inate(SPELL_IDX spell) {
     if (spell < 32 * 4) /* Set RF4 */
     {
         if ((1L << (spell - 32 * 3)) & RF4_NOMAGIC_MASK)

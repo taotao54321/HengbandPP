@@ -42,8 +42,7 @@
  * @param mode ステータス表示モード
  * @return どれかの処理をこなしたらTRUE、何もしなかったらFALSE
  */
-static bool display_player_info(player_type *creature_ptr, int mode)
-{
+static bool display_player_info(player_type* creature_ptr, int mode) {
     if (mode == 2) {
         display_player_misc_info(creature_ptr);
         display_player_stat_info(creature_ptr);
@@ -68,8 +67,7 @@ static bool display_player_info(player_type *creature_ptr, int mode)
  * @brief 名前、性別、種族、職業を表示する
  * @param creature_ptr プレーヤーへの参照ポインタ
  */
-static void display_player_basic_info(player_type *creature_ptr)
-{
+static void display_player_basic_info(player_type* creature_ptr) {
     char tmp[64];
 #ifdef JP
     sprintf(tmp, "%s%s%s", ap_ptr->title, ap_ptr->no == 1 ? "の" : "", creature_ptr->name);
@@ -88,8 +86,7 @@ static void display_player_basic_info(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void display_magic_realms(player_type *creature_ptr)
-{
+static void display_magic_realms(player_type* creature_ptr) {
     if (creature_ptr->realm1 == 0)
         return;
 
@@ -109,8 +106,7 @@ static void display_magic_realms(player_type *creature_ptr)
  * @details
  * 日本語版では、身長はcmに、体重はkgに変更してある
  */
-static void display_phisique(player_type *creature_ptr)
-{
+static void display_phisique(player_type* creature_ptr) {
 #ifdef JP
     display_player_one_line(ENTRY_AGE, format("%d才", (int)creature_ptr->age), TERM_L_BLUE);
     display_player_one_line(ENTRY_HEIGHT, format("%dcm", (int)((creature_ptr->ht * 254) / 100)), TERM_L_BLUE);
@@ -129,8 +125,7 @@ static void display_phisique(player_type *creature_ptr)
  * @brief 能力値を (減少していたら色を変えて)表示する
  * @param creature_ptr プレーヤーへの参照ポインタ
  */
-static void display_player_stats(player_type *creature_ptr)
-{
+static void display_player_stats(player_type* creature_ptr) {
     char buf[80];
     for (int i = 0; i < A_MAX; i++) {
         if (creature_ptr->stat_cur[i] < creature_ptr->stat_max[i]) {
@@ -141,7 +136,8 @@ static void display_player_stats(player_type *creature_ptr)
             value = creature_ptr->stat_top[i];
             cnv_stat(value, buf);
             c_put_str(TERM_L_GREEN, buf, 3 + i, 67);
-        } else {
+        }
+        else {
             put_str(stat_names[i], 3 + i, 53);
             cnv_stat(creature_ptr->stat_use[i], buf);
             c_put_str(TERM_L_GREEN, buf, 3 + i, 60);
@@ -158,9 +154,8 @@ static void display_player_stats(player_type *creature_ptr)
  * @param statmsg メッセージバッファ
  * @return 生きていたらFALSE、死んでいたらTRUE
  */
-static bool search_death_cause(player_type *creature_ptr, char *statmsg)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+static bool search_death_cause(player_type* creature_ptr, char* statmsg) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (!creature_ptr->is_dead)
         return FALSE;
 
@@ -208,9 +203,8 @@ static bool search_death_cause(player_type *creature_ptr, char *statmsg)
  * @param statmsg メッセージバッファ
  * @return クエスト内であればTRUE、いなければFALSE
  */
-static bool decide_death_in_quest(player_type *creature_ptr, char *statmsg)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+static bool decide_death_in_quest(player_type* creature_ptr, char* statmsg) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (!floor_ptr->inside_quest || !is_fixed_quest_idx(floor_ptr->inside_quest))
         return FALSE;
 
@@ -230,14 +224,13 @@ static bool decide_death_in_quest(player_type *creature_ptr, char *statmsg)
  * @param statmsg メッセージバッファ
  * @return なし
  */
-static void decide_current_floor(player_type *creature_ptr, char *statmsg)
-{
+static void decide_current_floor(player_type* creature_ptr, char* statmsg) {
     if (search_death_cause(creature_ptr, statmsg))
         return;
     if (!current_world_ptr->character_dungeon)
         return;
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (floor_ptr->dun_level == 0) {
         sprintf(statmsg, _("…あなたは現在、 %s にいる。", "...Now, you are in %s."), map_name(creature_ptr));
         return;
@@ -258,11 +251,10 @@ static void decide_current_floor(player_type *creature_ptr, char *statmsg)
  * @param statmsg メッセージバッファ
  * @return なし
  */
-static void display_current_floor(char *statmsg)
-{
+static void display_current_floor(char* statmsg) {
     char temp[128];
     shape_buffer(statmsg, 60, temp, sizeof(temp));
-    char *t;
+    char* t;
     t = temp;
     for (int i = 0; i < 2; i++) {
         if (t[0] == 0)
@@ -289,8 +281,7 @@ static void display_current_floor(char *statmsg)
  * Mode 4 = mutations
  * </pre>
  */
-void display_player(player_type *creature_ptr, int mode)
-{
+void display_player(player_type* creature_ptr, int mode) {
     if ((creature_ptr->muta1 || creature_ptr->muta2 || creature_ptr->muta3) && display_mutations)
         mode = (mode % 5);
     else
@@ -338,11 +329,10 @@ void display_player(player_type *creature_ptr, int mode)
  * @param mode オプション
  * @return なし
  */
-void display_player_equippy(player_type *creature_ptr, TERM_LEN y, TERM_LEN x, BIT_FLAGS16 mode)
-{
+void display_player_equippy(player_type* creature_ptr, TERM_LEN y, TERM_LEN x, BIT_FLAGS16 mode) {
     int max_i = (mode & DP_WP) ? INVEN_LARM + 1 : INVEN_TOTAL;
     for (int i = INVEN_RARM; i < max_i; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[i];
 
         TERM_COLOR a = object_attr(o_ptr);

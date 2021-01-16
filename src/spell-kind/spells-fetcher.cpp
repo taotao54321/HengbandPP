@@ -30,10 +30,9 @@
  * @param require_los 射線の通りを要求するならばTRUE
  * @return なし
  */
-void fetch_item(player_type *caster_ptr, DIRECTION dir, WEIGHT wgt, bool require_los)
-{
-    grid_type *g_ptr;
-    object_type *o_ptr;
+void fetch_item(player_type* caster_ptr, DIRECTION dir, WEIGHT wgt, bool require_los) {
+    grid_type* g_ptr;
+    object_type* o_ptr;
     GAME_TEXT o_name[MAX_NLEN];
 
     if (caster_ptr->current_floor_ptr->grid_array[caster_ptr->y][caster_ptr->x].o_idx) {
@@ -66,12 +65,14 @@ void fetch_item(player_type *caster_ptr, DIRECTION dir, WEIGHT wgt, bool require
             if (!player_has_los_bold(caster_ptr, ty, tx)) {
                 msg_print(_("そこはあなたの視界に入っていません。", "You have no direct line of sight to that location."));
                 return;
-            } else if (!projectable(caster_ptr, caster_ptr->y, caster_ptr->x, ty, tx)) {
+            }
+            else if (!projectable(caster_ptr, caster_ptr->y, caster_ptr->x, ty, tx)) {
                 msg_print(_("そこは壁の向こうです。", "You have no direct line of sight to that location."));
                 return;
             }
         }
-    } else {
+    }
+    else {
         ty = caster_ptr->y;
         tx = caster_ptr->x;
         bool is_first_loop = TRUE;
@@ -109,9 +110,8 @@ void fetch_item(player_type *caster_ptr, DIRECTION dir, WEIGHT wgt, bool require
     caster_ptr->redraw |= PR_MAP;
 }
 
-bool fetch_monster(player_type *caster_ptr)
-{
-    monster_type *m_ptr;
+bool fetch_monster(player_type* caster_ptr) {
+    monster_type* m_ptr;
     MONSTER_IDX m_idx;
     GAME_TEXT m_name[MAX_NLEN];
     int i;
@@ -140,7 +140,7 @@ bool fetch_monster(player_type *caster_ptr)
     for (i = 1; i < path_n; i++) {
         POSITION ny = get_grid_y(path_g[i]);
         POSITION nx = get_grid_x(path_g[i]);
-        grid_type *g_ptr = &caster_ptr->current_floor_ptr->grid_array[ny][nx];
+        grid_type* g_ptr = &caster_ptr->current_floor_ptr->grid_array[ny][nx];
 
         if (in_bounds(caster_ptr->current_floor_ptr, ny, nx) && is_cave_empty_bold(caster_ptr, ny, nx) && !(g_ptr->info & CAVE_OBJECT)
             && !pattern_tile(caster_ptr->current_floor_ptr, ny, nx)) {

@@ -85,8 +85,7 @@
  * @param only_browse 閲覧するだけならばTRUE
  * @return 選択した魔力のID、キャンセルならば-1を返す
  */
-static OBJECT_SUBTYPE_VALUE select_magic_eater(player_type *creature_ptr, bool only_browse)
-{
+static OBJECT_SUBTYPE_VALUE select_magic_eater(player_type* creature_ptr, bool only_browse) {
     OBJECT_SUBTYPE_VALUE ext = 0;
     char choice;
     bool flag, request_list;
@@ -169,7 +168,8 @@ static OBJECT_SUBTYPE_VALUE select_magic_eater(player_type *creature_ptr, bool o
                 menu_line -= 3;
         }
         screen_load();
-    } else {
+    }
+    else {
         while (TRUE) {
             if (!get_com(_("[A] 杖, [B] 魔法棒, [C] ロッド:", "[A] staff, [B] wand, [C] rod:"), &choice, TRUE)) {
                 return -1;
@@ -299,14 +299,16 @@ static OBJECT_SUBTYPE_VALUE select_magic_eater(player_type *creature_ptr, bool o
                                 creature_ptr->magic_num2[ctr + ext], chance));
                         if (creature_ptr->magic_num1[ctr + ext] > k_info[k_idx].pval * (creature_ptr->magic_num2[ctr + ext] - 1) * EATER_ROD_CHARGE)
                             col = TERM_RED;
-                    } else {
+                    }
+                    else {
                         strcat(dummy,
                             format(" %-22.22s    %2d/%2d %3d%%", k_name + k_info[k_idx].name, (s16b)(creature_ptr->magic_num1[ctr + ext] / EATER_CHARGE),
                                 creature_ptr->magic_num2[ctr + ext], chance));
                         if (creature_ptr->magic_num1[ctr + ext] < EATER_CHARGE)
                             col = TERM_RED;
                     }
-                } else
+                }
+                else
                     strcpy(dummy, "");
                 c_prt(col, dummy, y1, x1);
             }
@@ -356,14 +358,16 @@ static OBJECT_SUBTYPE_VALUE select_magic_eater(player_type *creature_ptr, bool o
                 if (menu_line > EATER_EXT / 2) {
                     menu_line -= EATER_EXT / 2;
                     reverse = TRUE;
-                } else
+                }
+                else
                     menu_line += EATER_EXT / 2;
                 while (!creature_ptr->magic_num2[menu_line + ext - 1]) {
                     if (reverse) {
                         menu_line--;
                         if (menu_line < 2)
                             reverse = FALSE;
-                    } else {
+                    }
+                    else {
                         menu_line++;
                         if (menu_line > EATER_EXT - 1)
                             reverse = TRUE;
@@ -394,7 +398,8 @@ static OBJECT_SUBTYPE_VALUE select_magic_eater(player_type *creature_ptr, bool o
                 request_list = FALSE;
                 screen_load();
                 screen_save();
-            } else
+            }
+            else
                 request_list = TRUE;
 
             /* Redo asking */
@@ -412,7 +417,8 @@ static OBJECT_SUBTYPE_VALUE select_magic_eater(player_type *creature_ptr, bool o
 
                 /* Extract request */
                 i = (islower(choice) ? A2I(choice) : -1);
-            } else {
+            }
+            else {
                 ask = FALSE; /* Can't uppercase digits */
 
                 i = choice - '0' + 26;
@@ -445,7 +451,8 @@ static OBJECT_SUBTYPE_VALUE select_magic_eater(player_type *creature_ptr, bool o
                         ask = TRUE;
                     continue;
                 }
-            } else {
+            }
+            else {
                 if (creature_ptr->magic_num1[ext + i] < EATER_CHARGE) {
                     msg_print(_("その魔法は使用回数が切れている。", "The magic has no charges left."));
                     msg_print(NULL);
@@ -495,8 +502,7 @@ static OBJECT_SUBTYPE_VALUE select_magic_eater(player_type *creature_ptr, bool o
  * @param powerful 強力発動中の処理ならばTRUE
  * @return 実際にコマンドを実行したならばTRUEを返す。
  */
-bool do_cmd_magic_eater(player_type *creature_ptr, bool only_browse, bool powerful)
-{
+bool do_cmd_magic_eater(player_type* creature_ptr, bool only_browse, bool powerful) {
     OBJECT_SUBTYPE_VALUE item;
     PERCENTAGE chance;
     DEPTH level;
@@ -516,10 +522,12 @@ bool do_cmd_magic_eater(player_type *creature_ptr, bool only_browse, bool powerf
     if (item >= EATER_EXT * 2) {
         tval = TV_ROD;
         sval = item - EATER_EXT * 2;
-    } else if (item >= EATER_EXT) {
+    }
+    else if (item >= EATER_EXT) {
         tval = TV_WAND;
         sval = item - EATER_EXT;
-    } else {
+    }
+    else {
         tval = TV_STAFF;
         sval = item;
     }
@@ -556,7 +564,8 @@ bool do_cmd_magic_eater(player_type *creature_ptr, bool only_browse, bool powerf
         take_turn(creature_ptr, 100);
 
         return TRUE;
-    } else {
+    }
+    else {
         DIRECTION dir = 0;
 
         if (tval == TV_ROD) {
@@ -566,11 +575,13 @@ bool do_cmd_magic_eater(player_type *creature_ptr, bool only_browse, bool powerf
             rod_effect(creature_ptr, sval, dir, &use_charge, powerful, TRUE);
             if (!use_charge)
                 return FALSE;
-        } else if (tval == TV_WAND) {
+        }
+        else if (tval == TV_WAND) {
             if (!get_aim_dir(creature_ptr, &dir))
                 return FALSE;
             wand_effect(creature_ptr, sval, dir, powerful, TRUE);
-        } else {
+        }
+        else {
             staff_effect(creature_ptr, sval, &use_charge, powerful, TRUE, TRUE);
             if (!use_charge)
                 return FALSE;

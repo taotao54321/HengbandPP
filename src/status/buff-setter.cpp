@@ -1,28 +1,27 @@
 ﻿#include "status/buff-setter.h"
+#include "status/buff-setter.h"
 #include "core/disturbance.h"
 #include "core/player-redraw-types.h"
 #include "core/player-update-types.h"
-#include "core/stuff-handler.h"
 #include "core/speed-table.h"
-#include "status/buff-setter.h"
-#include "game-option/disturbance-options.h"
-#include "player-info/avatar.h"
-#include "player/player-race.h"
-#include "player/player-class.h"
-#include "player/attack-defense-types.h"
-#include "realm/realm-song-numbers.h"
-#include "view/display-messages.h"
+#include "core/stuff-handler.h"
 #include "core/window-redrawer.h"
-#include "status/element-resistance.h"
-#include "status/base-status.h"
+#include "game-option/disturbance-options.h"
 #include "monster/monster-status-setter.h"
+#include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
+#include "player/player-class.h"
+#include "player/player-race.h"
+#include "realm/realm-song-numbers.h"
+#include "status/base-status.h"
+#include "status/element-resistance.h"
+#include "view/display-messages.h"
 
 /*!
  * @brief プレイヤーの全ての時限効果をリセットする。 / reset timed flags
  * @return なし
  */
-void reset_tim_flags(player_type *creature_ptr)
-{
+void reset_tim_flags(player_type* creature_ptr) {
     creature_ptr->fast = 0; /* Timed -- Fast */
     creature_ptr->lightspeed = 0;
     creature_ptr->slow = 0; /* Timed -- Slow */
@@ -104,10 +103,10 @@ void reset_tim_flags(player_type *creature_ptr)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_fast(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_fast(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -116,13 +115,15 @@ bool set_fast(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->fast && !do_dec) {
             if (creature_ptr->fast > v)
                 return FALSE;
-        } else if (!is_fast(creature_ptr) && !creature_ptr->lightspeed) {
+        }
+        else if (!is_fast(creature_ptr) && !creature_ptr->lightspeed) {
             msg_print(_("素早く動けるようになった！", "You feel yourself moving much faster!"));
             notice = TRUE;
             chg_virtue(creature_ptr, V_PATIENCE, -1);
             chg_virtue(creature_ptr, V_DILIGENCE, 1);
         }
-    } else {
+    }
+    else {
         if (creature_ptr->fast && !creature_ptr->lightspeed && !music_singing(creature_ptr, MUSIC_SPEED) && !music_singing(creature_ptr, MUSIC_SHERO)) {
             msg_print(_("動きの素早さがなくなったようだ。", "You feel yourself slow down."));
             notice = TRUE;
@@ -146,10 +147,10 @@ bool set_fast(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_shield(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_shield(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -158,11 +159,13 @@ bool set_shield(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->shield && !do_dec) {
             if (creature_ptr->shield > v)
                 return FALSE;
-        } else if (!creature_ptr->shield) {
+        }
+        else if (!creature_ptr->shield) {
             msg_print(_("肌が石になった。", "Your skin turns to stone."));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->shield) {
             msg_print(_("肌が元に戻った。", "Your skin returns to normal."));
             notice = TRUE;
@@ -188,10 +191,10 @@ bool set_shield(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_magicdef(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_magicdef(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -200,11 +203,13 @@ bool set_magicdef(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->magicdef && !do_dec) {
             if (creature_ptr->magicdef > v)
                 return FALSE;
-        } else if (!creature_ptr->magicdef) {
+        }
+        else if (!creature_ptr->magicdef) {
             msg_print(_("魔法の防御力が増したような気がする。", "You feel more resistant to magic."));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->magicdef) {
             msg_print(_("魔法の防御力が元に戻った。", "You feel less resistant to magic."));
             notice = TRUE;
@@ -230,10 +235,10 @@ bool set_magicdef(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_blessed(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_blessed(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -242,11 +247,13 @@ bool set_blessed(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->blessed && !do_dec) {
             if (creature_ptr->blessed > v)
                 return FALSE;
-        } else if (!is_blessed(creature_ptr)) {
+        }
+        else if (!is_blessed(creature_ptr)) {
             msg_print(_("高潔な気分になった！", "You feel righteous!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->blessed && !music_singing(creature_ptr, MUSIC_BLESS)) {
             msg_print(_("高潔な気分が消え失せた。", "The prayer has expired."));
             notice = TRUE;
@@ -272,10 +279,10 @@ bool set_blessed(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_hero(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_hero(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -284,11 +291,13 @@ bool set_hero(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->hero && !do_dec) {
             if (creature_ptr->hero > v)
                 return FALSE;
-        } else if (!is_hero(creature_ptr)) {
+        }
+        else if (!is_hero(creature_ptr)) {
             msg_print(_("ヒーローになった気がする！", "You feel like a hero!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->hero && !music_singing(creature_ptr, MUSIC_HERO) && !music_singing(creature_ptr, MUSIC_SHERO)) {
             msg_print(_("ヒーローの気分が消え失せた。", "The heroism wears off."));
             notice = TRUE;
@@ -309,7 +318,6 @@ bool set_hero(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
     return TRUE;
 }
 
-
 /*!
  * @brief 変身効果の継続時間と変身先をセットする / Set "tim_mimic", and "mimic_form", notice observable changes
  * @param v 継続時間
@@ -317,10 +325,10 @@ bool set_hero(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_mimic(player_type *creature_ptr, TIME_EFFECT v, MIMIC_RACE_IDX p, bool do_dec)
-{
+bool set_mimic(player_type* creature_ptr, TIME_EFFECT v, MIMIC_RACE_IDX p, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -329,7 +337,8 @@ bool set_mimic(player_type *creature_ptr, TIME_EFFECT v, MIMIC_RACE_IDX p, bool 
         if (creature_ptr->tim_mimic && (creature_ptr->mimic_form == p) && !do_dec) {
             if (creature_ptr->tim_mimic > v)
                 return FALSE;
-        } else if ((!creature_ptr->tim_mimic) || (creature_ptr->mimic_form != p)) {
+        }
+        else if ((!creature_ptr->tim_mimic) || (creature_ptr->mimic_form != p)) {
             msg_print(_("自分の体が変わってゆくのを感じた。", "You feel that your body changes."));
             creature_ptr->mimic_form = p;
             notice = TRUE;
@@ -367,10 +376,10 @@ bool set_mimic(player_type *creature_ptr, TIME_EFFECT v, MIMIC_RACE_IDX p, bool 
  * @param do_dec FALSEの場合現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_shero(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_shero(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -381,11 +390,13 @@ bool set_shero(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->shero && !do_dec) {
             if (creature_ptr->shero > v)
                 return FALSE;
-        } else if (!creature_ptr->shero) {
+        }
+        else if (!creature_ptr->shero) {
             msg_print(_("殺戮マシーンになった気がする！", "You feel like a killing machine!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->shero) {
             msg_print(_("野蛮な気持ちが消え失せた。", "You feel less berserk."));
             notice = TRUE;
@@ -412,10 +423,10 @@ bool set_shero(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_wraith_form(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_wraith_form(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -424,7 +435,8 @@ bool set_wraith_form(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->wraith_form && !do_dec) {
             if (creature_ptr->wraith_form > v)
                 return FALSE;
-        } else if (!creature_ptr->wraith_form) {
+        }
+        else if (!creature_ptr->wraith_form) {
             msg_print(_("物質界を離れて幽鬼のような存在になった！", "You leave the physical world and turn into a wraith-being!"));
             notice = TRUE;
             chg_virtue(creature_ptr, V_UNLIFE, 3);
@@ -437,7 +449,8 @@ bool set_wraith_form(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
 
             creature_ptr->window |= (PW_OVERHEAD | PW_DUNGEON);
         }
-    } else {
+    }
+    else {
         if (creature_ptr->wraith_form) {
             msg_print(_("不透明になった感じがする。", "You feel opaque."));
             notice = TRUE;
@@ -468,10 +481,10 @@ bool set_wraith_form(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_tsuyoshi(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_tsuyoshi(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -480,12 +493,14 @@ bool set_tsuyoshi(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tsuyoshi && !do_dec) {
             if (creature_ptr->tsuyoshi > v)
                 return FALSE;
-        } else if (!creature_ptr->tsuyoshi) {
+        }
+        else if (!creature_ptr->tsuyoshi) {
             msg_print(_("「オクレ兄さん！」", "Brother OKURE!"));
             notice = TRUE;
             chg_virtue(creature_ptr, V_VITALITY, 2);
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tsuyoshi) {
             msg_print(_("肉体が急速にしぼんでいった。", "Your body has quickly shriveled."));
 

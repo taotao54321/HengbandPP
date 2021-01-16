@@ -14,13 +14,13 @@ extern const POSITION cdd[8];
 extern const POSITION ddx_cdd[8];
 extern const POSITION ddy_cdd[8];
 
-extern DIRECTION coords_to_dir(player_type *creature_ptr, POSITION y, POSITION x);
+extern DIRECTION coords_to_dir(player_type* creature_ptr, POSITION y, POSITION x);
 
 extern POSITION distance(POSITION y1, POSITION x1, POSITION y2, POSITION x2);
 
-extern void mmove2(POSITION *y, POSITION *x, POSITION y1, POSITION x1, POSITION y2, POSITION x2);
+extern void mmove2(POSITION* y, POSITION* x, POSITION y1, POSITION x1, POSITION y2, POSITION x2);
 
-extern bool player_can_see_bold(player_type *creature_ptr, POSITION y, POSITION x);
+extern bool player_can_see_bold(player_type* creature_ptr, POSITION y, POSITION x);
 
 /*!
  * @brief 視界及び光源の過渡処理配列サイズ / Maximum size of the "temp" array
@@ -34,9 +34,9 @@ extern bool player_can_see_bold(player_type *creature_ptr, POSITION y, POSITION 
 
 //!< 対象グリッドの一覧をまとめる構造体
 typedef struct pos_list {
-	POSITION_IDX n; //!< Array of grids for use by various functions (see grid.c")
-	POSITION y[TEMP_MAX];
-	POSITION x[TEMP_MAX];
+    POSITION_IDX n; //!< Array of grids for use by various functions (see grid.c")
+    POSITION y[TEMP_MAX];
+    POSITION x[TEMP_MAX];
 } pos_list;
 
-bool is_seen(player_type *creature_ptr, monster_type *m_ptr);
+bool is_seen(player_type* creature_ptr, monster_type* m_ptr);

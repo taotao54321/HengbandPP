@@ -11,8 +11,7 @@
 #include "util/int-char-converter.h"
 #include "view/display-messages.h"
 
-static void set_stance(player_type *creature_ptr, const int new_stance)
-{
+static void set_stance(player_type* creature_ptr, const int new_stance) {
     set_action(creature_ptr, ACTION_KAMAE);
     if (creature_ptr->special_defense & (KAMAE_GENBU << new_stance)) {
         msg_print(_("構え直した。", "You reassume a stance."));
@@ -30,8 +29,7 @@ static void set_stance(player_type *creature_ptr, const int new_stance)
  * @brief 修行僧の構え設定処理
  * @return 構えを変化させたらTRUE、構え不能かキャンセルしたらFALSEを返す。
  */
-bool choose_monk_stance(player_type *creature_ptr)
-{
+bool choose_monk_stance(player_type* creature_ptr) {
     if (cmd_limit_confused(creature_ptr))
         return FALSE;
 
@@ -55,26 +53,30 @@ bool choose_monk_stance(player_type *creature_ptr)
             screen_load();
             return FALSE;
         }
-        
+
         if ((choice == 'a') || (choice == 'A')) {
             if (creature_ptr->action == ACTION_KAMAE) {
                 set_action(creature_ptr, ACTION_NONE);
-            } else
+            }
+            else
                 msg_print(_("もともと構えていない。", "You are not in a special stance."));
             screen_load();
             return TRUE;
         }
-        
+
         if ((choice == 'b') || (choice == 'B')) {
             new_stance = 0;
             break;
-        } else if (((choice == 'c') || (choice == 'C')) && (creature_ptr->lev > 29)) {
+        }
+        else if (((choice == 'c') || (choice == 'C')) && (creature_ptr->lev > 29)) {
             new_stance = 1;
             break;
-        } else if (((choice == 'd') || (choice == 'D')) && (creature_ptr->lev > 34)) {
+        }
+        else if (((choice == 'd') || (choice == 'D')) && (creature_ptr->lev > 34)) {
             new_stance = 2;
             break;
-        } else if (((choice == 'e') || (choice == 'E')) && (creature_ptr->lev > 39)) {
+        }
+        else if (((choice == 'e') || (choice == 'E')) && (creature_ptr->lev > 39)) {
             new_stance = 3;
             break;
         }

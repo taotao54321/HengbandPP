@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void spoil_random_artifact(player_type *creature_ptr, concptr fname);
+void spoil_random_artifact(player_type* creature_ptr, concptr fname);

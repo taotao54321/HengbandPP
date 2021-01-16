@@ -20,8 +20,7 @@
  * @param o_ptr 未鑑定価格を確認したいオブジェクトの構造体参照ポインタ
  * @return オブジェクトの未鑑定価格
  */
-static PRICE object_value_base(object_type *o_ptr)
-{
+static PRICE object_value_base(object_type* o_ptr) {
     if (object_is_aware(o_ptr))
         return (k_info[o_ptr->k_idx].cost);
 
@@ -79,8 +78,7 @@ static PRICE object_value_base(object_type *o_ptr)
  * Note that discounted items stay discounted forever, even if\n
  * the discount is "forgotten" by the player via memory loss.\n
  */
-PRICE object_value(player_type *player_ptr, object_type *o_ptr)
-{
+PRICE object_value(player_type* player_ptr, object_type* o_ptr) {
     PRICE value;
 
     if (object_is_known(o_ptr)) {
@@ -90,7 +88,8 @@ PRICE object_value(player_type *player_ptr, object_type *o_ptr)
             return (0L);
 
         value = object_value_real(player_ptr, o_ptr);
-    } else {
+    }
+    else {
         if ((o_ptr->ident & (IDENT_SENSE)) && object_is_broken(o_ptr))
             return (0L);
         if ((o_ptr->ident & (IDENT_SENSE)) && object_is_cursed(o_ptr))
@@ -131,10 +130,9 @@ PRICE object_value(player_type *player_ptr, object_type *o_ptr)
  *\n
  * Every wearable item with a "pval" bonus is worth extra (see below).\n
  */
-PRICE object_value_real(player_type *player_ptr, object_type *o_ptr)
-{
+PRICE object_value_real(player_type* player_ptr, object_type* o_ptr) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
-    object_kind *k_ptr = &k_info[o_ptr->k_idx];
+    object_kind* k_ptr = &k_info[o_ptr->k_idx];
 
     if (!k_info[o_ptr->k_idx].cost)
         return (0L);
@@ -142,21 +140,23 @@ PRICE object_value_real(player_type *player_ptr, object_type *o_ptr)
     PRICE value = k_info[o_ptr->k_idx].cost;
     object_flags(player_ptr, o_ptr, flgs);
     if (object_is_fixed_artifact(o_ptr)) {
-        artifact_type *a_ptr = &a_info[o_ptr->name1];
+        artifact_type* a_ptr = &a_info[o_ptr->name1];
         if (!a_ptr->cost)
             return (0L);
 
         value = a_ptr->cost;
         value += flag_cost(player_ptr, o_ptr, o_ptr->pval);
         return (value);
-    } else if (object_is_ego(o_ptr)) {
-        ego_item_type *e_ptr = &e_info[o_ptr->name2];
+    }
+    else if (object_is_ego(o_ptr)) {
+        ego_item_type* e_ptr = &e_info[o_ptr->name2];
         if (!e_ptr->cost)
             return (0L);
 
         value += e_ptr->cost;
         value += flag_cost(player_ptr, o_ptr, o_ptr->pval);
-    } else {
+    }
+    else {
         bool flag = FALSE;
         for (int i = 0; i < TR_FLAG_SIZE; i++)
             if (o_ptr->art_flags[i])

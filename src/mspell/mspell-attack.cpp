@@ -37,8 +37,7 @@
 #include "monster/monster-description-types.h"
 #endif
 
-static void set_no_magic_mask(msa_type *msa_ptr)
-{
+static void set_no_magic_mask(msa_type* msa_ptr) {
     if (!msa_ptr->no_inate)
         return;
 
@@ -47,9 +46,8 @@ static void set_no_magic_mask(msa_type *msa_ptr)
     msa_ptr->f6 &= ~(RF6_NOMAGIC_MASK);
 }
 
-static void check_mspell_stupid(player_type *target_ptr, msa_type *msa_ptr)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+static void check_mspell_stupid(player_type* target_ptr, msa_type* msa_ptr) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     msa_ptr->in_no_magic_dungeon = (d_info[target_ptr->dungeon_idx].flags1 & DF1_NO_MAGIC) && floor_ptr->dun_level
         && (!floor_ptr->inside_quest || is_fixed_quest_idx(floor_ptr->inside_quest));
     if (!msa_ptr->in_no_magic_dungeon || ((msa_ptr->r_ptr->flags2 & RF2_STUPID) != 0))
@@ -60,8 +58,7 @@ static void check_mspell_stupid(player_type *target_ptr, msa_type *msa_ptr)
     msa_ptr->f6 &= RF6_NOMAGIC_MASK;
 }
 
-static void check_mspell_smart(player_type *target_ptr, msa_type *msa_ptr)
-{
+static void check_mspell_smart(player_type* target_ptr, msa_type* msa_ptr) {
     if ((msa_ptr->r_ptr->flags2 & RF2_SMART) == 0)
         return;
 
@@ -76,8 +73,7 @@ static void check_mspell_smart(player_type *target_ptr, msa_type *msa_ptr)
     }
 }
 
-static void check_mspell_arena(player_type *target_ptr, msa_type *msa_ptr)
-{
+static void check_mspell_arena(player_type* target_ptr, msa_type* msa_ptr) {
     if (!target_ptr->current_floor_ptr->inside_arena && !target_ptr->phase_out)
         return;
 
@@ -89,8 +85,7 @@ static void check_mspell_arena(player_type *target_ptr, msa_type *msa_ptr)
         msa_ptr->f6 &= ~(RF6_SPECIAL);
 }
 
-static bool check_mspell_non_stupid(player_type *target_ptr, msa_type *msa_ptr)
-{
+static bool check_mspell_non_stupid(player_type* target_ptr, msa_type* msa_ptr) {
     if ((msa_ptr->r_ptr->flags2 & RF2_STUPID) != 0)
         return TRUE;
 
@@ -120,8 +115,7 @@ static bool check_mspell_non_stupid(player_type *target_ptr, msa_type *msa_ptr)
     return (msa_ptr->f4 != 0) || (msa_ptr->f5 != 0) || (msa_ptr->f6 != 0);
 }
 
-static void set_mspell_list(msa_type *msa_ptr)
-{
+static void set_mspell_list(msa_type* msa_ptr) {
     for (int k = 0; k < 32; k++)
         if (msa_ptr->f4 & (1L << k))
             msa_ptr->mspells[msa_ptr->num++] = k + RF4_SPELL_START;
@@ -135,8 +129,7 @@ static void set_mspell_list(msa_type *msa_ptr)
             msa_ptr->mspells[msa_ptr->num++] = k + RF6_SPELL_START;
 }
 
-static void describe_mspell_monster(player_type *target_ptr, msa_type *msa_ptr)
-{
+static void describe_mspell_monster(player_type* target_ptr, msa_type* msa_ptr) {
     monster_desc(target_ptr, msa_ptr->m_name, msa_ptr->m_ptr, 0x00);
 
 #ifdef JP
@@ -147,8 +140,7 @@ static void describe_mspell_monster(player_type *target_ptr, msa_type *msa_ptr)
 #endif
 }
 
-static bool switch_do_spell(player_type *target_ptr, msa_type *msa_ptr)
-{
+static bool switch_do_spell(player_type* target_ptr, msa_type* msa_ptr) {
     switch (msa_ptr->do_spell) {
     case DO_SPELL_NONE: {
         int attempt = 10;
@@ -174,8 +166,7 @@ static bool switch_do_spell(player_type *target_ptr, msa_type *msa_ptr)
     }
 }
 
-static bool check_mspell_continuation(player_type *target_ptr, msa_type *msa_ptr)
-{
+static bool check_mspell_continuation(player_type* target_ptr, msa_type* msa_ptr) {
     if ((msa_ptr->f4 == 0) && (msa_ptr->f5 == 0) && (msa_ptr->f6 == 0))
         return FALSE;
 
@@ -195,8 +186,7 @@ static bool check_mspell_continuation(player_type *target_ptr, msa_type *msa_ptr
     return TRUE;
 }
 
-static bool check_mspell_unexploded(player_type *target_ptr, msa_type *msa_ptr)
-{
+static bool check_mspell_unexploded(player_type* target_ptr, msa_type* msa_ptr) {
     PERCENTAGE fail_rate = 25 - (msa_ptr->rlev + 3) / 4;
     if (msa_ptr->r_ptr->flags2 & RF2_STUPID)
         fail_rate = 0;
@@ -216,8 +206,7 @@ static bool check_mspell_unexploded(player_type *target_ptr, msa_type *msa_ptr)
     return FALSE;
 }
 
-static bool check_thrown_mspell(player_type *target_ptr, msa_type *msa_ptr)
-{
+static bool check_thrown_mspell(player_type* target_ptr, msa_type* msa_ptr) {
     bool direct = player_bold(target_ptr, msa_ptr->y, msa_ptr->x);
     msa_ptr->can_remember = is_original_ap_and_seen(target_ptr, msa_ptr->m_ptr);
     if (direct)
@@ -261,8 +250,7 @@ static bool check_thrown_mspell(player_type *target_ptr, msa_type *msa_ptr)
     }
 }
 
-static void check_mspell_imitation(player_type *target_ptr, msa_type *msa_ptr)
-{
+static void check_mspell_imitation(player_type* target_ptr, msa_type* msa_ptr) {
     bool seen = (!target_ptr->blind && msa_ptr->m_ptr->ml);
     bool can_imitate = player_has_los_bold(target_ptr, msa_ptr->m_ptr->fy, msa_ptr->m_ptr->fx);
     if (!seen || !can_imitate || (current_world_ptr->timewalk_m_idx != 0) || (target_ptr->pclass != CLASS_IMITATOR))
@@ -287,8 +275,7 @@ static void check_mspell_imitation(player_type *target_ptr, msa_type *msa_ptr)
     target_ptr->redraw |= PR_IMITATION;
 }
 
-static void remember_mspell(msa_type *msa_ptr)
-{
+static void remember_mspell(msa_type* msa_ptr) {
     if (!msa_ptr->can_remember)
         return;
 
@@ -299,7 +286,7 @@ static void remember_mspell(msa_type *msa_ptr)
 
         return;
     }
-    
+
     if (msa_ptr->thrown_spell < 32 * 5) {
         msa_ptr->r_ptr->r_flags5 |= (1L << (msa_ptr->thrown_spell - 32 * 4));
         if (msa_ptr->r_ptr->r_cast_spell < MAX_UCHAR)
@@ -307,7 +294,7 @@ static void remember_mspell(msa_type *msa_ptr)
 
         return;
     }
-    
+
     if (msa_ptr->thrown_spell < 32 * 6) {
         msa_ptr->r_ptr->r_flags6 |= (1L << (msa_ptr->thrown_spell - 32 * 5));
         if (msa_ptr->r_ptr->r_cast_spell < MAX_UCHAR)
@@ -322,10 +309,9 @@ static void remember_mspell(msa_type *msa_ptr)
  * @param m_idx モンスター構造体配列のID
  * @return 実際に特殊技能を利用したらTRUEを返す
  */
-bool make_attack_spell(player_type *target_ptr, MONSTER_IDX m_idx)
-{
+bool make_attack_spell(player_type* target_ptr, MONSTER_IDX m_idx) {
     msa_type tmp_msa;
-    msa_type *msa_ptr = initialize_msa_type(target_ptr, &tmp_msa, m_idx);
+    msa_type* msa_ptr = initialize_msa_type(target_ptr, &tmp_msa, m_idx);
     if (monster_confused_remaining(msa_ptr->m_ptr)) {
         reset_target(msa_ptr->m_ptr);
         return FALSE;

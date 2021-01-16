@@ -1,9 +1,8 @@
 ﻿#include "blue-magic/blue-magic-util.h"
 #include "monster-floor/place-monster-types.h"
 
-bmc_type *initialize_blue_magic_type(
-    player_type *caster_ptr, bmc_type *bmc_ptr, const bool success, get_pseudo_monstetr_level_pf get_pseudo_monstetr_level)
-{
+bmc_type* initialize_blue_magic_type(
+    player_type* caster_ptr, bmc_type* bmc_ptr, const bool success, get_pseudo_monstetr_level_pf get_pseudo_monstetr_level) {
     bmc_ptr->plev = (*get_pseudo_monstetr_level)(caster_ptr);
     bmc_ptr->summon_lev = caster_ptr->lev * 2 / 3 + randint1(caster_ptr->lev / 2);
     bmc_ptr->damage = 0;

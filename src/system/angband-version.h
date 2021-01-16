@@ -49,4 +49,4 @@
 #define H_VER_PATCH FAKE_VER_PATCH /*!< セーブファイル上のバージョン定義(パッチ番号) */
 #define H_VER_EXTRA FAKE_VER_EXTRA /*!< セーブファイル上のバージョン定義(エクストラ番号) */
 
-void put_version(char *buf);
+void put_version(char* buf);

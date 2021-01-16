@@ -60,8 +60,7 @@
 #include "view/object-describer.h"
 #include "wizard/wizard-messages.h"
 
-static bool check_throw_boomerang(player_type *creature_ptr, it_type *it_ptr, concptr *q, concptr *s)
-{
+static bool check_throw_boomerang(player_type* creature_ptr, it_type* it_ptr, concptr* q, concptr* s) {
     if (!it_ptr->boomerang)
         return TRUE;
 
@@ -89,8 +88,7 @@ static bool check_throw_boomerang(player_type *creature_ptr, it_type *it_ptr, co
     return TRUE;
 }
 
-static bool check_what_throw(player_type *creature_ptr, it_type *it_ptr)
-{
+static bool check_what_throw(player_type* creature_ptr, it_type* it_ptr) {
     if (it_ptr->shuriken >= 0) {
         it_ptr->item = it_ptr->shuriken;
         it_ptr->o_ptr = &creature_ptr->inventory_list[it_ptr->item];
@@ -112,8 +110,7 @@ static bool check_what_throw(player_type *creature_ptr, it_type *it_ptr)
     return TRUE;
 }
 
-static bool check_can_throw(player_type *creature_ptr, it_type *it_ptr)
-{
+static bool check_can_throw(player_type* creature_ptr, it_type* it_ptr) {
     if (!check_what_throw(creature_ptr, it_ptr))
         return FALSE;
 
@@ -131,8 +128,7 @@ static bool check_can_throw(player_type *creature_ptr, it_type *it_ptr)
     return TRUE;
 }
 
-static void calc_throw_range(player_type *creature_ptr, it_type *it_ptr)
-{
+static void calc_throw_range(player_type* creature_ptr, it_type* it_ptr) {
     object_copy(it_ptr->q_ptr, it_ptr->o_ptr);
     object_flags(creature_ptr, it_ptr->q_ptr, it_ptr->obj_flags);
     torch_flags(it_ptr->q_ptr, it_ptr->obj_flags);
@@ -152,8 +148,7 @@ static void calc_throw_range(player_type *creature_ptr, it_type *it_ptr)
         it_ptr->tdis = mul;
 }
 
-static bool calc_throw_grid(player_type *creature_ptr, it_type *it_ptr)
-{
+static bool calc_throw_grid(player_type* creature_ptr, it_type* it_ptr) {
     if (it_ptr->shuriken >= 0) {
         it_ptr->ty = randint0(101) - 50 + creature_ptr->y;
         it_ptr->tx = randint0(101) - 50 + creature_ptr->x;
@@ -176,8 +171,7 @@ static bool calc_throw_grid(player_type *creature_ptr, it_type *it_ptr)
     return TRUE;
 }
 
-static void reflect_inventory_by_throw(player_type *creature_ptr, it_type *it_ptr)
-{
+static void reflect_inventory_by_throw(player_type* creature_ptr, it_type* it_ptr) {
     if ((it_ptr->q_ptr->name1 == ART_MJOLLNIR) || (it_ptr->q_ptr->name1 == ART_AEGISFANG) || it_ptr->boomerang)
         it_ptr->return_when_thrown = TRUE;
 
@@ -194,8 +188,7 @@ static void reflect_inventory_by_throw(player_type *creature_ptr, it_type *it_pt
     inven_item_optimize(creature_ptr, it_ptr->item);
 }
 
-static void set_class_specific_throw_params(player_type *creature_ptr, it_type *it_ptr)
-{
+static void set_class_specific_throw_params(player_type* creature_ptr, it_type* it_ptr) {
     take_turn(creature_ptr, 100);
     if ((creature_ptr->pclass == CLASS_ROGUE) || (creature_ptr->pclass == CLASS_NINJA))
         creature_ptr->energy_use -= creature_ptr->lev;
@@ -207,8 +200,7 @@ static void set_class_specific_throw_params(player_type *creature_ptr, it_type *
         && ((it_ptr->q_ptr->tval == TV_SPIKE) || ((has_flag(it_ptr->obj_flags, TR_THROW)) && (it_ptr->q_ptr->tval == TV_SWORD)));
 }
 
-static void set_racial_chance(player_type *creature_ptr, it_type *it_ptr)
-{
+static void set_racial_chance(player_type* creature_ptr, it_type* it_ptr) {
     if (has_flag(it_ptr->obj_flags, TR_THROW))
         it_ptr->chance = ((creature_ptr->skill_tht) + ((creature_ptr->to_h_b + it_ptr->q_ptr->to_h) * BTH_PLUS_ADJ));
     else
@@ -218,8 +210,7 @@ static void set_racial_chance(player_type *creature_ptr, it_type *it_ptr)
         it_ptr->chance *= 2;
 }
 
-static bool check_racial_target_bold(player_type *creature_ptr, it_type *it_ptr)
-{
+static bool check_racial_target_bold(player_type* creature_ptr, it_type* it_ptr) {
     it_ptr->ny[it_ptr->cur_dis] = it_ptr->y;
     it_ptr->nx[it_ptr->cur_dis] = it_ptr->x;
     mmove2(&it_ptr->ny[it_ptr->cur_dis], &it_ptr->nx[it_ptr->cur_dis], creature_ptr->y, creature_ptr->x, it_ptr->ty, it_ptr->tx);
@@ -231,8 +222,7 @@ static bool check_racial_target_bold(player_type *creature_ptr, it_type *it_ptr)
         || (creature_ptr->current_floor_ptr->grid_array[it_ptr->ny[it_ptr->cur_dis]][it_ptr->nx[it_ptr->cur_dis]].m_idx == 0);
 }
 
-static void check_racial_target_seen(player_type *creature_ptr, it_type *it_ptr)
-{
+static void check_racial_target_seen(player_type* creature_ptr, it_type* it_ptr) {
     if (!panel_contains(it_ptr->ny[it_ptr->cur_dis], it_ptr->nx[it_ptr->cur_dis])
         || !player_can_see_bold(creature_ptr, it_ptr->ny[it_ptr->cur_dis], it_ptr->nx[it_ptr->cur_dis])) {
         term_xtra(TERM_XTRA_DELAY, it_ptr->msec);
@@ -249,8 +239,7 @@ static void check_racial_target_seen(player_type *creature_ptr, it_type *it_ptr)
     term_fresh();
 }
 
-static bool check_racial_target_monster(player_type *creature_ptr, it_type *it_ptr)
-{
+static bool check_racial_target_monster(player_type* creature_ptr, it_type* it_ptr) {
     it_ptr->prev_y = it_ptr->y;
     it_ptr->prev_x = it_ptr->x;
     it_ptr->x = it_ptr->nx[it_ptr->cur_dis];
@@ -259,8 +248,7 @@ static bool check_racial_target_monster(player_type *creature_ptr, it_type *it_p
     return creature_ptr->current_floor_ptr->grid_array[it_ptr->y][it_ptr->x].m_idx == 0;
 }
 
-static void display_attack_racial_power(player_type *creature_ptr, it_type *it_ptr)
-{
+static void display_attack_racial_power(player_type* creature_ptr, it_type* it_ptr) {
     if (!it_ptr->visible) {
         msg_format(_("%sが敵を捕捉した。", "The %s finds a mark."), it_ptr->o_name);
         return;
@@ -276,8 +264,7 @@ static void display_attack_racial_power(player_type *creature_ptr, it_type *it_p
     health_track(creature_ptr, it_ptr->g_ptr->m_idx);
 }
 
-static void calc_racial_power_damage(player_type *creature_ptr, it_type *it_ptr)
-{
+static void calc_racial_power_damage(player_type* creature_ptr, it_type* it_ptr) {
     int dd = it_ptr->q_ptr->dd;
     int ds = it_ptr->q_ptr->ds;
     torch_dice(it_ptr->q_ptr, &dd, &ds);
@@ -292,10 +279,12 @@ static void calc_racial_power_damage(player_type *creature_ptr, it_type *it_ptr)
     if (it_ptr->boomerang) {
         it_ptr->tdam *= (it_ptr->mult + creature_ptr->num_blow[it_ptr->item - INVEN_RARM]);
         it_ptr->tdam += creature_ptr->to_d_m;
-    } else if (has_flag(it_ptr->obj_flags, TR_THROW)) {
+    }
+    else if (has_flag(it_ptr->obj_flags, TR_THROW)) {
         it_ptr->tdam *= (3 + it_ptr->mult);
         it_ptr->tdam += creature_ptr->to_d_m;
-    } else {
+    }
+    else {
         it_ptr->tdam *= it_ptr->mult;
     }
 
@@ -308,8 +297,7 @@ static void calc_racial_power_damage(player_type *creature_ptr, it_type *it_ptr)
     it_ptr->tdam = mon_damage_mod(creature_ptr, it_ptr->m_ptr, it_ptr->tdam, FALSE);
 }
 
-static void attack_racial_power(player_type *creature_ptr, it_type *it_ptr)
-{
+static void attack_racial_power(player_type* creature_ptr, it_type* it_ptr) {
     if (!test_hit_fire(creature_ptr, it_ptr->chance - it_ptr->cur_dis, it_ptr->m_ptr, it_ptr->m_ptr->ml, it_ptr->o_name))
         return;
 
@@ -332,8 +320,7 @@ static void attack_racial_power(player_type *creature_ptr, it_type *it_ptr)
     }
 }
 
-static void exe_throw(player_type *creature_ptr, it_type *it_ptr)
-{
+static void exe_throw(player_type* creature_ptr, it_type* it_ptr) {
     it_ptr->cur_dis = 0;
     while (it_ptr->cur_dis <= it_ptr->tdis) {
         if ((it_ptr->y == it_ptr->ty) && (it_ptr->x == it_ptr->tx))
@@ -356,8 +343,7 @@ static void exe_throw(player_type *creature_ptr, it_type *it_ptr)
     }
 }
 
-void display_figurine_throw(player_type *creature_ptr, it_type *it_ptr)
-{
+void display_figurine_throw(player_type* creature_ptr, it_type* it_ptr) {
     if ((it_ptr->q_ptr->tval != TV_FIGURINE) || creature_ptr->current_floor_ptr->inside_arena)
         return;
 
@@ -371,8 +357,7 @@ void display_figurine_throw(player_type *creature_ptr, it_type *it_ptr)
         msg_print(_("これはあまり良くない気がする。", "You have a bad feeling about this."));
 }
 
-void display_potion_throw(player_type *creature_ptr, it_type *it_ptr)
-{
+void display_potion_throw(player_type* creature_ptr, it_type* it_ptr) {
     if (!object_is_potion(it_ptr->q_ptr))
         return;
 
@@ -387,7 +372,7 @@ void display_potion_throw(player_type *creature_ptr, it_type *it_ptr)
         return;
     }
 
-    monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->current_floor_ptr->grid_array[it_ptr->y][it_ptr->x].m_idx];
+    monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->current_floor_ptr->grid_array[it_ptr->y][it_ptr->x].m_idx];
     if ((creature_ptr->current_floor_ptr->grid_array[it_ptr->y][it_ptr->x].m_idx == 0) || !is_friendly(m_ptr) || monster_invulner_remaining(m_ptr)) {
         it_ptr->do_drop = FALSE;
         return;
@@ -400,8 +385,7 @@ void display_potion_throw(player_type *creature_ptr, it_type *it_ptr)
     it_ptr->do_drop = FALSE;
 }
 
-static void display_boomerang_throw(player_type *creature_ptr, it_type *it_ptr)
-{
+static void display_boomerang_throw(player_type* creature_ptr, it_type* it_ptr) {
     if ((it_ptr->back_chance > 37) && !creature_ptr->blind && (it_ptr->item >= 0)) {
         msg_format(_("%sが手元に返ってきた。", "%s comes back to you."), it_ptr->o2_name);
         it_ptr->come_back = TRUE;
@@ -417,8 +401,7 @@ static void display_boomerang_throw(player_type *creature_ptr, it_type *it_ptr)
     it_ptr->x = creature_ptr->x;
 }
 
-static void process_boomerang_throw(player_type *creature_ptr, it_type *it_ptr)
-{
+static void process_boomerang_throw(player_type* creature_ptr, it_type* it_ptr) {
     if ((it_ptr->back_chance <= 30) || (one_in_(100) && !it_ptr->super_boomerang)) {
         msg_format(_("%sが返ってこなかった！", "%s doesn't come back!"), it_ptr->o2_name);
         return;
@@ -443,8 +426,7 @@ static void process_boomerang_throw(player_type *creature_ptr, it_type *it_ptr)
     display_boomerang_throw(creature_ptr, it_ptr);
 }
 
-static void check_boomerang_throw(player_type *creature_ptr, it_type *it_ptr)
-{
+static void check_boomerang_throw(player_type* creature_ptr, it_type* it_ptr) {
     if (!it_ptr->return_when_thrown)
         return;
 
@@ -461,8 +443,7 @@ static void check_boomerang_throw(player_type *creature_ptr, it_type *it_ptr)
     process_boomerang_throw(creature_ptr, it_ptr);
 }
 
-static void process_boomerang_back(player_type *creature_ptr, it_type *it_ptr)
-{
+static void process_boomerang_back(player_type* creature_ptr, it_type* it_ptr) {
     if (it_ptr->come_back) {
         if ((it_ptr->item != INVEN_RARM) && (it_ptr->item != INVEN_LARM)) {
             store_item_to_inventory(creature_ptr, it_ptr->q_ptr);
@@ -485,8 +466,7 @@ static void process_boomerang_back(player_type *creature_ptr, it_type *it_ptr)
     }
 }
 
-static void drop_thrown_item(player_type *creature_ptr, it_type *it_ptr)
-{
+static void drop_thrown_item(player_type* creature_ptr, it_type* it_ptr) {
     if (!it_ptr->do_drop)
         return;
 
@@ -513,8 +493,7 @@ static void drop_thrown_item(player_type *creature_ptr, it_type *it_ptr)
  * the item to be destroyed?  Should it do any damage at all?
  * </pre>
  */
-bool do_cmd_throw(player_type *creature_ptr, int mult, bool boomerang, OBJECT_IDX shuriken)
-{
+bool do_cmd_throw(player_type* creature_ptr, int mult, bool boomerang, OBJECT_IDX shuriken) {
     if (creature_ptr->wild_mode)
         return FALSE;
 
@@ -523,7 +502,7 @@ bool do_cmd_throw(player_type *creature_ptr, int mult, bool boomerang, OBJECT_ID
 
     it_type tmp_it;
     object_type tmp_object;
-    it_type *it_ptr = initialize_it_type(&tmp_it, &tmp_object, delay_factor, mult, boomerang, shuriken);
+    it_type* it_ptr = initialize_it_type(&tmp_it, &tmp_object, delay_factor, mult, boomerang, shuriken);
     if (!check_can_throw(creature_ptr, it_ptr))
         return FALSE;
 

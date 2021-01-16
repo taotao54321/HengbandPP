@@ -2,8 +2,7 @@
 #include "mutation/mutation-flag-types.h"
 #include "mutation/mutation-util.h"
 
-void switch_lose_mutation(player_type *creature_ptr, glm_type *glm_ptr)
-{
+void switch_lose_mutation(player_type* creature_ptr, glm_type* glm_ptr) {
     switch ((glm_ptr->choose_mut != 0) ? glm_ptr->choose_mut : randint1(193)) {
     case 1:
     case 2:

@@ -18,9 +18,8 @@
  * @param x 対象を行うマスのX座標
  * @return
  */
-static bool do_cmd_tunnel_test(floor_type *floor_ptr, POSITION y, POSITION x)
-{
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+static bool do_cmd_tunnel_test(floor_type* floor_ptr, POSITION y, POSITION x) {
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     if (!(g_ptr->info & CAVE_MARK)) {
         msg_print(_("そこには何も見当たらない。", "You see nothing there."));
         return FALSE;
@@ -45,9 +44,8 @@ static bool do_cmd_tunnel_test(floor_type *floor_ptr, POSITION y, POSITION x)
  * Do not use twall anymore
  * Returns TRUE if repeated commands may continue
  */
-bool exe_tunnel(player_type *creature_ptr, POSITION y, POSITION x)
-{
-    grid_type *g_ptr;
+bool exe_tunnel(player_type* creature_ptr, POSITION y, POSITION x) {
+    grid_type* g_ptr;
     feature_type *f_ptr, *mimic_f_ptr;
     int power;
     concptr name;
@@ -67,16 +65,19 @@ bool exe_tunnel(player_type *creature_ptr, POSITION y, POSITION x)
             msg_print(_("この岩は硬すぎて掘れないようだ。", "This seems to be permanent rock."));
         else
             msg_print(_("そこは掘れない!", "You can't tunnel through that!"));
-    } else if (has_flag(f_ptr->flags, FF_CAN_DIG)) {
+    }
+    else if (has_flag(f_ptr->flags, FF_CAN_DIG)) {
         if (creature_ptr->skill_dig > randint0(20 * power)) {
             msg_format(_("%sをくずした。", "You have removed the %s."), name);
             cave_alter_feat(creature_ptr, y, x, FF_TUNNEL);
             creature_ptr->update |= PU_FLOW;
-        } else {
+        }
+        else {
             msg_format(_("%sをくずしている。", "You dig into the %s."), name);
             more = TRUE;
         }
-    } else {
+    }
+    else {
         bool tree = has_flag(mimic_f_ptr->flags, FF_TREE);
         if (creature_ptr->skill_dig > power + randint0(40 * power)) {
             if (tree)
@@ -92,12 +93,14 @@ bool exe_tunnel(player_type *creature_ptr, POSITION y, POSITION x)
             cave_alter_feat(creature_ptr, y, x, FF_TUNNEL);
             chg_virtue(creature_ptr, V_DILIGENCE, 1);
             chg_virtue(creature_ptr, V_NATURE, -1);
-        } else {
+        }
+        else {
             if (tree) {
                 msg_format(_("%sを切っている。", "You chop away at the %s."), name);
                 if (randint0(100) < 25)
                     search(creature_ptr);
-            } else {
+            }
+            else {
                 msg_format(_("%sに穴を掘っている。", "You tunnel into the %s."), name);
             }
 

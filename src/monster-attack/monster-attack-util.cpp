@@ -7,13 +7,12 @@
 #include "monster-attack/monster-attack-util.h"
 #include "system/floor-type-definition.h"
 
-monap_type *initialize_monap_type(player_type *target_ptr, monap_type *monap_ptr, MONSTER_IDX m_idx)
-{
+monap_type* initialize_monap_type(player_type* target_ptr, monap_type* monap_ptr, MONSTER_IDX m_idx) {
 #ifdef JP
     monap_ptr->abbreviate = 0;
 #endif
     monap_ptr->m_idx = m_idx;
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     monap_ptr->m_ptr = &floor_ptr->m_list[m_idx];
     monap_ptr->act = NULL;
     monap_ptr->touched = FALSE;

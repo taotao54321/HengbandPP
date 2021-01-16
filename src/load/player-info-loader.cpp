@@ -16,8 +16,7 @@
 #include "system/floor-type-definition.h"
 #include "world/world.h"
 
-void rd_base_info(player_type *creature_ptr)
-{
+void rd_base_info(player_type* creature_ptr) {
     rd_string(creature_ptr->name, sizeof(creature_ptr->name));
     rd_string(creature_ptr->died_from, sizeof(creature_ptr->died_from));
     if (!h_older_than(1, 7, 0, 1)) {
@@ -62,8 +61,7 @@ void rd_base_info(player_type *creature_ptr)
     rd_s16b(&creature_ptr->wt);
 }
 
-void rd_experience(player_type *creature_ptr)
-{
+void rd_experience(player_type* creature_ptr) {
     rd_s32b(&creature_ptr->max_exp);
     if (h_older_than(1, 5, 4, 1))
         creature_ptr->max_max_exp = creature_ptr->max_exp;
@@ -93,8 +91,7 @@ void rd_experience(player_type *creature_ptr)
         rd_s16b(&creature_ptr->skill_exp[i]);
 }
 
-static void set_spells(player_type *creature_ptr)
-{
+static void set_spells(player_type* creature_ptr) {
     for (int i = 0; i < MAX_SPELLS; i++)
         rd_s32b(&creature_ptr->magic_num1[i]);
 
@@ -105,8 +102,7 @@ static void set_spells(player_type *creature_ptr)
         set_spells_old(creature_ptr);
 }
 
-void rd_skills(player_type *creature_ptr)
-{
+void rd_skills(player_type* creature_ptr) {
     if (z_older_than(10, 4, 1))
         set_zangband_skill(creature_ptr);
 
@@ -119,8 +115,7 @@ void rd_skills(player_type *creature_ptr)
         creature_ptr->action = ACTION_SING;
 }
 
-static void set_race(player_type *creature_ptr)
-{
+static void set_race(player_type* creature_ptr) {
     byte tmp8u;
     rd_byte(&tmp8u);
     creature_ptr->start_race = (player_race_type)tmp8u;
@@ -132,8 +127,7 @@ static void set_race(player_type *creature_ptr)
     rd_s16b(&creature_ptr->old_realm);
 }
 
-void rd_race(player_type *creature_ptr)
-{
+void rd_race(player_type* creature_ptr) {
     if (z_older_than(11, 0, 7)) {
         set_zangband_race(creature_ptr);
         return;
@@ -142,8 +136,7 @@ void rd_race(player_type *creature_ptr)
     set_race(creature_ptr);
 }
 
-void rd_bounty_uniques(player_type *creature_ptr)
-{
+void rd_bounty_uniques(player_type* creature_ptr) {
     if (z_older_than(10, 0, 3)) {
         set_zangband_bounty_uniques(creature_ptr);
         return;
@@ -158,8 +151,7 @@ void rd_bounty_uniques(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void rd_base_status(player_type *creature_ptr)
-{
+static void rd_base_status(player_type* creature_ptr) {
     for (int i = 0; i < A_MAX; i++)
         rd_s16b(&creature_ptr->stat_max[i]);
 
@@ -170,8 +162,7 @@ static void rd_base_status(player_type *creature_ptr)
         rd_s16b(&creature_ptr->stat_cur[i]);
 }
 
-static void set_imitation(player_type *creature_ptr)
-{
+static void set_imitation(player_type* creature_ptr) {
     if (z_older_than(10, 0, 1)) {
         for (int i = 0; i < MAX_MANE; i++) {
             creature_ptr->mane_spell[i] = -1;
@@ -211,8 +202,7 @@ static void set_imitation(player_type *creature_ptr)
     rd_s16b(&creature_ptr->mane_num);
 }
 
-static void rd_phase_out(player_type *creature_ptr)
-{
+static void rd_phase_out(player_type* creature_ptr) {
     s16b tmp16s;
     rd_s16b(&tmp16s);
     creature_ptr->current_floor_ptr->inside_arena = (bool)tmp16s;
@@ -225,8 +215,7 @@ static void rd_phase_out(player_type *creature_ptr)
     }
 }
 
-static void rd_arena(player_type *creature_ptr)
-{
+static void rd_arena(player_type* creature_ptr) {
     if (z_older_than(10, 0, 3))
         update_gambling_monsters(creature_ptr);
     else
@@ -259,8 +248,7 @@ static void rd_arena(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void rd_hp(player_type *creature_ptr)
-{
+static void rd_hp(player_type* creature_ptr) {
     if (h_older_than(1, 7, 0, 3)) {
         set_hp_old(creature_ptr);
         return;
@@ -276,8 +264,7 @@ static void rd_hp(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void rd_mana(player_type *creature_ptr)
-{
+static void rd_mana(player_type* creature_ptr) {
     if (h_older_than(1, 7, 0, 3)) {
         set_mana_old(creature_ptr);
         return;
@@ -293,8 +280,7 @@ static void rd_mana(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void rd_bad_status(player_type *creature_ptr)
-{
+static void rd_bad_status(player_type* creature_ptr) {
     strip_bytes(2); /* Old "rest" */
     rd_s16b(&creature_ptr->blind);
     rd_s16b(&creature_ptr->paralyzed);
@@ -303,8 +289,7 @@ static void rd_bad_status(player_type *creature_ptr)
     strip_bytes(4); /* Old "food_digested" / "protection" */
 }
 
-static void rd_energy(player_type *creature_ptr)
-{
+static void rd_energy(player_type* creature_ptr) {
     rd_s16b(&creature_ptr->energy_need);
     if (z_older_than(11, 0, 13))
         creature_ptr->energy_need = 100 - creature_ptr->energy_need;
@@ -321,8 +306,7 @@ static void rd_energy(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void rd_status(player_type *creature_ptr)
-{
+static void rd_status(player_type* creature_ptr) {
     rd_s16b(&creature_ptr->fast);
     rd_s16b(&creature_ptr->slow);
     rd_s16b(&creature_ptr->afraid);
@@ -338,16 +322,14 @@ static void rd_status(player_type *creature_ptr)
         rd_s16b(&creature_ptr->ult_res);
 }
 
-static void rd_tsuyoshi(player_type *creature_ptr)
-{
+static void rd_tsuyoshi(player_type* creature_ptr) {
     if (z_older_than(10, 0, 2))
         creature_ptr->tsuyoshi = 0;
     else
         rd_s16b(&creature_ptr->tsuyoshi);
 }
 
-static void set_timed_effects(player_type *creature_ptr)
-{
+static void set_timed_effects(player_type* creature_ptr) {
     rd_s16b(&creature_ptr->tim_esp);
     rd_s16b(&creature_ptr->wraith_form);
     rd_s16b(&creature_ptr->resist_magic);
@@ -392,15 +374,13 @@ static void set_timed_effects(player_type *creature_ptr)
     }
 }
 
-static void set_mutations(player_type *creature_ptr)
-{
+static void set_mutations(player_type* creature_ptr) {
     rd_u32b(&creature_ptr->muta1);
     rd_u32b(&creature_ptr->muta2);
     rd_u32b(&creature_ptr->muta3);
 }
 
-static void set_virtues(player_type *creature_ptr)
-{
+static void set_virtues(player_type* creature_ptr) {
     for (int i = 0; i < 8; i++)
         rd_s16b(&creature_ptr->virtues[i]);
 
@@ -414,8 +394,7 @@ static void set_virtues(player_type *creature_ptr)
  * @return なし
  * @details ZAngbandとの互換性を保つ都合上、突然変異と徳の処理も追加している
  */
-static void rd_timed_effects(player_type *creature_ptr)
-{
+static void rd_timed_effects(player_type* creature_ptr) {
     if ((current_world_ptr->z_major == 2) && (current_world_ptr->z_minor == 0) && (current_world_ptr->z_patch == 6)) {
         set_zangband_timed_effects(creature_ptr);
         return;
@@ -427,8 +406,7 @@ static void rd_timed_effects(player_type *creature_ptr)
     set_virtues(creature_ptr);
 }
 
-static void rd_player_status(player_type *creature_ptr)
-{
+static void rd_player_status(player_type* creature_ptr) {
     rd_base_status(creature_ptr);
     strip_bytes(24);
     rd_s32b(&creature_ptr->au);
@@ -468,8 +446,7 @@ static void rd_player_status(player_type *creature_ptr)
     creature_ptr->mutant_regenerate_mod = calc_mutant_regenerate_mod(creature_ptr);
 }
 
-void rd_player_info(player_type *creature_ptr)
-{
+void rd_player_info(player_type* creature_ptr) {
     rd_player_status(creature_ptr);
     rd_special_attack(creature_ptr);
     rd_special_action(creature_ptr);

@@ -10,8 +10,7 @@
  * @param extra エクストラパージョン値
  * @return 現在のバージョンより値が古いならtrue
  */
-bool h_older_than(byte major, byte minor, byte patch, byte extra)
-{
+bool h_older_than(byte major, byte minor, byte patch, byte extra) {
     if (current_world_ptr->h_ver_major < major)
         return TRUE;
     if (current_world_ptr->h_ver_major > major)
@@ -42,8 +41,7 @@ bool h_older_than(byte major, byte minor, byte patch, byte extra)
  * @param z パッチバージョン値
  * @return 現在のバージョンより値が古いならtrue
  */
-bool z_older_than(byte x, byte y, byte z)
-{
+bool z_older_than(byte x, byte y, byte z) {
     if (current_world_ptr->z_major < x)
         return TRUE;
     if (current_world_ptr->z_major > x)

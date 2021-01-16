@@ -72,5 +72,5 @@ typedef struct dun_data_type {
     int alloc_object_num;
     int alloc_monster_num;
 
-    concptr *why;
+    concptr* why;
 } dun_data_type;

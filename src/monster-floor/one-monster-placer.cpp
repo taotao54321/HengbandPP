@@ -41,7 +41,7 @@
 #include "wizard/wizard-messages.h"
 #include "world/world.h"
 
-static bool is_friendly_idx(player_type *player_ptr, MONSTER_IDX m_idx) { return m_idx > 0 && is_friendly(&player_ptr->current_floor_ptr->m_list[(m_idx)]); }
+static bool is_friendly_idx(player_type* player_ptr, MONSTER_IDX m_idx) { return m_idx > 0 && is_friendly(&player_ptr->current_floor_ptr->m_list[(m_idx)]); }
 
 /*!
  * @brief たぬきの変身対象となるモンスターかどうか判定する / Hook for Tanuki
@@ -49,9 +49,8 @@ static bool is_friendly_idx(player_type *player_ptr, MONSTER_IDX m_idx) { return
  * @return 対象にできるならtrueを返す
  * @todo グローバル変数対策の上 monster_hook.cへ移す。
  */
-static bool monster_hook_tanuki(player_type *player_ptr, MONRACE_IDX r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+static bool monster_hook_tanuki(player_type* player_ptr, MONRACE_IDX r_idx) {
+    monster_race* r_ptr = &r_info[r_idx];
     bool unselectable = (r_ptr->flags1 & RF1_UNIQUE) != 0;
     unselectable |= (r_ptr->flags2 & RF2_MULTIPLY) != 0;
     unselectable |= (r_ptr->flags7 & (RF7_FRIENDLY | RF7_CHAMELEON)) != 0;
@@ -72,9 +71,8 @@ static bool monster_hook_tanuki(player_type *player_ptr, MONRACE_IDX r_idx)
  * @param r_idx モンスター種族ID
  * @return モンスター種族の表層ID
  */
-static MONRACE_IDX initial_r_appearance(player_type *player_ptr, MONRACE_IDX r_idx, BIT_FLAGS generate_mode)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static MONRACE_IDX initial_r_appearance(player_type* player_ptr, MONRACE_IDX r_idx, BIT_FLAGS generate_mode) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (player_ptr->pseikaku == PERSONALITY_CHARGEMAN && (generate_mode & PM_JURAL) && !(generate_mode & (PM_MULTIPLY | PM_KAGE)))
         return MON_ALIEN_JURAL;
 
@@ -99,12 +97,11 @@ static MONRACE_IDX initial_r_appearance(player_type *player_ptr, MONRACE_IDX r_i
  * @param r_idx 生成モンスター種族
  * @return ユニークの生成が不可能な条件ならFALSE、それ以外はTRUE
  */
-static bool check_unique_placeable(player_type *player_ptr, MONRACE_IDX r_idx)
-{
+static bool check_unique_placeable(player_type* player_ptr, MONRACE_IDX r_idx) {
     if (player_ptr->phase_out)
         return TRUE;
 
-    monster_race *r_ptr = &r_info[r_idx];
+    monster_race* r_ptr = &r_info[r_idx];
     if (((r_ptr->flags1 & (RF1_UNIQUE)) || (r_ptr->flags7 & (RF7_NAZGUL))) && (r_ptr->cur_num >= r_ptr->max_num)) {
         return FALSE;
     }
@@ -134,9 +131,8 @@ static bool check_unique_placeable(player_type *player_ptr, MONRACE_IDX r_idx)
  * @param r_idx 生成モンスター種族
  * @return 生成が可能ならTRUE、不可能ならFALSE
  */
-static bool check_quest_placeable(player_type *player_ptr, MONRACE_IDX r_idx)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static bool check_quest_placeable(player_type* player_ptr, MONRACE_IDX r_idx) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (quest_number(player_ptr, floor_ptr->dun_level) == 0)
         return TRUE;
 
@@ -167,13 +163,12 @@ static bool check_quest_placeable(player_type *player_ptr, MONRACE_IDX r_idx)
  * @param x 生成位置x座標
  * @return 生成が可能ならTRUE、不可能ならFALSE
  */
-static bool check_procection_rune(player_type *player_ptr, MONRACE_IDX r_idx, POSITION y, POSITION x)
-{
-    grid_type *g_ptr = &player_ptr->current_floor_ptr->grid_array[y][x];
+static bool check_procection_rune(player_type* player_ptr, MONRACE_IDX r_idx, POSITION y, POSITION x) {
+    grid_type* g_ptr = &player_ptr->current_floor_ptr->grid_array[y][x];
     if (!is_glyph_grid(g_ptr))
         return TRUE;
 
-    monster_race *r_ptr = &r_info[r_idx];
+    monster_race* r_ptr = &r_info[r_idx];
     if (randint1(BREAK_GLYPH) >= (r_ptr->level + 20))
         return FALSE;
 
@@ -187,17 +182,16 @@ static bool check_procection_rune(player_type *player_ptr, MONRACE_IDX r_idx, PO
     return TRUE;
 }
 
-static void warn_unique_generation(player_type *player_ptr, MONRACE_IDX r_idx)
-{
+static void warn_unique_generation(player_type* player_ptr, MONRACE_IDX r_idx) {
     if (!player_ptr->warning || !current_world_ptr->character_dungeon)
         return;
 
-    monster_race *r_ptr = &r_info[r_idx];
+    monster_race* r_ptr = &r_info[r_idx];
     if ((r_ptr->flags1 & RF1_UNIQUE) == 0)
         return;
 
     concptr color;
-    object_type *o_ptr;
+    object_type* o_ptr;
     GAME_TEXT o_name[MAX_NLEN];
     if (r_ptr->level > player_ptr->lev + 30)
         color = _("黒く", "black");
@@ -216,7 +210,8 @@ static void warn_unique_generation(player_type *player_ptr, MONRACE_IDX r_idx)
     if (o_ptr != NULL) {
         describe_flavor(player_ptr, o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
         msg_format(_("%sは%s光った。", "%s glows %s."), o_name, color);
-    } else {
+    }
+    else {
         msg_format(_("%s光る物が頭に浮かんだ。", "An %s image forms in your mind."), color);
     }
 }
@@ -231,11 +226,10 @@ static void warn_unique_generation(player_type *player_ptr, MONRACE_IDX r_idx)
  * @param mode 生成オプション
  * @return 成功したらtrue
  */
-bool place_monster_one(player_type *player_ptr, MONSTER_IDX who, POSITION y, POSITION x, MONRACE_IDX r_idx, BIT_FLAGS mode)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
-    monster_race *r_ptr = &r_info[r_idx];
+bool place_monster_one(player_type* player_ptr, MONSTER_IDX who, POSITION y, POSITION x, MONRACE_IDX r_idx, BIT_FLAGS mode) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
+    monster_race* r_ptr = &r_info[r_idx];
     concptr name = (r_name + r_ptr->name);
 
     if (player_ptr->wild_mode || !in_bounds(floor_ptr, y, x) || (r_idx == 0) || (r_ptr->name == 0))
@@ -256,7 +250,7 @@ bool place_monster_one(player_type *player_ptr, MONSTER_IDX who, POSITION y, POS
     if (!g_ptr->m_idx)
         return FALSE;
 
-    monster_type *m_ptr;
+    monster_type* m_ptr;
     m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
     m_ptr->r_idx = r_idx;
     m_ptr->ap_r_idx = initial_r_appearance(player_ptr, r_idx, mode);
@@ -294,7 +288,8 @@ bool place_monster_one(player_type *player_ptr, MONSTER_IDX who, POSITION y, POS
     if (who > 0 && is_pet(&floor_ptr->m_list[who])) {
         mode |= PM_FORCE_PET;
         m_ptr->parent_m_idx = who;
-    } else {
+    }
+    else {
         m_ptr->parent_m_idx = 0;
     }
 
@@ -304,7 +299,8 @@ bool place_monster_one(player_type *player_ptr, MONSTER_IDX who, POSITION y, POS
         m_ptr->mflag2 |= MFLAG2_CHAMELEON;
         if ((r_ptr->flags1 & RF1_UNIQUE) && (who <= 0))
             m_ptr->sub_align = SUB_ALIGN_NEUTRAL;
-    } else if ((mode & PM_KAGE) && !(mode & PM_FORCE_PET)) {
+    }
+    else if ((mode & PM_KAGE) && !(mode & PM_FORCE_PET)) {
         m_ptr->ap_r_idx = MON_KAGE;
         m_ptr->mflag2 |= MFLAG2_KAGE;
     }
@@ -315,7 +311,8 @@ bool place_monster_one(player_type *player_ptr, MONSTER_IDX who, POSITION y, POS
     m_ptr->ml = FALSE;
     if (mode & PM_FORCE_PET) {
         set_pet(player_ptr, m_ptr);
-    } else if ((r_ptr->flags7 & RF7_FRIENDLY) || (mode & PM_FORCE_FRIENDLY) || is_friendly_idx(player_ptr, who)) {
+    }
+    else if ((r_ptr->flags7 & RF7_FRIENDLY) || (mode & PM_FORCE_FRIENDLY) || is_friendly_idx(player_ptr, who)) {
         if (!monster_has_hostile_align(player_ptr, NULL, 0, -1, r_ptr))
             set_friendly(m_ptr);
     }
@@ -328,7 +325,8 @@ bool place_monster_one(player_type *player_ptr, MONSTER_IDX who, POSITION y, POS
 
     if (r_ptr->flags1 & RF1_FORCE_MAXHP) {
         m_ptr->max_maxhp = maxroll(r_ptr->hdice, r_ptr->hside);
-    } else {
+    }
+    else {
         m_ptr->max_maxhp = damroll(r_ptr->hdice, r_ptr->hside);
     }
 
@@ -353,7 +351,8 @@ bool place_monster_one(player_type *player_ptr, MONSTER_IDX who, POSITION y, POS
 
     if (!ironman_nightmare) {
         m_ptr->energy_need = ENERGY_NEED() - (s16b)randint0(100);
-    } else {
+    }
+    else {
         m_ptr->energy_need = ENERGY_NEED() - (s16b)randint0(100) * 2;
     }
 
@@ -394,7 +393,8 @@ bool place_monster_one(player_type *player_ptr, MONSTER_IDX who, POSITION y, POS
             project(player_ptr, 0, 2, y, x, 2 * (player_ptr->lev + damroll(7, 7)), GF_MANA,
                 (PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP | PROJECT_NO_HANGEKI), -1);
         }
-    } else {
+    }
+    else {
         msg_print(_("爆発のルーンは解除された。", "An explosive rune was disarmed."));
     }
 

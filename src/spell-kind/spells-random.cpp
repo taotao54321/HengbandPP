@@ -39,8 +39,7 @@
  * @brief 混沌招来処理
  * @return 作用が実際にあった場合TRUEを返す
  */
-void call_chaos(player_type *caster_ptr)
-{
+void call_chaos(player_type* caster_ptr) {
     int hurt_types[31] = { GF_ELEC, GF_POIS, GF_ACID, GF_COLD, GF_FIRE, GF_MISSILE, GF_ARROW, GF_PLASMA, GF_HOLY_FIRE, GF_WATER, GF_LITE, GF_DARK, GF_FORCE,
         GF_INERTIAL, GF_MANA, GF_METEOR, GF_ICE, GF_CHAOS, GF_NETHER, GF_DISENCHANT, GF_SHARDS, GF_SOUND, GF_NEXUS, GF_CONFUSION, GF_TIME, GF_GRAVITY,
         GF_ROCKET, GF_NUKE, GF_HELL_FIRE, GF_DISINTEGRATE, GF_PSY_SPEAR };
@@ -89,11 +88,10 @@ void call_chaos(player_type *caster_ptr)
  * or the player gets paralyzed.
  * </pre>
  */
-bool activate_ty_curse(player_type *target_ptr, bool stop_ty, int *count)
-{
+bool activate_ty_curse(player_type* target_ptr, bool stop_ty, int* count) {
     BIT_FLAGS flg = (PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL | PROJECT_JUMP);
     bool is_first_curse = TRUE;
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     while (is_first_curse || (one_in_(3) && !stop_ty)) {
         is_first_curse = FALSE;
         switch (randint1(34)) {
@@ -236,15 +234,14 @@ bool activate_ty_curse(player_type *target_ptr, bool stop_ty, int *count)
  * @param spell ランダムな効果を選択するための基準ID
  * @return なし
  */
-void wild_magic(player_type *caster_ptr, int spell)
-{
+void wild_magic(player_type* caster_ptr, int spell) {
     summon_type type = summon_type(SUMMON_MOLD + randint0(6));
     if (type < SUMMON_MOLD)
         type = SUMMON_MOLD;
     else if (type > SUMMON_MIMIC)
         type = SUMMON_MIMIC;
 
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
     switch (randint1(spell) + randint1(8) + 1) {
     case 1:
     case 2:
@@ -347,8 +344,7 @@ void wild_magic(player_type *caster_ptr, int spell)
  * while keeping the results quite random.  It also allows some potent\n
  * effects only at high level.
  */
-void cast_wonder(player_type *caster_ptr, DIRECTION dir)
-{
+void cast_wonder(player_type* caster_ptr, DIRECTION dir) {
     PLAYER_LEVEL plev = caster_ptr->lev;
     int die = randint1(100) + plev / 5;
     int vir = virtue_number(caster_ptr, V_CHANCE);
@@ -356,7 +352,8 @@ void cast_wonder(player_type *caster_ptr, DIRECTION dir)
         if (caster_ptr->virtues[vir - 1] > 0) {
             while (randint1(400) < caster_ptr->virtues[vir - 1])
                 die++;
-        } else {
+        }
+        else {
             while (randint1(400) < (0 - caster_ptr->virtues[vir - 1]))
                 die--;
         }

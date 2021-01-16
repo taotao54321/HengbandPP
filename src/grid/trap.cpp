@@ -126,8 +126,7 @@ const int chest_traps[64] = {
  * @brief タグに従って、基本トラップテーブルを初期化する / Initialize arrays for normal traps
  * @return なし
  */
-void init_normal_traps(void)
-{
+void init_normal_traps(void) {
     int cur_trap = 0;
 
     normal_traps[cur_trap++] = f_tag_to_index_in_init("TRAP_TRAPDOOR");
@@ -160,12 +159,11 @@ void init_normal_traps(void)
  * Actually, it is not this routine, but the "trap instantiation"\n
  * code, which should also check for "trap doors" on quest levels.\n
  */
-FEAT_IDX choose_random_trap(player_type *trapped_ptr)
-{
+FEAT_IDX choose_random_trap(player_type* trapped_ptr) {
     FEAT_IDX feat;
 
     /* Pick a trap */
-    floor_type *floor_ptr = trapped_ptr->current_floor_ptr;
+    floor_type* floor_ptr = trapped_ptr->current_floor_ptr;
     while (TRUE) {
         /* Hack -- pick a trap */
         feat = normal_traps[randint0(MAX_NORMAL_TRAPS)];
@@ -196,14 +194,14 @@ FEAT_IDX choose_random_trap(player_type *trapped_ptr)
  * @param x 秘匿したいマスのX座標
  * @return なし
  */
-void disclose_grid(player_type *trapped_ptr, POSITION y, POSITION x)
-{
-    grid_type *g_ptr = &trapped_ptr->current_floor_ptr->grid_array[y][x];
+void disclose_grid(player_type* trapped_ptr, POSITION y, POSITION x) {
+    grid_type* g_ptr = &trapped_ptr->current_floor_ptr->grid_array[y][x];
 
     if (cave_has_flag_grid(g_ptr, FF_SECRET)) {
         /* No longer hidden */
         cave_alter_feat(trapped_ptr, y, x, FF_SECRET);
-    } else if (g_ptr->mimic) {
+    }
+    else if (g_ptr->mimic) {
         /* No longer hidden */
         g_ptr->mimic = 0;
 
@@ -222,10 +220,9 @@ void disclose_grid(player_type *trapped_ptr, POSITION y, POSITION x)
  * when they are "discovered" (by detecting them or setting them off),\n
  * the trap is "instantiated" as a visible, "typed", trap.\n
  */
-void place_trap(player_type *trapped_ptr, POSITION y, POSITION x)
-{
-    floor_type *floor_ptr = trapped_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+void place_trap(player_type* trapped_ptr, POSITION y, POSITION x) {
+    floor_type* floor_ptr = trapped_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
 
     /* Paranoia -- verify location */
     if (!in_bounds(floor_ptr, y, x))
@@ -249,8 +246,7 @@ void place_trap(player_type *trapped_ptr, POSITION y, POSITION x)
  * Always miss 5% of the time, Always hit 5% of the time.
  * Otherwise, match trap power against player armor.
  */
-static int check_hit_from_monster_to_player(player_type *target_ptr, int power)
-{
+static int check_hit_from_monster_to_player(player_type* target_ptr, int power) {
     int k;
     ARMOUR_CLASS ac;
 
@@ -285,8 +281,7 @@ static int check_hit_from_monster_to_player(player_type *target_ptr, int power)
  * @param trap_feat_type トラップの種別ID
  * @return なし
  */
-static void hit_trap_pit(player_type *trapped_ptr, int trap_feat_type)
-{
+static void hit_trap_pit(player_type* trapped_ptr, int trap_feat_type) {
     HIT_POINT dam;
     concptr trap_name = "";
     concptr spike_name = "";
@@ -327,7 +322,8 @@ static void hit_trap_pit(player_type *trapped_ptr, int trap_feat_type)
         if (trap_feat_type == TRAP_POISON_PIT) {
             if (has_resist_pois(trapped_ptr) || is_oppose_pois(trapped_ptr)) {
                 msg_print(_("しかし毒の影響はなかった！", "The poison does not affect you!"));
-            } else {
+            }
+            else {
                 dam = dam * 2;
                 (void)set_poisoned(trapped_ptr, trapped_ptr->poisoned + randint1(dam));
             }
@@ -341,8 +337,7 @@ static void hit_trap_pit(player_type *trapped_ptr, int trap_feat_type)
  * @brief ダーツ系トラップ（通常ダメージ）の判定とプレイヤーの被害処理
  * @return ダーツが命中した場合TRUEを返す
  */
-static bool hit_trap_dart(player_type *target_ptr)
-{
+static bool hit_trap_dart(player_type* target_ptr) {
     bool hit = FALSE;
 
     if (check_hit_from_monster_to_player(target_ptr, 125)) {
@@ -350,7 +345,8 @@ static bool hit_trap_dart(player_type *target_ptr)
         take_hit(target_ptr, DAMAGE_ATTACK, damroll(1, 4), _("ダーツの罠", "a dart trap"), -1);
         if (!check_multishadow(target_ptr))
             hit = TRUE;
-    } else {
+    }
+    else {
         msg_print(_("小さなダーツが飛んできた！が、運良く当たらなかった。", "A small dart barely misses you."));
     }
 
@@ -362,8 +358,7 @@ static bool hit_trap_dart(player_type *target_ptr)
  * @param stat 低下する能力値ID
  * @return なし
  */
-static void hit_trap_lose_stat(player_type *target_ptr, int stat)
-{
+static void hit_trap_lose_stat(player_type* target_ptr, int stat) {
     if (hit_trap_dart(target_ptr)) {
         do_dec_stat(target_ptr, stat);
     }
@@ -373,8 +368,7 @@ static void hit_trap_lose_stat(player_type *target_ptr, int stat)
  * @brief ダーツ系トラップ（通常ダメージ＋減速）の判定とプレイヤーの被害処理
  * @return なし
  */
-static void hit_trap_slow(player_type *target_ptr)
-{
+static void hit_trap_slow(player_type* target_ptr) {
     if (hit_trap_dart(target_ptr)) {
         set_slow(target_ptr, target_ptr->slow + randint0(20) + 20, FALSE);
     }
@@ -388,8 +382,7 @@ static void hit_trap_slow(player_type *target_ptr)
  * @param turn_aux 状態異常の追加ターン量
  * @return なし
  */
-static void hit_trap_set_abnormal_status_p(player_type *trapped_ptr, concptr trap_message, bool resist, bool (*set_status)(player_type *, IDX), IDX turn_aux)
-{
+static void hit_trap_set_abnormal_status_p(player_type* trapped_ptr, concptr trap_message, bool resist, bool (*set_status)(player_type*, IDX), IDX turn_aux) {
     msg_print(trap_message);
     if (!resist) {
         set_status(trapped_ptr, turn_aux);
@@ -403,12 +396,11 @@ static void hit_trap_set_abnormal_status_p(player_type *trapped_ptr, concptr tra
  * @param break_trap 作動後のトラップ破壊が確定しているならばTRUE
  * @return なし
  */
-void hit_trap(player_type *trapped_ptr, bool break_trap)
-{
+void hit_trap(player_type* trapped_ptr, bool break_trap) {
     int i, num, dam;
     POSITION x = trapped_ptr->x, y = trapped_ptr->y;
-    grid_type *g_ptr = &trapped_ptr->current_floor_ptr->grid_array[y][x];
-    feature_type *f_ptr = &f_info[g_ptr->feat];
+    grid_type* g_ptr = &trapped_ptr->current_floor_ptr->grid_array[y][x];
+    feature_type* f_ptr = &f_info[g_ptr->feat];
     int trap_feat_type = has_flag(f_ptr->flags, FF_TRAP) ? f_ptr->subtype : NOT_TRAP;
     concptr name = _("トラップ", "a trap");
 
@@ -421,7 +413,8 @@ void hit_trap(player_type *trapped_ptr, bool break_trap)
     case TRAP_TRAPDOOR: {
         if (trapped_ptr->levitation) {
             msg_print(_("落とし戸を飛び越えた。", "You fly over a trap door."));
-        } else {
+        }
+        else {
             msg_print(_("落とし戸に落ちた！", "You have fallen through a trap door!"));
             if (is_echizen(trapped_ptr))
                 msg_print(_("くっそ～！", ""));
@@ -601,8 +594,8 @@ void hit_trap(player_type *trapped_ptr, bool break_trap)
 
                 /* Let them fight each other */
                 if (evil_idx && good_idx) {
-                    monster_type *evil_ptr = &trapped_ptr->current_floor_ptr->m_list[evil_idx];
-                    monster_type *good_ptr = &trapped_ptr->current_floor_ptr->m_list[good_idx];
+                    monster_type* evil_ptr = &trapped_ptr->current_floor_ptr->m_list[evil_idx];
+                    monster_type* good_ptr = &trapped_ptr->current_floor_ptr->m_list[good_idx];
                     evil_ptr->target_y = good_ptr->fy;
                     evil_ptr->target_x = good_ptr->fx;
                     good_ptr->target_y = evil_ptr->fy;

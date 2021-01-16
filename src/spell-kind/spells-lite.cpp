@@ -41,18 +41,17 @@
  * STUPID monsters wake up 1/10 the time when illuminated
  * </pre>
  */
-static void cave_temp_room_lite(player_type *caster_ptr)
-{
+static void cave_temp_room_lite(player_type* caster_ptr) {
     for (int i = 0; i < tmp_pos.n; i++) {
         POSITION y = tmp_pos.y[i];
         POSITION x = tmp_pos.x[i];
-        grid_type *g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
+        grid_type* g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
         g_ptr->info &= ~(CAVE_TEMP);
         g_ptr->info |= (CAVE_GLOW);
         if (g_ptr->m_idx) {
             PERCENTAGE chance = 25;
-            monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
-            monster_race *r_ptr = &r_info[m_ptr->r_idx];
+            monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
+            monster_race* r_ptr = &r_info[m_ptr->r_idx];
             update_monster(caster_ptr, g_ptr->m_idx, FALSE);
             if (r_ptr->flags2 & (RF2_STUPID))
                 chance = 10;
@@ -91,12 +90,11 @@ static void cave_temp_room_lite(player_type *caster_ptr)
  * Also, process all affected monsters
  * </pre>
  */
-static void cave_temp_room_unlite(player_type *caster_ptr)
-{
+static void cave_temp_room_unlite(player_type* caster_ptr) {
     for (int i = 0; i < tmp_pos.n; i++) {
         POSITION y = tmp_pos.y[i];
         POSITION x = tmp_pos.x[i];
-        grid_type *g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
+        grid_type* g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
         bool do_dark = !is_mirror_grid(g_ptr);
         g_ptr->info &= ~(CAVE_TEMP);
         if (!do_dark)
@@ -108,7 +106,7 @@ static void cave_temp_room_unlite(player_type *caster_ptr)
                 POSITION bx = x + ddx_ddd[j];
 
                 if (in_bounds2(caster_ptr->current_floor_ptr, by, bx)) {
-                    grid_type *cc_ptr = &caster_ptr->current_floor_ptr->grid_array[by][bx];
+                    grid_type* cc_ptr = &caster_ptr->current_floor_ptr->grid_array[by][bx];
 
                     if (has_flag(f_info[get_feat_mimic(cc_ptr)].flags, FF_GLOW)) {
                         do_dark = FALSE;
@@ -147,8 +145,7 @@ static void cave_temp_room_unlite(player_type *caster_ptr)
  * @param pass_bold 地形条件を返す関数ポインタ
  * @return 該当地形の数
  */
-static int next_to_open(floor_type *floor_ptr, POSITION cy, POSITION cx, bool (*pass_bold)(floor_type *, POSITION, POSITION))
-{
+static int next_to_open(floor_type* floor_ptr, POSITION cy, POSITION cx, bool (*pass_bold)(floor_type*, POSITION, POSITION)) {
     int len = 0;
     int blen = 0;
     for (int i = 0; i < 16; i++) {
@@ -160,7 +157,8 @@ static int next_to_open(floor_type *floor_ptr, POSITION cy, POSITION cx, bool (*
             }
 
             len = 0;
-        } else {
+        }
+        else {
             len++;
         }
     }
@@ -176,8 +174,7 @@ static int next_to_open(floor_type *floor_ptr, POSITION cy, POSITION cx, bool (*
  * @param pass_bold 地形条件を返す関数ポインタ
  * @return 該当地形の数
  */
-static int next_to_walls_adj(floor_type *floor_ptr, POSITION cy, POSITION cx, bool (*pass_bold)(floor_type *, POSITION, POSITION))
-{
+static int next_to_walls_adj(floor_type* floor_ptr, POSITION cy, POSITION cx, bool (*pass_bold)(floor_type*, POSITION, POSITION)) {
     POSITION y, x;
     int c = 0;
     for (DIRECTION i = 0; i < 8; i++) {
@@ -200,10 +197,9 @@ static int next_to_walls_adj(floor_type *floor_ptr, POSITION cy, POSITION cx, bo
  * @param pass_bold 地形条件を返す関数ポインタ
  * @return 該当地形の数
  */
-static void cave_temp_room_aux(player_type *caster_ptr, POSITION y, POSITION x, bool only_room, bool (*pass_bold)(floor_type *, POSITION, POSITION))
-{
-    grid_type *g_ptr;
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+static void cave_temp_room_aux(player_type* caster_ptr, POSITION y, POSITION x, bool only_room, bool (*pass_bold)(floor_type*, POSITION, POSITION)) {
+    grid_type* g_ptr;
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
     g_ptr = &floor_ptr->grid_array[y][x];
     if (g_ptr->info & (CAVE_TEMP))
         return;
@@ -246,7 +242,7 @@ static void cave_temp_room_aux(player_type *caster_ptr, POSITION y, POSITION x, 
  * @param x 指定X座標
  * @return なし
  */
-static void cave_temp_lite_room_aux(player_type *caster_ptr, POSITION y, POSITION x) { cave_temp_room_aux(caster_ptr, y, x, FALSE, cave_los_bold); }
+static void cave_temp_lite_room_aux(player_type* caster_ptr, POSITION y, POSITION x) { cave_temp_room_aux(caster_ptr, y, x, FALSE, cave_los_bold); }
 
 /*!
  * @brief 指定のマスが光を通さず射線のみを通すかを返す。 / Aux function -- see below
@@ -255,7 +251,7 @@ static void cave_temp_lite_room_aux(player_type *caster_ptr, POSITION y, POSITIO
  * @param x 指定X座標
  * @return 射線を通すならばtrueを返す。
  */
-static bool cave_pass_dark_bold(floor_type *floor_ptr, POSITION y, POSITION x) { return cave_has_flag_bold(floor_ptr, y, x, FF_PROJECT); }
+static bool cave_pass_dark_bold(floor_type* floor_ptr, POSITION y, POSITION x) { return cave_has_flag_bold(floor_ptr, y, x, FF_PROJECT); }
 
 /*!
  * @brief 部屋内にある一点の周囲がいくつ射線を通すかをグローバル変数tmp_pos.nに返す / Aux function -- see below
@@ -264,7 +260,7 @@ static bool cave_pass_dark_bold(floor_type *floor_ptr, POSITION y, POSITION x) {
  * @param x 指定X座標
  * @return なし
  */
-static void cave_temp_unlite_room_aux(player_type *caster_ptr, POSITION y, POSITION x) { cave_temp_room_aux(caster_ptr, y, x, TRUE, cave_pass_dark_bold); }
+static void cave_temp_unlite_room_aux(player_type* caster_ptr, POSITION y, POSITION x) { cave_temp_room_aux(caster_ptr, y, x, TRUE, cave_pass_dark_bold); }
 
 /*!
  * @brief 指定された部屋内を照らす / Illuminate any room containing the given location.
@@ -273,10 +269,9 @@ static void cave_temp_unlite_room_aux(player_type *caster_ptr, POSITION y, POSIT
  * @param x1 指定X座標
  * @return なし
  */
-void lite_room(player_type *caster_ptr, POSITION y1, POSITION x1)
-{
+void lite_room(player_type* caster_ptr, POSITION y1, POSITION x1) {
     cave_temp_lite_room_aux(caster_ptr, y1, x1);
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
     for (int i = 0; i < tmp_pos.n; i++) {
         POSITION x = tmp_pos.x[i];
         POSITION y = tmp_pos.y[i];
@@ -309,8 +304,7 @@ void lite_room(player_type *caster_ptr, POSITION y1, POSITION x1)
  * @param x1 指定X座標
  * @return なし
  */
-void unlite_room(player_type *caster_ptr, POSITION y1, POSITION x1)
-{
+void unlite_room(player_type* caster_ptr, POSITION y1, POSITION x1) {
     cave_temp_unlite_room_aux(caster_ptr, y1, x1);
     for (int i = 0; i < tmp_pos.n; i++) {
         POSITION x = tmp_pos.x[i];
@@ -338,8 +332,7 @@ void unlite_room(player_type *caster_ptr, POSITION y1, POSITION x1)
  * @param magic 魔法による効果であればTRUE、スターライトの杖による効果であればFALSE
  * @return 常にTRUE
  */
-bool starlight(player_type *caster_ptr, bool magic)
-{
+bool starlight(player_type* caster_ptr, bool magic) {
     if (!caster_ptr->blind && !magic) {
         msg_print(_("杖の先が明るく輝いた...", "The end of the staff glows brightly..."));
     }
@@ -372,8 +365,7 @@ bool starlight(player_type *caster_ptr, bool magic)
  * @param rad 効果半径
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool lite_area(player_type *caster_ptr, HIT_POINT dam, POSITION rad)
-{
+bool lite_area(player_type* caster_ptr, HIT_POINT dam, POSITION rad) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS) {
         msg_print(_("ダンジョンが光を吸収した。", "The darkness of this dungeon absorbs your light."));
         return FALSE;
@@ -398,8 +390,7 @@ bool lite_area(player_type *caster_ptr, HIT_POINT dam, POSITION rad)
  * @param rad 効果半径
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool unlite_area(player_type *caster_ptr, HIT_POINT dam, POSITION rad)
-{
+bool unlite_area(player_type* caster_ptr, HIT_POINT dam, POSITION rad) {
     if (!caster_ptr->blind) {
         msg_print(_("暗闇が辺りを覆った。", "Darkness surrounds you."));
     }
@@ -419,8 +410,7 @@ bool unlite_area(player_type *caster_ptr, HIT_POINT dam, POSITION rad)
  * @param dam 威力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool lite_line(player_type *caster_ptr, DIRECTION dir, HIT_POINT dam)
-{
+bool lite_line(player_type* caster_ptr, DIRECTION dir, HIT_POINT dam) {
     BIT_FLAGS flg = PROJECT_BEAM | PROJECT_GRID | PROJECT_KILL;
     return (project_hook(caster_ptr, GF_LITE_WEAK, dir, dam, flg));
 }

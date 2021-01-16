@@ -23,13 +23,12 @@
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 生成が実際に試みられたらTRUEを返す
  */
-bool artifact_scroll(player_type *caster_ptr)
-{
+bool artifact_scroll(player_type* caster_ptr) {
     item_tester_hook = item_tester_hook_nameless_weapon_armour;
 
     concptr q = _("どのアイテムを強化しますか? ", "Enchant which item? ");
     concptr s = _("強化できるアイテムがない。", "You have nothing to enchant.");
-    object_type *o_ptr;
+    object_type* o_ptr;
     OBJECT_IDX item;
     o_ptr = choose_object(caster_ptr, &item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT), TV_NONE);
     if (!o_ptr)
@@ -51,20 +50,23 @@ bool artifact_scroll(player_type *caster_ptr)
         msg_format("The %s %s already %s!", o_name, ((o_ptr->number > 1) ? "are" : "is"), ((o_ptr->number > 1) ? "artifacts" : "an artifact"));
 #endif
         okay = FALSE;
-    } else if (object_is_ego(o_ptr)) {
+    }
+    else if (object_is_ego(o_ptr)) {
 #ifdef JP
         msg_format("%sは既に名のあるアイテムです！", o_name);
 #else
         msg_format("The %s %s already %s!", o_name, ((o_ptr->number > 1) ? "are" : "is"), ((o_ptr->number > 1) ? "ego items" : "an ego item"));
 #endif
         okay = FALSE;
-    } else if (o_ptr->xtra3) {
+    }
+    else if (o_ptr->xtra3) {
 #ifdef JP
         msg_format("%sは既に強化されています！", o_name);
 #else
         msg_format("The %s %s already %s!", o_name, ((o_ptr->number > 1) ? "are" : "is"), ((o_ptr->number > 1) ? "customized items" : "a customized item"));
 #endif
-    } else {
+    }
+    else {
         if (o_ptr->number > 1) {
             msg_print(_("複数のアイテムに魔法をかけるだけのエネルギーはありません！", "Not enough energy to enchant more than one object!"));
 #ifdef JP
@@ -75,7 +77,8 @@ bool artifact_scroll(player_type *caster_ptr)
 
             if (item >= 0) {
                 inven_item_increase(caster_ptr, item, 1 - (o_ptr->number));
-            } else {
+            }
+            else {
                 floor_item_increase(caster_ptr->current_floor_ptr, 0 - item, 1 - (o_ptr->number));
             }
         }
@@ -118,13 +121,12 @@ bool artifact_scroll(player_type *caster_ptr)
  * Returns TRUE if something was mundanified, else FALSE.
  * </pre>
  */
-bool mundane_spell(player_type *owner_ptr, bool only_equip)
-{
+bool mundane_spell(player_type* owner_ptr, bool only_equip) {
     if (only_equip)
         item_tester_hook = object_is_weapon_armour_ammo;
 
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     concptr q = _("どれを使いますか？", "Use which item? ");
     concptr s = _("使えるものがありません。", "You have nothing you can use.");
 

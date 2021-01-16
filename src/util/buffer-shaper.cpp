@@ -1,7 +1,6 @@
 ﻿#include "util/buffer-shaper.h"
 
-void shape_buffer(concptr str, int maxlen, char *tbuf, size_t bufsize)
-{
+void shape_buffer(concptr str, int maxlen, char* tbuf, size_t bufsize) {
     int read_pt = 0;
     int write_pt = 0;
     int line_len = 0;
@@ -26,7 +25,8 @@ void shape_buffer(concptr str, int maxlen, char *tbuf, size_t bufsize)
 
             if (strcmp(ch, "。") == 0 || strcmp(ch, "、") == 0 || strcmp(ch, "ィ") == 0 || strcmp(ch, "ー") == 0)
                 kinsoku = TRUE;
-        } else if (!isprint(ch[0]))
+        }
+        else if (!isprint(ch[0]))
             ch[0] = ' ';
 #else
         if (!isprint(ch[0]))

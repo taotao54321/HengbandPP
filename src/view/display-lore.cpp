@@ -38,9 +38,8 @@
  * @param r_idx モンスターの種族ID
  * @return なし
  */
-void roff_top(MONRACE_IDX r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+void roff_top(MONRACE_IDX r_idx) {
+    monster_race* r_ptr = &r_info[r_idx];
     char c1 = r_ptr->d_char;
     char c2 = r_ptr->x_char;
 
@@ -84,8 +83,7 @@ void roff_top(MONRACE_IDX r_idx)
  * @param mode 表示オプション
  * @return なし
  */
-void screen_roff(player_type *player_ptr, MONRACE_IDX r_idx, BIT_FLAGS mode)
-{
+void screen_roff(player_type* player_ptr, MONRACE_IDX r_idx, BIT_FLAGS mode) {
     msg_erase();
     term_erase(0, 1, 255);
     hook_c_roff = c_roff;
@@ -99,8 +97,7 @@ void screen_roff(player_type *player_ptr, MONRACE_IDX r_idx, BIT_FLAGS mode)
  * @param r_idx モンスターの種族ID
  * @return なし
  */
-void display_roff(player_type *player_ptr)
-{
+void display_roff(player_type* player_ptr) {
     for (int y = 0; y < Term->hgt; y++) {
         term_erase(0, y, 255);
     }
@@ -120,14 +117,12 @@ void display_roff(player_type *player_ptr)
  * @param roff_func 出力処理を行う関数ポインタ
  * @return なし
  */
-void output_monster_spoiler(player_type *player_ptr, MONRACE_IDX r_idx, void (*roff_func)(TERM_COLOR attr, concptr str))
-{
+void output_monster_spoiler(player_type* player_ptr, MONRACE_IDX r_idx, void (*roff_func)(TERM_COLOR attr, concptr str)) {
     hook_c_roff = roff_func;
     process_monster_lore(player_ptr, r_idx, 0x03);
 }
 
-static bool display_kill_unique(lore_type *lore_ptr)
-{
+static bool display_kill_unique(lore_type* lore_ptr) {
     if ((lore_ptr->flags1 & RF1_UNIQUE) == 0)
         return FALSE;
 
@@ -138,13 +133,15 @@ static bool display_kill_unique(lore_type *lore_ptr)
         if (dead) {
             hooked_roff(
                 _(format("が、すでに仇討ちは果たしている！"), format(", but you have avenged %s!  ", plural(lore_ptr->r_ptr->r_deaths, "him", "them"))));
-        } else {
+        }
+        else {
             hooked_roff(
                 _(format("のに、まだ仇討ちを果たしていない。"), format(", who %s unavenged.  ", plural(lore_ptr->r_ptr->r_deaths, "remains", "remain"))));
         }
 
         hooked_roff("\n");
-    } else if (dead) {
+    }
+    else if (dead) {
         hooked_roff(_("あなたはこの仇敵をすでに葬り去っている。", "You have slain this foe.  "));
         hooked_roff("\n");
     }
@@ -152,8 +149,7 @@ static bool display_kill_unique(lore_type *lore_ptr)
     return TRUE;
 }
 
-static bool display_killed(lore_type *lore_ptr)
-{
+static bool display_killed(lore_type* lore_ptr) {
     if (lore_ptr->r_ptr->r_deaths == 0)
         return FALSE;
 
@@ -163,11 +159,13 @@ static bool display_killed(lore_type *lore_ptr)
     if (lore_ptr->r_ptr->r_pkills) {
         hooked_roff(format(_("が、あなたはこのモンスターを少なくとも %d 体は倒している。", "and you have exterminated at least %d of the creatures.  "),
             lore_ptr->r_ptr->r_pkills));
-    } else if (lore_ptr->r_ptr->r_tkills) {
+    }
+    else if (lore_ptr->r_ptr->r_tkills) {
         hooked_roff(format(
             _("が、あなたの先祖はこのモンスターを少なくとも %d 体は倒している。", "and your ancestors have exterminated at least %d of the creatures.  "),
             lore_ptr->r_ptr->r_tkills));
-    } else {
+    }
+    else {
         hooked_roff(format(_("が、まだ%sを倒したことはない。", "and %s is not ever known to have been defeated.  "), wd_he[lore_ptr->msex]));
     }
 
@@ -175,8 +173,7 @@ static bool display_killed(lore_type *lore_ptr)
     return TRUE;
 }
 
-void display_kill_numbers(lore_type *lore_ptr)
-{
+void display_kill_numbers(lore_type* lore_ptr) {
     if ((lore_ptr->mode & 0x02) != 0)
         return;
 
@@ -189,10 +186,12 @@ void display_kill_numbers(lore_type *lore_ptr)
     if (lore_ptr->r_ptr->r_pkills) {
         hooked_roff(format(
             _("あなたはこのモンスターを少なくとも %d 体は殺している。", "You have killed at least %d of these creatures.  "), lore_ptr->r_ptr->r_pkills));
-    } else if (lore_ptr->r_ptr->r_tkills) {
+    }
+    else if (lore_ptr->r_ptr->r_tkills) {
         hooked_roff(format(_("あなたの先祖はこのモンスターを少なくとも %d 体は殺している。", "Your ancestors have killed at least %d of these creatures.  "),
             lore_ptr->r_ptr->r_tkills));
-    } else {
+    }
+    else {
         hooked_roff(_("このモンスターを倒したことはない。", "No battles to the death are recalled.  "));
     }
 
@@ -204,17 +203,18 @@ void display_kill_numbers(lore_type *lore_ptr)
  * @param lore_ptr モンスターの思い出構造体への参照ポインタ
  * @return たぬきならFALSE、それ以外はTRUE
  */
-bool display_where_to_appear(lore_type *lore_ptr)
-{
+bool display_where_to_appear(lore_type* lore_ptr) {
     lore_ptr->old = FALSE;
     if (lore_ptr->r_ptr->level == 0) {
         hooked_roff(format(_("%^sは町に住み", "%^s lives in the town"), wd_he[lore_ptr->msex]));
         lore_ptr->old = TRUE;
-    } else if (lore_ptr->r_ptr->r_tkills || lore_ptr->know_everything) {
+    }
+    else if (lore_ptr->r_ptr->r_tkills || lore_ptr->know_everything) {
         if (depth_in_feet) {
             hooked_roff(format(
                 _("%^sは通常地下 %d フィートで出現し", "%^s is normally found at depths of %d feet"), wd_he[lore_ptr->msex], lore_ptr->r_ptr->level * 50));
-        } else {
+        }
+        else {
             hooked_roff(format(_("%^sは通常地下 %d 階で出現し", "%^s is normally found on dungeon level %d"), wd_he[lore_ptr->msex], lore_ptr->r_ptr->level));
         }
 
@@ -228,7 +228,8 @@ bool display_where_to_appear(lore_type *lore_ptr)
 
     if (lore_ptr->old) {
         hooked_roff(_("、", ", and "));
-    } else {
+    }
+    else {
         hooked_roff(format(_("%^sは", "%^s "), wd_he[lore_ptr->msex]));
         lore_ptr->old = TRUE;
     }
@@ -236,8 +237,7 @@ bool display_where_to_appear(lore_type *lore_ptr)
     return TRUE;
 }
 
-void display_monster_move(lore_type *lore_ptr)
-{
+void display_monster_move(lore_type* lore_ptr) {
 #ifdef JP
 #else
     hooked_roff("moves");
@@ -256,7 +256,8 @@ void display_monster_move(lore_type *lore_ptr)
         else if (lore_ptr->speed < 120)
             hook_c_roff(TERM_L_UMBER, _("やや", " somewhat"));
         hook_c_roff(TERM_L_RED, _("素早く", " quickly"));
-    } else if (lore_ptr->speed < 110) {
+    }
+    else if (lore_ptr->speed < 110) {
         if (lore_ptr->speed < 90)
             hook_c_roff(TERM_L_GREEN, _("信じ難いほど", " incredibly"));
         else if (lore_ptr->speed < 95)
@@ -266,7 +267,8 @@ void display_monster_move(lore_type *lore_ptr)
         else if (lore_ptr->speed > 104)
             hook_c_roff(TERM_GREEN, _("やや", " somewhat"));
         hook_c_roff(TERM_L_BLUE, _("ゆっくりと", " slowly"));
-    } else {
+    }
+    else {
         hooked_roff(_("普通の速さで", " at normal speed"));
     }
 
@@ -275,16 +277,17 @@ void display_monster_move(lore_type *lore_ptr)
 #endif
 }
 
-void display_random_move(lore_type *lore_ptr)
-{
+void display_random_move(lore_type* lore_ptr) {
     if (((lore_ptr->flags1 & RF1_RAND_50) == 0) && ((lore_ptr->flags1 & RF1_RAND_25) == 0))
         return;
 
     if ((lore_ptr->flags1 & RF1_RAND_50) && (lore_ptr->flags1 & RF1_RAND_25)) {
         hooked_roff(_("かなり", " extremely"));
-    } else if (lore_ptr->flags1 & RF1_RAND_50) {
+    }
+    else if (lore_ptr->flags1 & RF1_RAND_50) {
         hooked_roff(_("幾分", " somewhat"));
-    } else if (lore_ptr->flags1 & RF1_RAND_25) {
+    }
+    else if (lore_ptr->flags1 & RF1_RAND_25) {
         hooked_roff(_("少々", " a bit"));
     }
 
@@ -293,14 +296,14 @@ void display_random_move(lore_type *lore_ptr)
         hooked_roff(_("、かつ", ", and"));
 }
 
-void display_monster_never_move(lore_type *lore_ptr)
-{
+void display_monster_never_move(lore_type* lore_ptr) {
     if ((lore_ptr->flags1 & RF1_NEVER_MOVE) == 0)
         return;
 
     if (lore_ptr->old) {
         hooked_roff(_("、しかし", ", but "));
-    } else {
+    }
+    else {
         hooked_roff(format(_("%^sは", "%^s "), wd_he[lore_ptr->msex]));
         lore_ptr->old = TRUE;
     }
@@ -308,8 +311,7 @@ void display_monster_never_move(lore_type *lore_ptr)
     hooked_roff(_("侵入者を追跡しない", "does not deign to chase intruders"));
 }
 
-void display_monster_kind(lore_type *lore_ptr)
-{
+void display_monster_kind(lore_type* lore_ptr) {
     if (((lore_ptr->flags3 & (RF3_DRAGON | RF3_DEMON | RF3_GIANT | RF3_TROLL | RF3_ORC | RF3_ANGEL)) == 0)
         && ((lore_ptr->flags2 & (RF2_QUANTUM | RF2_HUMAN)) == 0)) {
         hooked_roff(_("モンスター", " creature"));
@@ -341,8 +343,7 @@ void display_monster_kind(lore_type *lore_ptr)
         hook_c_roff(TERM_YELLOW, _("天使", " angel"));
 }
 
-void display_monster_alignment(lore_type *lore_ptr)
-{
+void display_monster_alignment(lore_type* lore_ptr) {
     if (lore_ptr->flags2 & RF2_ELDRITCH_HORROR)
         hook_c_roff(TERM_VIOLET, _("狂気を誘う", " sanity-blasting"));
 
@@ -362,8 +363,7 @@ void display_monster_alignment(lore_type *lore_ptr)
         hook_c_roff(TERM_VIOLET, _("アンバーの王族の", " Amberite"));
 }
 
-void display_monster_exp(player_type *player_ptr, lore_type *lore_ptr)
-{
+void display_monster_exp(player_type* player_ptr, lore_type* lore_ptr) {
 #ifdef JP
     hooked_roff("を倒すことは");
 #endif
@@ -376,7 +376,7 @@ void display_monster_exp(player_type *player_ptr, lore_type *lore_ptr)
 #else
     hooked_roff(format(" is worth about %ld.%02ld point%s", (long)exp_integer, (long)exp_decimal, ((exp_integer == 1) && (exp_decimal == 0)) ? "" : "s"));
 
-    char *ordinal;
+    char* ordinal;
     ordinal = "th";
     exp_integer = player_ptr->lev % 10;
     if ((player_ptr->lev / 10) != 1) {
@@ -388,7 +388,7 @@ void display_monster_exp(player_type *player_ptr, lore_type *lore_ptr)
             ordinal = "rd";
     }
 
-    char *vowel;
+    char* vowel;
     vowel = "";
     exp_integer = player_ptr->lev;
     if ((exp_integer == 8) || (exp_integer == 11) || (exp_integer == 18))
@@ -398,8 +398,7 @@ void display_monster_exp(player_type *player_ptr, lore_type *lore_ptr)
 #endif
 }
 
-void display_monster_aura(lore_type *lore_ptr)
-{
+void display_monster_aura(lore_type* lore_ptr) {
     if ((lore_ptr->flags2 & RF2_AURA_FIRE) && (lore_ptr->flags2 & RF2_AURA_ELEC) && (lore_ptr->flags3 & RF3_AURA_COLD))
         hook_c_roff(
             TERM_VIOLET, format(_("%^sは炎と氷とスパークに包まれている。", "%^s is surrounded by flames, ice and electricity.  "), wd_he[lore_ptr->msex]));
@@ -417,8 +416,7 @@ void display_monster_aura(lore_type *lore_ptr)
         hook_c_roff(TERM_L_BLUE, format(_("%^sはスパークに包まれている。", "%^s is surrounded by electricity.  "), wd_he[lore_ptr->msex]));
 }
 
-void display_lore_this(player_type *player_ptr, lore_type *lore_ptr)
-{
+void display_lore_this(player_type* player_ptr, lore_type* lore_ptr) {
     if ((lore_ptr->r_ptr->r_tkills == 0) && !lore_ptr->know_everything)
         return;
 
@@ -427,7 +425,8 @@ void display_lore_this(player_type *player_ptr, lore_type *lore_ptr)
 #else
     if (lore_ptr->flags1 & RF1_UNIQUE) {
         hooked_roff("Killing this");
-    } else {
+    }
+    else {
         hooked_roff("A kill of this");
     }
 #endif
@@ -437,8 +436,7 @@ void display_lore_this(player_type *player_ptr, lore_type *lore_ptr)
     display_monster_exp(player_ptr, lore_ptr);
 }
 
-static void display_monster_escort_contents(lore_type *lore_ptr)
-{
+static void display_monster_escort_contents(lore_type* lore_ptr) {
     if (!lore_ptr->reinforce)
         return;
 
@@ -459,7 +457,7 @@ static void display_monster_escort_contents(lore_type *lore_ptr)
         if (!is_reinforced)
             continue;
 
-        monster_race *rf_ptr = &r_info[lore_ptr->r_ptr->reinforce_id[n]];
+        monster_race* rf_ptr = &r_info[lore_ptr->r_ptr->reinforce_id[n]];
         if (rf_ptr->flags1 & RF1_UNIQUE) {
             hooked_roff(format(_("、%s", ", %s"), r_name + rf_ptr->name));
             continue;
@@ -480,12 +478,12 @@ static void display_monster_escort_contents(lore_type *lore_ptr)
     hooked_roff(_("で成り立っている。", "."));
 }
 
-void display_monster_collective(lore_type *lore_ptr)
-{
+void display_monster_collective(lore_type* lore_ptr) {
     if ((lore_ptr->flags1 & RF1_ESCORT) || (lore_ptr->flags1 & RF1_ESCORTS) || lore_ptr->reinforce) {
         hooked_roff(format(_("%^sは通常護衛を伴って現れる。", "%^s usually appears with escorts.  "), wd_he[lore_ptr->msex]));
         display_monster_escort_contents(lore_ptr);
-    } else if (lore_ptr->flags1 & RF1_FRIENDS) {
+    }
+    else if (lore_ptr->flags1 & RF1_FRIENDS) {
         hooked_roff(format(_("%^sは通常集団で現れる。", "%^s usually appears in groups.  "), wd_he[lore_ptr->msex]));
     }
 }
@@ -501,8 +499,7 @@ void display_monster_collective(lore_type *lore_ptr)
  * This function should only be called when display/dump a recall of
  * a monster.
  */
-void display_monster_launching(player_type *player_ptr, lore_type *lore_ptr)
-{
+void display_monster_launching(player_type* player_ptr, lore_type* lore_ptr) {
     if (lore_ptr->flags4 & RF4_ROCKET) {
         set_damage(player_ptr, lore_ptr->r_idx, (MS_ROCKET), _("ロケット%sを発射する", "shoot a rocket%s"), lore_ptr->tmp_msg[lore_ptr->vn]);
         lore_ptr->vp[lore_ptr->vn] = lore_ptr->tmp_msg[lore_ptr->vn];
@@ -542,8 +539,7 @@ void display_monster_launching(player_type *player_ptr, lore_type *lore_ptr)
     lore_ptr->color[lore_ptr->vn++] = TERM_UMBER;
 }
 
-void display_monster_sometimes(lore_type *lore_ptr)
-{
+void display_monster_sometimes(lore_type* lore_ptr) {
     if (lore_ptr->vn <= 0)
         return;
 
@@ -555,7 +551,8 @@ void display_monster_sometimes(lore_type *lore_ptr)
             hook_c_roff(lore_ptr->color[n], lore_ptr->jverb_buf);
             hook_c_roff(lore_ptr->color[n], "り");
             hooked_roff("、");
-        } else
+        }
+        else
             hook_c_roff(lore_ptr->color[n], lore_ptr->vp[n]);
 #else
         if (n == 0)
@@ -572,15 +569,15 @@ void display_monster_sometimes(lore_type *lore_ptr)
     hooked_roff(_("ことがある。", ".  "));
 }
 
-void display_monster_guardian(lore_type *lore_ptr)
-{
+void display_monster_guardian(lore_type* lore_ptr) {
     bool is_kingpin = (lore_ptr->flags1 & RF1_QUESTOR) != 0;
     is_kingpin &= lore_ptr->r_ptr->r_sights > 0;
     is_kingpin &= lore_ptr->r_ptr->max_num > 0;
     is_kingpin &= (lore_ptr->r_idx == MON_OBERON) || (lore_ptr->r_idx == MON_SERPENT);
     if (is_kingpin) {
         hook_c_roff(TERM_VIOLET, _("あなたはこのモンスターを殺したいという強い欲望を感じている...", "You feel an intense desire to kill this monster...  "));
-    } else if (lore_ptr->flags7 & RF7_GUARDIAN) {
+    }
+    else if (lore_ptr->flags7 & RF7_GUARDIAN) {
         hook_c_roff(TERM_L_RED, _("このモンスターはダンジョンの主である。", "This monster is the master of a dungeon."));
     }
 

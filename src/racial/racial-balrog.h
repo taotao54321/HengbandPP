@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool demonic_breath(player_type *creature_ptr);
+bool demonic_breath(player_type* creature_ptr);

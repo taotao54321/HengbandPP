@@ -69,8 +69,7 @@ static int damage;
  * @param dam ものまねの威力
  * @return なし
  */
-static void mane_info(player_type *caster_ptr, char *p, int power, HIT_POINT dam)
-{
+static void mane_info(player_type* caster_ptr, char* p, int power, HIT_POINT dam) {
     PLAYER_LEVEL plev = caster_ptr->lev;
 
     strcpy(p, "");
@@ -124,8 +123,7 @@ static void mane_info(player_type *caster_ptr, char *p, int power, HIT_POINT dam
  * when you run it. It's probably easy to fix but I haven't tried,
  * sorry.
  */
-static int get_mane_power(player_type *caster_ptr, int *sn, bool baigaesi)
-{
+static int get_mane_power(player_type* caster_ptr, int* sn, bool baigaesi) {
     int i = 0;
     int num = 0;
     TERM_LEN y = 1;
@@ -292,8 +290,7 @@ static int get_mane_power(player_type *caster_ptr, int *sn, bool baigaesi)
  * @param spell 発動するモンスター攻撃のID
  * @return 処理を実行したらTRUE、キャンセルした場合FALSEを返す。
  */
-static bool use_mane(player_type *caster_ptr, int spell)
-{
+static bool use_mane(player_type* caster_ptr, int spell) {
     DIRECTION dir;
     PLAYER_LEVEL plev = caster_ptr->lev;
     BIT_FLAGS mode = (PM_ALLOW_GROUP | PM_FORCE_PET);
@@ -811,8 +808,8 @@ static bool use_mane(player_type *caster_ptr, int spell)
     case MS_SPECIAL:
         break;
     case MS_TELE_TO: {
-        monster_type *m_ptr;
-        monster_race *r_ptr;
+        monster_type* m_ptr;
+        monster_race* r_ptr;
         GAME_TEXT m_name[MAX_NLEN];
 
         if (!target_set(caster_ptr, TARGET_KILL))
@@ -833,7 +830,8 @@ static bool use_mane(player_type *caster_ptr, int spell)
                 msg_format(_("%sには効果がなかった！", "%s is unaffected!"), m_name);
 
                 break;
-            } else if (r_ptr->level > randint1(100)) {
+            }
+            else if (r_ptr->level > randint1(100)) {
                 if (is_original_ap_and_seen(caster_ptr, m_ptr))
                     r_ptr->r_flagsr |= RFR_RES_TELE;
                 msg_format(_("%sには耐性がある！", "%s resists!"), m_name);
@@ -1060,8 +1058,7 @@ static bool use_mane(player_type *caster_ptr, int spell)
  * when you run it. It's probably easy to fix but I haven't tried,
  * sorry.
  */
-bool do_cmd_mane(player_type *creature_ptr, bool baigaesi)
-{
+bool do_cmd_mane(player_type* creature_ptr, bool baigaesi) {
     int n = 0, j;
     PERCENTAGE chance;
     PERCENTAGE minfail = 0;
@@ -1120,7 +1117,8 @@ bool do_cmd_mane(player_type *creature_ptr, bool baigaesi)
             flush();
         msg_print(_("ものまねに失敗した！", "You failed to concentrate hard enough!"));
         sound(SOUND_FAIL);
-    } else {
+    }
+    else {
         sound(SOUND_ZAP);
         cast = use_mane(creature_ptr, creature_ptr->mane_spell[n]);
         if (!cast)

@@ -51,10 +51,9 @@
  * @param item 食べるオブジェクトの所持品ID
  * @return なし
  */
-void exe_eat_food(player_type *creature_ptr, INVENTORY_IDX item)
-{
+void exe_eat_food(player_type* creature_ptr, INVENTORY_IDX item) {
     int ident, lev;
-    object_type *o_ptr;
+    object_type* o_ptr;
 
     if (music_singing_any(creature_ptr))
         stop_singing(creature_ptr);
@@ -311,8 +310,9 @@ void exe_eat_food(player_type *creature_ptr, INVENTORY_IDX item)
 
         if (creature_ptr->food < PY_FOOD_ALERT) /* Hungry */
             msg_print(_("あなたの飢えは新鮮な血によってのみ満たされる！", "Your hunger can only be satisfied with fresh blood!"));
-    } else if ((is_specific_player_race(creature_ptr, RACE_SKELETON) || is_specific_player_race(creature_ptr, RACE_GOLEM)
-                   || is_specific_player_race(creature_ptr, RACE_ZOMBIE) || is_specific_player_race(creature_ptr, RACE_SPECTRE))
+    }
+    else if ((is_specific_player_race(creature_ptr, RACE_SKELETON) || is_specific_player_race(creature_ptr, RACE_GOLEM)
+                 || is_specific_player_race(creature_ptr, RACE_ZOMBIE) || is_specific_player_race(creature_ptr, RACE_SPECTRE))
         && (o_ptr->tval == TV_STAFF || o_ptr->tval == TV_WAND)) {
         concptr staff;
 
@@ -343,7 +343,7 @@ void exe_eat_food(player_type *creature_ptr, INVENTORY_IDX item)
         /* XXX Hack -- unstack if necessary */
         if (o_ptr->tval == TV_STAFF && (item >= 0) && (o_ptr->number > 1)) {
             object_type forge;
-            object_type *q_ptr;
+            object_type* q_ptr;
             q_ptr = &forge;
             object_copy(q_ptr, o_ptr);
 
@@ -384,29 +384,34 @@ void exe_eat_food(player_type *creature_ptr, INVENTORY_IDX item)
         describe_flavor(creature_ptr, o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
         msg_format(_("%sは燃え上り灰になった。精力を吸収した気がする。", "%^s is burnt to ashes.  You absorb its vitality!"), o_name);
         (void)set_food(creature_ptr, PY_FOOD_MAX - 1);
-    } else if (is_specific_player_race(creature_ptr, RACE_SKELETON)) {
+    }
+    else if (is_specific_player_race(creature_ptr, RACE_SKELETON)) {
         if (!((o_ptr->sval == SV_FOOD_WAYBREAD) || (o_ptr->sval < SV_FOOD_BISCUIT))) {
             object_type forge;
-            object_type *q_ptr = &forge;
+            object_type* q_ptr = &forge;
 
             msg_print(_("食べ物がアゴを素通りして落ちた！", "The food falls through your jaws!"));
             object_prep(creature_ptr, q_ptr, lookup_kind(o_ptr->tval, o_ptr->sval));
 
             /* Drop the object from heaven */
             (void)drop_near(creature_ptr, q_ptr, -1, creature_ptr->y, creature_ptr->x);
-        } else {
+        }
+        else {
             msg_print(_("食べ物がアゴを素通りして落ち、消えた！", "The food falls through your jaws and vanishes!"));
         }
-    } else if (is_specific_player_race(creature_ptr, RACE_GOLEM) || is_specific_player_race(creature_ptr, RACE_ZOMBIE)
+    }
+    else if (is_specific_player_race(creature_ptr, RACE_GOLEM) || is_specific_player_race(creature_ptr, RACE_ZOMBIE)
         || is_specific_player_race(creature_ptr, RACE_ENT) || is_specific_player_race(creature_ptr, RACE_BALROG)
         || is_specific_player_race(creature_ptr, RACE_ANDROID) || is_specific_player_race(creature_ptr, RACE_SPECTRE)
         || (mimic_info[creature_ptr->mimic_form].MIMIC_FLAGS & MIMIC_IS_NONLIVING)) {
         msg_print(_("生者の食物はあなたにとってほとんど栄養にならない。", "The food of mortals is poor sustenance for you."));
         set_food(creature_ptr, creature_ptr->food + ((o_ptr->pval) / 20));
-    } else if (o_ptr->tval == TV_FOOD && o_ptr->sval == SV_FOOD_WAYBREAD) {
+    }
+    else if (o_ptr->tval == TV_FOOD && o_ptr->sval == SV_FOOD_WAYBREAD) {
         /* Waybread is always fully satisfying. */
         set_food(creature_ptr, MAX(creature_ptr->food, PY_FOOD_MAX - 1));
-    } else {
+    }
+    else {
         /* Food can feed the player */
         (void)set_food(creature_ptr, creature_ptr->food + o_ptr->pval);
     }
@@ -420,8 +425,7 @@ void exe_eat_food(player_type *creature_ptr, INVENTORY_IDX item)
  * Eat some food (from the pack or floor)
  * @return なし
  */
-void do_cmd_eat_food(player_type *creature_ptr)
-{
+void do_cmd_eat_food(player_type* creature_ptr) {
     OBJECT_IDX item;
     concptr q, s;
 

@@ -4,8 +4,7 @@
 #include "system/object-type-definition.h"
 #include "util/bit-flags-calculator.h"
 
-static bool random_art_resistance_acid(object_type *o_ptr)
-{
+static bool random_art_resistance_acid(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_ACID))
         return FALSE;
 
@@ -13,8 +12,7 @@ static bool random_art_resistance_acid(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_immunity_acid(object_type *o_ptr)
-{
+static bool random_art_immunity_acid(object_type* o_ptr) {
     if (!one_in_(BIAS_LUCK) || has_flag(o_ptr->art_flags, TR_IM_ACID))
         return FALSE;
 
@@ -28,8 +26,7 @@ static bool random_art_immunity_acid(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_elec(object_type *o_ptr)
-{
+static bool random_art_resistance_elec(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_ELEC))
         return FALSE;
 
@@ -37,8 +34,7 @@ static bool random_art_resistance_elec(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_aura_elec(object_type *o_ptr)
-{
+static bool random_art_aura_elec(object_type* o_ptr) {
     if ((o_ptr->tval < TV_CLOAK) || (o_ptr->tval > TV_HARD_ARMOR) || has_flag(o_ptr->art_flags, TR_SH_ELEC))
         return FALSE;
 
@@ -46,8 +42,7 @@ static bool random_art_aura_elec(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_immunity_elec(object_type *o_ptr)
-{
+static bool random_art_immunity_elec(object_type* o_ptr) {
     if (!one_in_(BIAS_LUCK) || has_flag(o_ptr->art_flags, TR_IM_ELEC))
         return FALSE;
 
@@ -61,8 +56,7 @@ static bool random_art_immunity_elec(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_fire(object_type *o_ptr)
-{
+static bool random_art_resistance_fire(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_FIRE))
         return FALSE;
 
@@ -70,8 +64,7 @@ static bool random_art_resistance_fire(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_aura_fire(object_type *o_ptr)
-{
+static bool random_art_aura_fire(object_type* o_ptr) {
     if ((o_ptr->tval < TV_CLOAK) || (o_ptr->tval > TV_HARD_ARMOR) || has_flag(o_ptr->art_flags, TR_SH_FIRE))
         return FALSE;
 
@@ -79,8 +72,7 @@ static bool random_art_aura_fire(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_immunity_fire(object_type *o_ptr)
-{
+static bool random_art_immunity_fire(object_type* o_ptr) {
     if (!one_in_(BIAS_LUCK) || has_flag(o_ptr->art_flags, TR_IM_FIRE))
         return FALSE;
 
@@ -94,8 +86,7 @@ static bool random_art_immunity_fire(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_cold(object_type *o_ptr)
-{
+static bool random_art_resistance_cold(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_COLD))
         return FALSE;
 
@@ -103,8 +94,7 @@ static bool random_art_resistance_cold(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_aura_cold(object_type *o_ptr)
-{
+static bool random_art_aura_cold(object_type* o_ptr) {
     if ((o_ptr->tval < TV_CLOAK) || (o_ptr->tval > TV_HARD_ARMOR) || has_flag(o_ptr->art_flags, TR_SH_COLD))
         return FALSE;
 
@@ -112,8 +102,7 @@ static bool random_art_aura_cold(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_immunity_cold(object_type *o_ptr)
-{
+static bool random_art_immunity_cold(object_type* o_ptr) {
     if (!one_in_(BIAS_LUCK) || has_flag(o_ptr->art_flags, TR_IM_COLD))
         return FALSE;
 
@@ -127,8 +116,7 @@ static bool random_art_immunity_cold(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_pois(object_type *o_ptr)
-{
+static bool random_art_resistance_pois(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_POIS))
         return FALSE;
 
@@ -136,8 +124,7 @@ static bool random_art_resistance_pois(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_fear(object_type *o_ptr)
-{
+static bool random_art_resistance_fear(object_type* o_ptr) {
     if (one_in_(3) || has_flag(o_ptr->art_flags, TR_RES_FEAR))
         return FALSE;
 
@@ -145,8 +132,7 @@ static bool random_art_resistance_fear(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_no_magic(object_type *o_ptr)
-{
+static bool random_art_resistance_no_magic(object_type* o_ptr) {
     if (!one_in_(3) || has_flag(o_ptr->art_flags, TR_NO_MAGIC))
         return FALSE;
 
@@ -154,8 +140,7 @@ static bool random_art_resistance_no_magic(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_nether(object_type *o_ptr)
-{
+static bool random_art_resistance_nether(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_NETHER))
         return FALSE;
 
@@ -163,8 +148,7 @@ static bool random_art_resistance_nether(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_dark(object_type *o_ptr)
-{
+static bool random_art_resistance_dark(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_DARK))
         return FALSE;
 
@@ -172,8 +156,7 @@ static bool random_art_resistance_dark(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_chaos(object_type *o_ptr)
-{
+static bool random_art_resistance_chaos(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_CHAOS))
         return FALSE;
 
@@ -181,8 +164,7 @@ static bool random_art_resistance_chaos(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_confusion(object_type *o_ptr)
-{
+static bool random_art_resistance_confusion(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_CONF))
         return FALSE;
 
@@ -190,8 +172,7 @@ static bool random_art_resistance_confusion(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool random_art_resistance_disenchant(object_type *o_ptr)
-{
+static bool random_art_resistance_disenchant(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_RES_DISEN))
         return FALSE;
 
@@ -199,8 +180,7 @@ static bool random_art_resistance_disenchant(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool switch_random_art_resistance(object_type *o_ptr)
-{
+static bool switch_random_art_resistance(object_type* o_ptr) {
     switch (o_ptr->artifact_bias) {
     case BIAS_ACID:
         return random_art_resistance_acid(o_ptr) || random_art_immunity_acid(o_ptr);
@@ -224,8 +204,7 @@ static bool switch_random_art_resistance(object_type *o_ptr)
 }
 
 /* 一定確率で再試行する */
-static void set_weird_bias_acid(object_type *o_ptr)
-{
+static void set_weird_bias_acid(object_type* o_ptr) {
     if (!one_in_(WEIRD_LUCK)) {
         random_resistance(o_ptr);
         return;
@@ -237,8 +216,7 @@ static void set_weird_bias_acid(object_type *o_ptr)
 }
 
 /* 一定確率で再試行する */
-static void set_weird_bias_elec(object_type *o_ptr)
-{
+static void set_weird_bias_elec(object_type* o_ptr) {
     if (!one_in_(WEIRD_LUCK)) {
         random_resistance(o_ptr);
         return;
@@ -250,8 +228,7 @@ static void set_weird_bias_elec(object_type *o_ptr)
 }
 
 /* 一定確率で再試行する */
-static void set_weird_bias_cold(object_type *o_ptr)
-{
+static void set_weird_bias_cold(object_type* o_ptr) {
     if (!one_in_(WEIRD_LUCK)) {
         random_resistance(o_ptr);
         return;
@@ -263,8 +240,7 @@ static void set_weird_bias_cold(object_type *o_ptr)
 }
 
 /* 一定確率で再試行する */
-static void set_weird_bias_fire(object_type *o_ptr)
-{
+static void set_weird_bias_fire(object_type* o_ptr) {
     if (!one_in_(WEIRD_LUCK)) {
         random_resistance(o_ptr);
         return;
@@ -275,8 +251,7 @@ static void set_weird_bias_fire(object_type *o_ptr)
         o_ptr->artifact_bias = BIAS_FIRE;
 }
 
-static void set_bias_pois(object_type *o_ptr)
-{
+static void set_bias_pois(object_type* o_ptr) {
     add_flag(o_ptr->art_flags, TR_RES_POIS);
     if (!o_ptr->artifact_bias && !one_in_(4)) {
         o_ptr->artifact_bias = BIAS_POIS;
@@ -293,8 +268,7 @@ static void set_bias_pois(object_type *o_ptr)
 }
 
 /* 一定確率で再試行する */
-static void set_weird_bias_aura_elec(object_type *o_ptr)
-{
+static void set_weird_bias_aura_elec(object_type* o_ptr) {
     if (o_ptr->tval >= TV_CLOAK && o_ptr->tval <= TV_HARD_ARMOR)
         add_flag(o_ptr->art_flags, TR_SH_ELEC);
     else
@@ -305,8 +279,7 @@ static void set_weird_bias_aura_elec(object_type *o_ptr)
 }
 
 /* 一定確率で再試行する */
-static void set_weird_bias_aura_fire(object_type *o_ptr)
-{
+static void set_weird_bias_aura_fire(object_type* o_ptr) {
     if (o_ptr->tval >= TV_CLOAK && o_ptr->tval <= TV_HARD_ARMOR)
         add_flag(o_ptr->art_flags, TR_SH_FIRE);
     else
@@ -317,8 +290,7 @@ static void set_weird_bias_aura_fire(object_type *o_ptr)
 }
 
 /* 一定確率で再試行する */
-static void set_weird_bias_reflection(object_type *o_ptr)
-{
+static void set_weird_bias_reflection(object_type* o_ptr) {
     if (o_ptr->tval == TV_SHIELD || o_ptr->tval == TV_CLOAK || o_ptr->tval == TV_HELM || o_ptr->tval == TV_HARD_ARMOR) {
         add_flag(o_ptr->art_flags, TR_REFLECT);
         return;
@@ -328,8 +300,7 @@ static void set_weird_bias_reflection(object_type *o_ptr)
 }
 
 /* 一定確率で再試行する */
-static void set_weird_bias_aura_cold(object_type *o_ptr)
-{
+static void set_weird_bias_aura_cold(object_type* o_ptr) {
     if (o_ptr->tval >= TV_CLOAK && o_ptr->tval <= TV_HARD_ARMOR)
         add_flag(o_ptr->art_flags, TR_SH_COLD);
     else
@@ -349,8 +320,7 @@ static void set_weird_bias_aura_cold(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void random_resistance(object_type *o_ptr)
-{
+void random_resistance(object_type* o_ptr) {
     if (switch_random_art_resistance(o_ptr))
         return;
 

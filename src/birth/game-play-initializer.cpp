@@ -1,10 +1,10 @@
 ﻿#include "birth/game-play-initializer.h"
-#include "info-reader/fixed-map-parser.h"
 #include "dungeon/dungeon.h"
 #include "dungeon/quest.h"
 #include "floor/floor-util.h"
 #include "game-option/birth-options.h"
 #include "game-option/cheat-options.h"
+#include "info-reader/fixed-map-parser.h"
 #include "inventory/inventory-slot-types.h"
 #include "market/arena.h"
 #include "monster-race/monster-race.h"
@@ -23,10 +23,9 @@
  * @brief ベースアイテム構造体の鑑定済みフラグをリセットする。
  * @return なし
  */
-static void k_info_reset(void)
-{
+static void k_info_reset(void) {
     for (int i = 1; i < max_k_idx; i++) {
-        object_kind *k_ptr = &k_info[i];
+        object_kind* k_ptr = &k_info[i];
         k_ptr->tried = FALSE;
         k_ptr->aware = FALSE;
     }
@@ -38,8 +37,7 @@ static void k_info_reset(void)
  * @return なし
  * @details 少し長いが、これ1つで処理が完結しているので分割は見送る
  */
-void player_wipe_without_name(player_type *creature_ptr)
-{
+void player_wipe_without_name(player_type* creature_ptr) {
     player_type tmp;
 
 #ifdef SET_UID
@@ -61,7 +59,7 @@ void player_wipe_without_name(player_type *creature_ptr)
         strcpy(creature_ptr->history[i], "");
 
     for (int i = 0; i < max_q_idx; i++) {
-        quest_type *const q_ptr = &quest[i];
+        quest_type* const q_ptr = &quest[i];
         q_ptr->status = QUEST_STATUS_UNTAKEN;
         q_ptr->cur_num = 0;
         q_ptr->max_num = 0;
@@ -78,13 +76,13 @@ void player_wipe_without_name(player_type *creature_ptr)
         object_wipe(&creature_ptr->inventory_list[i]);
 
     for (int i = 0; i < max_a_idx; i++) {
-        artifact_type *a_ptr = &a_info[i];
+        artifact_type* a_ptr = &a_info[i];
         a_ptr->cur_num = 0;
     }
 
     k_info_reset();
     for (int i = 1; i < max_r_idx; i++) {
-        monster_race *r_ptr = &r_info[i];
+        monster_race* r_ptr = &r_info[i];
         r_ptr->cur_num = 0;
         r_ptr->max_num = 100;
         if (r_ptr->flags1 & RF1_UNIQUE)
@@ -100,7 +98,8 @@ void player_wipe_without_name(player_type *creature_ptr)
     if (creature_ptr->pclass == CLASS_SORCERER) {
         creature_ptr->spell_learned1 = creature_ptr->spell_learned2 = 0xffffffffL;
         creature_ptr->spell_worked1 = creature_ptr->spell_worked2 = 0xffffffffL;
-    } else {
+    }
+    else {
         creature_ptr->spell_learned1 = creature_ptr->spell_learned2 = 0L;
         creature_ptr->spell_worked1 = creature_ptr->spell_worked2 = 0L;
     }
@@ -168,7 +167,8 @@ void player_wipe_without_name(player_type *creature_ptr)
     creature_ptr->dungeon_idx = 0;
     if (vanilla_town || ironman_downward) {
         creature_ptr->recall_dungeon = DUNGEON_ANGBAND;
-    } else {
+    }
+    else {
         creature_ptr->recall_dungeon = DUNGEON_GALGALS;
     }
 
@@ -184,17 +184,16 @@ void player_wipe_without_name(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void init_dungeon_quests(player_type *creature_ptr)
-{
+void init_dungeon_quests(player_type* creature_ptr) {
     int number_of_quests = MAX_RANDOM_QUEST - MIN_RANDOM_QUEST + 1;
     init_flags = INIT_ASSIGN;
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     floor_ptr->inside_quest = MIN_RANDOM_QUEST;
     parse_fixed_map(creature_ptr, "q_info.txt", 0, 0, 0, 0);
     floor_ptr->inside_quest = 0;
     for (int i = MIN_RANDOM_QUEST + number_of_quests - 1; i >= MIN_RANDOM_QUEST; i--) {
-        quest_type *q_ptr = &quest[i];
-        monster_race *quest_r_ptr;
+        quest_type* q_ptr = &quest[i];
+        monster_race* quest_r_ptr;
         q_ptr->status = QUEST_STATUS_TAKEN;
         determine_random_questor(creature_ptr, q_ptr);
         quest_r_ptr = &r_info[q_ptr->r_idx];
@@ -220,12 +219,12 @@ void init_dungeon_quests(player_type *creature_ptr)
  * @details アンデッド系種族は開始時刻を夜からにする / Undead start just sunset
  * @details        
  */
-void init_turn(player_type *creature_ptr)
-{
+void init_turn(player_type* creature_ptr) {
     if ((creature_ptr->prace == RACE_VAMPIRE) || (creature_ptr->prace == RACE_SKELETON) || (creature_ptr->prace == RACE_ZOMBIE) || (creature_ptr->prace == RACE_SPECTRE)) {
         current_world_ptr->game_turn = (TURNS_PER_TICK * 3 * TOWN_DAWN) / 4 + 1;
         current_world_ptr->game_turn_limit = TURNS_PER_TICK * TOWN_DAWN * MAX_DAYS + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
-    } else {
+    }
+    else {
         current_world_ptr->game_turn = 1;
         current_world_ptr->game_turn_limit = TURNS_PER_TICK * TOWN_DAWN * (MAX_DAYS - 1) + TURNS_PER_TICK * TOWN_DAWN * 3 / 4;
     }

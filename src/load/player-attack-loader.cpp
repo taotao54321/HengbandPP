@@ -5,8 +5,7 @@
 #include "player/attack-defense-types.h"
 #include "player/special-defense-types.h"
 
-void rd_special_attack(player_type *creature_ptr)
-{
+void rd_special_attack(player_type* creature_ptr) {
     if (z_older_than(10, 0, 9)) {
         set_zangband_special_attack(creature_ptr);
         return;
@@ -16,8 +15,7 @@ void rd_special_attack(player_type *creature_ptr)
     rd_u32b(&creature_ptr->special_attack);
 }
 
-void rd_special_action(player_type *creature_ptr)
-{
+void rd_special_action(player_type* creature_ptr) {
     if (creature_ptr->special_attack & KAMAE_MASK) {
         creature_ptr->action = ACTION_KAMAE;
         return;
@@ -27,8 +25,7 @@ void rd_special_action(player_type *creature_ptr)
         creature_ptr->action = ACTION_KATA;
 }
 
-void rd_special_defense(player_type *creature_ptr)
-{
+void rd_special_defense(player_type* creature_ptr) {
     if (z_older_than(10, 0, 12)) {
         set_zangband_special_defense(creature_ptr);
         return;
@@ -38,8 +35,7 @@ void rd_special_defense(player_type *creature_ptr)
     rd_u32b(&creature_ptr->special_defense);
 }
 
-void rd_action(player_type *creature_ptr)
-{
+void rd_action(player_type* creature_ptr) {
     byte tmp8u;
     rd_byte(&tmp8u);
     rd_byte(&tmp8u);

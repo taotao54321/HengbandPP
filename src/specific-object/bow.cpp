@@ -7,8 +7,7 @@
  * @param o_ptr 判定する射撃武器のアイテム情報参照ポインタ
  * @return 対応する矢/弾薬のベースアイテムID
  */
-int bow_tval_ammo(object_type *o_ptr)
-{
+int bow_tval_ammo(object_type* o_ptr) {
     switch (o_ptr->sval) {
     case SV_SLING: {
         return TV_SHOT;

@@ -25,8 +25,7 @@
  * is the randint0(3) below; it governs the relative density of
  * twists and turns in the labyrinth: smaller number, more twists.
  */
-void r_visit(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, int node, DIRECTION dir, int *visited)
-{
+void r_visit(player_type* player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, int node, DIRECTION dir, int* visited) {
     int adj[4];
     int m = (x2 - x1) / 2 + 1;
     int n = (y2 - y1) / 2 + 1;
@@ -47,7 +46,8 @@ void r_visit(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POS
         }
 
         dir = adj[0];
-    } else {
+    }
+    else {
         adj[0] = dir;
         for (int i = 1; i < 4; i++)
             adj[i] = i;
@@ -93,10 +93,9 @@ void r_visit(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POS
     }
 }
 
-void build_maze_vault(player_type *player_ptr, POSITION x0, POSITION y0, POSITION xsize, POSITION ysize, bool is_vault)
-{
+void build_maze_vault(player_type* player_ptr, POSITION x0, POSITION y0, POSITION xsize, POSITION ysize, bool is_vault) {
     msg_print_wizard(player_ptr, CHEAT_DUNGEON, _("迷路ランダムVaultを生成しました。", "Maze Vault."));
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     bool light = ((floor_ptr->dun_level <= randint1(25)) && is_vault && !(d_info[floor_ptr->dungeon_idx].flags1 & DF1_DARKNESS));
     POSITION dy = ysize / 2 - 1;
     POSITION dx = xsize / 2 - 1;
@@ -106,16 +105,18 @@ void build_maze_vault(player_type *player_ptr, POSITION x0, POSITION y0, POSITIO
     POSITION x2 = x0 + dx;
     for (POSITION y = y1 - 1; y <= y2 + 1; y++) {
         for (POSITION x = x1 - 1; x <= x2 + 1; x++) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[y][x];
             g_ptr->info |= CAVE_ROOM;
             if (is_vault)
                 g_ptr->info |= CAVE_ICKY;
             if ((x == x1 - 1) || (x == x2 + 1) || (y == y1 - 1) || (y == y2 + 1)) {
                 place_grid(player_ptr, g_ptr, GB_OUTER);
-            } else if (!is_vault) {
+            }
+            else if (!is_vault) {
                 place_grid(player_ptr, g_ptr, GB_EXTRA);
-            } else {
+            }
+            else {
                 place_grid(player_ptr, g_ptr, GB_INNER);
             }
 
@@ -128,7 +129,7 @@ void build_maze_vault(player_type *player_ptr, POSITION x0, POSITION y0, POSITIO
     int n = dy + 1;
     int num_vertices = m * n;
 
-    int *visited;
+    int* visited;
     C_MAKE(visited, num_vertices, int);
     r_visit(player_ptr, y1, x1, y2, x2, randint0(num_vertices), 0, visited);
     if (is_vault)

@@ -14,9 +14,8 @@
  *
  * The doors must be INSIDE the allocated region.
  */
-void add_door(player_type *player_ptr, POSITION x, POSITION y)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void add_door(player_type* player_ptr, POSITION x, POSITION y) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!is_outer_bold(floor_ptr, y, x))
         return;
 
@@ -59,9 +58,8 @@ void add_door(player_type *player_ptr, POSITION x, POSITION y)
  * @param type DOOR_DEFAULT / DOOR_DOOR / DOOR_GLASS_DOOR / DOOR_CURTAIN のいずれか
  * @return なし
  */
-void place_secret_door(player_type *player_ptr, POSITION y, POSITION x, int type)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void place_secret_door(player_type* player_ptr, POSITION y, POSITION x, int type) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (d_info[floor_ptr->dungeon_idx].flags1 & DF1_NO_DOORS) {
         place_bold(player_ptr, y, x, GB_FLOOR);
         return;
@@ -74,7 +72,7 @@ void place_secret_door(player_type *player_ptr, POSITION y, POSITION x, int type
     }
 
     place_closed_door(player_ptr, y, x, type);
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     if (type != DOOR_CURTAIN) {
         g_ptr->mimic = feat_wall_inner;
         if (feat_supports_los(g_ptr->mimic) && !feat_supports_los(g_ptr->feat)) {
@@ -97,9 +95,8 @@ void place_secret_door(player_type *player_ptr, POSITION y, POSITION x, int type
  * @param x 配置したいフロアのX座標
  * @return なし
  */
-void place_locked_door(player_type *player_ptr, POSITION y, POSITION x)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void place_locked_door(player_type* player_ptr, POSITION y, POSITION x) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (d_info[floor_ptr->dungeon_idx].flags1 & DF1_NO_DOORS) {
         place_bold(player_ptr, y, x, GB_FLOOR);
         return;
@@ -118,10 +115,9 @@ void place_locked_door(player_type *player_ptr, POSITION y, POSITION x)
  * @param room 部屋に接している場合向けのドア生成か否か
  * @return なし
  */
-void place_random_door(player_type *player_ptr, POSITION y, POSITION x, bool room)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+void place_random_door(player_type* player_ptr, POSITION y, POSITION x, bool room) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     g_ptr->mimic = 0;
 
     if (d_info[floor_ptr->dungeon_idx].flags1 & DF1_NO_DOORS) {
@@ -137,9 +133,11 @@ void place_random_door(player_type *player_ptr, POSITION y, POSITION x, bool roo
     FEAT_IDX feat = feat_none;
     if (tmp < 300) {
         feat = feat_door[type].open;
-    } else if (tmp < 400) {
+    }
+    else if (tmp < 400) {
         feat = feat_door[type].broken;
-    } else if (tmp < 600) {
+    }
+    else if (tmp < 600) {
         place_closed_door(player_ptr, y, x, type);
 
         if (type != DOOR_CURTAIN) {
@@ -151,7 +149,8 @@ void place_random_door(player_type *player_ptr, POSITION y, POSITION x, bool roo
                 g_ptr->mimic = 0;
             }
         }
-    } else {
+    }
+    else {
         place_closed_door(player_ptr, y, x, type);
     }
 
@@ -162,7 +161,8 @@ void place_random_door(player_type *player_ptr, POSITION y, POSITION x, bool roo
 
     if (feat == feat_none) {
         place_bold(player_ptr, y, x, GB_FLOOR);
-    } else {
+    }
+    else {
         set_cave_feat(floor_ptr, y, x, feat);
     }
 
@@ -177,9 +177,8 @@ void place_random_door(player_type *player_ptr, POSITION y, POSITION x, bool roo
  * @param type ドアの地形ID
  * @return なし
  */
-void place_closed_door(player_type *player_ptr, POSITION y, POSITION x, int type)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void place_closed_door(player_type* player_ptr, POSITION y, POSITION x, int type) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (d_info[floor_ptr->dungeon_idx].flags1 & DF1_NO_DOORS) {
         place_bold(player_ptr, y, x, GB_FLOOR);
         return;
@@ -189,9 +188,11 @@ void place_closed_door(player_type *player_ptr, POSITION y, POSITION x, int type
     FEAT_IDX feat = feat_none;
     if (tmp < 300) {
         feat = feat_door[type].closed;
-    } else if (tmp < 399) {
+    }
+    else if (tmp < 399) {
         feat = feat_locked_door_random(type);
-    } else {
+    }
+    else {
         feat = feat_jammed_door_random(type);
     }
 

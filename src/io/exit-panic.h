@@ -5,4 +5,4 @@
 
 #include "system/angband.h"
 
-void exit_game_panic(player_type *creature_ptr);
+void exit_game_panic(player_type* creature_ptr);

@@ -24,8 +24,7 @@
  * @param m_idx 呪文を唱えるモンスターID
  * @return 召喚したモンスターの数を返す。
  */
-MONSTER_NUMBER summon_EAGLE(player_type *target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_EAGLE(player_type* target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx) {
     int count = 0;
     int num = 4 + randint1(3);
     for (int k = 0; k < num; k++) {
@@ -44,8 +43,7 @@ MONSTER_NUMBER summon_EAGLE(player_type *target_ptr, POSITION y, POSITION x, int
  * @param m_idx 呪文を唱えるモンスターID
  * @return 召喚したモンスターの数を返す。
  */
-MONSTER_NUMBER summon_EDGE(player_type *target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_EDGE(player_type* target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx) {
     int count = 0;
     int num = 2 + randint1(1 + rlev / 20);
     for (int k = 0; k < num; k++)
@@ -65,8 +63,7 @@ MONSTER_NUMBER summon_EDGE(player_type *target_ptr, POSITION y, POSITION x, int 
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return 召喚したモンスターの数を返す。
  */
-MONSTER_NUMBER summon_guardian(player_type *target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+MONSTER_NUMBER summon_guardian(player_type* target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
     int num = 2 + randint1(3);
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
@@ -97,8 +94,7 @@ MONSTER_NUMBER summon_guardian(player_type *target_ptr, POSITION y, POSITION x, 
  * @param m_idx 呪文を唱えるモンスターID
  * @return 召喚したモンスターの数を返す。
  */
-MONSTER_NUMBER summon_LOCKE_CLONE(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_LOCKE_CLONE(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx) {
     int count = 0;
     int num = randint1(3);
     for (int k = 0; k < num; k++) {
@@ -117,8 +113,7 @@ MONSTER_NUMBER summon_LOCKE_CLONE(player_type *target_ptr, POSITION y, POSITION 
  * @param m_idx 呪文を唱えるモンスターID
  * @return 召喚したモンスターの数を返す。
  */
-MONSTER_NUMBER summon_LOUSE(player_type *target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_LOUSE(player_type* target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx) {
     int count = 0;
     int num = 2 + randint1(3);
     for (int k = 0; k < num; k++)
@@ -127,8 +122,7 @@ MONSTER_NUMBER summon_LOUSE(player_type *target_ptr, POSITION y, POSITION x, int
     return count;
 }
 
-MONSTER_NUMBER summon_MOAI(player_type *target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_MOAI(player_type* target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx) {
     int count = 0;
     int num = 3 + randint1(3);
     for (int k = 0; k < num; k++)
@@ -137,8 +131,7 @@ MONSTER_NUMBER summon_MOAI(player_type *target_ptr, POSITION y, POSITION x, int 
     return count;
 }
 
-MONSTER_NUMBER summon_DEMON_SLAYER(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_DEMON_SLAYER(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx) {
     int count = 0;
     const int num = 5;
     for (int k = 0; k < num; k++)
@@ -158,8 +151,7 @@ MONSTER_NUMBER summon_DEMON_SLAYER(player_type *target_ptr, POSITION y, POSITION
  * @param m_idx 呪文を唱えるモンスターID
  * @return 召喚したモンスターの数を返す。
  */
-MONSTER_NUMBER summon_NAZGUL(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_NAZGUL(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx) {
     BIT_FLAGS mode = 0L;
     POSITION cy = y;
     POSITION cx = x;
@@ -209,8 +201,7 @@ MONSTER_NUMBER summon_NAZGUL(player_type *target_ptr, POSITION y, POSITION x, MO
     return count;
 }
 
-MONSTER_NUMBER summon_APOCRYPHA(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_APOCRYPHA(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx) {
     int count = 0;
     int num = 4 + randint1(4);
     summon_type followers = next_bool() ? SUMMON_APOCRYPHA_FOLLOWERS : SUMMON_APOCRYPHA_DRAGONS;
@@ -220,8 +211,7 @@ MONSTER_NUMBER summon_APOCRYPHA(player_type *target_ptr, POSITION y, POSITION x,
     return count;
 }
 
-MONSTER_NUMBER summon_HIGHEST_DRAGON(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_HIGHEST_DRAGON(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx) {
     int count = 0;
     int num = 4 + randint1(4);
     for (int k = 0; k < num; k++)
@@ -230,8 +220,7 @@ MONSTER_NUMBER summon_HIGHEST_DRAGON(player_type* target_ptr, POSITION y, POSITI
     return count;
 }
 
-MONSTER_NUMBER summon_PYRAMID(player_type* target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_PYRAMID(player_type* target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx) {
     int count = 0;
     int num = 2 + randint1(3);
     for (int k = 0; k < num; k++)
@@ -240,8 +229,7 @@ MONSTER_NUMBER summon_PYRAMID(player_type* target_ptr, POSITION y, POSITION x, i
     return count;
 }
 
-MONSTER_NUMBER summon_EYE_PHORN(player_type *target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_EYE_PHORN(player_type* target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx) {
     int count = 0;
     int num = 2 + randint1(1 + rlev / 20);
     for (int k = 0; k < num; k++)
@@ -250,8 +238,7 @@ MONSTER_NUMBER summon_EYE_PHORN(player_type *target_ptr, POSITION y, POSITION x,
     return count;
 }
 
-MONSTER_NUMBER summon_VESPOID(player_type *target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx)
-{
+MONSTER_NUMBER summon_VESPOID(player_type* target_ptr, POSITION y, POSITION x, int rlev, MONSTER_IDX m_idx) {
     int count = 0;
     int num = 2 + randint1(3);
     for (int k = 0; k < num; k++)

@@ -16,7 +16,7 @@ typedef struct lore_type {
     bool sin;
 #endif
     bool nightmare;
-    monster_race *r_ptr;
+    monster_race* r_ptr;
     SPEED speed;
     ITEM_NUMBER drop_gold;
     ITEM_NUMBER drop_item;
@@ -54,5 +54,5 @@ extern hook_c_roff_pf hook_c_roff;
 extern concptr wd_he[3];
 extern concptr wd_his[3];
 
-lore_type *initialize_lore_type(lore_type *lore_ptr, MONRACE_IDX r_idx, BIT_FLAGS mode);
+lore_type* initialize_lore_type(lore_type* lore_ptr, MONRACE_IDX r_idx, BIT_FLAGS mode);
 void hooked_roff(concptr str);

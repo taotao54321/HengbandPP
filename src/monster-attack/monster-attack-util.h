@@ -11,7 +11,7 @@ typedef struct monap_type {
     int abbreviate; // 2回目以降の省略表現フラグ.
 #endif
     MONSTER_IDX m_idx;
-    monster_type *m_ptr;
+    monster_type* m_ptr;
     concptr act;
     int do_cut;
     int do_stun;
@@ -23,7 +23,7 @@ typedef struct monap_type {
     bool do_silly_attack;
     int d_dice;
     int d_side;
-    object_type *o_ptr;
+    object_type* o_ptr;
     bool obvious;
     HIT_POINT damage;
     rbe_type effect;
@@ -37,4 +37,4 @@ typedef struct monap_type {
     int ap_cnt;
 } monap_type;
 
-monap_type *initialize_monap_type(player_type *target_ptr, monap_type *monap_ptr, MONSTER_IDX m_idx);
+monap_type* initialize_monap_type(player_type* target_ptr, monap_type* monap_ptr, MONSTER_IDX m_idx);

@@ -32,14 +32,13 @@
 #include "util/quarks.h"
 #include "util/string-processor.h"
 
-static BIT_FLAGS check_equipment_flags(player_type *creature_ptr, tr_type tr_flag);
+static BIT_FLAGS check_equipment_flags(player_type* creature_ptr, tr_type tr_flag);
 
 /*!
  * @brief 装備による所定の特性フラグを得ているかを一括して取得する関数。
  */
-static BIT_FLAGS check_equipment_flags(player_type *creature_ptr, tr_type tr_flag)
-{
-    object_type *o_ptr;
+static BIT_FLAGS check_equipment_flags(player_type* creature_ptr, tr_type tr_flag) {
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     BIT_FLAGS result = 0L;
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
@@ -58,15 +57,14 @@ static BIT_FLAGS check_equipment_flags(player_type *creature_ptr, tr_type tr_fla
 /*!
  * @brief クリーチャーが壁破壊進行を持っているかを返す。
  */
-bool has_kill_wall(player_type *creature_ptr)
-{
+bool has_kill_wall(player_type* creature_ptr) {
     if (creature_ptr->mimic_form == MIMIC_DEMON_LORD || music_singing(creature_ptr, MUSIC_WALL)) {
         return TRUE;
     }
 
     if (creature_ptr->riding) {
-        monster_type *riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
-        monster_race *riding_r_ptr = &r_info[riding_m_ptr->r_idx];
+        monster_type* riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+        monster_race* riding_r_ptr = &r_info[riding_m_ptr->r_idx];
         if (riding_r_ptr->flags2 & RF2_KILL_WALL)
             return TRUE;
     }
@@ -82,8 +80,7 @@ bool has_kill_wall(player_type *creature_ptr)
  * * 時限で幽体化、壁抜けをもつか種族幽霊ならばひとまずTRUE。
  * * 但し騎乗中は乗騎が壁抜けを持っていなければ不能になる。
  */
-bool has_pass_wall(player_type *creature_ptr)
-{
+bool has_pass_wall(player_type* creature_ptr) {
     bool pow = FALSE;
 
     if (creature_ptr->wraith_form || creature_ptr->tim_pass_wall || (!creature_ptr->mimic_form && creature_ptr->prace == RACE_SPECTRE)) {
@@ -91,8 +88,8 @@ bool has_pass_wall(player_type *creature_ptr)
     }
 
     if (creature_ptr->riding) {
-        monster_type *riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
-        monster_race *riding_r_ptr = &r_info[riding_m_ptr->r_idx];
+        monster_type* riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+        monster_race* riding_r_ptr = &r_info[riding_m_ptr->r_idx];
         if (!(riding_r_ptr->flags2 & RF2_PASS_WALL))
             pow = FALSE;
     }
@@ -105,8 +102,7 @@ bool has_pass_wall(player_type *creature_ptr)
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_xtra_might(player_type *creature_ptr)
-{
+BIT_FLAGS has_xtra_might(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     result |= check_equipment_flags(creature_ptr, TR_XTRA_MIGHT);
     return result;
@@ -118,10 +114,9 @@ BIT_FLAGS has_xtra_might(player_type *creature_ptr)
  * @return 持っていたら所持前提ビットフラグを返す。
  * @details 種族修正は0より大きければTRUEとする。
  */
-BIT_FLAGS has_infra_vision(player_type *creature_ptr)
-{
+BIT_FLAGS has_infra_vision(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
@@ -146,8 +141,7 @@ BIT_FLAGS has_infra_vision(player_type *creature_ptr)
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_evil(player_type *creature_ptr)
-{
+BIT_FLAGS has_esp_evil(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (creature_ptr->realm1 == REALM_HEX) {
         if (hex_spelling(creature_ptr, HEX_DETECT_EVIL))
@@ -162,85 +156,84 @@ BIT_FLAGS has_esp_evil(player_type *creature_ptr)
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_animal(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_ANIMAL); }
+BIT_FLAGS has_esp_animal(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_ANIMAL); }
 
 /*!
  * @brief クリーチャーがアンデッド感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_undead(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_UNDEAD); }
+BIT_FLAGS has_esp_undead(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_UNDEAD); }
 
 /*!
  * @brief クリーチャーが悪魔感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_demon(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_DEMON); }
+BIT_FLAGS has_esp_demon(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_DEMON); }
 
 /*!
  * @brief クリーチャーがオーク感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_orc(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_ORC); }
+BIT_FLAGS has_esp_orc(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_ORC); }
 
 /*!
  * @brief クリーチャーがトロル感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_troll(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_TROLL); }
+BIT_FLAGS has_esp_troll(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_TROLL); }
 
 /*!
  * @brief クリーチャーが巨人感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_giant(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_GIANT); }
+BIT_FLAGS has_esp_giant(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_GIANT); }
 
 /*!
  * @brief クリーチャーがドラゴン感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_dragon(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_DRAGON); }
+BIT_FLAGS has_esp_dragon(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_DRAGON); }
 
 /*!
  * @brief クリーチャーが人間感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_human(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_HUMAN); }
+BIT_FLAGS has_esp_human(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_HUMAN); }
 
 /*!
  * @brief クリーチャーが善良感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_good(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_GOOD); }
+BIT_FLAGS has_esp_good(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_GOOD); }
 
 /*!
  * @brief クリーチャーが無生物感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_nonliving(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_GOOD); }
+BIT_FLAGS has_esp_nonliving(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_GOOD); }
 
 /*!
  * @brief クリーチャーがユニーク感知を持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_unique(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_UNIQUE); }
+BIT_FLAGS has_esp_unique(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_UNIQUE); }
 
 /*!
  * @brief クリーチャーがテレパシーを持っているかを返す。
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_telepathy(player_type *creature_ptr)
-{
+BIT_FLAGS has_esp_telepathy(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (is_time_limit_esp(creature_ptr) || creature_ptr->ult_res || (creature_ptr->special_defense & KATA_MUSOU)) {
@@ -268,16 +261,15 @@ BIT_FLAGS has_esp_telepathy(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_bless_blade(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_BLESSED); }
+BIT_FLAGS has_bless_blade(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_BLESSED); }
 
-BIT_FLAGS has_easy2_weapon(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_EASY2_WEAPON); }
+BIT_FLAGS has_easy2_weapon(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_EASY2_WEAPON); }
 
-BIT_FLAGS has_down_saving(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_DOWN_SAVING); }
+BIT_FLAGS has_down_saving(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_DOWN_SAVING); }
 
-BIT_FLAGS has_no_ac(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_NO_AC); }
+BIT_FLAGS has_no_ac(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_NO_AC); }
 
-BIT_FLAGS has_invuln_arrow(player_type *creature_ptr)
-{
+BIT_FLAGS has_invuln_arrow(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (creature_ptr->blind)
         return result;
@@ -285,9 +277,8 @@ BIT_FLAGS has_invuln_arrow(player_type *creature_ptr)
     return result;
 }
 
-void has_no_flowed(player_type *creature_ptr)
-{
-    object_type *o_ptr;
+void has_no_flowed(player_type* creature_ptr) {
+    object_type* o_ptr;
     bool has_sw = FALSE, has_kabe = FALSE;
     OBJECT_IDX this_o_idx, next_o_idx = 0;
 
@@ -314,24 +305,23 @@ void has_no_flowed(player_type *creature_ptr)
     }
 
     if (has_sw && ((creature_ptr->realm1 == REALM_NATURE) || (creature_ptr->realm2 == REALM_NATURE) || (creature_ptr->pclass == CLASS_SORCERER))) {
-        const magic_type *s_ptr = &mp_ptr->info[REALM_NATURE - 1][SPELL_SW];
+        const magic_type* s_ptr = &mp_ptr->info[REALM_NATURE - 1][SPELL_SW];
         if (creature_ptr->lev >= s_ptr->slevel)
             creature_ptr->no_flowed = TRUE;
     }
 
     if (has_kabe && ((creature_ptr->realm1 == REALM_CRAFT) || (creature_ptr->realm2 == REALM_CRAFT) || (creature_ptr->pclass == CLASS_SORCERER))) {
-        const magic_type *s_ptr = &mp_ptr->info[REALM_CRAFT - 1][SPELL_WALL];
+        const magic_type* s_ptr = &mp_ptr->info[REALM_CRAFT - 1][SPELL_WALL];
         if (creature_ptr->lev >= s_ptr->slevel)
             creature_ptr->no_flowed = TRUE;
     }
 }
 
-BIT_FLAGS has_mighty_throw(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_MIGHTY_THROW); }
+BIT_FLAGS has_mighty_throw(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_MIGHTY_THROW); }
 
-BIT_FLAGS has_dec_mana(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_DEC_MANA); }
+BIT_FLAGS has_dec_mana(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_DEC_MANA); }
 
-BIT_FLAGS has_reflect(player_type *creature_ptr)
-{
+BIT_FLAGS has_reflect(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pclass == CLASS_BERSERKER && creature_ptr->lev > 39)
@@ -352,12 +342,11 @@ BIT_FLAGS has_reflect(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_see_nocto(player_type *creature_ptr) { return creature_ptr->pclass == CLASS_NINJA ? FLAG_CAUSE_CLASS : 0L; }
+BIT_FLAGS has_see_nocto(player_type* creature_ptr) { return creature_ptr->pclass == CLASS_NINJA ? FLAG_CAUSE_CLASS : 0L; }
 
-BIT_FLAGS has_warning(player_type *creature_ptr)
-{
+BIT_FLAGS has_warning(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
-    object_type *o_ptr;
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
@@ -375,12 +364,11 @@ BIT_FLAGS has_warning(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_anti_magic(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_NO_MAGIC); }
+BIT_FLAGS has_anti_magic(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_NO_MAGIC); }
 
-BIT_FLAGS has_anti_tele(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_NO_TELE); }
+BIT_FLAGS has_anti_tele(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_NO_TELE); }
 
-BIT_FLAGS has_sh_fire(player_type *creature_ptr)
-{
+BIT_FLAGS has_sh_fire(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->muta3 & MUT3_FIRE_BODY) {
@@ -403,8 +391,7 @@ BIT_FLAGS has_sh_fire(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_sh_elec(player_type *creature_ptr)
-{
+BIT_FLAGS has_sh_elec(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->muta3 & MUT3_ELEC_TOUC)
@@ -422,8 +409,7 @@ BIT_FLAGS has_sh_elec(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_sh_cold(player_type *creature_ptr)
-{
+BIT_FLAGS has_sh_cold(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->special_defense & KAMAE_SEIRYU || creature_ptr->special_defense & KATA_MUSOU) {
@@ -438,12 +424,11 @@ BIT_FLAGS has_sh_cold(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_easy_spell(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_EASY_SPELL); }
+BIT_FLAGS has_easy_spell(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_EASY_SPELL); }
 
-BIT_FLAGS has_heavy_spell(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_HEAVY_SPELL); }
+BIT_FLAGS has_heavy_spell(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_HEAVY_SPELL); }
 
-BIT_FLAGS has_hold_exp(player_type *creature_ptr)
-{
+BIT_FLAGS has_hold_exp(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pseikaku == PERSONALITY_MUNCHKIN) {
@@ -478,8 +463,7 @@ BIT_FLAGS has_hold_exp(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_see_inv(player_type *creature_ptr)
-{
+BIT_FLAGS has_see_inv(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pclass == CLASS_NINJA && creature_ptr->lev > 29)
@@ -487,15 +471,19 @@ BIT_FLAGS has_see_inv(player_type *creature_ptr)
 
     if (creature_ptr->mimic_form == MIMIC_DEMON || creature_ptr->mimic_form == MIMIC_DEMON_LORD || creature_ptr->mimic_form == MIMIC_VAMPIRE) {
         result |= 0x01 << FLAG_CAUSE_RACE;
-    } else if (is_specific_player_race(creature_ptr, RACE_HIGH_ELF) || is_specific_player_race(creature_ptr, RACE_GOLEM)
+    }
+    else if (is_specific_player_race(creature_ptr, RACE_HIGH_ELF) || is_specific_player_race(creature_ptr, RACE_GOLEM)
         || is_specific_player_race(creature_ptr, RACE_SKELETON) || is_specific_player_race(creature_ptr, RACE_ZOMBIE)
         || is_specific_player_race(creature_ptr, RACE_SPECTRE) || is_specific_player_race(creature_ptr, RACE_ARCHON)) {
         result |= 0x01 << FLAG_CAUSE_RACE;
-    } else if (is_specific_player_race(creature_ptr, RACE_DARK_ELF) && creature_ptr->lev > 19) {
+    }
+    else if (is_specific_player_race(creature_ptr, RACE_DARK_ELF) && creature_ptr->lev > 19) {
         result |= 0x01 << FLAG_CAUSE_RACE;
-    } else if (is_specific_player_race(creature_ptr, RACE_MIND_FLAYER) && creature_ptr->lev > 14) {
+    }
+    else if (is_specific_player_race(creature_ptr, RACE_MIND_FLAYER) && creature_ptr->lev > 14) {
         result |= 0x01 << FLAG_CAUSE_RACE;
-    } else if ((is_specific_player_race(creature_ptr, RACE_IMP) || is_specific_player_race(creature_ptr, RACE_BALROG)) && creature_ptr->lev > 9) {
+    }
+    else if ((is_specific_player_race(creature_ptr, RACE_IMP) || is_specific_player_race(creature_ptr, RACE_BALROG)) && creature_ptr->lev > 9) {
         result |= 0x01 << FLAG_CAUSE_RACE;
     }
 
@@ -511,10 +499,9 @@ BIT_FLAGS has_see_inv(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_magic_mastery(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_MAGIC_MASTERY); }
+BIT_FLAGS has_magic_mastery(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_MAGIC_MASTERY); }
 
-BIT_FLAGS has_free_act(player_type *creature_ptr)
-{
+BIT_FLAGS has_free_act(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->muta3 & MUT3_MOTION)
@@ -555,8 +542,7 @@ BIT_FLAGS has_free_act(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_sustain_str(player_type *creature_ptr)
-{
+BIT_FLAGS has_sustain_str(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pclass == CLASS_BERSERKER) {
@@ -579,8 +565,7 @@ BIT_FLAGS has_sustain_str(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_sustain_int(player_type *creature_ptr)
-{
+BIT_FLAGS has_sustain_int(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (is_specific_player_race(creature_ptr, RACE_MIND_FLAYER)) {
@@ -599,8 +584,7 @@ BIT_FLAGS has_sustain_int(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_sustain_wis(player_type *creature_ptr)
-{
+BIT_FLAGS has_sustain_wis(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     result = FALSE;
@@ -623,8 +607,7 @@ BIT_FLAGS has_sustain_wis(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_sustain_dex(player_type *creature_ptr)
-{
+BIT_FLAGS has_sustain_dex(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (creature_ptr->pclass == CLASS_BERSERKER) {
         result |= 0x01 << FLAG_CAUSE_CLASS;
@@ -645,8 +628,7 @@ BIT_FLAGS has_sustain_dex(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_sustain_con(player_type *creature_ptr)
-{
+BIT_FLAGS has_sustain_con(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (creature_ptr->pclass == CLASS_BERSERKER) {
         result |= 0x01 << FLAG_CAUSE_CLASS;
@@ -668,8 +650,7 @@ BIT_FLAGS has_sustain_con(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_sustain_chr(player_type *creature_ptr)
-{
+BIT_FLAGS has_sustain_chr(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->ult_res) {
@@ -684,8 +665,7 @@ BIT_FLAGS has_sustain_chr(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_levitation(player_type *creature_ptr)
-{
+BIT_FLAGS has_levitation(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->muta3 & MUT3_WINGS)
@@ -710,8 +690,8 @@ BIT_FLAGS has_levitation(player_type *creature_ptr)
     }
 
     if (creature_ptr->riding) {
-        monster_type *riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
-        monster_race *riding_r_ptr = &r_info[riding_m_ptr->r_idx];
+        monster_type* riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+        monster_race* riding_r_ptr = &r_info[riding_m_ptr->r_idx];
         result = (riding_r_ptr->flags7 & RF7_CAN_FLY) ? result : 0;
     }
 
@@ -723,19 +703,17 @@ BIT_FLAGS has_levitation(player_type *creature_ptr)
     return result;
 }
 
-void has_can_swim(player_type *creature_ptr)
-{
+void has_can_swim(player_type* creature_ptr) {
     creature_ptr->can_swim = FALSE;
     if (creature_ptr->riding) {
-        monster_type *riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
-        monster_race *riding_r_ptr = &r_info[riding_m_ptr->r_idx];
+        monster_type* riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+        monster_race* riding_r_ptr = &r_info[riding_m_ptr->r_idx];
         if (riding_r_ptr->flags7 & (RF7_CAN_SWIM | RF7_AQUATIC))
             creature_ptr->can_swim = TRUE;
     }
 }
 
-BIT_FLAGS has_slow_digest(player_type *creature_ptr)
-{
+BIT_FLAGS has_slow_digest(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pclass == CLASS_NINJA) {
@@ -771,8 +749,7 @@ BIT_FLAGS has_slow_digest(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_regenerate(player_type *creature_ptr)
-{
+BIT_FLAGS has_regenerate(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (is_specific_player_race(creature_ptr, RACE_HALF_TROLL) && creature_ptr->lev > 14) {
@@ -810,9 +787,8 @@ BIT_FLAGS has_regenerate(player_type *creature_ptr)
     return result;
 }
 
-void has_curses(player_type *creature_ptr)
-{
-    object_type *o_ptr;
+void has_curses(player_type* creature_ptr) {
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     creature_ptr->cursed = 0L;
 
@@ -871,7 +847,8 @@ void has_curses(player_type *creature_ptr)
 
                 /* {.} will stop random teleportation. */
                 if (o_ptr->inscription && angband_strchr(insc, '.')) {
-                } else {
+                }
+                else {
                     creature_ptr->cursed |= TRC_TELEPORT_SELF;
                 }
             }
@@ -886,11 +863,10 @@ void has_curses(player_type *creature_ptr)
     }
 }
 
-BIT_FLAGS has_impact(player_type *creature_ptr) { return check_equipment_flags(creature_ptr, TR_IMPACT); }
+BIT_FLAGS has_impact(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_IMPACT); }
 
-void has_extra_blow(player_type *creature_ptr)
-{
-    object_type *o_ptr;
+void has_extra_blow(player_type* creature_ptr) {
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     creature_ptr->extra_blows[0] = creature_ptr->extra_blows[1] = 0;
 
@@ -913,15 +889,16 @@ void has_extra_blow(player_type *creature_ptr)
     }
 }
 
-BIT_FLAGS has_resist_acid(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_acid(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->mimic_form == MIMIC_DEMON_LORD) {
         result |= 0x01 << FLAG_CAUSE_RACE;
-    } else if (is_specific_player_race(creature_ptr, RACE_YEEK) || is_specific_player_race(creature_ptr, RACE_KLACKON)) {
+    }
+    else if (is_specific_player_race(creature_ptr, RACE_YEEK) || is_specific_player_race(creature_ptr, RACE_KLACKON)) {
         result |= 0x01 << FLAG_CAUSE_RACE;
-    } else if (is_specific_player_race(creature_ptr, RACE_DRACONIAN) && creature_ptr->lev > 14) {
+    }
+    else if (is_specific_player_race(creature_ptr, RACE_DRACONIAN) && creature_ptr->lev > 14) {
         result |= 0x01 << FLAG_CAUSE_RACE;
     }
 
@@ -939,8 +916,7 @@ BIT_FLAGS has_resist_acid(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_vuln_acid(player_type *creature_ptr)
-{
+BIT_FLAGS has_vuln_acid(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (creature_ptr->muta3 & MUT3_VULN_ELEM) {
         result |= 0x01 << FLAG_CAUSE_MUTATION;
@@ -952,13 +928,13 @@ BIT_FLAGS has_vuln_acid(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_elec(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_elec(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->mimic_form == MIMIC_DEMON_LORD) {
         result |= 0x01 << FLAG_CAUSE_RACE;
-    } else if (is_specific_player_race(creature_ptr, RACE_DRACONIAN) && creature_ptr->lev > 19) {
+    }
+    else if (is_specific_player_race(creature_ptr, RACE_DRACONIAN) && creature_ptr->lev > 19) {
         result |= 0x01 << FLAG_CAUSE_RACE;
     }
 
@@ -975,8 +951,7 @@ BIT_FLAGS has_resist_elec(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_vuln_elec(player_type *creature_ptr)
-{
+BIT_FLAGS has_vuln_elec(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (creature_ptr->muta3 & MUT3_VULN_ELEM) {
         result |= 0x01 << FLAG_CAUSE_MUTATION;
@@ -992,8 +967,7 @@ BIT_FLAGS has_vuln_elec(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_fire(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_fire(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->mimic_form == MIMIC_DEMON || creature_ptr->mimic_form == MIMIC_DEMON_LORD) {
@@ -1021,8 +995,7 @@ BIT_FLAGS has_resist_fire(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_vuln_fire(player_type *creature_ptr)
-{
+BIT_FLAGS has_vuln_fire(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (creature_ptr->muta3 & MUT3_VULN_ELEM) {
         result |= 0x01 << FLAG_CAUSE_MUTATION;
@@ -1038,8 +1011,7 @@ BIT_FLAGS has_vuln_fire(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_cold(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_cold(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->mimic_form == MIMIC_DEMON_LORD || creature_ptr->mimic_form == MIMIC_VAMPIRE) {
@@ -1071,8 +1043,7 @@ BIT_FLAGS has_resist_cold(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_vuln_cold(player_type *creature_ptr)
-{
+BIT_FLAGS has_vuln_cold(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (creature_ptr->muta3 & MUT3_VULN_ELEM) {
         result |= 0x01 << FLAG_CAUSE_MUTATION;
@@ -1084,8 +1055,7 @@ BIT_FLAGS has_vuln_cold(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_pois(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_pois(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pclass == CLASS_NINJA && creature_ptr->lev > 19)
@@ -1117,8 +1087,7 @@ BIT_FLAGS has_resist_pois(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_conf(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_conf(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pclass == CLASS_MINDCRAFTER && creature_ptr->lev > 29)
@@ -1148,8 +1117,7 @@ BIT_FLAGS has_resist_conf(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_sound(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_sound(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pclass == CLASS_BARD) {
@@ -1172,8 +1140,7 @@ BIT_FLAGS has_resist_sound(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_lite(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_lite(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (!creature_ptr->mimic_form && (creature_ptr->prace == RACE_ELF || creature_ptr->prace == RACE_HIGH_ELF || creature_ptr->prace == RACE_SPRITE)) {
@@ -1192,8 +1159,7 @@ BIT_FLAGS has_resist_lite(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_vuln_lite(player_type *creature_ptr)
-{
+BIT_FLAGS has_vuln_lite(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (is_specific_player_race(creature_ptr, RACE_S_FAIRY) || is_specific_player_race(creature_ptr, RACE_VAMPIRE)
         || (creature_ptr->mimic_form == MIMIC_VAMPIRE)) {
@@ -1207,8 +1173,7 @@ BIT_FLAGS has_vuln_lite(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_dark(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_dark(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->mimic_form == MIMIC_VAMPIRE) {
@@ -1233,8 +1198,7 @@ BIT_FLAGS has_resist_dark(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_chaos(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_chaos(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pclass == CLASS_CHAOS_WARRIOR && creature_ptr->lev > 29)
@@ -1259,8 +1223,7 @@ BIT_FLAGS has_resist_chaos(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_disen(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_disen(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->mimic_form == MIMIC_DEMON_LORD) {
@@ -1282,8 +1245,7 @@ BIT_FLAGS has_resist_disen(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_shard(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_shard(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (!creature_ptr->mimic_form && (creature_ptr->prace == RACE_HALF_TITAN || creature_ptr->prace == RACE_SKELETON))
@@ -1301,8 +1263,7 @@ BIT_FLAGS has_resist_shard(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_nexus(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_nexus(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->mimic_form == MIMIC_DEMON_LORD) {
@@ -1321,8 +1282,7 @@ BIT_FLAGS has_resist_nexus(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_blind(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_blind(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->pseikaku == PERSONALITY_MUNCHKIN) {
@@ -1344,8 +1304,7 @@ BIT_FLAGS has_resist_blind(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_neth(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_neth(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->mimic_form == MIMIC_DEMON_LORD || creature_ptr->mimic_form == MIMIC_DEMON || creature_ptr->mimic_form == MIMIC_VAMPIRE) {
@@ -1369,8 +1328,7 @@ BIT_FLAGS has_resist_neth(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_time(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_time(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->tim_res_time) {
@@ -1381,8 +1339,7 @@ BIT_FLAGS has_resist_time(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_water(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_water(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (!creature_ptr->mimic_form && creature_ptr->prace == RACE_MERFOLK)
@@ -1392,8 +1349,7 @@ BIT_FLAGS has_resist_water(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_resist_fear(player_type *creature_ptr)
-{
+BIT_FLAGS has_resist_fear(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->muta3 & MUT3_FEARLESS)
@@ -1438,8 +1394,7 @@ BIT_FLAGS has_resist_fear(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_immune_acid(player_type *creature_ptr)
-{
+BIT_FLAGS has_immune_acid(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (!creature_ptr->mimic_form && creature_ptr->prace == RACE_YEEK && creature_ptr->lev > 19)
         result |= 0x01 << FLAG_CAUSE_RACE;
@@ -1453,8 +1408,7 @@ BIT_FLAGS has_immune_acid(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_immune_elec(player_type *creature_ptr)
-{
+BIT_FLAGS has_immune_elec(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->ele_immune) {
@@ -1466,8 +1420,7 @@ BIT_FLAGS has_immune_elec(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_immune_fire(player_type *creature_ptr)
-{
+BIT_FLAGS has_immune_fire(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->ele_immune) {
@@ -1479,8 +1432,7 @@ BIT_FLAGS has_immune_fire(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_immune_cold(player_type *creature_ptr)
-{
+BIT_FLAGS has_immune_cold(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (creature_ptr->ele_immune) {
@@ -1492,8 +1444,7 @@ BIT_FLAGS has_immune_cold(player_type *creature_ptr)
     return result;
 }
 
-BIT_FLAGS has_immune_dark(player_type *creature_ptr)
-{
+BIT_FLAGS has_immune_dark(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
 
     if (is_specific_player_race(creature_ptr, RACE_VAMPIRE) || (creature_ptr->mimic_form == MIMIC_VAMPIRE)) {
@@ -1511,8 +1462,7 @@ BIT_FLAGS has_immune_dark(player_type *creature_ptr)
  * @brief 右手(利き手)が武器を持っているかどうかを判定する
  * @detail Includes martial arts and hand combats as weapons.
  */
-bool has_right_hand_weapon(player_type *creature_ptr)
-{
+bool has_right_hand_weapon(player_type* creature_ptr) {
     if (has_melee_weapon(creature_ptr, INVEN_RARM))
         return TRUE;
 
@@ -1526,15 +1476,15 @@ bool has_right_hand_weapon(player_type *creature_ptr)
  * @brief 左手(非利き手)が武器を持っているかどうかを判定する
  * @detail Exclude martial arts and hand combats from weapons.
  */
-bool has_left_hand_weapon(player_type *creature_ptr) { return has_melee_weapon(creature_ptr, INVEN_LARM); }
+bool has_left_hand_weapon(player_type* creature_ptr) { return has_melee_weapon(creature_ptr, INVEN_LARM); }
 
-bool has_two_handed_weapons(player_type *creature_ptr)
-{
+bool has_two_handed_weapons(player_type* creature_ptr) {
     if (can_two_hands_wielding(creature_ptr)) {
         if (has_right_hand_weapon(creature_ptr) && (empty_hands(creature_ptr, FALSE) == EMPTY_HAND_LARM)
             && object_allow_two_hands_wielding(&creature_ptr->inventory_list[INVEN_RARM])) {
             return TRUE;
-        } else if (has_left_hand_weapon(creature_ptr) && (empty_hands(creature_ptr, FALSE) == EMPTY_HAND_RARM)
+        }
+        else if (has_left_hand_weapon(creature_ptr) && (empty_hands(creature_ptr, FALSE) == EMPTY_HAND_RARM)
             && object_allow_two_hands_wielding(&creature_ptr->inventory_list[INVEN_LARM])) {
             return TRUE;
         }
@@ -1542,8 +1492,7 @@ bool has_two_handed_weapons(player_type *creature_ptr)
     return FALSE;
 }
 
-BIT_FLAGS has_lite(player_type *creature_ptr)
-{
+BIT_FLAGS has_lite(player_type* creature_ptr) {
     BIT_FLAGS result = 0L;
     if (creature_ptr->pclass == CLASS_NINJA)
         return 0L;
@@ -1578,10 +1527,9 @@ BIT_FLAGS has_lite(player_type *creature_ptr)
  *  Only can get hit bonuses when wieids an enough light weapon which is lighter than 5 times of weight limit.
  *  If its weight is 10 times heavier or more than weight limit, gets hit penalty in calc_to_hit().
  */
-bool has_disable_two_handed_bonus(player_type *creature_ptr, int i)
-{
+bool has_disable_two_handed_bonus(player_type* creature_ptr, int i) {
     if (has_melee_weapon(creature_ptr, INVEN_RARM + i) && has_two_handed_weapons(creature_ptr)) {
-        object_type *o_ptr = &creature_ptr->inventory_list[INVEN_RARM + i];
+        object_type* o_ptr = &creature_ptr->inventory_list[INVEN_RARM + i];
         int limit = calc_weapon_weight_limit(creature_ptr) * 2;
 
         /* Enable when two hand wields an enough light weapon */
@@ -1593,16 +1541,16 @@ bool has_disable_two_handed_bonus(player_type *creature_ptr, int i)
     return TRUE;
 }
 
-bool has_icky_wield_weapon(player_type *creature_ptr, int i)
-{
-    object_type *o_ptr;
+bool has_icky_wield_weapon(player_type* creature_ptr, int i) {
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     o_ptr = &creature_ptr->inventory_list[INVEN_RARM + i];
     object_flags(creature_ptr, o_ptr, flgs);
 
     if ((creature_ptr->pclass == CLASS_PRIEST) && (!(has_flag(flgs, TR_BLESSED))) && ((o_ptr->tval == TV_SWORD) || (o_ptr->tval == TV_POLEARM))) {
         return TRUE;
-    } else if (creature_ptr->pclass == CLASS_SORCERER) {
+    }
+    else if (creature_ptr->pclass == CLASS_SORCERER) {
         if (!((o_ptr->tval == TV_HAFTED) && ((o_ptr->sval == SV_WIZSTAFF) || (o_ptr->sval == SV_NAMAKE_HAMMER)))) {
             return TRUE;
         }
@@ -1613,9 +1561,8 @@ bool has_icky_wield_weapon(player_type *creature_ptr, int i)
     return FALSE;
 }
 
-bool has_riding_wield_weapon(player_type *creature_ptr, int i)
-{
-    object_type *o_ptr;
+bool has_riding_wield_weapon(player_type* creature_ptr, int i) {
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     o_ptr = &creature_ptr->inventory_list[INVEN_RARM + i];
     object_flags(creature_ptr, o_ptr, flgs);
@@ -1626,19 +1573,17 @@ bool has_riding_wield_weapon(player_type *creature_ptr, int i)
     return FALSE;
 }
 
-bool has_not_ninja_weapon(player_type *creature_ptr, int i)
-{
+bool has_not_ninja_weapon(player_type* creature_ptr, int i) {
     tval_type tval = tval_type(creature_ptr->inventory_list[INVEN_RARM + i].tval - TV_WEAPON_BEGIN);
     OBJECT_SUBTYPE_VALUE sval = creature_ptr->inventory_list[INVEN_RARM + i].sval;
     return creature_ptr->pclass == CLASS_NINJA
         && !((s_info[CLASS_NINJA].w_max[tval][sval] > WEAPON_EXP_BEGINNER) && (creature_ptr->inventory_list[INVEN_LARM - i].tval != TV_SHIELD));
 }
 
-bool has_not_monk_weapon(player_type *creature_ptr, int i)
-{
+bool has_not_monk_weapon(player_type* creature_ptr, int i) {
     tval_type tval = tval_type(creature_ptr->inventory_list[INVEN_RARM + i].tval - TV_WEAPON_BEGIN);
     OBJECT_SUBTYPE_VALUE sval = creature_ptr->inventory_list[INVEN_RARM + i].sval;
     return ((creature_ptr->pclass == CLASS_MONK) || (creature_ptr->pclass == CLASS_FORCETRAINER)) && !(s_info[creature_ptr->pclass].w_max[tval][sval]);
 }
 
-bool has_good_luck(player_type *creature_ptr) { return (creature_ptr->pseikaku == PERSONALITY_LUCKY) || (creature_ptr->muta3 & MUT3_GOOD_LUCK); }
+bool has_good_luck(player_type* creature_ptr) { return (creature_ptr->pseikaku == PERSONALITY_LUCKY) || (creature_ptr->muta3 & MUT3_GOOD_LUCK); }

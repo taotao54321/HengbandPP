@@ -11,8 +11,7 @@
  * @return なし
  * @details もはや何に使われていたのか不明
  */
-void rd_dummy1(void)
-{
+void rd_dummy1(void) {
     s16b tmp16s;
     rd_s16b(&tmp16s);
     for (int i = 0; i < tmp16s; i++) {
@@ -27,8 +26,7 @@ void rd_dummy1(void)
  * @return なし
  * @details もはや何に使われていたのか不明
  */
-void rd_dummy2(void)
-{
+void rd_dummy2(void) {
     byte tmp8u;
     for (int i = 0; i < 48; i++)
         rd_byte(&tmp8u);
@@ -42,8 +40,7 @@ void rd_dummy2(void)
  * @return なし
  * @details もはや何に使われていたのか不明
  */
-void rd_dummy_monsters(player_type *creature_ptr)
-{
+void rd_dummy_monsters(player_type* creature_ptr) {
     if (h_older_than(1, 5, 0, 2))
         return;
 
@@ -61,15 +58,13 @@ void rd_dummy_monsters(player_type *creature_ptr)
  * @details
  * This is such a nasty hack it hurts.
  */
-void rd_ghost(void)
-{
+void rd_ghost(void) {
     char buf[64];
     rd_string(buf, sizeof(buf));
     strip_bytes(60);
 }
 
-void rd_dummy3(void)
-{
+void rd_dummy3(void) {
     u32b tmp32u;
     rd_u32b(&tmp32u);
 

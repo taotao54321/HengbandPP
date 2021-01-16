@@ -44,8 +44,7 @@
  *
  * Close down, then fall back into "quit()".
  */
-static void quit_hook(concptr s)
-{
+static void quit_hook(concptr s) {
     int j;
 
     /* Unused */
@@ -73,8 +72,7 @@ static void quit_hook(concptr s)
  * ToDo: Add error handling.
  * ToDo: Only create the directories when actually writing files.
  */
-static void create_user_dir(void)
-{
+static void create_user_dir(void) {
     char dirpath[1024];
     char subdirpath[1024];
 
@@ -113,8 +111,7 @@ static void create_user_dir(void)
  * to leave enough space for the path separator, directory, and
  * filenames.
  */
-static void init_stuff(void)
-{
+static void init_stuff(void) {
     char libpath[1024], varpath[1024];
 
     concptr tail;
@@ -149,8 +146,7 @@ static void init_stuff(void)
  * The "<path>" can be any legal path for the given system, and should
  * not end in any special path separator (i.e. "/tmp" or "~/.ang-info").
  */
-static void change_path(concptr info)
-{
+static void change_path(concptr info) {
     concptr s;
 
     /* Find equal sign */
@@ -234,8 +230,7 @@ static void change_path(concptr info)
     }
 }
 
-static void display_usage(void)
-{
+static void display_usage(void) {
     /* Dump usage information */
     puts("Usage: angband [options] [-- subopts]");
     puts("  -n       Start a new character");
@@ -284,8 +279,7 @@ static void display_usage(void)
  * standard options.  All non-standard options (if any) are passed
  * directly to the "init_xxx()" function.
  */
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
     int i;
 
     bool done = FALSE;
@@ -480,7 +474,7 @@ int main(int argc, char *argv[])
 #ifdef USE_XAW
     /* Attempt to use the "main-xaw.c" support */
     if (!done && (!mstr || (streq(mstr, "xaw")))) {
-        extern errr init_xaw(int, char **);
+        extern errr init_xaw(int, char**);
         if (0 == init_xaw(argc, argv)) {
             ANGBAND_SYS = "xaw";
             done = TRUE;
@@ -491,7 +485,7 @@ int main(int argc, char *argv[])
 #ifdef USE_X11
     /* Attempt to use the "main-x11.c" support */
     if (!done && (!mstr || (streq(mstr, "x11")))) {
-        extern errr init_x11(int, char **);
+        extern errr init_x11(int, char**);
         if (0 == init_x11(argc, argv)) {
             ANGBAND_SYS = "x11";
             done = TRUE;
@@ -502,7 +496,7 @@ int main(int argc, char *argv[])
 #ifdef USE_GCU
     /* Attempt to use the "main-gcu.c" support */
     if (!done && (!mstr || (streq(mstr, "gcu")))) {
-        extern errr init_gcu(int, char **);
+        extern errr init_gcu(int, char**);
         if (0 == init_gcu(argc, argv)) {
             ANGBAND_SYS = "gcu";
             done = TRUE;
@@ -513,7 +507,7 @@ int main(int argc, char *argv[])
 #ifdef USE_CAP
     /* Attempt to use the "main-cap.c" support */
     if (!done && (!mstr || (streq(mstr, "cap")))) {
-        extern errr init_cap(int, char **);
+        extern errr init_cap(int, char**);
         if (0 == init_cap(argc, argv)) {
             ANGBAND_SYS = "cap";
             done = TRUE;

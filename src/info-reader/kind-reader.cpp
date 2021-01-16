@@ -15,8 +15,7 @@
  * @param what 参照元の文字列ポインタ
  * @return エラーコード
  */
-static errr grab_one_kind_flag(object_kind *k_ptr, concptr what)
-{
+static errr grab_one_kind_flag(object_kind* k_ptr, concptr what) {
     for (int i = 0; i < TR_FLAG_MAX; i++) {
         if (streq(what, k_info_flags[i])) {
             add_flag(k_ptr->flags, i);
@@ -38,14 +37,13 @@ static errr grab_one_kind_flag(object_kind *k_ptr, concptr what)
  * @param head ヘッダ構造体
  * @return エラーコード
  */
-errr parse_k_info(char *buf, angband_header *head)
-{
-    static object_kind *k_ptr = NULL;
+errr parse_k_info(char* buf, angband_header* head) {
+    static object_kind* k_ptr = NULL;
 
     char *s, *t;
     if (buf[0] == 'N') {
 #ifdef JP
-        char *flavor;
+        char* flavor;
 #endif
         s = angband_strchr(buf + 2, ':');
         if (!s)
@@ -76,7 +74,8 @@ errr parse_k_info(char *buf, angband_header *head)
         if (!add_name(&k_ptr->name, head, s))
             return 7;
 #endif
-    } else if (!k_ptr) {
+    }
+    else if (!k_ptr) {
         return 3;
     }
 #ifdef JP
@@ -87,7 +86,7 @@ errr parse_k_info(char *buf, angband_header *head)
     }
 #else
     else if (buf[0] == 'E') {
-        char *flavor;
+        char* flavor;
         s = buf + 2;
         flavor = angband_strchr(s, ':');
         if (flavor) {
@@ -112,7 +111,8 @@ errr parse_k_info(char *buf, angband_header *head)
 #endif
         if (!add_text(&k_ptr->text, head, s, TRUE))
             return 7;
-    } else if (buf[0] == 'G') {
+    }
+    else if (buf[0] == 'G') {
         char sym;
         byte tmp;
         if (buf[1] != ':')
@@ -131,7 +131,8 @@ errr parse_k_info(char *buf, angband_header *head)
 
         k_ptr->d_attr = tmp;
         k_ptr->d_char = sym;
-    } else if (buf[0] == 'I') {
+    }
+    else if (buf[0] == 'I') {
         int tval, sval, pval;
         if (3 != sscanf(buf + 2, "%d:%d:%d", &tval, &sval, &pval))
             return 1;
@@ -139,7 +140,8 @@ errr parse_k_info(char *buf, angband_header *head)
         k_ptr->tval = (tval_type)tval;
         k_ptr->sval = (OBJECT_SUBTYPE_VALUE)sval;
         k_ptr->pval = (PARAMETER_VALUE)pval;
-    } else if (buf[0] == 'W') {
+    }
+    else if (buf[0] == 'W') {
         int level, extra, wgt;
         long cost;
         if (4 != sscanf(buf + 2, "%d:%d:%d:%ld", &level, &extra, &wgt, &cost))
@@ -149,7 +151,8 @@ errr parse_k_info(char *buf, angband_header *head)
         k_ptr->extra = (BIT_FLAGS8)extra;
         k_ptr->weight = (WEIGHT)wgt;
         k_ptr->cost = (PRICE)cost;
-    } else if (buf[0] == 'A') {
+    }
+    else if (buf[0] == 'A') {
         int i = 0;
         for (s = buf + 1; s && (s[0] == ':') && s[1]; ++i) {
             k_ptr->chance[i] = 1;
@@ -162,7 +165,8 @@ errr parse_k_info(char *buf, angband_header *head)
                     k_ptr->chance[i] = (PROB)chance;
             }
         }
-    } else if (buf[0] == 'P') {
+    }
+    else if (buf[0] == 'P') {
         int ac, hd1, hd2, th, td, ta;
         if (6 != sscanf(buf + 2, "%d:%dd%d:%d:%d:%d", &ac, &hd1, &hd2, &th, &td, &ta))
             return 1;
@@ -173,15 +177,18 @@ errr parse_k_info(char *buf, angband_header *head)
         k_ptr->to_h = (HIT_PROB)th;
         k_ptr->to_d = (HIT_POINT)td;
         k_ptr->to_a = (ARMOUR_CLASS)ta;
-    } else if (buf[0] == 'U') {
+    }
+    else if (buf[0] == 'U') {
         byte n;
         n = grab_one_activation_flag(buf + 2);
         if (n > 0) {
             k_ptr->act_idx = n;
-        } else {
+        }
+        else {
             return 5;
         }
-    } else if (buf[0] == 'F') {
+    }
+    else if (buf[0] == 'F') {
         for (s = buf + 2; *s;) {
             /* loop */
             for (t = s; *t && (*t != ' ') && (*t != '|'); ++t)
@@ -197,7 +204,8 @@ errr parse_k_info(char *buf, angband_header *head)
                 return 5;
             s = t;
         }
-    } else {
+    }
+    else {
         return 6;
     }
 

@@ -43,8 +43,7 @@
  * Map resizing whenever the main term changes size
  * @return なし
  */
-void resize_map()
-{
+void resize_map() {
     if (!current_world_ptr->character_dungeon)
         return;
 
@@ -76,8 +75,7 @@ void resize_map()
  * @param hgt_p コンソールの表示行数を返す
  * @return なし
  */
-void get_screen_size(TERM_LEN *wid_p, TERM_LEN *hgt_p)
-{
+void get_screen_size(TERM_LEN* wid_p, TERM_LEN* hgt_p) {
     term_get_size(wid_p, hgt_p);
     *hgt_p -= ROW_MAP + 2;
     *wid_p -= COL_MAP + 2;

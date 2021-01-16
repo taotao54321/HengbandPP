@@ -27,8 +27,7 @@ dungeon_grid letter[255];
  * @param parse_info_txt_line パース関数
  * @return エラーコード
  */
-errr init_info_txt(FILE *fp, char *buf, angband_header *head, parse_info_txt_func parse_info_txt_line)
-{
+errr init_info_txt(FILE* fp, char* buf, angband_header* head, parse_info_txt_func parse_info_txt_line) {
     error_idx = -1;
     error_line = 0;
 
@@ -76,12 +75,11 @@ errr init_info_txt(FILE *fp, char *buf, angband_header *head, parse_info_txt_fun
  * @param buf 解析文字列
  * @return エラーコード
  */
-errr parse_line_feature(floor_type *floor_ptr, char *buf)
-{
+errr parse_line_feature(floor_type* floor_ptr, char* buf) {
     if (init_flags & INIT_ONLY_BUILDINGS)
         return 0;
 
-    char *zz[9];
+    char* zz[9];
     int num = tokenize(buf + 2, 9, zz, 0);
     if (num <= 1)
         return 1;
@@ -104,7 +102,8 @@ errr parse_line_feature(floor_type *floor_ptr, char *buf)
     case 8:
         if ((zz[7][0] == '*') && !zz[7][1]) {
             letter[index].random |= RANDOM_TRAP;
-        } else {
+        }
+        else {
             letter[index].trap = f_tag_to_index(zz[7]);
             if (letter[index].trap < 0)
                 return PARSE_ERROR_UNDEFINED_TERRAIN_TAG;
@@ -115,11 +114,13 @@ errr parse_line_feature(floor_type *floor_ptr, char *buf)
             letter[index].random |= RANDOM_ARTIFACT;
             if (zz[6][1])
                 letter[index].artifact = (ARTIFACT_IDX)atoi(zz[6] + 1);
-        } else if (zz[6][0] == '!') {
+        }
+        else if (zz[6][0] == '!') {
             if (floor_ptr->inside_quest) {
                 letter[index].artifact = quest[floor_ptr->inside_quest].k_idx;
             }
-        } else {
+        }
+        else {
             letter[index].artifact = (ARTIFACT_IDX)atoi(zz[6]);
         }
         /* Fall through */
@@ -128,7 +129,8 @@ errr parse_line_feature(floor_type *floor_ptr, char *buf)
             letter[index].random |= RANDOM_EGO;
             if (zz[5][1])
                 letter[index].ego = (EGO_IDX)atoi(zz[5] + 1);
-        } else {
+        }
+        else {
             letter[index].ego = (EGO_IDX)atoi(zz[5]);
         }
         /* Fall through */
@@ -137,17 +139,19 @@ errr parse_line_feature(floor_type *floor_ptr, char *buf)
             letter[index].random |= RANDOM_OBJECT;
             if (zz[4][1])
                 letter[index].object = (OBJECT_IDX)atoi(zz[4] + 1);
-        } else if (zz[4][0] == '!') {
+        }
+        else if (zz[4][0] == '!') {
             if (floor_ptr->inside_quest) {
                 ARTIFACT_IDX a_idx = quest[floor_ptr->inside_quest].k_idx;
                 if (a_idx) {
-                    artifact_type *a_ptr = &a_info[a_idx];
+                    artifact_type* a_ptr = &a_info[a_idx];
                     if (!(a_ptr->gen_flags & TRG_INSTA_ART)) {
                         letter[index].object = lookup_kind(a_ptr->tval, a_ptr->sval);
                     }
                 }
             }
-        } else {
+        }
+        else {
             letter[index].object = (OBJECT_IDX)atoi(zz[4]);
         }
         /* Fall through */
@@ -156,11 +160,13 @@ errr parse_line_feature(floor_type *floor_ptr, char *buf)
             letter[index].random |= RANDOM_MONSTER;
             if (zz[3][1])
                 letter[index].monster = (MONSTER_IDX)atoi(zz[3] + 1);
-        } else if (zz[3][0] == 'c') {
+        }
+        else if (zz[3][0] == 'c') {
             if (!zz[3][1])
                 return PARSE_ERROR_GENERIC;
             letter[index].monster = -atoi(zz[3] + 1);
-        } else {
+        }
+        else {
             letter[index].monster = (MONSTER_IDX)atoi(zz[3]);
         }
         /* Fall through */
@@ -170,7 +176,8 @@ errr parse_line_feature(floor_type *floor_ptr, char *buf)
     case 2:
         if ((zz[1][0] == '*') && !zz[1][1]) {
             letter[index].random |= RANDOM_FEATURE;
-        } else {
+        }
+        else {
             letter[index].feature = f_tag_to_index(zz[1]);
             if (letter[index].feature < 0)
                 return PARSE_ERROR_UNDEFINED_TERRAIN_TAG;
@@ -188,10 +195,9 @@ errr parse_line_feature(floor_type *floor_ptr, char *buf)
  * @param buf 解析文字列
  * @return エラーコード
  */
-errr parse_line_building(char *buf)
-{
-    char *zz[1000];
-    char *s;
+errr parse_line_building(char* buf) {
+    char* zz[1000];
+    char* s;
 
 #ifdef JP
     if (buf[2] == '$')

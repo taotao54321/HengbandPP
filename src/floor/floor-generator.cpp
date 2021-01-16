@@ -50,15 +50,14 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void build_arena(player_type *player_ptr, POSITION *start_y, POSITION *start_x)
-{
+static void build_arena(player_type* player_ptr, POSITION* start_y, POSITION* start_x) {
     POSITION yval = SCREEN_HGT / 2;
     POSITION xval = SCREEN_WID / 2;
     POSITION y_height = yval - 10;
     POSITION y_depth = yval + 10;
     POSITION x_left = xval - 32;
     POSITION x_right = xval + 32;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (POSITION i = y_height; i <= y_height + 5; i++)
         for (POSITION j = x_left; j <= x_right; j++) {
             place_bold(player_ptr, i, j, GB_EXTRA_PERM);
@@ -102,11 +101,10 @@ static void build_arena(player_type *player_ptr, POSITION *start_y, POSITION *st
  * @brief 挑戦時闘技場への入場処理 / Town logic flow for generation of on_defeat_arena_monster -KMW-
  * @return なし
  */
-static void generate_challenge_arena(player_type *challanger_ptr)
-{
+static void generate_challenge_arena(player_type* challanger_ptr) {
     POSITION qy = 0;
     POSITION qx = 0;
-    floor_type *floor_ptr = challanger_ptr->current_floor_ptr;
+    floor_type* floor_ptr = challanger_ptr->current_floor_ptr;
     floor_ptr->height = SCREEN_HGT;
     floor_ptr->width = SCREEN_WID;
 
@@ -136,8 +134,7 @@ static void generate_challenge_arena(player_type *challanger_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void build_battle(player_type *player_ptr, POSITION *y, POSITION *x)
-{
+static void build_battle(player_type* player_ptr, POSITION* y, POSITION* x) {
     POSITION yval = SCREEN_HGT / 2;
     POSITION xval = SCREEN_WID / 2;
     POSITION y_height = yval - 10;
@@ -145,7 +142,7 @@ static void build_battle(player_type *player_ptr, POSITION *y, POSITION *x)
     POSITION x_left = xval - 32;
     POSITION x_right = xval + 32;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (int i = y_height; i <= y_height + 5; i++)
         for (int j = x_left; j <= x_right; j++) {
             place_bold(player_ptr, i, j, GB_EXTRA_PERM);
@@ -196,12 +193,11 @@ static void build_battle(player_type *player_ptr, POSITION *y, POSITION *x)
  * @brief モンスター闘技場への導入処理 / Town logic flow for generation of on_defeat_arena_monster -KMW-
  * @return なし
  */
-static void generate_gambling_arena(player_type *creature_ptr)
-{
+static void generate_gambling_arena(player_type* creature_ptr) {
     POSITION y, x;
     POSITION qy = 0;
     POSITION qx = 0;
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     for (y = 0; y < MAX_HGT; y++)
         for (x = 0; x < MAX_WID; x++) {
             place_bold(creature_ptr, y, x, GB_SOLID_PERM);
@@ -220,7 +216,7 @@ static void generate_gambling_arena(player_type *creature_ptr)
     }
 
     for (MONSTER_IDX i = 1; i < floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &floor_ptr->m_list[i];
+        monster_type* m_ptr = &floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -234,9 +230,8 @@ static void generate_gambling_arena(player_type *creature_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void generate_fixed_floor(player_type *player_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void generate_fixed_floor(player_type* player_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (POSITION y = 0; y < floor_ptr->height; y++)
         for (POSITION x = 0; x < floor_ptr->width; x++)
             place_bold(player_ptr, y, x, GB_SOLID_PERM);
@@ -259,9 +254,8 @@ static void generate_fixed_floor(player_type *player_ptr)
  * @param concptr
  * @return フロアの生成に成功したらTRUE
  */
-static bool level_gen(player_type *player_ptr, concptr *why)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static bool level_gen(player_type* player_ptr, concptr* why) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     DUNGEON_IDX d_idx = floor_ptr->dungeon_idx;
     if ((always_small_levels || ironman_small_levels || (one_in_(SMALL_LEVEL) && small_levels) || (d_info[d_idx].flags1 & DF1_BEGINNER)
             || (d_info[d_idx].flags1 & DF1_SMALLEST))
@@ -271,10 +265,12 @@ static bool level_gen(player_type *player_ptr, concptr *why)
         if (d_info[d_idx].flags1 & DF1_SMALLEST) {
             level_height = 1;
             level_width = 1;
-        } else if (d_info[d_idx].flags1 & DF1_BEGINNER) {
+        }
+        else if (d_info[d_idx].flags1 & DF1_BEGINNER) {
             level_height = 2;
             level_width = 2;
-        } else {
+        }
+        else {
             level_height = randint1(MAX_HGT / SCREEN_HGT);
             level_width = randint1(MAX_WID / SCREEN_WID);
             bool is_first_level_area = TRUE;
@@ -294,7 +290,8 @@ static bool level_gen(player_type *player_ptr, concptr *why)
 
         msg_format_wizard(
             player_ptr, CHEAT_DUNGEON, _("小さなフロア: X:%d, Y:%d", "A 'small' dungeon level: X:%d, Y:%d."), floor_ptr->width, floor_ptr->height);
-    } else {
+    }
+    else {
         floor_ptr->height = MAX_HGT;
         floor_ptr->width = MAX_WID;
         panel_row_min = floor_ptr->height;
@@ -308,8 +305,7 @@ static bool level_gen(player_type *player_ptr, concptr *why)
  * @brief フロアに存在する全マスの記憶状態を初期化する / Wipe all unnecessary flags after grid_array generation
  * @return なし
  */
-void wipe_generate_random_floor_flags(floor_type *floor_ptr)
-{
+void wipe_generate_random_floor_flags(floor_type* floor_ptr) {
     for (POSITION y = 0; y < floor_ptr->height; y++)
         for (POSITION x = 0; x < floor_ptr->width; x++)
             floor_ptr->grid_array[y][x].info &= ~(CAVE_MASK);
@@ -325,9 +321,8 @@ void wipe_generate_random_floor_flags(floor_type *floor_ptr)
  * @parama player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void clear_cave(player_type *player_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void clear_cave(player_type* player_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     (void)C_WIPE(floor_ptr->o_list, floor_ptr->o_max, object_type);
     floor_ptr->o_max = 1;
     floor_ptr->o_cnt = 0;
@@ -344,7 +339,7 @@ void clear_cave(player_type *player_ptr)
     precalc_cur_num_of_pet(player_ptr);
     for (POSITION y = 0; y < MAX_HGT; y++) {
         for (POSITION x = 0; x < MAX_WID; x++) {
-            grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+            grid_type* g_ptr = &floor_ptr->grid_array[y][x];
             g_ptr->info = 0;
             g_ptr->feat = 0;
             g_ptr->o_idx = 0;
@@ -368,9 +363,8 @@ void clear_cave(player_type *player_ptr)
  * @return なし
  * @note Hack -- regenerate any "overflow" levels
  */
-void generate_floor(player_type *player_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void generate_floor(player_type* player_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     floor_ptr->dungeon_idx = player_ptr->dungeon_idx;
     set_floor_and_wall(floor_ptr->dungeon_idx);
     for (int num = 0; TRUE; num++) {
@@ -395,7 +389,8 @@ void generate_floor(player_type *player_ptr)
         if (floor_ptr->o_max >= current_world_ptr->max_o_idx) {
             why = _("アイテムが多すぎる", "too many objects");
             okay = FALSE;
-        } else if (floor_ptr->m_max >= current_world_ptr->max_m_idx) {
+        }
+        else if (floor_ptr->m_max >= current_world_ptr->max_m_idx) {
             why = _("モンスターが多すぎる", "too many monsters");
             okay = FALSE;
         }

@@ -24,23 +24,22 @@
  * This file makes use of both "z-util.c" and "z-virt.c"
  */
 
-
 /**** Available Functions ****/
 
 /* Format arguments into given bounded-length buffer */
-extern uint vstrnfmt(char *buf, uint max, concptr fmt, va_list vp);
+extern uint vstrnfmt(char* buf, uint max, concptr fmt, va_list vp);
 
 /* Simple interface to "vstrnfmt()" */
-extern uint strnfmt(char *buf, uint max, concptr fmt, ...);
+extern uint strnfmt(char* buf, uint max, concptr fmt, ...);
 
 /* Simple interface to "vstrnfmt()", assuming infinite length */
-extern uint strfmt(char *buf, concptr fmt, ...);
+extern uint strfmt(char* buf, concptr fmt, ...);
 
 /* Format arguments into a static resizing buffer */
-extern char *vformat(concptr fmt, va_list vp);
+extern char* vformat(concptr fmt, va_list vp);
 
 /* Simple interface to "vformat()" */
-extern char *format(concptr fmt, ...);
+extern char* format(concptr fmt, ...);
 
 /* Vararg interface to "plog()", using "format()" */
 extern void plog_fmt(concptr fmt, ...);
@@ -50,6 +49,5 @@ extern void quit_fmt(concptr fmt, ...);
 
 /* Vararg interface to "core()", using "format()" */
 extern void core_fmt(concptr fmt, ...);
-
 
 #endif

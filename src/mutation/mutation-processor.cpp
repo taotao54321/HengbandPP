@@ -45,8 +45,7 @@
 #include "term/screen-processor.h"
 #include "view/display-messages.h"
 
-static bool get_hack_dir(player_type *creature_ptr, DIRECTION *dp)
-{
+static bool get_hack_dir(player_type* creature_ptr, DIRECTION* dp) {
     *dp = 0;
     char command;
     DIRECTION dir = 0;
@@ -106,8 +105,7 @@ static bool get_hack_dir(player_type *creature_ptr, DIRECTION *dp)
  * / Handle mutation effects once every 10 game turns
  * @return なし
  */
-void process_world_aux_mutation(player_type *creature_ptr)
-{
+void process_world_aux_mutation(player_type* creature_ptr) {
     if (!creature_ptr->muta2 || creature_ptr->phase_out || creature_ptr->wild_mode)
         return;
 
@@ -158,7 +156,8 @@ void process_world_aux_mutation(player_type *creature_ptr)
                 wiz_dark(creature_ptr);
                 msg_print(_("あなたは見知らぬ場所で目が醒めた...頭が痛い。", "You wake up somewhere with a sore head..."));
                 msg_print(_("何も覚えていない。どうやってここに来たかも分からない！", "You can't remember a thing or how you got here!"));
-            } else {
+            }
+            else {
                 if (one_in_(3)) {
                     msg_print(_("き～れいなちょおちょらとんれいる～", "Thishcischs GooDSChtuff!"));
                     (void)set_image(creature_ptr, creature_ptr->image + randint0(150) + 150);
@@ -216,15 +215,18 @@ void process_world_aux_mutation(player_type *creature_ptr)
 
             if (creature_ptr->fast > 0) {
                 set_fast(creature_ptr, 0, TRUE);
-            } else {
+            }
+            else {
                 set_slow(creature_ptr, randint1(30) + 10, FALSE);
             }
-        } else {
+        }
+        else {
             msg_print(_("精力的になった気がする。", "You feel more energetic."));
 
             if (creature_ptr->slow > 0) {
                 set_slow(creature_ptr, 0, TRUE);
-            } else {
+            }
+            else {
                 set_fast(creature_ptr, randint1(30) + 10, FALSE);
             }
         }
@@ -250,7 +252,7 @@ void process_world_aux_mutation(player_type *creature_ptr)
     }
 
     if ((creature_ptr->muta2 & MUT2_EAT_LIGHT) && one_in_(3000)) {
-        object_type *o_ptr;
+        object_type* o_ptr;
 
         msg_print(_("影につつまれた。", "A shadow passes over you."));
         msg_print(NULL);
@@ -374,7 +376,8 @@ void process_world_aux_mutation(player_type *creature_ptr)
         if (creature_ptr->tim_esp > 0) {
             msg_print(_("精神にもやがかかった！", "Your mind feels cloudy!"));
             set_tim_esp(creature_ptr, 0, TRUE);
-        } else {
+        }
+        else {
             msg_print(_("精神が広がった！", "Your mind expands!"));
             set_tim_esp(creature_ptr, creature_ptr->lev, FALSE);
         }
@@ -398,8 +401,8 @@ void process_world_aux_mutation(player_type *creature_ptr)
     if ((creature_ptr->muta2 & MUT2_WARNING) && one_in_(1000)) {
         int danger_amount = 0;
         for (MONSTER_IDX monster = 0; monster < creature_ptr->current_floor_ptr->m_max; monster++) {
-            monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[monster];
-            monster_race *r_ptr = &r_info[m_ptr->r_idx];
+            monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[monster];
+            monster_race* r_ptr = &r_info[m_ptr->r_idx];
             if (!monster_is_valid(m_ptr))
                 continue;
 
@@ -463,10 +466,9 @@ void process_world_aux_mutation(player_type *creature_ptr)
     }
 }
 
-bool drop_weapons(player_type *creature_ptr)
-{
+bool drop_weapons(player_type* creature_ptr) {
     INVENTORY_IDX slot = 0;
-    object_type *o_ptr = NULL;
+    object_type* o_ptr = NULL;
 
     if (creature_ptr->wild_mode)
         return FALSE;
@@ -480,7 +482,8 @@ bool drop_weapons(player_type *creature_ptr)
             o_ptr = &creature_ptr->inventory_list[INVEN_LARM];
             slot = INVEN_LARM;
         }
-    } else if (has_melee_weapon(creature_ptr, INVEN_LARM)) {
+    }
+    else if (has_melee_weapon(creature_ptr, INVEN_LARM)) {
         o_ptr = &creature_ptr->inventory_list[INVEN_LARM];
         slot = INVEN_LARM;
     }

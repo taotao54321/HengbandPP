@@ -34,9 +34,8 @@
  * @param typ 効果属性 / Type of damage to apply to monsters (and objects)
  * @return 何か一つでも効力があればTRUEを返す / TRUE if any "effects" of the projection were observed, else FALSE
  */
-bool affect_item(player_type *caster_ptr, MONSTER_IDX who, POSITION r, POSITION y, POSITION x, HIT_POINT dam, EFFECT_ID typ)
-{
-    grid_type *g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
+bool affect_item(player_type* caster_ptr, MONSTER_IDX who, POSITION r, POSITION y, POSITION x, HIT_POINT dam, EFFECT_ID typ) {
+    grid_type* g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
 
     bool is_item_affected = FALSE;
     bool known = player_has_los_bold(caster_ptr, y, x);
@@ -44,7 +43,7 @@ bool affect_item(player_type *caster_ptr, MONSTER_IDX who, POSITION r, POSITION 
     dam = (dam + r) / (r + 1);
     OBJECT_IDX next_o_idx = 0;
     for (OBJECT_IDX this_o_idx = g_ptr->o_idx; this_o_idx != 0; this_o_idx = next_o_idx) {
-        object_type *o_ptr = &caster_ptr->current_floor_ptr->o_list[this_o_idx];
+        object_type* o_ptr = &caster_ptr->current_floor_ptr->o_list[this_o_idx];
         bool ignore = FALSE;
         bool do_kill = FALSE;
         concptr note_kill = NULL;
@@ -211,9 +210,11 @@ bool affect_item(player_type *caster_ptr, MONSTER_IDX who, POSITION r, POSITION 
                     }
 
                     continue;
-                } else if (summon_named_creature(caster_ptr, who, y, x, o_ptr->pval, mode)) {
+                }
+                else if (summon_named_creature(caster_ptr, who, y, x, o_ptr->pval, mode)) {
                     note_kill = _("生き返った。", " revived.");
-                } else if (!note_kill) {
+                }
+                else if (!note_kill) {
                     note_kill = _("灰になった。", (plural ? " become dust." : " becomes dust."));
                 }
             }

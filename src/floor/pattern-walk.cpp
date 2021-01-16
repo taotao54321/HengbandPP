@@ -15,8 +15,8 @@
 #include "player/player-move.h"
 #include "player/player-race-types.h"
 #include "player/player-race.h"
-#include "spell/spells-status.h"
 #include "spell-kind/spells-teleport.h"
+#include "spell/spells-status.h"
 #include "status/bad-status-setter.h"
 #include "status/experience.h"
 #include "system/floor-type-definition.h"
@@ -29,8 +29,7 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void pattern_teleport(player_type *creature_ptr)
-{
+static void pattern_teleport(player_type* creature_ptr) {
     DEPTH min_level = 0;
     DEPTH max_level = 99;
 
@@ -46,7 +45,8 @@ static void pattern_teleport(player_type *creature_ptr)
                 max_level = MAX_DEPTH - 1;
             else if (creature_ptr->current_floor_ptr->dun_level == 100)
                 max_level = 100;
-        } else {
+        }
+        else {
             max_level = d_info[creature_ptr->dungeon_idx].maxdepth;
             min_level = d_info[creature_ptr->dungeon_idx].mindepth;
         }
@@ -57,10 +57,12 @@ static void pattern_teleport(player_type *creature_ptr)
             return;
 
         command_arg = (COMMAND_ARG)atoi(tmp_val);
-    } else if (get_check(_("通常テレポート？", "Normal teleport? "))) {
+    }
+    else if (get_check(_("通常テレポート？", "Normal teleport? "))) {
         teleport_player(creature_ptr, 200, TELEPORT_SPONTANEOUS);
         return;
-    } else {
+    }
+    else {
         return;
     }
 
@@ -93,9 +95,8 @@ static void pattern_teleport(player_type *creature_ptr)
  * @brief 各種パターン地形上の特別な処理 / Returns TRUE if we are on the Pattern...
  * @return 実際にパターン地形上にプレイヤーが居た場合はTRUEを返す。
  */
-bool pattern_effect(player_type *creature_ptr)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+bool pattern_effect(player_type* creature_ptr) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (!pattern_tile(floor_ptr, creature_ptr->y, creature_ptr->x))
         return FALSE;
 
@@ -155,10 +156,9 @@ bool pattern_effect(player_type *creature_ptr)
  * @param n_x プレイヤーの移動先X座標
  * @return 移動処理が可能である場合（可能な場合に選択した場合）TRUEを返す。
  */
-bool pattern_seq(player_type *creature_ptr, POSITION c_y, POSITION c_x, POSITION n_y, POSITION n_x)
-{
-    feature_type *cur_f_ptr = &f_info[creature_ptr->current_floor_ptr->grid_array[c_y][c_x].feat];
-    feature_type *new_f_ptr = &f_info[creature_ptr->current_floor_ptr->grid_array[n_y][n_x].feat];
+bool pattern_seq(player_type* creature_ptr, POSITION c_y, POSITION c_x, POSITION n_y, POSITION n_x) {
+    feature_type* cur_f_ptr = &f_info[creature_ptr->current_floor_ptr->grid_array[c_y][c_x].feat];
+    feature_type* new_f_ptr = &f_info[creature_ptr->current_floor_ptr->grid_array[n_y][n_x].feat];
     bool is_pattern_tile_cur = has_flag(cur_f_ptr->flags, FF_PATTERN);
     bool is_pattern_tile_new = has_flag(new_f_ptr->flags, FF_PATTERN);
     if (!is_pattern_tile_cur && !is_pattern_tile_new)
@@ -173,14 +173,16 @@ bool pattern_seq(player_type *creature_ptr, POSITION c_y, POSITION c_x, POSITION
                 return TRUE;
             else
                 return FALSE;
-        } else
+        }
+        else
             return TRUE;
     }
 
     if ((pattern_type_new == PATTERN_TILE_OLD) || (pattern_type_new == PATTERN_TILE_END) || (pattern_type_new == PATTERN_TILE_WRECKED)) {
         if (is_pattern_tile_cur) {
             return TRUE;
-        } else {
+        }
+        else {
             msg_print(_("パターンの上を歩くにはスタート地点から歩き始めなくてはなりません。", "You must start walking the Pattern from the startpoint."));
             return FALSE;
         }
@@ -202,7 +204,8 @@ bool pattern_seq(player_type *creature_ptr, POSITION c_y, POSITION c_x, POSITION
         if (!is_pattern_tile_new) {
             msg_print(_("パターンを踏み外してはいけません。", "You may not step off from the Pattern."));
             return FALSE;
-        } else {
+        }
+        else {
             return TRUE;
         }
     }

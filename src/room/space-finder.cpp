@@ -12,8 +12,7 @@
  * @param y チェックするマスのY座標
  * @return 床系地形ならばTRUE
  */
-static bool get_is_floor(floor_type *floor_ptr, POSITION x, POSITION y)
-{
+static bool get_is_floor(floor_type* floor_ptr, POSITION x, POSITION y) {
     if (!in_bounds(floor_ptr, y, x)) {
         return FALSE;
     }
@@ -31,9 +30,8 @@ static bool get_is_floor(floor_type *floor_ptr, POSITION x, POSITION y)
  * @param y 地形を変えたいマスのY座標
  * @return なし
  */
-static void set_floor(player_type *player_ptr, POSITION x, POSITION y)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void set_floor(player_type* player_ptr, POSITION x, POSITION y) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!in_bounds(floor_ptr, y, x))
         return;
 
@@ -55,13 +53,12 @@ static void set_floor(player_type *player_ptr, POSITION x, POSITION y)
  * @param y2 範囲の下端
  * @return なし
  */
-static void check_room_boundary(player_type *player_ptr, POSITION x1, POSITION y1, POSITION x2, POSITION y2)
-{
+static void check_room_boundary(player_type* player_ptr, POSITION x1, POSITION y1, POSITION x2, POSITION y2) {
     bool old_is_floor;
     bool new_is_floor;
     int count = 0;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     old_is_floor = get_is_floor(floor_ptr, x1 - 1, y1);
 
     for (POSITION x = x1; x <= x2; x++) {
@@ -114,21 +111,23 @@ static void check_room_boundary(player_type *player_ptr, POSITION x1, POSITION y
  * @param block_x 範囲の左端
  * @return なし
  */
-static bool find_space_aux(dun_data_type *dd_ptr, POSITION blocks_high, POSITION blocks_wide, POSITION block_y, POSITION block_x)
-{
+static bool find_space_aux(dun_data_type* dd_ptr, POSITION blocks_high, POSITION blocks_wide, POSITION block_y, POSITION block_x) {
     if (blocks_wide < 3) {
         if ((blocks_wide == 2) && (block_x % 3) == 2)
             return FALSE;
-    } else if ((blocks_wide % 3) == 0) {
+    }
+    else if ((blocks_wide % 3) == 0) {
         if ((block_x % 3) != 0)
             return FALSE;
-    } else {
+    }
+    else {
         if (block_x + (blocks_wide / 2) <= dd_ptr->col_rooms / 2) {
             if (((block_x % 3) == 2) && ((blocks_wide % 3) == 2))
                 return FALSE;
             if ((block_x % 3) == 1)
                 return FALSE;
-        } else {
+        }
+        else {
             if (((block_x % 3) == 2) && ((blocks_wide % 3) == 2))
                 return FALSE;
             if ((block_x % 3) == 1)
@@ -173,8 +172,7 @@ static bool find_space_aux(dun_data_type *dd_ptr, POSITION blocks_high, POSITION
  * Return TRUE and values for the center of the room if all went well.\n
  * Otherwise, return FALSE.\n
  */
-bool find_space(player_type *player_ptr, dun_data_type *dd_ptr, POSITION *y, POSITION *x, POSITION height, POSITION width)
-{
+bool find_space(player_type* player_ptr, dun_data_type* dd_ptr, POSITION* y, POSITION* x, POSITION height, POSITION width) {
     int pick;
     POSITION block_y = 0;
     POSITION block_x = 0;

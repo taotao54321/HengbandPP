@@ -19,11 +19,10 @@
  * @details MAX_TRIES: ランダムクエストのモンスターを確定するために試行する回数 /
  * Maximum number of tries for selection of a proper quest monster
  */
-void rd_unique_info(void)
-{
+void rd_unique_info(void) {
     const int MAX_TRIES = 100;
     for (int i = 0; i < max_r_idx; i++) {
-        monster_race *r_ptr = &r_info[i];
+        monster_race* r_ptr = &r_info[i];
         r_ptr->max_num = MAX_TRIES;
         if (r_ptr->flags1 & RF1_UNIQUE)
             r_ptr->max_num = 1;
@@ -32,8 +31,7 @@ void rd_unique_info(void)
     }
 }
 
-errr load_town(void)
-{
+errr load_town(void) {
     u16b max_towns_load;
     rd_u16b(&max_towns_load);
     if (max_towns_load <= max_towns)
@@ -43,8 +41,7 @@ errr load_town(void)
     return 23;
 }
 
-errr load_quest_info(u16b *max_quests_load, byte *max_rquests_load)
-{
+errr load_quest_info(u16b* max_quests_load, byte* max_rquests_load) {
     rd_u16b(max_quests_load);
     if (z_older_than(11, 0, 7))
         *max_rquests_load = 10;
@@ -58,8 +55,7 @@ errr load_quest_info(u16b *max_quests_load, byte *max_rquests_load)
     return 23;
 }
 
-static bool check_quest_index(int loading_quest_index)
-{
+static bool check_quest_index(int loading_quest_index) {
     if (loading_quest_index < max_q_idx)
         return FALSE;
 
@@ -68,8 +64,7 @@ static bool check_quest_index(int loading_quest_index)
     return TRUE;
 }
 
-static void load_quest_completion(quest_type *q_ptr)
-{
+static void load_quest_completion(quest_type* q_ptr) {
     rd_s16b(&q_ptr->status);
     s16b tmp16s;
     rd_s16b(&tmp16s);
@@ -89,8 +84,7 @@ static void load_quest_completion(quest_type *q_ptr)
         rd_u32b(&q_ptr->comptime);
 }
 
-static void load_quest_details(player_type *creature_ptr, quest_type *q_ptr, int loading_quest_index)
-{
+static void load_quest_details(player_type* creature_ptr, quest_type* q_ptr, int loading_quest_index) {
     s16b tmp16s;
     rd_s16b(&tmp16s);
     q_ptr->cur_num = (MONSTER_NUMBER)tmp16s;
@@ -111,14 +105,13 @@ static void load_quest_details(player_type *creature_ptr, quest_type *q_ptr, int
     q_ptr->flags = tmp8u;
 }
 
-void analyze_quests(player_type *creature_ptr, const u16b max_quests_load, const byte max_rquests_load)
-{
+void analyze_quests(player_type* creature_ptr, const u16b max_quests_load, const byte max_rquests_load) {
     QUEST_IDX old_inside_quest = creature_ptr->current_floor_ptr->inside_quest;
     for (int i = 0; i < max_quests_load; i++) {
         if (check_quest_index(i))
             continue;
 
-        quest_type *const q_ptr = &quest[i];
+        quest_type* const q_ptr = &quest[i];
         load_quest_completion(q_ptr);
         bool is_quest_running = (q_ptr->status == QUEST_STATUS_TAKEN);
         is_quest_running |= (!z_older_than(10, 3, 14) && (q_ptr->status == QUEST_STATUS_COMPLETED));

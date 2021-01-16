@@ -15,8 +15,7 @@
  * @param item 持ち替えを行いたい装備部位ID
  * @return なし
  */
-void verify_equip_slot(player_type *owner_ptr, INVENTORY_IDX item)
-{
+void verify_equip_slot(player_type* owner_ptr, INVENTORY_IDX item) {
     object_type *o_ptr, *new_o_ptr;
     GAME_TEXT o_name[MAX_NLEN];
 

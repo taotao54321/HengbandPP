@@ -31,6 +31,6 @@ concptr monster_group_text[] = {
  * Symbols of monsters in each group. Note the "Uniques" group
  * is handled differently.
  */
-concptr monster_group_char[] = { (char *)-1L, (char *)-2L, (char *)-3L, (char *)-4L, "a", "b", "c", "dD", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+concptr monster_group_char[] = { (char*)-1L, (char*)-2L, (char*)-3L, (char*)-4L, "a", "b", "c", "dD", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
     "pt", "q", "r", "s", "uU", "v", "w", "y", "z", "A", "B", "C", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "V", "W", "X",
     "Y", "Z", "!$&()+./=>?[\\]`{|~", "#%", ",", "*", "@", NULL };

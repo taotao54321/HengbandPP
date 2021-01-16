@@ -9,9 +9,8 @@
  * @return なし
  * @details
  */
-void do_cmd_help(player_type *creature_ptr)
-{
-	screen_save();
-	(void)show_file(creature_ptr, TRUE, _("jhelp.hlp", "help.hlp"), NULL, 0, 0);
-	screen_load();
+void do_cmd_help(player_type* creature_ptr) {
+    screen_save();
+    (void)show_file(creature_ptr, TRUE, _("jhelp.hlp", "help.hlp"), NULL, 0, 0);
+    screen_load();
 }

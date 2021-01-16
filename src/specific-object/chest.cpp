@@ -49,18 +49,17 @@
  * on the level on which the chest is generated.
  * </pre>
  */
-void chest_death(player_type *owner_ptr, bool scatter, POSITION y, POSITION x, OBJECT_IDX o_idx)
-{
+void chest_death(player_type* owner_ptr, bool scatter, POSITION y, POSITION x, OBJECT_IDX o_idx) {
     int number;
 
     bool small;
     BIT_FLAGS mode = AM_GOOD | AM_FORBID_CHEST;
 
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
 
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
-    object_type *o_ptr = &floor_ptr->o_list[o_idx];
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
+    object_type* o_ptr = &floor_ptr->o_list[o_idx];
 
     /* Small chests often hold "gold" */
     small = (o_ptr->sval < SV_CHEST_MIN_LARGE);
@@ -73,7 +72,8 @@ void chest_death(player_type *owner_ptr, bool scatter, POSITION y, POSITION x, O
         small = FALSE;
         mode |= AM_GREAT;
         floor_ptr->object_level = o_ptr->xtra3;
-    } else {
+    }
+    else {
         /* Determine the "value" of the items */
         floor_ptr->object_level = ABS(o_ptr->pval) + 10;
     }
@@ -148,11 +148,10 @@ void chest_death(player_type *owner_ptr, bool scatter, POSITION y, POSITION x, O
  * Note that the chest itself is never destroyed.
  * </pre>
  */
-void chest_trap(player_type *target_ptr, POSITION y, POSITION x, OBJECT_IDX o_idx)
-{
+void chest_trap(player_type* target_ptr, POSITION y, POSITION x, OBJECT_IDX o_idx) {
     int i, trap;
 
-    object_type *o_ptr = &target_ptr->current_floor_ptr->o_list[o_idx];
+    object_type* o_ptr = &target_ptr->current_floor_ptr->o_list[o_idx];
 
     int mon_level = o_ptr->xtra3;
 
@@ -280,7 +279,8 @@ void chest_trap(player_type *target_ptr, POSITION y, POSITION x, OBJECT_IDX o_id
                         (void)set_paralyzed(target_ptr, target_ptr->paralyzed + 2 + randint0(6));
                     else
                         (void)set_stun(target_ptr, target_ptr->stun + 10 + randint0(100));
-                } else if (one_in_(3))
+                }
+                else if (one_in_(3))
                     apply_disenchant(target_ptr, 0);
                 else if (one_in_(2)) {
                     (void)do_dec_stat(target_ptr, A_STR);
@@ -289,7 +289,8 @@ void chest_trap(player_type *target_ptr, POSITION y, POSITION x, OBJECT_IDX o_id
                     (void)do_dec_stat(target_ptr, A_INT);
                     (void)do_dec_stat(target_ptr, A_WIS);
                     (void)do_dec_stat(target_ptr, A_CHR);
-                } else
+                }
+                else
                     (void)fire_meteor(target_ptr, -1, GF_NETHER, y, x, 150, 1);
             }
         }
@@ -316,4 +317,3 @@ void chest_trap(player_type *target_ptr, POSITION y, POSITION x, OBJECT_IDX o_id
         o_ptr->pval = 0;
     }
 }
-

@@ -52,9 +52,8 @@
 #include "system/floor-type-definition.h"
 #include "view/display-messages.h"
 
-static bool check_no_blow(player_type *target_ptr, monap_type *monap_ptr)
-{
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+static bool check_no_blow(player_type* target_ptr, monap_type* monap_ptr) {
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if (r_ptr->flags1 & (RF1_NEVER_BLOW))
         return FALSE;
 
@@ -73,15 +72,14 @@ static bool check_no_blow(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return 攻撃続行ならばTRUE、打ち切りになったらFALSE
  */
-static bool check_monster_attack_terminated(player_type *target_ptr, monap_type *monap_ptr)
-{
+static bool check_monster_attack_terminated(player_type* target_ptr, monap_type* monap_ptr) {
     if (!monster_is_valid(monap_ptr->m_ptr))
         return FALSE;
 
     if (monap_ptr->method == RBM_NONE)
         return FALSE;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if (is_pet(monap_ptr->m_ptr) && (r_ptr->flags1 & RF1_UNIQUE) && (monap_ptr->method == RBM_EXPLODE)) {
         monap_ptr->method = RBM_HIT;
         monap_ptr->d_dice /= 10;
@@ -100,9 +98,8 @@ static bool check_monster_attack_terminated(player_type *target_ptr, monap_type 
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return briefに書いた条件＋確率が満たされたらTRUE、それ以外はFALSE
  */
-static bool effect_protecion_from_evil(player_type *target_ptr, monap_type *monap_ptr)
-{
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+static bool effect_protecion_from_evil(player_type* target_ptr, monap_type* monap_ptr) {
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if ((target_ptr->protevil <= 0) || ((r_ptr->flags3 & RF3_EVIL) == 0) || (target_ptr->lev < monap_ptr->rlev) || ((randint0(100) + target_ptr->lev) <= 50))
         return FALSE;
 
@@ -123,8 +120,7 @@ static bool effect_protecion_from_evil(player_type *target_ptr, monap_type *mona
     return TRUE;
 }
 
-static void describe_silly_attacks(monap_type *monap_ptr)
-{
+static void describe_silly_attacks(monap_type* monap_ptr) {
     if (monap_ptr->act == NULL)
         return;
 
@@ -154,8 +150,7 @@ static void describe_silly_attacks(monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void select_cut_stun(monap_type *monap_ptr)
-{
+static void select_cut_stun(monap_type* monap_ptr) {
     if ((monap_ptr->do_cut == 0) || (monap_ptr->do_stun == 0))
         return;
 
@@ -165,8 +160,7 @@ static void select_cut_stun(monap_type *monap_ptr)
         monap_ptr->do_stun = 0;
 }
 
-static void calc_player_cut(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_player_cut(player_type* target_ptr, monap_type* monap_ptr) {
     if (monap_ptr->do_cut == 0)
         return;
 
@@ -203,8 +197,7 @@ static void calc_player_cut(player_type *target_ptr, monap_type *monap_ptr)
         (void)set_cut(target_ptr, target_ptr->cut + cut_plus);
 }
 
-static void calc_player_stun(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void calc_player_stun(player_type* target_ptr, monap_type* monap_ptr) {
     if (monap_ptr->do_stun == 0)
         return;
 
@@ -241,8 +234,7 @@ static void calc_player_stun(player_type *target_ptr, monap_type *monap_ptr)
         (void)set_stun(target_ptr, target_ptr->stun + stun_plus);
 }
 
-static void monster_explode(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void monster_explode(player_type* target_ptr, monap_type* monap_ptr) {
     if (!monap_ptr->explode)
         return;
 
@@ -253,8 +245,7 @@ static void monster_explode(player_type *target_ptr, monap_type *monap_ptr)
     }
 }
 
-static void describe_attack_evasion(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void describe_attack_evasion(player_type* target_ptr, monap_type* monap_ptr) {
     if (!monap_ptr->m_ptr->ml)
         return;
 
@@ -271,8 +262,7 @@ static void describe_attack_evasion(player_type *target_ptr, monap_type *monap_p
 #endif
 }
 
-static void gain_armor_exp(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void gain_armor_exp(player_type* target_ptr, monap_type* monap_ptr) {
     if (!object_is_armour(target_ptr, &target_ptr->inventory_list[INVEN_RARM]) && !object_is_armour(target_ptr, &target_ptr->inventory_list[INVEN_LARM]))
         return;
 
@@ -281,7 +271,7 @@ static void gain_armor_exp(player_type *target_ptr, monap_type *monap_ptr)
     if (cur >= max)
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     DEPTH targetlevel = r_ptr->level;
     int inc = 0;
     if ((cur / 100) < targetlevel) {
@@ -302,8 +292,7 @@ static void gain_armor_exp(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @details 最大4 回/モンスター/ターン、このルーチンを通る
  */
-static bool process_monster_attack_hit(player_type *target_ptr, monap_type *monap_ptr)
-{
+static bool process_monster_attack_hit(player_type* target_ptr, monap_type* monap_ptr) {
     disturb(target_ptr, TRUE, TRUE);
     if (effect_protecion_from_evil(target_ptr, monap_ptr))
         return FALSE;
@@ -332,8 +321,7 @@ static bool process_monster_attack_hit(player_type *target_ptr, monap_type *mona
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void process_monster_attack_evasion(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void process_monster_attack_evasion(player_type* target_ptr, monap_type* monap_ptr) {
     switch (monap_ptr->method) {
     case RBM_HIT:
     case RBM_TOUCH:
@@ -356,12 +344,11 @@ static void process_monster_attack_evasion(player_type *target_ptr, monap_type *
     }
 }
 
-static void increase_blow_type_seen(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void increase_blow_type_seen(player_type* target_ptr, monap_type* monap_ptr) {
     if (!is_original_ap_and_seen(target_ptr, monap_ptr->m_ptr) || monap_ptr->do_silly_attack)
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if (!monap_ptr->obvious && (monap_ptr->damage == 0) && (r_ptr->r_blows[monap_ptr->ap_cnt] <= 10))
         return;
 
@@ -369,9 +356,8 @@ static void increase_blow_type_seen(player_type *target_ptr, monap_type *monap_p
         r_ptr->r_blows[monap_ptr->ap_cnt]++;
 }
 
-static bool process_monster_blows(player_type *target_ptr, monap_type *monap_ptr)
-{
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+static bool process_monster_blows(player_type* target_ptr, monap_type* monap_ptr) {
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     for (monap_ptr->ap_cnt = 0; monap_ptr->ap_cnt < 4; monap_ptr->ap_cnt++) {
         monap_ptr->obvious = FALSE;
         HIT_POINT power = 0;
@@ -415,8 +401,7 @@ static bool process_monster_blows(player_type *target_ptr, monap_type *monap_ptr
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void eyes_on_eyes(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void eyes_on_eyes(player_type* target_ptr, monap_type* monap_ptr) {
     if (((target_ptr->tim_eyeeye == 0) && !hex_spelling(target_ptr, HEX_EYE_FOR_EYE)) || (monap_ptr->get_damage == 0) || target_ptr->is_dead)
         return;
 
@@ -432,26 +417,25 @@ static void eyes_on_eyes(player_type *target_ptr, monap_type *monap_ptr)
         set_tim_eyeeye(target_ptr, target_ptr->tim_eyeeye - 5, TRUE);
 }
 
-static void thief_teleport(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void thief_teleport(player_type* target_ptr, monap_type* monap_ptr) {
     if (!monap_ptr->blinked || !monap_ptr->alive || target_ptr->is_dead)
         return;
 
     if (teleport_barrier(target_ptr, monap_ptr->m_idx)) {
         msg_print(_("泥棒は笑って逃げ...ようとしたがバリアに防がれた。", "The thief flees laughing...? But a magic barrier obstructs it."));
-    } else {
+    }
+    else {
         msg_print(_("泥棒は笑って逃げた！", "The thief flees laughing!"));
         teleport_away(target_ptr, monap_ptr->m_idx, MAX_SIGHT * 2 + 5, TELEPORT_SPONTANEOUS);
     }
 }
 
-static void postprocess_monster_blows(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void postprocess_monster_blows(player_type* target_ptr, monap_type* monap_ptr) {
     revenge_store(target_ptr, monap_ptr->get_damage);
     eyes_on_eyes(target_ptr, monap_ptr);
     musou_counterattack(target_ptr, monap_ptr);
     thief_teleport(target_ptr, monap_ptr);
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if (target_ptr->is_dead && (r_ptr->r_deaths < MAX_SHORT) && !target_ptr->current_floor_ptr->inside_arena)
         r_ptr->r_deaths++;
 
@@ -469,13 +453,12 @@ static void postprocess_monster_blows(player_type *target_ptr, monap_type *monap
  * @param m_idx 打撃を行うモンスターのID
  * @return 実際に攻撃処理を行った場合TRUEを返す
  */
-bool make_attack_normal(player_type *target_ptr, MONSTER_IDX m_idx)
-{
+bool make_attack_normal(player_type* target_ptr, MONSTER_IDX m_idx) {
     monap_type tmp_monap;
-    monap_type *monap_ptr = initialize_monap_type(target_ptr, &tmp_monap, m_idx);
+    monap_type* monap_ptr = initialize_monap_type(target_ptr, &tmp_monap, m_idx);
     check_no_blow(target_ptr, monap_ptr);
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     monap_ptr->rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
     monster_desc(target_ptr, monap_ptr->m_name, monap_ptr->m_ptr, 0);
     monster_desc(target_ptr, monap_ptr->ddesc, monap_ptr->m_ptr, MD_WRONGDOER_NAME);

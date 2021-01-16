@@ -79,8 +79,7 @@ const u32b fake_spell_flags[4] = { 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff00000
  * @param base 固定値
  * @return フォーマットに従い整形された文字列
  */
-concptr info_string_dice(concptr str, DICE_NUMBER dice, DICE_SID sides, int base)
-{
+concptr info_string_dice(concptr str, DICE_NUMBER dice, DICE_SID sides, int base) {
     /* Fix value */
     if (!dice)
         return format("%s%d", str, base);
@@ -180,8 +179,7 @@ concptr info_radius(POSITION rad) { return format(_("半径:%d", "rad %d"), rad)
  * @param weight 最大重量
  * @return フォーマットに従い整形された文字列
  */
-concptr info_weight(WEIGHT weight)
-{
+concptr info_weight(WEIGHT weight) {
 #ifdef JP
     return format("最大重量:%d.%dkg", lbtokg1(weight), lbtokg2(weight));
 #else
@@ -200,14 +198,14 @@ concptr info_weight(WEIGHT weight)
  * @param use_realm 魔法領域ID
  * @return 失敗率(%)
  */
-static bool spell_okay(player_type *caster_ptr, int spell, bool learned, bool study_pray, int use_realm)
-{
-    const magic_type *s_ptr;
+static bool spell_okay(player_type* caster_ptr, int spell, bool learned, bool study_pray, int use_realm) {
+    const magic_type* s_ptr;
 
     /* Access the spell */
     if (!is_magic(use_realm)) {
         s_ptr = &technic_info[use_realm - MIN_TECHNIC][spell];
-    } else {
+    }
+    else {
         s_ptr = &mp_ptr->info[use_realm - 1][spell];
     }
 
@@ -253,8 +251,7 @@ static bool spell_okay(player_type *caster_ptr, int spell, bool learned, bool st
  * The "known" should be TRUE for cast/pray, FALSE for study
  * </pre>
  */
-static int get_spell(player_type *caster_ptr, SPELL_IDX *sn, concptr prompt, OBJECT_SUBTYPE_VALUE sval, bool learned, REALM_IDX use_realm)
-{
+static int get_spell(player_type* caster_ptr, SPELL_IDX* sn, concptr prompt, OBJECT_SUBTYPE_VALUE sval, bool learned, REALM_IDX use_realm) {
     int i;
     SPELL_IDX spell = -1;
     int num = 0;
@@ -263,7 +260,7 @@ static int get_spell(player_type *caster_ptr, SPELL_IDX *sn, concptr prompt, OBJ
     SPELL_IDX spells[64];
     bool flag, redraw, okay;
     char choice;
-    const magic_type *s_ptr;
+    const magic_type* s_ptr;
     char out_val[160];
     concptr p;
     COMMAND_CODE code;
@@ -377,7 +374,8 @@ static int get_spell(player_type *caster_ptr, SPELL_IDX *sn, concptr prompt, OBJ
             print_spells(caster_ptr, menu_line, spells, num, 1, 15, use_realm);
             if (ask)
                 continue;
-        } else {
+        }
+        else {
             /* Request redraw */
             if ((choice == ' ') || (choice == '*') || (choice == '?')) {
                 /* Show the list */
@@ -442,14 +440,16 @@ static int get_spell(player_type *caster_ptr, SPELL_IDX *sn, concptr prompt, OBJ
             /* Access the spell */
             if (!is_magic(use_realm)) {
                 s_ptr = &technic_info[use_realm - MIN_TECHNIC][spell];
-            } else {
+            }
+            else {
                 s_ptr = &mp_ptr->info[use_realm - 1][spell];
             }
 
             /* Extract mana consumption rate */
             if (use_realm == REALM_HISSATSU) {
                 need_mana = s_ptr->smana;
-            } else {
+            }
+            else {
                 need_mana = mod_need_mana(caster_ptr, s_ptr->smana, spell, use_realm);
             }
 
@@ -497,8 +497,7 @@ static int get_spell(player_type *caster_ptr, SPELL_IDX *sn, concptr prompt, OBJ
  * @param browse_only 魔法と技能の閲覧を行うならばTRUE
  * @return 魔道書を一冊も持っていないならTRUEを返す
  */
-static void confirm_use_force(player_type *caster_ptr, bool browse_only)
-{
+static void confirm_use_force(player_type* caster_ptr, bool browse_only) {
     char which;
     COMMAND_CODE code;
 
@@ -543,8 +542,7 @@ static void confirm_use_force(player_type *caster_ptr, bool browse_only)
  * and in the dark, primarily to allow browsing in stores.
  * </pre>
  */
-void do_cmd_browse(player_type *caster_ptr)
-{
+void do_cmd_browse(player_type* caster_ptr) {
     OBJECT_IDX item;
     OBJECT_SUBTYPE_VALUE sval;
     REALM_IDX use_realm = 0;
@@ -555,7 +553,7 @@ void do_cmd_browse(player_type *caster_ptr)
     SPELL_IDX spells[64];
     char temp[62 * 4];
 
-    object_type *o_ptr;
+    object_type* o_ptr;
 
     concptr q, s;
     tval_type tval = TV_NONE;
@@ -664,8 +662,7 @@ void do_cmd_browse(player_type *caster_ptr)
  * @param next_realm 変更先の魔法領域ID
  * @return なし
  */
-static void change_realm2(player_type *caster_ptr, magic_realm_type next_realm)
-{
+static void change_realm2(player_type* caster_ptr, magic_realm_type next_realm) {
     int i, j = 0;
     char tmp[80];
 
@@ -702,8 +699,7 @@ static void change_realm2(player_type *caster_ptr, magic_realm_type next_realm)
  * Study a book to gain a new spell/prayer
  * @return なし
  */
-void do_cmd_study(player_type *caster_ptr)
-{
+void do_cmd_study(player_type* caster_ptr) {
     int i;
     OBJECT_IDX item;
     OBJECT_SUBTYPE_VALUE sval;
@@ -713,7 +709,7 @@ void do_cmd_study(player_type *caster_ptr)
     /* Spells of realm2 will have an increment of +32 */
     SPELL_IDX spell = -1;
     concptr p = spell_category_name(mp_ptr->spell_book);
-    object_type *o_ptr;
+    object_type* o_ptr;
     concptr q, s;
     tval_type tval = TV_NONE;
 
@@ -739,7 +735,8 @@ void do_cmd_study(player_type *caster_ptr)
 #ifdef JP
     if (caster_ptr->new_spells < 10) {
         msg_format("あと %d つの%sを学べる。", caster_ptr->new_spells, p);
-    } else {
+    }
+    else {
         msg_format("あと %d 個の%sを学べる。", caster_ptr->new_spells, p);
     }
 #else
@@ -828,7 +825,8 @@ void do_cmd_study(player_type *caster_ptr)
             learned = TRUE;
         else
             caster_ptr->spell_learned1 |= (1L << spell);
-    } else {
+    }
+    else {
         if (caster_ptr->spell_learned2 & (1L << (spell - 32)))
             learned = TRUE;
         else
@@ -852,24 +850,29 @@ void do_cmd_study(player_type *caster_ptr)
 #endif
         {
             return;
-        } else if (old_exp >= SPELL_EXP_EXPERT) {
+        }
+        else if (old_exp >= SPELL_EXP_EXPERT) {
             caster_ptr->spell_exp[spell] = SPELL_EXP_MASTER;
             new_rank = EXP_LEVEL_MASTER;
-        } else if (old_exp >= SPELL_EXP_SKILLED) {
+        }
+        else if (old_exp >= SPELL_EXP_SKILLED) {
             if (spell >= 32)
                 caster_ptr->spell_exp[spell] = SPELL_EXP_EXPERT;
             else
                 caster_ptr->spell_exp[spell] += SPELL_EXP_EXPERT - SPELL_EXP_SKILLED;
             new_rank = EXP_LEVEL_EXPERT;
-        } else if (old_exp >= SPELL_EXP_BEGINNER) {
+        }
+        else if (old_exp >= SPELL_EXP_BEGINNER) {
             caster_ptr->spell_exp[spell] = SPELL_EXP_SKILLED + (old_exp - SPELL_EXP_BEGINNER) * 2 / 3;
             new_rank = EXP_LEVEL_SKILLED;
-        } else {
+        }
+        else {
             caster_ptr->spell_exp[spell] = SPELL_EXP_BEGINNER + old_exp / 3;
             new_rank = EXP_LEVEL_BEGINNER;
         }
         msg_format(_("%sの熟練度が%sに上がった。", "Your proficiency of %s is now %s rank."), name, exp_level_str[new_rank]);
-    } else {
+    }
+    else {
         /* Find the next open entry in "caster_ptr->spell_order[]" */
         for (i = 0; i < 64; i++) {
             /* Stop at the first empty space */
@@ -885,7 +888,8 @@ void do_cmd_study(player_type *caster_ptr)
         /* 英日切り替え機能に対応 */
         if (mp_ptr->spell_book == TV_MUSIC_BOOK) {
             msg_format("%sを学んだ。", exe_spell(caster_ptr, increment ? caster_ptr->realm2 : caster_ptr->realm1, spell % 32, SPELL_NAME));
-        } else {
+        }
+        else {
             msg_format("%sの%sを学んだ。", exe_spell(caster_ptr, increment ? caster_ptr->realm2 : caster_ptr->realm1, spell % 32, SPELL_NAME), p);
         }
 #else
@@ -929,8 +933,7 @@ void do_cmd_study(player_type *caster_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_cast(player_type *caster_ptr)
-{
+void do_cmd_cast(player_type* caster_ptr) {
     OBJECT_IDX item;
     OBJECT_SUBTYPE_VALUE sval;
     SPELL_IDX spell;
@@ -941,8 +944,8 @@ void do_cmd_cast(player_type *caster_ptr)
     MANA_POINT need_mana;
 
     concptr prayer;
-    object_type *o_ptr;
-    const magic_type *s_ptr;
+    object_type* o_ptr;
+    const magic_type* s_ptr;
     concptr q, s;
 
     bool over_exerted = FALSE;
@@ -1045,7 +1048,8 @@ void do_cmd_cast(player_type *caster_ptr)
 
     if (!is_magic(use_realm)) {
         s_ptr = &technic_info[use_realm - MIN_TECHNIC][spell];
-    } else {
+    }
+    else {
         s_ptr = &mp_ptr->info[realm - 1][spell];
     }
 
@@ -1082,7 +1086,8 @@ void do_cmd_cast(player_type *caster_ptr)
     if (need_mana <= caster_ptr->csp) {
         /* Use some mana */
         caster_ptr->csp -= need_mana;
-    } else
+    }
+    else
         over_exerted = TRUE;
     caster_ptr->redraw |= (PR_MANA);
 
@@ -1131,17 +1136,20 @@ void do_cmd_cast(player_type *caster_ptr)
         if ((o_ptr->tval == TV_CHAOS_BOOK) && (randint1(100) < spell)) {
             msg_print(_("カオス的な効果を発生した！", "You produce a chaotic effect!"));
             wild_magic(caster_ptr, spell);
-        } else if ((o_ptr->tval == TV_DEATH_BOOK) && (randint1(100) < spell)) {
+        }
+        else if ((o_ptr->tval == TV_DEATH_BOOK) && (randint1(100) < spell)) {
             if ((sval == 3) && one_in_(2)) {
                 sanity_blast(caster_ptr, 0, TRUE);
-            } else {
+            }
+            else {
                 msg_print(_("痛い！", "It hurts!"));
                 take_hit(caster_ptr, DAMAGE_LOSELIFE, damroll(o_ptr->sval + 1, 6), _("暗黒魔法の逆流", "a miscast Death spell"), -1);
 
                 if ((spell > 15) && one_in_(6) && !caster_ptr->hold_exp)
                     lose_exp(caster_ptr, spell * 250);
             }
-        } else if ((o_ptr->tval == TV_MUSIC_BOOK) && (randint1(200) < spell)) {
+        }
+        else if ((o_ptr->tval == TV_MUSIC_BOOK) && (randint1(200) < spell)) {
             msg_print(_("いやな音が響いた", "An infernal sound echoed."));
             aggravate_monsters(caster_ptr, 0);
         }
@@ -1166,7 +1174,8 @@ void do_cmd_cast(player_type *caster_ptr)
             /* The spell worked */
             if (realm == caster_ptr->realm1) {
                 caster_ptr->spell_worked1 |= (1L << spell);
-            } else {
+            }
+            else {
                 caster_ptr->spell_worked2 |= (1L << spell);
             }
 
@@ -1280,10 +1289,12 @@ void do_cmd_cast(player_type *caster_ptr)
             else if (cur_exp < SPELL_EXP_SKILLED) {
                 if ((caster_ptr->current_floor_ptr->dun_level > 4) && ((caster_ptr->current_floor_ptr->dun_level + 10) > caster_ptr->lev))
                     exp_gain = 8;
-            } else if (cur_exp < SPELL_EXP_EXPERT) {
+            }
+            else if (cur_exp < SPELL_EXP_EXPERT) {
                 if (((caster_ptr->current_floor_ptr->dun_level + 5) > caster_ptr->lev) && ((caster_ptr->current_floor_ptr->dun_level + 5) > s_ptr->slevel))
                     exp_gain = 2;
-            } else if ((cur_exp < SPELL_EXP_MASTER) && !increment) {
+            }
+            else if ((cur_exp < SPELL_EXP_MASTER) && !increment) {
                 if (((caster_ptr->current_floor_ptr->dun_level + 5) > caster_ptr->lev) && (caster_ptr->current_floor_ptr->dun_level > s_ptr->slevel))
                     exp_gain = 1;
             }

@@ -20,8 +20,7 @@
  * @param spell 発動する特殊技能のID
  * @return 処理を実行したらTRUE、キャンセルした場合FALSEを返す。
  */
-bool cast_berserk_spell(player_type *caster_ptr, mind_berserker_type spell)
-{
+bool cast_berserk_spell(player_type* caster_ptr, mind_berserker_type spell) {
     POSITION y, x;
     DIRECTION dir;
     switch (spell) {

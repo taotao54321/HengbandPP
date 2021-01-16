@@ -1,8 +1,7 @@
 ﻿#include "player-info/race-ability-info.h"
 #include "player-info/self-info-util.h"
 
-void set_race_ability_info(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void set_race_ability_info(player_type* creature_ptr, self_info_type* self_ptr) {
     switch (creature_ptr->prace) {
     case RACE_NIBELUNG:
     case RACE_DWARF:

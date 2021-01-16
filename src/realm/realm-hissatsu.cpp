@@ -56,8 +56,7 @@
  * @param mode 処理内容 (SPELL_NAME / SPELL_DESC / SPELL_CAST)
  * @return SPELL_NAME / SPELL_DESC 時には文字列ポインタを返す。SPELL_CAST時はNULL文字列を返す。
  */
-concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
-{
+concptr do_hissatsu_spell(player_type* caster_ptr, SPELL_IDX spell, spell_type mode) {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool cast = (mode == SPELL_CAST) ? TRUE : FALSE;
@@ -349,7 +348,7 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
                 POSITION ty = y, tx = x;
                 POSITION oy = y, ox = x;
                 MONSTER_IDX m_idx = caster_ptr->current_floor_ptr->grid_array[y][x].m_idx;
-                monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
+                monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[m_idx];
                 GAME_TEXT m_name[MAX_NLEN];
 
                 monster_desc(caster_ptr, m_name, m_ptr, 0);
@@ -360,7 +359,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
                     if (is_cave_empty_bold(caster_ptr, y, x)) {
                         ty = y;
                         tx = x;
-                    } else
+                    }
+                    else
                         break;
                 }
                 if ((ty != oy) || (tx != ox)) {
@@ -392,7 +392,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
             if (plev > 44) {
                 if (!identify_fully(caster_ptr, TRUE, TV_NONE))
                     return NULL;
-            } else {
+            }
+            else {
                 if (!ident_spell(caster_ptr, TRUE, TV_NONE))
                     return NULL;
             }
@@ -584,8 +585,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
         if (cast) {
             POSITION y = 0, x = 0;
 
-            grid_type *g_ptr;
-            monster_type *m_ptr;
+            grid_type* g_ptr;
+            monster_type* m_ptr;
 
             if (caster_ptr->cut < 300)
                 set_cut(caster_ptr, caster_ptr->cut + 300);
@@ -605,7 +606,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
 
                         monster_desc(caster_ptr, m_name, m_ptr, 0);
                         msg_format(_("%sには効果がない！", "%s is unharmed!"), m_name);
-                    } else
+                    }
+                    else
                         do_cmd_attack(caster_ptr, y, x, HISSATSU_SEKIRYUKA);
                 }
             }
@@ -645,7 +647,7 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
         if (cast) {
             int total_damage = 0, basedam, i;
             BIT_FLAGS flgs[TR_FLAG_SIZE];
-            object_type *o_ptr;
+            object_type* o_ptr;
             if (!get_aim_dir(caster_ptr, &dir))
                 return NULL;
             msg_print(_("武器を大きく振り下ろした。", "You swing your weapon downward."));
@@ -662,7 +664,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
                     /* vorpal blade */
                     basedam *= 5;
                     basedam /= 3;
-                } else if (has_flag(flgs, TR_VORPAL)) {
+                }
+                else if (has_flag(flgs, TR_VORPAL)) {
                     /* vorpal flag only */
                     basedam *= 11;
                     basedam /= 9;
@@ -709,8 +712,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
                 POSITION y, x;
                 POSITION ny, nx;
                 MONSTER_IDX m_idx;
-                grid_type *g_ptr;
-                monster_type *m_ptr;
+                grid_type* g_ptr;
+                monster_type* m_ptr;
 
                 y = caster_ptr->y + ddy[dir];
                 x = caster_ptr->x + ddx[dir];
@@ -761,7 +764,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
                 if (player_can_enter(caster_ptr, g_ptr->feat, 0)) {
                     if (!move_player_effect(caster_ptr, y, x, MPE_FORGET_FLOW | MPE_HANDLE_STUFF | MPE_DONT_PICKUP))
                         break;
-                } else {
+                }
+                else {
                     break;
                 }
 
@@ -832,7 +836,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
                     /* Reserve needed mana point */
                     caster_ptr->csp -= technic_info[REALM_HISSATSU - MIN_TECHNIC][26].smana;
                     is_new = FALSE;
-                } else
+                }
+                else
                     caster_ptr->csp -= mana_cost_per_monster;
 
                 if (!mdeath)
@@ -899,7 +904,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
                     handle_stuff(caster_ptr);
                     do_cmd_attack(caster_ptr, y, x, combat_options(0));
                 }
-            } else {
+            }
+            else {
                 msg_print(_("その方向にはモンスターはいません。", "You don't see any monster in this direction"));
                 return NULL;
             }
@@ -916,7 +922,7 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
             int total_damage = 0, basedam, i;
             POSITION y, x;
             BIT_FLAGS flgs[TR_FLAG_SIZE];
-            object_type *o_ptr;
+            object_type* o_ptr;
 
             if (!get_direction(caster_ptr, &dir, FALSE, FALSE))
                 return NULL;
@@ -943,7 +949,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
                     /* vorpal blade */
                     basedam *= 5;
                     basedam /= 3;
-                } else if (has_flag(flgs, TR_VORPAL)) {
+                }
+                else if (has_flag(flgs, TR_VORPAL)) {
                     /* vorpal flag only */
                     basedam *= 11;
                     basedam /= 9;
@@ -1007,7 +1014,8 @@ concptr do_hissatsu_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type m
             if (current_world_ptr->total_winner) {
                 take_hit(caster_ptr, DAMAGE_FORCE, 9999, "Seppuku", -1);
                 current_world_ptr->total_winner = TRUE;
-            } else {
+            }
+            else {
                 msg_print(_("武士道とは、死ぬことと見つけたり。", "The meaning of bushido is found in death."));
                 take_hit(caster_ptr, DAMAGE_FORCE, 9999, "Seppuku", -1);
             }

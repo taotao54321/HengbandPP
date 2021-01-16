@@ -3,8 +3,8 @@
 #include "mind/mind-force-trainer.h"
 #include "mind/mind-magic-resistance.h"
 #include "mind/mind-mirror-master.h"
-#include "racial/racial-kutar.h"
 #include "player/player-status-table.h"
+#include "racial/racial-kutar.h"
 #include "spell-realm/spells-craft.h"
 #include "spell-realm/spells-crusade.h"
 #include "spell-realm/spells-demon.h"
@@ -22,8 +22,7 @@
  * / Handle timeout every 10 game turns
  * @return なし
  */
-void reduce_magic_effects_timeout(player_type *creature_ptr)
-{
+void reduce_magic_effects_timeout(player_type* creature_ptr) {
     const int dec_count = (easy_band ? 2 : 1);
     if (creature_ptr->tim_mimic) {
         (void)set_mimic(creature_ptr, creature_ptr->tim_mimic - 1, creature_ptr->mimic_form, TRUE);

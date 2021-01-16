@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void fix_spell(player_type *player_ptr);
+void fix_spell(player_type* player_ptr);

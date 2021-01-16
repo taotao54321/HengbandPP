@@ -6,8 +6,7 @@
 #include "util/quarks.h"
 #include "util/string-processor.h"
 
-void display_short_flavors(player_type *player_ptr, flavor_type *flavor_ptr)
-{
+void display_short_flavors(player_type* player_ptr, flavor_type* flavor_ptr) {
     flavor_ptr->tmp_val2[0] = '\0';
     if ((abbrev_extra || abbrev_all) && object_is_fully_known(flavor_ptr->o_ptr)) {
         if (!flavor_ptr->o_ptr->inscription || !angband_strchr(quark_str(flavor_ptr->o_ptr->inscription), '%')) {
@@ -27,8 +26,7 @@ void display_short_flavors(player_type *player_ptr, flavor_type *flavor_ptr)
     angband_strcat(flavor_ptr->tmp_val2, buff, sizeof(flavor_ptr->tmp_val2));
 }
 
-void display_item_discount(flavor_type *flavor_ptr)
-{
+void display_item_discount(flavor_type* flavor_ptr) {
     if ((flavor_ptr->o_ptr->discount == 0) || (flavor_ptr->tmp_val2[0] && ((flavor_ptr->o_ptr->ident & IDENT_STORE) == 0)))
         return;
 
@@ -46,8 +44,7 @@ void display_item_discount(flavor_type *flavor_ptr)
  * @param flavor_ptr アイテム表記への参照ポインタ
  * @return なし
  */
-void display_item_fake_inscription(flavor_type *flavor_ptr)
-{
+void display_item_fake_inscription(flavor_type* flavor_ptr) {
     if ((flavor_ptr->fake_insc_buf[0] == '\0') && (flavor_ptr->tmp_val2[0] == '\0'))
         return;
 

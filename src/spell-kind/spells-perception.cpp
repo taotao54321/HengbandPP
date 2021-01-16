@@ -34,10 +34,9 @@
  * @param target_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void identify_pack(player_type *target_ptr)
-{
+void identify_pack(player_type* target_ptr) {
     for (INVENTORY_IDX i = 0; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr = &target_ptr->inventory_list[i];
+        object_type* o_ptr = &target_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
 
@@ -53,8 +52,7 @@ void identify_pack(player_type *target_ptr)
  * @param o_ptr 鑑定されるアイテムの情報参照ポインタ
  * @return 実際に鑑定できたらTRUEを返す
  */
-bool identify_item(player_type *owner_ptr, object_type *o_ptr)
-{
+bool identify_item(player_type* owner_ptr, object_type* o_ptr) {
     GAME_TEXT o_name[MAX_NLEN];
     describe_flavor(owner_ptr, o_name, o_ptr, 0);
 
@@ -97,8 +95,7 @@ bool identify_item(player_type *owner_ptr, object_type *o_ptr)
  * This routine does *not* automatically combine objects.
  * Returns TRUE if something was identified, else FALSE.
  */
-bool ident_spell(player_type *caster_ptr, bool only_equip, tval_type item_tester_tval)
-{
+bool ident_spell(player_type* caster_ptr, bool only_equip, tval_type item_tester_tval) {
     if (only_equip)
         item_tester_hook = item_tester_hook_identify_weapon_armour;
     else
@@ -107,7 +104,8 @@ bool ident_spell(player_type *caster_ptr, bool only_equip, tval_type item_tester
     concptr q;
     if (can_get_item(caster_ptr, item_tester_tval)) {
         q = _("どのアイテムを鑑定しますか? ", "Identify which item? ");
-    } else {
+    }
+    else {
         if (only_equip)
             item_tester_hook = object_is_weapon_armour_ammo;
         else
@@ -118,7 +116,7 @@ bool ident_spell(player_type *caster_ptr, bool only_equip, tval_type item_tester
 
     concptr s = _("鑑定するべきアイテムがない。", "You have nothing to identify.");
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(caster_ptr, &item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT), TV_NONE);
     if (!o_ptr)
         return FALSE;
@@ -129,9 +127,11 @@ bool ident_spell(player_type *caster_ptr, bool only_equip, tval_type item_tester
     describe_flavor(caster_ptr, o_name, o_ptr, 0);
     if (item >= INVEN_RARM) {
         msg_format(_("%^s: %s(%c)。", "%^s: %s (%c)."), describe_use(caster_ptr, item), o_name, index_to_label(item));
-    } else if (item >= 0) {
+    }
+    else if (item >= 0) {
         msg_format(_("ザック中: %s(%c)。", "In your pack: %s (%c)."), o_name, index_to_label(item));
-    } else {
+    }
+    else {
         msg_format(_("床上: %s。", "On the ground: %s."), o_name);
     }
 
@@ -149,8 +149,7 @@ bool ident_spell(player_type *caster_ptr, bool only_equip, tval_type item_tester
  * Fully "identify" an object in the inventory -BEN-
  * This routine returns TRUE if an item was identified.
  */
-bool identify_fully(player_type *caster_ptr, bool only_equip, tval_type item_tester_tval)
-{
+bool identify_fully(player_type* caster_ptr, bool only_equip, tval_type item_tester_tval) {
     if (only_equip)
         item_tester_hook = item_tester_hook_identify_fully_weapon_armour;
     else
@@ -159,7 +158,8 @@ bool identify_fully(player_type *caster_ptr, bool only_equip, tval_type item_tes
     concptr q;
     if (can_get_item(caster_ptr, item_tester_tval)) {
         q = _("どのアイテムを*鑑定*しますか? ", "*Identify* which item? ");
-    } else {
+    }
+    else {
         if (only_equip)
             item_tester_hook = object_is_weapon_armour_ammo;
         else
@@ -171,7 +171,7 @@ bool identify_fully(player_type *caster_ptr, bool only_equip, tval_type item_tes
     concptr s = _("*鑑定*するべきアイテムがない。", "You have nothing to *identify*.");
 
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(caster_ptr, &item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT), TV_NONE);
     if (!o_ptr)
         return FALSE;
@@ -189,9 +189,11 @@ bool identify_fully(player_type *caster_ptr, bool only_equip, tval_type item_tes
     describe_flavor(caster_ptr, o_name, o_ptr, 0);
     if (item >= INVEN_RARM) {
         msg_format(_("%^s: %s(%c)。", "%^s: %s (%c)."), describe_use(caster_ptr, item), o_name, index_to_label(item));
-    } else if (item >= 0) {
+    }
+    else if (item >= 0) {
         msg_format(_("ザック中: %s(%c)。", "In your pack: %s (%c)."), o_name, index_to_label(item));
-    } else {
+    }
+    else {
         msg_format(_("床上: %s。", "On the ground: %s."), o_name);
     }
 

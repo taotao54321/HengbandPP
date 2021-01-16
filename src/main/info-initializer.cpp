@@ -38,7 +38,7 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return エラーコード
  */
-errr init_misc(player_type *player_ptr) { return parse_fixed_map(player_ptr, "misc.txt", 0, 0, 0, 0); }
+errr init_misc(player_type* player_ptr) { return parse_fixed_map(player_ptr, "misc.txt", 0, 0, 0, 0); }
 
 /*!
  * @brief rawファイルからのデータの読み取り処理
@@ -47,10 +47,9 @@ errr init_misc(player_type *player_ptr) { return parse_fixed_map(player_ptr, "mi
  * @param head rawファイルのヘッダ
  * @return エラーコード
  */
-static errr init_info_raw(int fd, angband_header *head)
-{
+static errr init_info_raw(int fd, angband_header* head) {
     angband_header test;
-    if (fd_read(fd, (char *)(&test), sizeof(angband_header)) || (test.v_major != head->v_major) || (test.v_minor != head->v_minor)
+    if (fd_read(fd, (char*)(&test), sizeof(angband_header)) || (test.v_major != head->v_major) || (test.v_minor != head->v_minor)
         || (test.v_patch != head->v_patch) || (test.info_num != head->info_num) || (test.info_len != head->info_len) || (test.head_size != head->head_size)
         || (test.info_size != head->info_size)) {
         return -1;
@@ -58,7 +57,7 @@ static errr init_info_raw(int fd, angband_header *head)
 
     *head = test;
     C_MAKE(head->info_ptr, head->info_size, char);
-    fd_read(fd, (char *)head->info_ptr, head->info_size);
+    fd_read(fd, (char*)head->info_ptr, head->info_size);
     if (head->name_size) {
         C_MAKE(head->name_ptr, head->name_size, char);
         fd_read(fd, head->name_ptr, head->name_size);
@@ -77,8 +76,7 @@ static errr init_info_raw(int fd, angband_header *head)
     return 0;
 }
 
-static void update_header(angband_header *head, void **info, char **name, char **text, char **tag)
-{
+static void update_header(angband_header* head, void** info, char** name, char** text, char** tag) {
     if (info)
         *info = head->info_ptr;
 
@@ -100,8 +98,7 @@ static void update_header(angband_header *head, void **info, char **name, char *
  * @param len データの長さ
  * @return エラーコード
  */
-static void init_header(angband_header *head, IDX num, int len)
-{
+static void init_header(angband_header* head, IDX num, int len) {
     head->v_major = FAKE_VER_MAJOR;
     head->v_minor = FAKE_VER_MINOR;
     head->v_patch = FAKE_VER_PATCH;
@@ -121,8 +118,7 @@ static void init_header(angband_header *head, IDX num, int len)
  * @param template_file ファイル名
  * @return テキストの方が新しいか、rawファイルがなく更新の必要がある場合-1、更新の必要がない場合0。
  */
-static errr check_modification_date(int fd, concptr template_file)
-{
+static errr check_modification_date(int fd, concptr template_file) {
     struct stat txt_stat, raw_stat;
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_EDIT, template_file);
@@ -152,8 +148,7 @@ static errr check_modification_date(int fd, concptr template_file)
  * Note that we let each entry have a unique "name" and "text" string,
  * even if the string happens to be empty (everyone has a unique '\0').
  */
-static errr init_info(player_type *player_ptr, concptr filename, angband_header *head, void **info, char **name, char **text, char **tag)
-{
+static errr init_info(player_type* player_ptr, concptr filename, angband_header* head, void** info, char** name, char** text, char** tag) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_DATA, format(_("%s_j.raw", "%s.raw"), filename));
     int fd = fd_open(buf, O_RDONLY);
@@ -195,7 +190,7 @@ static errr init_info(player_type *player_ptr, concptr filename, angband_header 
         *tag = head->tag_ptr;
 
     path_build(buf, sizeof(buf), ANGBAND_DIR_EDIT, format("%s.txt", filename));
-    FILE *fp;
+    FILE* fp;
     fp = angband_fopen(buf, "r");
     if (!fp)
         quit(format(_("'%s.txt'ファイルをオープンできません。", "Cannot open '%s.txt' file."), filename));
@@ -261,12 +256,11 @@ static errr init_info(player_type *player_ptr, concptr filename, angband_header 
  * Initialize the "f_info" array
  * @return エラーコード
  */
-errr init_f_info(player_type *player_ptr)
-{
+errr init_f_info(player_type* player_ptr) {
     init_header(&f_head, max_f_idx, sizeof(feature_type));
     f_head.parse_info_txt = parse_f_info;
     f_head.retouch = retouch_f_info;
-    return init_info(player_ptr, "f_info", &f_head, (void **)&f_info, &f_name, NULL, &f_tag);
+    return init_info(player_ptr, "f_info", &f_head, (void**)&f_info, &f_name, NULL, &f_tag);
 }
 
 /*!
@@ -274,11 +268,10 @@ errr init_f_info(player_type *player_ptr)
  * Initialize the "k_info" array
  * @return エラーコード
  */
-errr init_k_info(player_type *player_ptr)
-{
+errr init_k_info(player_type* player_ptr) {
     init_header(&k_head, max_k_idx, sizeof(object_kind));
     k_head.parse_info_txt = parse_k_info;
-    return init_info(player_ptr, "k_info", &k_head, (void **)&k_info, &k_name, &k_text, NULL);
+    return init_info(player_ptr, "k_info", &k_head, (void**)&k_info, &k_name, &k_text, NULL);
 }
 
 /*!
@@ -286,11 +279,10 @@ errr init_k_info(player_type *player_ptr)
  * Initialize the "a_info" array
  * @return エラーコード
  */
-errr init_a_info(player_type *player_ptr)
-{
+errr init_a_info(player_type* player_ptr) {
     init_header(&a_head, max_a_idx, sizeof(artifact_type));
     a_head.parse_info_txt = parse_a_info;
-    return init_info(player_ptr, "a_info", &a_head, (void **)&a_info, &a_name, &a_text, NULL);
+    return init_info(player_ptr, "a_info", &a_head, (void**)&a_info, &a_name, &a_text, NULL);
 }
 
 /*!
@@ -298,11 +290,10 @@ errr init_a_info(player_type *player_ptr)
  * Initialize the "e_info" array
  * @return エラーコード
  */
-errr init_e_info(player_type *player_ptr)
-{
+errr init_e_info(player_type* player_ptr) {
     init_header(&e_head, max_e_idx, sizeof(ego_item_type));
     e_head.parse_info_txt = parse_e_info;
-    return init_info(player_ptr, "e_info", &e_head, (void **)&e_info, &e_name, &e_text, NULL);
+    return init_info(player_ptr, "e_info", &e_head, (void**)&e_info, &e_name, &e_text, NULL);
 }
 
 /*!
@@ -310,11 +301,10 @@ errr init_e_info(player_type *player_ptr)
  * Initialize the "r_info" array
  * @return エラーコード
  */
-errr init_r_info(player_type *player_ptr)
-{
+errr init_r_info(player_type* player_ptr) {
     init_header(&r_head, max_r_idx, sizeof(monster_race));
     r_head.parse_info_txt = parse_r_info;
-    return init_info(player_ptr, "r_info", &r_head, (void **)&r_info, &r_name, &r_text, NULL);
+    return init_info(player_ptr, "r_info", &r_head, (void**)&r_info, &r_name, &r_text, NULL);
 }
 
 /*!
@@ -322,11 +312,10 @@ errr init_r_info(player_type *player_ptr)
  * Initialize the "d_info" array
  * @return エラーコード
  */
-errr init_d_info(player_type *player_ptr)
-{
+errr init_d_info(player_type* player_ptr) {
     init_header(&d_head, current_world_ptr->max_d_idx, sizeof(dungeon_type));
     d_head.parse_info_txt = parse_d_info;
-    return init_info(player_ptr, "d_info", &d_head, (void **)&d_info, &d_name, &d_text, NULL);
+    return init_info(player_ptr, "d_info", &d_head, (void**)&d_info, &d_name, &d_text, NULL);
 }
 
 /*!
@@ -337,11 +326,10 @@ errr init_d_info(player_type *player_ptr)
  * Note that we let each entry have a unique "name" and "text" string,
  * even if the string happens to be empty (everyone has a unique '\0').
  */
-errr init_v_info(player_type *player_ptr)
-{
+errr init_v_info(player_type* player_ptr) {
     init_header(&v_head, max_v_idx, sizeof(vault_type));
     v_head.parse_info_txt = parse_v_info;
-    return init_info(player_ptr, "v_info", &v_head, (void **)&v_info, &v_name, &v_text, NULL);
+    return init_info(player_ptr, "v_info", &v_head, (void**)&v_info, &v_name, &v_text, NULL);
 }
 
 /*!
@@ -349,11 +337,10 @@ errr init_v_info(player_type *player_ptr)
  * Initialize the "s_info" array
  * @return エラーコード
  */
-errr init_s_info(player_type *player_ptr)
-{
+errr init_s_info(player_type* player_ptr) {
     init_header(&s_head, MAX_CLASS, sizeof(skill_table));
     s_head.parse_info_txt = parse_s_info;
-    return init_info(player_ptr, "s_info", &s_head, (void **)&s_info, NULL, NULL, NULL);
+    return init_info(player_ptr, "s_info", &s_head, (void**)&s_info, NULL, NULL, NULL);
 }
 
 /*!
@@ -361,9 +348,8 @@ errr init_s_info(player_type *player_ptr)
  * Initialize the "m_info" array
  * @return エラーコード
  */
-errr init_m_info(player_type *player_ptr)
-{
+errr init_m_info(player_type* player_ptr) {
     init_header(&m_head, MAX_CLASS, sizeof(player_magic));
     m_head.parse_info_txt = parse_m_info;
-    return init_info(player_ptr, "m_info", &m_head, (void **)&m_info, NULL, NULL, NULL);
+    return init_info(player_ptr, "m_info", &m_head, (void**)&m_info, NULL, NULL, NULL);
 }

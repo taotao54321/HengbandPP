@@ -10,11 +10,11 @@
 #include "object/item-use-flags.h"
 #include "object/object-info.h"
 #include "object/object-kind.h"
+#include "player/player-status-flags.h"
 #include "system/object-type-definition.h"
 #include "term/gameterm.h"
 #include "term/screen-processor.h"
 #include "term/term-color-types.h"
-#include "player/player-status-flags.h"
 
 /*!
  * @brief メインウィンドウの右上に装備アイテムの表示させる
@@ -22,11 +22,10 @@
  * @param target_item アイテムの選択処理を行うか否か。
  * @return 選択したアイテムのタグ
  */
-COMMAND_CODE show_equipment(player_type *owner_ptr, int target_item, BIT_FLAGS mode, tval_type tval)
-{
+COMMAND_CODE show_equipment(player_type* owner_ptr, int target_item, BIT_FLAGS mode, tval_type tval) {
     COMMAND_CODE i;
     int j, k, l;
-    object_type *o_ptr;
+    object_type* o_ptr;
     char tmp_val[80];
     GAME_TEXT o_name[MAX_NLEN];
     COMMAND_CODE out_index[23];
@@ -49,7 +48,8 @@ COMMAND_CODE show_equipment(player_type *owner_ptr, int target_item, BIT_FLAGS m
         if ((((i == INVEN_RARM) && has_left_hand_weapon(owner_ptr)) || ((i == INVEN_LARM) && has_right_hand_weapon(owner_ptr))) && has_two_handed_weapons(owner_ptr)) {
             (void)strcpy(out_desc[k], _("(武器を両手持ち)", "(wielding with two-hands)"));
             out_color[k] = TERM_WHITE;
-        } else {
+        }
+        else {
             (void)strcpy(out_desc[k], o_name);
             out_color[k] = tval_to_attr[o_ptr->tval % 128];
         }
@@ -84,9 +84,11 @@ COMMAND_CODE show_equipment(player_type *owner_ptr, int target_item, BIT_FLAGS m
             if (j == (target_item - 1)) {
                 strcpy(tmp_val, _("》", "> "));
                 target_item_label = i;
-            } else
+            }
+            else
                 strcpy(tmp_val, "  ");
-        } else if (i >= INVEN_RARM)
+        }
+        else if (i >= INVEN_RARM)
             sprintf(tmp_val, "%c)", equip_label[i - INVEN_RARM]);
         else
             sprintf(tmp_val, "%c)", index_to_label(i));
@@ -107,7 +109,8 @@ COMMAND_CODE show_equipment(player_type *owner_ptr, int target_item, BIT_FLAGS m
             (void)sprintf(tmp_val, _("%-7s: ", "%-14s: "), mention_use(owner_ptr, i));
             put_str(tmp_val, j + 1, cur_col);
             c_put_str(out_color[j], out_desc[j], j + 1, _(cur_col + 9, cur_col + 16));
-        } else
+        }
+        else
             c_put_str(out_color[j], out_desc[j], j + 1, cur_col);
 
         if (!show_weights)

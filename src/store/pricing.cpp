@@ -27,8 +27,7 @@
  * "greed" value is always something (?).
  * </pre>
  */
-PRICE price_item(player_type *player_ptr, object_type *o_ptr, int greed, bool flip)
-{
+PRICE price_item(player_type* player_ptr, object_type* o_ptr, int greed, bool flip) {
     PRICE price = object_value(player_ptr, o_ptr);
     if (price <= 0)
         return 0L;
@@ -45,7 +44,8 @@ PRICE price_item(player_type *player_ptr, object_type *o_ptr, int greed, bool fl
             price = price / 2;
 
         price = (price * adjust + 50L) / 100L;
-    } else {
+    }
+    else {
         adjust = 100 + ((greed + factor) - 300);
         if (adjust < 100)
             adjust = 100;
@@ -68,8 +68,7 @@ PRICE price_item(player_type *player_ptr, object_type *o_ptr, int greed, bool fl
  * @param minprice アイテムの最低販売価格
  * @return 割引を禁止するならTRUEを返す。
  */
-bool noneedtobargain(PRICE minprice)
-{
+bool noneedtobargain(PRICE minprice) {
     PRICE good = st_ptr->good_buy;
     PRICE bad = st_ptr->bad_buy;
     return (minprice < 10L) || (good == MAX_SHORT) || (good > ((3 * bad) + (5 + (minprice / 50))));

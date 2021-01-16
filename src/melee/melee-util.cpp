@@ -3,8 +3,7 @@
 #include "monster-race/monster-race.h"
 #include "system/floor-type-definition.h"
 
-mam_type *initialize_mam_type(player_type *subject_ptr, mam_type *mam_ptr, MONRACE_IDX m_idx, MONRACE_IDX t_idx)
-{
+mam_type* initialize_mam_type(player_type* subject_ptr, mam_type* mam_ptr, MONRACE_IDX m_idx, MONRACE_IDX t_idx) {
     mam_ptr->effect_type = 0;
     mam_ptr->m_idx = m_idx;
     mam_ptr->t_idx = t_idx;
@@ -19,8 +18,8 @@ mam_type *initialize_mam_type(player_type *subject_ptr, mam_type *mam_ptr, MONRA
     mam_ptr->explode = FALSE;
     mam_ptr->touched = FALSE;
 
-    monster_race *r_ptr = &r_info[mam_ptr->m_ptr->r_idx];
-    monster_race *tr_ptr = &r_info[mam_ptr->t_ptr->r_idx];
+    monster_race* r_ptr = &r_info[mam_ptr->m_ptr->r_idx];
+    monster_race* tr_ptr = &r_info[mam_ptr->t_ptr->r_idx];
     mam_ptr->ac = tr_ptr->ac;
     mam_ptr->rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
     mam_ptr->blinked = FALSE;

@@ -19,12 +19,11 @@
  * @param i2 整理したい配列の終点
  * @return なし
  */
-static void compact_objects_aux(floor_type *floor_ptr, OBJECT_IDX i1, OBJECT_IDX i2)
-{
+static void compact_objects_aux(floor_type* floor_ptr, OBJECT_IDX i1, OBJECT_IDX i2) {
     if (i1 == i2)
         return;
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     for (OBJECT_IDX i = 1; i < floor_ptr->o_max; i++) {
         o_ptr = &floor_ptr->o_list[i];
         if (!o_ptr->k_idx)
@@ -37,14 +36,15 @@ static void compact_objects_aux(floor_type *floor_ptr, OBJECT_IDX i1, OBJECT_IDX
     o_ptr = &floor_ptr->o_list[i1];
 
     if (object_is_held_monster(o_ptr)) {
-        monster_type *m_ptr;
+        monster_type* m_ptr;
         m_ptr = &floor_ptr->m_list[o_ptr->held_m_idx];
         if (m_ptr->hold_o_idx == i1)
             m_ptr->hold_o_idx = i2;
-    } else {
+    }
+    else {
         POSITION y = o_ptr->iy;
         POSITION x = o_ptr->ix;
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[y][x];
         if (g_ptr->o_idx == i1)
             g_ptr->o_idx = i2;
@@ -71,16 +71,15 @@ static void compact_objects_aux(floor_type *floor_ptr, OBJECT_IDX i1, OBJECT_IDX
  * After "compacting" (if needed), we "reorder" the objects into a more\n
  * compact order, and we reset the allocation info, and the "live" array.\n
  */
-void compact_objects(player_type *player_ptr, int size)
-{
-    object_type *o_ptr;
+void compact_objects(player_type* player_ptr, int size) {
+    object_type* o_ptr;
     if (size) {
         msg_print(_("アイテム情報を圧縮しています...", "Compacting objects..."));
         player_ptr->redraw |= PR_MAP;
         player_ptr->window |= PW_OVERHEAD | PW_DUNGEON;
     }
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (int num = 0, cnt = 1; num < size; cnt++) {
         int cur_lev = 5 * cnt;
         int cur_dis = 5 * (20 - cnt);
@@ -92,14 +91,15 @@ void compact_objects(player_type *player_ptr, int size)
 
             POSITION y, x;
             if (object_is_held_monster(o_ptr)) {
-                monster_type *m_ptr;
+                monster_type* m_ptr;
                 m_ptr = &floor_ptr->m_list[o_ptr->held_m_idx];
                 y = m_ptr->fy;
                 x = m_ptr->fx;
 
                 if (randint0(100) < 90)
                     continue;
-            } else {
+            }
+            else {
                 y = o_ptr->iy;
                 x = o_ptr->ix;
             }

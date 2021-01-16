@@ -36,8 +36,7 @@ typedef enum ammo_creation_type {
  * Hook to determine if an object is contertible in an arrow/bolt
  * @return 製造を実際に行ったらTRUE、キャンセルしたらFALSEを返す
  */
-bool create_ammo(player_type *creature_ptr)
-{
+bool create_ammo(player_type* creature_ptr) {
     char com[80];
     if (creature_ptr->lev >= 20)
         sprintf(com, _("[S]弾, [A]矢, [B]クロスボウの矢 :", "Create [S]hots, Create [A]rrow or Create [B]olt ?"));
@@ -80,7 +79,7 @@ bool create_ammo(player_type *creature_ptr)
 
         POSITION y = creature_ptr->y + ddy[dir];
         POSITION x = creature_ptr->x + ddx[dir];
-        grid_type *g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
+        grid_type* g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
         if (!has_flag(f_info[get_feat_mimic(g_ptr)].flags, FF_CAN_DIG)) {
             msg_print(_("そこには岩石がない。", "You need a pile of rubble."));
             return FALSE;
@@ -92,7 +91,7 @@ bool create_ammo(player_type *creature_ptr)
         }
 
         object_type forge;
-        object_type *q_ptr = &forge;
+        object_type* q_ptr = &forge;
         object_prep(creature_ptr, q_ptr, lookup_kind(TV_SHOT, (OBJECT_SUBTYPE_VALUE)m_bonus(1, creature_ptr->lev) + 1));
         q_ptr->number = (byte)rand_range(15, 30);
         object_aware(creature_ptr, q_ptr);
@@ -115,7 +114,7 @@ bool create_ammo(player_type *creature_ptr)
         concptr q = _("どのアイテムから作りますか？ ", "Convert which item? ");
         concptr s = _("材料を持っていない。", "You have no item to convert.");
         OBJECT_IDX item;
-        object_type *q_ptr = choose_object(creature_ptr, &item, q, s, USE_INVEN | USE_FLOOR, TV_NONE);
+        object_type* q_ptr = choose_object(creature_ptr, &item, q, s, USE_INVEN | USE_FLOOR, TV_NONE);
         if (!q_ptr)
             return FALSE;
 
@@ -142,7 +141,7 @@ bool create_ammo(player_type *creature_ptr)
         concptr q = _("どのアイテムから作りますか？ ", "Convert which item? ");
         concptr s = _("材料を持っていない。", "You have no item to convert.");
         OBJECT_IDX item;
-        object_type *q_ptr = choose_object(creature_ptr, &item, q, s, (USE_INVEN | USE_FLOOR), TV_NONE);
+        object_type* q_ptr = choose_object(creature_ptr, &item, q, s, (USE_INVEN | USE_FLOOR), TV_NONE);
         if (!q_ptr)
             return FALSE;
 

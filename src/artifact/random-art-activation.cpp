@@ -1,13 +1,12 @@
 ﻿#include "artifact/random-art-activation.h"
-#include "artifact/random-art-effects.h"
 #include "artifact/random-art-bias-types.h"
+#include "artifact/random-art-effects.h"
 #include "object-enchant/object-boost.h"
 #include "object-enchant/tr-types.h"
 #include "system/object-type-definition.h"
 #include "util/bit-flags-calculator.h"
 
-static int invest_activation_elec(void)
-{
+static int invest_activation_elec(void) {
     if (!one_in_(3))
         return ACT_BO_ELEC_1;
 
@@ -17,8 +16,7 @@ static int invest_activation_elec(void)
     return ACT_BA_ELEC_3;
 }
 
-static int invest_activation_fire(void)
-{
+static int invest_activation_fire(void) {
     if (!one_in_(3))
         return ACT_BO_FIRE_1;
 
@@ -28,8 +26,7 @@ static int invest_activation_fire(void)
     return ACT_BA_FIRE_2;
 }
 
-static int invest_activation_cold(void)
-{
+static int invest_activation_cold(void) {
     if (!one_in_(3))
         return ACT_BO_COLD_1;
 
@@ -44,8 +41,7 @@ static int invest_activation_cold(void)
 
 static int invest_activation_chaos(void) { return one_in_(6) ? ACT_SUMMON_DEMON : ACT_CALL_CHAOS; }
 
-static int invest_activation_priest(void)
-{
+static int invest_activation_priest(void) {
     if (one_in_(13))
         return ACT_CHARM_UNDEAD;
 
@@ -73,8 +69,7 @@ static int invest_activation_priest(void)
     return ACT_CURE_MW;
 }
 
-static int invest_activation_necromancy(void)
-{
+static int invest_activation_necromancy(void) {
     if (one_in_(66))
         return ACT_WRAITH;
 
@@ -99,8 +94,7 @@ static int invest_activation_necromancy(void)
     return ACT_DRAIN_1;
 }
 
-static int invest_activation_law(void)
-{
+static int invest_activation_law(void) {
     if (one_in_(8))
         return ACT_BANISH_EVIL;
 
@@ -110,8 +104,7 @@ static int invest_activation_law(void)
     return ACT_PROT_EVIL;
 }
 
-static int invest_activation_rogue(void)
-{
+static int invest_activation_rogue(void) {
     if (one_in_(50))
         return ACT_SPEED;
 
@@ -127,8 +120,7 @@ static int invest_activation_rogue(void)
     return ACT_ID_PLAIN;
 }
 
-static int invest_activation_mage(void)
-{
+static int invest_activation_mage(void) {
     if (one_in_(20))
         return ACT_SUMMON_ELEMENTAL;
 
@@ -143,8 +135,7 @@ static int invest_activation_mage(void)
 
 static int invest_activation_warrior(void) { return one_in_(100) ? ACT_INVULN : ACT_BERSERK; }
 
-static int invest_activation_ranger(void)
-{
+static int invest_activation_ranger(void) {
     if (one_in_(20))
         return ACT_CHARM_ANIMALS;
 
@@ -169,8 +160,7 @@ static int invest_activation_ranger(void)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void give_activation_power(object_type *o_ptr)
-{
+void give_activation_power(object_type* o_ptr) {
     int type = 0;
     int chance = 0;
     switch (o_ptr->artifact_bias) {

@@ -38,8 +38,7 @@
 // PARSE_ERROR_MAXが既にあり扱い辛いのでここでconst宣言.
 static const int PARSE_CONTINUE = 255;
 
-qtwg_type *initialize_quest_generator_type(qtwg_type *qtwg_ptr, char *buf, int ymin, int xmin, int ymax, int xmax, int *y, int *x)
-{
+qtwg_type* initialize_quest_generator_type(qtwg_type* qtwg_ptr, char* buf, int ymin, int xmin, int ymax, int xmax, int* y, int* x) {
     qtwg_ptr->buf = buf;
     qtwg_ptr->ymin = ymin;
     qtwg_ptr->xmin = xmin;
@@ -59,22 +58,20 @@ qtwg_type *initialize_quest_generator_type(qtwg_type *qtwg_ptr, char *buf, int y
  * @param x 配置先X座標
  * @return エラーコード
  */
-static void drop_here(floor_type *floor_ptr, object_type *j_ptr, POSITION y, POSITION x)
-{
+static void drop_here(floor_type* floor_ptr, object_type* j_ptr, POSITION y, POSITION x) {
     OBJECT_IDX o_idx = o_pop(floor_ptr);
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &floor_ptr->o_list[o_idx];
     object_copy(o_ptr, j_ptr);
     o_ptr->iy = y;
     o_ptr->ix = x;
     o_ptr->held_m_idx = 0;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     o_ptr->next_o_idx = g_ptr->o_idx;
     g_ptr->o_idx = o_idx;
 }
 
-static void generate_artifact(player_type *player_ptr, qtwg_type *qtwg_ptr, const ARTIFACT_IDX artifact_index)
-{
+static void generate_artifact(player_type* player_ptr, qtwg_type* qtwg_ptr, const ARTIFACT_IDX artifact_index) {
     if (artifact_index == 0)
         return;
 
@@ -85,18 +82,17 @@ static void generate_artifact(player_type *player_ptr, qtwg_type *qtwg_ptr, cons
 
     KIND_OBJECT_IDX k_idx = lookup_kind(TV_SCROLL, SV_SCROLL_ACQUIREMENT);
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     object_prep(player_ptr, q_ptr, k_idx);
     drop_here(player_ptr->current_floor_ptr, q_ptr, *qtwg_ptr->y, *qtwg_ptr->x);
 }
 
-static void parse_qtw_D(player_type *player_ptr, qtwg_type *qtwg_ptr, char *s)
-{
+static void parse_qtw_D(player_type* player_ptr, qtwg_type* qtwg_ptr, char* s) {
     *qtwg_ptr->x = qtwg_ptr->xmin;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     int len = strlen(s);
     for (int i = 0; ((*qtwg_ptr->x < qtwg_ptr->xmax) && (i < len)); (*qtwg_ptr->x)++, s++, i++) {
-        grid_type *g_ptr = &floor_ptr->grid_array[*qtwg_ptr->y][*qtwg_ptr->x];
+        grid_type* g_ptr = &floor_ptr->grid_array[*qtwg_ptr->y][*qtwg_ptr->x];
         int idx = s[0];
         OBJECT_IDX object_index = letter[idx].object;
         MONSTER_IDX monster_index = letter[idx].monster;
@@ -113,7 +109,8 @@ static void parse_qtw_D(player_type *player_ptr, qtwg_type *qtwg_ptr, char *s)
             place_monster(player_ptr, *qtwg_ptr->y, *qtwg_ptr->x, (PM_ALLOW_SLEEP | PM_ALLOW_GROUP));
 
             floor_ptr->monster_level = floor_ptr->base_level;
-        } else if (monster_index) {
+        }
+        else if (monster_index) {
             int old_cur_num, old_max_num;
             bool clone = FALSE;
 
@@ -128,7 +125,8 @@ static void parse_qtw_D(player_type *player_ptr, qtwg_type *qtwg_ptr, char *s)
             if (r_info[monster_index].flags1 & RF1_UNIQUE) {
                 r_info[monster_index].cur_num = 0;
                 r_info[monster_index].max_num = 1;
-            } else if (r_info[monster_index].flags7 & RF7_NAZGUL) {
+            }
+            else if (r_info[monster_index].flags7 & RF7_NAZGUL) {
                 if (r_info[monster_index].cur_num == r_info[monster_index].max_num) {
                     r_info[monster_index].max_num++;
                 }
@@ -151,12 +149,14 @@ static void parse_qtw_D(player_type *player_ptr, qtwg_type *qtwg_ptr, char *s)
              */
             if (randint0(100) < 75) {
                 place_object(player_ptr, *qtwg_ptr->y, *qtwg_ptr->x, 0L);
-            } else {
+            }
+            else {
                 place_trap(player_ptr, *qtwg_ptr->y, *qtwg_ptr->x);
             }
 
             floor_ptr->object_level = floor_ptr->base_level;
-        } else if (random & RANDOM_OBJECT) {
+        }
+        else if (random & RANDOM_OBJECT) {
             floor_ptr->object_level = floor_ptr->base_level + object_index;
             if (randint0(100) < 75)
                 place_object(player_ptr, *qtwg_ptr->y, *qtwg_ptr->x, 0L);
@@ -166,14 +166,17 @@ static void parse_qtw_D(player_type *player_ptr, qtwg_type *qtwg_ptr, char *s)
                 place_object(player_ptr, *qtwg_ptr->y, *qtwg_ptr->x, AM_GOOD | AM_GREAT);
 
             floor_ptr->object_level = floor_ptr->base_level;
-        } else if (random & RANDOM_TRAP) {
+        }
+        else if (random & RANDOM_TRAP) {
             place_trap(player_ptr, *qtwg_ptr->y, *qtwg_ptr->x);
-        } else if (letter[idx].trap) {
+        }
+        else if (letter[idx].trap) {
             g_ptr->mimic = g_ptr->feat;
             g_ptr->feat = conv_dungeon_feat(floor_ptr, letter[idx].trap);
-        } else if (object_index) {
+        }
+        else if (object_index) {
             object_type tmp_object;
-            object_type *o_ptr = &tmp_object;
+            object_type* o_ptr = &tmp_object;
             object_prep(player_ptr, o_ptr, object_index);
             if (o_ptr->tval == TV_GOLD) {
                 coin_type = object_index - OBJ_GOLD_LIST;
@@ -190,16 +193,15 @@ static void parse_qtw_D(player_type *player_ptr, qtwg_type *qtwg_ptr, char *s)
     }
 }
 
-static bool parse_qtw_QQ(quest_type *q_ptr, char **zz, int num)
-{
+static bool parse_qtw_QQ(quest_type* q_ptr, char** zz, int num) {
     if (zz[1][0] != 'Q')
         return FALSE;
 
     if ((init_flags & INIT_ASSIGN) == 0)
         return TRUE;
 
-    monster_race *r_ptr;
-    artifact_type *a_ptr;
+    monster_race* r_ptr;
+    artifact_type* a_ptr;
 
     if (num < 9)
         return (PARSE_ERROR_TOO_FEW_ARGUMENTS);
@@ -228,8 +230,7 @@ static bool parse_qtw_QQ(quest_type *q_ptr, char **zz, int num)
 /**
  * @todo 処理がどうなっているのかいずれチェックする
  */
-static bool parse_qtw_QR(quest_type *q_ptr, char **zz, int num)
-{
+static bool parse_qtw_QR(quest_type* q_ptr, char** zz, int num) {
     if (zz[1][0] != 'R')
         return FALSE;
 
@@ -252,7 +253,8 @@ static bool parse_qtw_QR(quest_type *q_ptr, char **zz, int num)
     if (reward_idx) {
         q_ptr->k_idx = (KIND_OBJECT_IDX)reward_idx;
         a_info[reward_idx].gen_flags |= TRG_QUESTITEM;
-    } else {
+    }
+    else {
         q_ptr->type = QUEST_TYPE_KILL_ALL;
     }
 
@@ -265,8 +267,7 @@ static bool parse_qtw_QR(quest_type *q_ptr, char **zz, int num)
  * @param zz トークン保管文字列
  * @return エラーコード、但しPARSE_CONTINUEの時は処理続行
  */
-static int parse_qtw_Q(qtwg_type *qtwg_ptr, char **zz)
-{
+static int parse_qtw_Q(qtwg_type* qtwg_ptr, char** zz) {
     if (qtwg_ptr->buf[0] != 'Q')
         return PARSE_CONTINUE;
 
@@ -277,7 +278,7 @@ static int parse_qtw_Q(qtwg_type *qtwg_ptr, char **zz)
     if (num < 3)
         return PARSE_ERROR_TOO_FEW_ARGUMENTS;
 
-    quest_type *q_ptr;
+    quest_type* q_ptr;
     q_ptr = &(quest[atoi(zz[0])]);
     if (parse_qtw_QQ(q_ptr, zz, num))
         return PARSE_ERROR_NONE;
@@ -305,8 +306,7 @@ static int parse_qtw_Q(qtwg_type *qtwg_ptr, char **zz)
     return PARSE_ERROR_GENERIC;
 }
 
-static bool parse_qtw_P(player_type *player_ptr, qtwg_type *qtwg_ptr, char **zz)
-{
+static bool parse_qtw_P(player_type* player_ptr, qtwg_type* qtwg_ptr, char** zz) {
     if (qtwg_ptr->buf[0] != 'P')
         return FALSE;
 
@@ -320,7 +320,7 @@ static bool parse_qtw_P(player_type *player_ptr, qtwg_type *qtwg_ptr, char **zz)
     if (*qtwg_ptr->y % SCREEN_HGT)
         panels_y++;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     floor_ptr->height = panels_y * SCREEN_HGT;
     int panels_x = (*qtwg_ptr->x / SCREEN_WID);
     if (*qtwg_ptr->x % SCREEN_WID)
@@ -346,8 +346,7 @@ static bool parse_qtw_P(player_type *player_ptr, qtwg_type *qtwg_ptr, char **zz)
     return TRUE;
 }
 
-static bool parse_qtw_M(qtwg_type *qtwg_ptr, char **zz)
-{
+static bool parse_qtw_M(qtwg_type* qtwg_ptr, char** zz) {
     if (qtwg_ptr->buf[0] != 'M')
         return FALSE;
 
@@ -356,27 +355,38 @@ static bool parse_qtw_M(qtwg_type *qtwg_ptr, char **zz)
 
     if (zz[0][0] == 'T') {
         max_towns = (TOWN_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'Q') {
+    }
+    else if (zz[0][0] == 'Q') {
         max_q_idx = (QUEST_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'R') {
+    }
+    else if (zz[0][0] == 'R') {
         max_r_idx = (player_race_type)atoi(zz[1]);
-    } else if (zz[0][0] == 'K') {
+    }
+    else if (zz[0][0] == 'K') {
         max_k_idx = (KIND_OBJECT_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'V') {
+    }
+    else if (zz[0][0] == 'V') {
         max_v_idx = (VAULT_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'F') {
+    }
+    else if (zz[0][0] == 'F') {
         max_f_idx = (FEAT_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'A') {
+    }
+    else if (zz[0][0] == 'A') {
         max_a_idx = (ARTIFACT_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'E') {
+    }
+    else if (zz[0][0] == 'E') {
         max_e_idx = (EGO_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'D') {
+    }
+    else if (zz[0][0] == 'D') {
         current_world_ptr->max_d_idx = (DUNGEON_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'O') {
+    }
+    else if (zz[0][0] == 'O') {
         current_world_ptr->max_o_idx = (OBJECT_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'M') {
+    }
+    else if (zz[0][0] == 'M') {
         current_world_ptr->max_m_idx = (MONSTER_IDX)atoi(zz[1]);
-    } else if (zz[0][0] == 'W') {
+    }
+    else if (zz[0][0] == 'W') {
         if (zz[0][1] == 'X')
             current_world_ptr->max_wild_x = (POSITION)atoi(zz[1]);
 
@@ -400,9 +410,8 @@ static bool parse_qtw_M(qtwg_type *qtwg_ptr, char **zz)
  * @param x 詳細不明
  * @return エラーコード
  */
-parse_error_type generate_fixed_map_floor(player_type *player_ptr, qtwg_type *qtwg_ptr, process_dungeon_file_pf parse_fixed_map)
-{
-    char *zz[33];
+parse_error_type generate_fixed_map_floor(player_type* player_ptr, qtwg_type* qtwg_ptr, process_dungeon_file_pf parse_fixed_map) {
+    char* zz[33];
     if (!qtwg_ptr->buf[0])
         return PARSE_ERROR_NONE;
 
@@ -423,7 +432,7 @@ parse_error_type generate_fixed_map_floor(player_type *player_ptr, qtwg_type *qt
         return parse_error_type(parse_line_feature(player_ptr->current_floor_ptr, qtwg_ptr->buf));
 
     if (qtwg_ptr->buf[0] == 'D') {
-        char *s = qtwg_ptr->buf + 2;
+        char* s = qtwg_ptr->buf + 2;
         if (init_flags & INIT_ONLY_BUILDINGS)
             return PARSE_ERROR_NONE;
 

@@ -5,8 +5,7 @@
 #include "load/load-v1-5-0.h"
 #include "system/floor-type-definition.h"
 
-void set_hp_old(player_type *creature_ptr)
-{
+void set_hp_old(player_type* creature_ptr) {
     s16b tmp16s;
     rd_s16b(&tmp16s);
     creature_ptr->mhp = tmp16s;
@@ -19,8 +18,7 @@ void set_hp_old(player_type *creature_ptr)
     creature_ptr->chp_frac = (u32b)tmp16u;
 }
 
-void set_mana_old(player_type *creature_ptr)
-{
+void set_mana_old(player_type* creature_ptr) {
     s16b tmp16s;
     rd_s16b(&tmp16s);
     creature_ptr->msp = tmp16s;
@@ -33,15 +31,13 @@ void set_mana_old(player_type *creature_ptr)
     creature_ptr->csp_frac = (u32b)tmp16u;
 }
 
-void set_exp_frac_old(player_type *creature_ptr)
-{
+void set_exp_frac_old(player_type* creature_ptr) {
     u16b tmp16u;
     rd_u16b(&tmp16u);
     creature_ptr->exp_frac = (u32b)tmp16u;
 }
 
-void remove_water_cave(player_type* creature_ptr)
-{
+void remove_water_cave(player_type* creature_ptr) {
     if (creature_ptr->current_floor_ptr->inside_quest != OLD_QUEST_WATER_CAVE)
         return;
 

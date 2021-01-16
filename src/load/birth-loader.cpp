@@ -8,8 +8,7 @@
  * @brief クイックスタート情報を読み込む / Load quick start data
  * @return なし
  */
-void load_quick_start(void)
-{
+void load_quick_start(void) {
     if (z_older_than(11, 0, 13)) {
         previous_char.quick_ok = FALSE;
         return;

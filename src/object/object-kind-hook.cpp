@@ -37,9 +37,8 @@ bool kind_is_polearm(KIND_OBJECT_IDX k_idx) { return k_info[k_idx].tval == TV_PO
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトが剣ならばTRUEを返す
  */
-bool kind_is_sword(KIND_OBJECT_IDX k_idx)
-{
-    object_kind *k_ptr = &k_info[k_idx];
+bool kind_is_sword(KIND_OBJECT_IDX k_idx) {
+    object_kind* k_ptr = &k_info[k_idx];
     return (k_ptr->tval == TV_SWORD) && (k_ptr->sval > 2);
 }
 
@@ -49,9 +48,8 @@ bool kind_is_sword(KIND_OBJECT_IDX k_idx)
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトが魔法書ならばTRUEを返す
  */
-bool kind_is_book(KIND_OBJECT_IDX k_idx)
-{
-    object_kind *k_ptr = &k_info[k_idx];
+bool kind_is_book(KIND_OBJECT_IDX k_idx) {
+    object_kind* k_ptr = &k_info[k_idx];
     return (k_ptr->tval >= TV_LIFE_BOOK) && (k_ptr->tval <= TV_CRUSADE_BOOK);
 }
 
@@ -61,9 +59,8 @@ bool kind_is_book(KIND_OBJECT_IDX k_idx)
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトがベースアイテム時点でGOODなアイテムならばTRUEを返す
  */
-bool kind_is_good_book(KIND_OBJECT_IDX k_idx)
-{
-    object_kind *k_ptr = &k_info[k_idx];
+bool kind_is_good_book(KIND_OBJECT_IDX k_idx) {
+    object_kind* k_ptr = &k_info[k_idx];
     return (k_ptr->tval >= TV_LIFE_BOOK) && (k_ptr->tval <= TV_CRUSADE_BOOK) && (k_ptr->tval != TV_ARCANE_BOOK) && (k_ptr->sval > 1);
 }
 
@@ -105,9 +102,8 @@ bool kind_is_boots(KIND_OBJECT_IDX k_idx) { return k_info[k_idx].tval == TV_BOOT
  * @param k_idx 判定したいベースアイテムのID
  * @return ベースアイテムが上質ならばTRUEを返す。
  */
-bool kind_is_good(KIND_OBJECT_IDX k_idx)
-{
-    object_kind *k_ptr = &k_info[k_idx];
+bool kind_is_good(KIND_OBJECT_IDX k_idx) {
+    object_kind* k_ptr = &k_info[k_idx];
     switch (k_ptr->tval) {
         /* Armor -- Good unless damaged */
     case TV_HARD_ARMOR:
@@ -168,12 +164,11 @@ bool kind_is_good(KIND_OBJECT_IDX k_idx)
  * @param sval 検索したいベースアイテムのsval
  * @return なし
  */
-KIND_OBJECT_IDX lookup_kind(tval_type tval, OBJECT_SUBTYPE_VALUE sval)
-{
+KIND_OBJECT_IDX lookup_kind(tval_type tval, OBJECT_SUBTYPE_VALUE sval) {
     int num = 0;
     KIND_OBJECT_IDX bk = 0;
     for (KIND_OBJECT_IDX k = 1; k < max_k_idx; k++) {
-        object_kind *k_ptr = &k_info[k];
+        object_kind* k_ptr = &k_info[k];
         if (k_ptr->tval != tval)
             continue;
 

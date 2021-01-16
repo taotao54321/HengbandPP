@@ -19,10 +19,9 @@
  * @details
  * The location must be a legal, clean, floor grid.
  */
-void place_gold(player_type *player_ptr, POSITION y, POSITION x)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+void place_gold(player_type* player_ptr, POSITION y, POSITION x) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     if (!in_bounds(floor_ptr, y, x))
         return;
     if (!cave_drop_bold(floor_ptr, y, x))
@@ -31,7 +30,7 @@ void place_gold(player_type *player_ptr, POSITION y, POSITION x)
         return;
 
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
     q_ptr = &forge;
     object_wipe(q_ptr);
     if (!make_gold(player_ptr, q_ptr))
@@ -41,7 +40,7 @@ void place_gold(player_type *player_ptr, POSITION y, POSITION x)
     if (o_idx == 0)
         return;
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &floor_ptr->o_list[o_idx];
     object_copy(o_ptr, q_ptr);
 
@@ -67,12 +66,11 @@ void place_gold(player_type *player_ptr, POSITION y, POSITION x)
  * This routine uses "object_level" for the "generation level".\n
  * This routine requires a clean floor grid destination.\n
  */
-void place_object(player_type *owner_ptr, POSITION y, POSITION x, BIT_FLAGS mode)
-{
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+void place_object(player_type* owner_ptr, POSITION y, POSITION x, BIT_FLAGS mode) {
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
     if (!in_bounds(floor_ptr, y, x) || !cave_drop_bold(floor_ptr, y, x) || (g_ptr->o_idx != 0))
         return;
 
@@ -90,7 +88,7 @@ void place_object(player_type *owner_ptr, POSITION y, POSITION x, BIT_FLAGS mode
         return;
     }
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &floor_ptr->o_list[o_idx];
     object_copy(o_ptr, q_ptr);
 

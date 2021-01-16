@@ -16,13 +16,12 @@
  * @param caster_ptr 錆止め実行者の参照ポインタ
  * @return ターン消費を要する処理を行ったならばTRUEを返す
  */
-bool rustproof(player_type *caster_ptr)
-{
+bool rustproof(player_type* caster_ptr) {
     item_tester_hook = object_is_armour;
     concptr q = _("どの防具に錆止めをしますか？", "Rustproof which piece of armour? ");
     concptr s = _("錆止めできるものがありません。", "You have nothing to rustproof.");
     OBJECT_IDX item;
-    object_type *o_ptr = choose_object(caster_ptr, &item, q, s, USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT, TV_NONE);
+    object_type* o_ptr = choose_object(caster_ptr, &item, q, s, USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT, TV_NONE);
     if (o_ptr == NULL)
         return FALSE;
 

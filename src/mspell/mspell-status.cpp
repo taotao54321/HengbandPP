@@ -11,9 +11,9 @@
 #include "core/player-redraw-types.h"
 #include "mind/drs-types.h"
 #include "monster-race/monster-race.h"
-#include "monster-race/race-indice-types.h"
 #include "monster-race/race-flags1.h"
 #include "monster-race/race-flags3.h"
+#include "monster-race/race-indice-types.h"
 #include "monster/monster-describer.h"
 #include "monster/monster-description-types.h"
 #include "monster/monster-info.h"
@@ -44,10 +44,9 @@
  * @param saving_throw 抵抗に成功したか判別するフラグ
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_badstatus_message(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1, concptr msg2, concptr msg3, concptr msg4, bool resist,
-    bool saving_throw, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+void spell_badstatus_message(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, concptr msg1, concptr msg2, concptr msg3, concptr msg4, bool resist,
+    bool saving_throw, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     bool see_either = see_monster(target_ptr, m_idx) || see_monster(target_ptr, t_idx);
     bool see_t = see_monster(target_ptr, t_idx);
     bool known = monster_near_player(floor_ptr, m_idx, t_idx);
@@ -64,7 +63,8 @@ void spell_badstatus_message(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER
 
         if (resist) {
             msg_print(msg3);
-        } else if (saving_throw) {
+        }
+        else if (saving_throw) {
             msg_print(msg4);
         }
 
@@ -77,7 +77,8 @@ void spell_badstatus_message(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER
     if (known) {
         if (see_either) {
             msg_format(msg1, m_name, t_name);
-        } else {
+        }
+        else {
             floor_ptr->monster_noise = TRUE;
         }
     }
@@ -85,10 +86,12 @@ void spell_badstatus_message(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER
     if (resist) {
         if (see_t)
             msg_format(msg2, t_name);
-    } else if (saving_throw) {
+    }
+    else if (saving_throw) {
         if (see_t)
             msg_format(msg3, t_name);
-    } else {
+    }
+    else {
         if (see_t)
             msg_format(msg4, t_name);
     }
@@ -106,8 +109,7 @@ void spell_badstatus_message(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-HIT_POINT spell_RF5_DRAIN_MANA(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+HIT_POINT spell_RF5_DRAIN_MANA(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
     HIT_POINT dam;
     GAME_TEXT m_name[MAX_NLEN], t_name[MAX_NLEN];
     monster_name(target_ptr, m_idx, m_name);
@@ -115,7 +117,8 @@ HIT_POINT spell_RF5_DRAIN_MANA(player_type *target_ptr, POSITION y, POSITION x, 
 
     if (TARGET_TYPE == MONSTER_TO_PLAYER) {
         disturb(target_ptr, TRUE, TRUE);
-    } else if (TARGET_TYPE == MONSTER_TO_MONSTER && see_monster(target_ptr, m_idx)) {
+    }
+    else if (TARGET_TYPE == MONSTER_TO_MONSTER && see_monster(target_ptr, m_idx)) {
         /* Basic message */
         msg_format(_("%^sは精神エネルギーを%sから吸いとった。", "%^s draws psychic energy from %s."), m_name, t_name);
     }
@@ -138,9 +141,8 @@ HIT_POINT spell_RF5_DRAIN_MANA(player_type *target_ptr, POSITION y, POSITION x, 
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-HIT_POINT spell_RF5_MIND_BLAST(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+HIT_POINT spell_RF5_MIND_BLAST(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
     bool seen = (!target_ptr->blind && m_ptr->ml);
     HIT_POINT dam;
     GAME_TEXT m_name[MAX_NLEN], t_name[MAX_NLEN];
@@ -153,7 +155,8 @@ HIT_POINT spell_RF5_MIND_BLAST(player_type *target_ptr, POSITION y, POSITION x, 
             msg_print(_("何かがあなたの精神に念を放っているようだ。", "You feel something focusing on your mind."));
         else
             msg_format(_("%^sがあなたの瞳をじっとにらんでいる。", "%^s gazes deep into your eyes."), m_name);
-    } else if (TARGET_TYPE == MONSTER_TO_MONSTER && see_monster(target_ptr, m_idx)) {
+    }
+    else if (TARGET_TYPE == MONSTER_TO_MONSTER && see_monster(target_ptr, m_idx)) {
         msg_format(_("%^sは%sをじっと睨んだ。", "%^s gazes intently at %s."), m_name, t_name);
     }
 
@@ -172,9 +175,8 @@ HIT_POINT spell_RF5_MIND_BLAST(player_type *target_ptr, POSITION y, POSITION x, 
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-HIT_POINT spell_RF5_BRAIN_SMASH(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+HIT_POINT spell_RF5_BRAIN_SMASH(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
     bool seen = (!target_ptr->blind && m_ptr->ml);
     HIT_POINT dam;
     GAME_TEXT m_name[MAX_NLEN], t_name[MAX_NLEN];
@@ -187,7 +189,8 @@ HIT_POINT spell_RF5_BRAIN_SMASH(player_type *target_ptr, POSITION y, POSITION x,
             msg_print(_("何かがあなたの精神に念を放っているようだ。", "You feel something focusing on your mind."));
         else
             msg_format(_("%^sがあなたの瞳をじっとにらんでいる。", "%^s gazes deep into your eyes."), m_name);
-    } else if (TARGET_TYPE == MONSTER_TO_MONSTER && see_monster(target_ptr, m_idx)) {
+    }
+    else if (TARGET_TYPE == MONSTER_TO_MONSTER && see_monster(target_ptr, m_idx)) {
         msg_format(_("%^sは%sをじっと睨んだ。", "%^s gazes intently at %s."), m_name, t_name);
     }
 
@@ -202,11 +205,10 @@ HIT_POINT spell_RF5_BRAIN_SMASH(player_type *target_ptr, POSITION y, POSITION x,
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF5_SCARE(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *t_ptr = &floor_ptr->m_list[t_idx];
-    monster_race *tr_ptr = &r_info[t_ptr->r_idx];
+void spell_RF5_SCARE(MONSTER_IDX m_idx, player_type* target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* t_ptr = &floor_ptr->m_list[t_idx];
+    monster_race* tr_ptr = &r_info[t_ptr->r_idx];
     DEPTH rlev = monster_level_idx(floor_ptr, m_idx);
     bool resist, saving_throw;
 
@@ -247,11 +249,10 @@ void spell_RF5_SCARE(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_i
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF5_BLIND(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *t_ptr = &floor_ptr->m_list[t_idx];
-    monster_race *tr_ptr = &r_info[t_ptr->r_idx];
+void spell_RF5_BLIND(MONSTER_IDX m_idx, player_type* target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* t_ptr = &floor_ptr->m_list[t_idx];
+    monster_race* tr_ptr = &r_info[t_ptr->r_idx];
     DEPTH rlev = monster_level_idx(floor_ptr, m_idx);
     bool resist, saving_throw;
 
@@ -280,7 +281,8 @@ void spell_RF5_BLIND(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_i
 
     if (streq(t_name, "it")) {
         msg1 = _("%sは呪文を唱えて%sの目を焼き付かせた。", "%^s casts a spell, burning %ss eyes.");
-    } else {
+    }
+    else {
         msg1 = _("%sは呪文を唱えて%sの目を焼き付かせた。", "%^s casts a spell, burning %s's eyes.");
     }
 
@@ -301,11 +303,10 @@ void spell_RF5_BLIND(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_i
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF5_CONF(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *t_ptr = &floor_ptr->m_list[t_idx];
-    monster_race *tr_ptr = &r_info[t_ptr->r_idx];
+void spell_RF5_CONF(MONSTER_IDX m_idx, player_type* target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* t_ptr = &floor_ptr->m_list[t_idx];
+    monster_race* tr_ptr = &r_info[t_ptr->r_idx];
     DEPTH rlev = monster_level_idx(floor_ptr, m_idx);
     bool resist, saving_throw;
 
@@ -347,11 +348,10 @@ void spell_RF5_CONF(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_id
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF5_HOLD(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *t_ptr = &floor_ptr->m_list[t_idx];
-    monster_race *tr_ptr = &r_info[t_ptr->r_idx];
+void spell_RF5_HOLD(MONSTER_IDX m_idx, player_type* target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* t_ptr = &floor_ptr->m_list[t_idx];
+    monster_race* tr_ptr = &r_info[t_ptr->r_idx];
     DEPTH rlev = monster_level_idx(floor_ptr, m_idx);
     bool resist, saving_throw;
 
@@ -393,10 +393,9 @@ void spell_RF5_HOLD(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_id
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF6_HASTE(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+void spell_RF6_HASTE(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
     bool see_m = see_monster(target_ptr, m_idx);
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
     GAME_TEXT m_name[MAX_NLEN];
     monster_name(target_ptr, m_idx, m_name);
     char m_poss[10];
@@ -419,11 +418,10 @@ void spell_RF6_HASTE(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_i
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF5_SLOW(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *t_ptr = &floor_ptr->m_list[t_idx];
-    monster_race *tr_ptr = &r_info[t_ptr->r_idx];
+void spell_RF5_SLOW(MONSTER_IDX m_idx, player_type* target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* t_ptr = &floor_ptr->m_list[t_idx];
+    monster_race* tr_ptr = &r_info[t_ptr->r_idx];
     DEPTH rlev = monster_level_idx(floor_ptr, m_idx);
     bool resist, saving_throw;
 
@@ -452,7 +450,8 @@ void spell_RF5_SLOW(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_id
 
     if (streq(t_name, "it")) {
         msg1 = _("%sが%sの筋肉から力を吸いとった。", "%^s drains power from %ss muscles.");
-    } else {
+    }
+    else {
         msg1 = _("%sが%sの筋肉から力を吸いとった。", "%^s drains power from %s's muscles.");
     }
 
@@ -474,10 +473,9 @@ void spell_RF5_SLOW(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_id
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF6_HEAL(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+void spell_RF6_HEAL(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     DEPTH rlev = monster_level_idx(floor_ptr, m_idx);
     bool seen = (!target_ptr->blind && m_ptr->ml);
     GAME_TEXT m_name[MAX_NLEN];
@@ -500,7 +498,8 @@ void spell_RF6_HEAL(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_id
         monspell_message_base(target_ptr, m_idx, t_idx, _("%^sは完全に治ったようだ！", "%^s sounds completely healed!"),
             _("%^sは完全に治ったようだ！", "%^s sounds completely healed!"), _("%^sは完全に治った！", "%^s looks completely healed!"),
             _("%^sは完全に治った！", "%^s looks completely healed!"), !seen, TARGET_TYPE);
-    } else {
+    }
+    else {
         monspell_message_base(target_ptr, m_idx, t_idx, _("%^sは体力を回復したようだ。", "%^s sounds healthier."),
             _("%^sは体力を回復したようだ。", "%^s sounds healthier."), _("%^sは体力を回復したようだ。", "%^s looks healthier."),
             _("%^sは体力を回復したようだ。", "%^s looks healthier."), !seen, TARGET_TYPE);
@@ -527,9 +526,8 @@ void spell_RF6_HEAL(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_id
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF6_INVULNER(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+void spell_RF6_INVULNER(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
     bool seen = (!target_ptr->blind && m_ptr->ml);
 
     monspell_message_base(target_ptr, m_idx, t_idx, _("%^sが何かを力強くつぶやいた。", "%^s mumbles powerfully."),
@@ -553,8 +551,7 @@ void spell_RF6_INVULNER(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX 
  * @param m_idx 呪文を唱えるモンスターID
  * @param なし
  */
-void spell_RF6_FORGET(player_type *target_ptr, MONSTER_IDX m_idx)
-{
+void spell_RF6_FORGET(player_type* target_ptr, MONSTER_IDX m_idx) {
     DEPTH rlev = monster_level_idx(target_ptr->current_floor_ptr, m_idx);
     GAME_TEXT m_name[MAX_NLEN];
     monster_name(target_ptr, m_idx, m_name);
@@ -565,7 +562,8 @@ void spell_RF6_FORGET(player_type *target_ptr, MONSTER_IDX m_idx)
 
     if (randint0(100 + rlev / 2) < target_ptr->skill_sav) {
         msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
-    } else if (lose_all_info(target_ptr)) {
+    }
+    else if (lose_all_info(target_ptr)) {
         msg_print(_("記憶が薄れてしまった。", "Your memories fade away."));
     }
 

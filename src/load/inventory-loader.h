@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-errr load_inventory(player_type *creature_ptr);
+errr load_inventory(player_type* creature_ptr);

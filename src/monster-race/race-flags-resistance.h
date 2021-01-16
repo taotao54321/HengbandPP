@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum race_flags_resistance {
-	RFR_IM_ACID = 0x00000001, /* Immunity acid */
+    RFR_IM_ACID = 0x00000001, /* Immunity acid */
     RFR_IM_ELEC = 0x00000002, /* Immunity elec */
     RFR_IM_FIRE = 0x00000004, /* Immunity fire */
     RFR_IM_COLD = 0x00000008, /* Immunity cold */

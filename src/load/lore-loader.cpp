@@ -1,18 +1,17 @@
 ﻿#include "load/lore-loader.h"
 #include "game-option/runtime-arguments.h"
-#include "monster-race/monster-race.h"
+#include "load/angband-version-comparer.h"
 #include "load/load-util.h"
 #include "load/load-v1-5-0.h"
-#include "load/angband-version-comparer.h"
+#include "monster-race/monster-race.h"
 
 /*!
  * @brief モンスターの思い出を読み込む / Read the monster lore
  * @param r_idx 読み込み先モンスターID
  * @return なし
  */
-void rd_lore(MONRACE_IDX r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+void rd_lore(MONRACE_IDX r_idx) {
+    monster_race* r_ptr = &r_info[r_idx];
 
     s16b tmp16s;
     rd_s16b(&tmp16s);
@@ -26,7 +25,8 @@ void rd_lore(MONRACE_IDX r_idx)
 
     if (h_older_than(1, 7, 0, 5)) {
         r_ptr->r_akills = r_ptr->r_pkills;
-    } else {
+    }
+    else {
         rd_s16b(&tmp16s);
         r_ptr->r_akills = (MONSTER_NUMBER)tmp16s;
     }
@@ -79,8 +79,7 @@ void rd_lore(MONRACE_IDX r_idx)
     r_ptr->r_flagsr &= r_ptr->flagsr;
 }
 
-errr load_lore(void)
-{
+errr load_lore(void) {
     u16b tmp16u;
     rd_u16b(&tmp16u);
     if (tmp16u > max_r_idx) {

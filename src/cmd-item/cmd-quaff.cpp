@@ -20,8 +20,7 @@
  * Quaff some potion (from the pack or floor)
  * @return なし
  */
-void do_cmd_quaff_potion(player_type *creature_ptr)
-{
+void do_cmd_quaff_potion(player_type* creature_ptr) {
     if (creature_ptr->wild_mode)
         return;
 

@@ -28,8 +28,7 @@
 #include "view/display-messages.h"
 #include "world/world-object.h"
 
-void process_eat_gold(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_eat_gold(player_type* target_ptr, monap_type* monap_ptr) {
     if (!target_ptr->paralyzed && (randint0(100) < (adj_dex_safe[target_ptr->stat_ind[A_DEX]] + target_ptr->lev))) {
         msg_print(_("しかし素早く財布を守った！", "You quickly protect your money pouch!"));
         if (randint0(3))
@@ -51,11 +50,13 @@ void process_eat_gold(player_type *target_ptr, monap_type *monap_ptr)
     target_ptr->au -= gold;
     if (gold <= 0) {
         msg_print(_("しかし何も盗まれなかった。", "Nothing was stolen."));
-    } else if (target_ptr->au > 0) {
+    }
+    else if (target_ptr->au > 0) {
         msg_print(_("財布が軽くなった気がする。", "Your purse feels lighter."));
         msg_format(_("$%ld のお金が盗まれた！", "%ld coins were stolen!"), (long)gold);
         chg_virtue(target_ptr, V_SACRIFICE, 1);
-    } else {
+    }
+    else {
         msg_print(_("財布が軽くなった気がする。", "Your purse feels lighter."));
         msg_print(_("お金が全部盗まれた！", "All of your coins were stolen!"));
         chg_virtue(target_ptr, V_SACRIFICE, 2);
@@ -72,8 +73,7 @@ void process_eat_gold(player_type *target_ptr, monap_type *monap_ptr)
  * @monap_ptr モンスターからモンスターへの直接攻撃構造体への参照ポインタ
  * @return 盗まれたらTRUE、何も盗まれなかったらFALSE
  */
-bool check_eat_item(player_type *target_ptr, monap_type *monap_ptr)
-{
+bool check_eat_item(player_type* target_ptr, monap_type* monap_ptr) {
     if (monster_confused_remaining(monap_ptr->m_ptr))
         return FALSE;
 
@@ -96,12 +96,11 @@ bool check_eat_item(player_type *target_ptr, monap_type *monap_ptr)
  * @monap_ptr モンスターからモンスターへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void move_item_to_monster(player_type *target_ptr, monap_type *monap_ptr, const OBJECT_IDX o_idx)
-{
+static void move_item_to_monster(player_type* target_ptr, monap_type* monap_ptr, const OBJECT_IDX o_idx) {
     if (o_idx == 0)
         return;
 
-    object_type *j_ptr;
+    object_type* j_ptr;
     j_ptr = &target_ptr->current_floor_ptr->o_list[o_idx];
     object_copy(j_ptr, monap_ptr->o_ptr);
     j_ptr->number = 1;
@@ -123,8 +122,7 @@ static void move_item_to_monster(player_type *target_ptr, monap_type *monap_ptr,
  * @return なし
  * @details eatとあるがお金や食べ物と違ってなくならない、盗んだモンスターを倒せば取り戻せる
  */
-void process_eat_item(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_eat_item(player_type* target_ptr, monap_type* monap_ptr) {
     for (int i = 0; i < 10; i++) {
         OBJECT_IDX o_idx;
         INVENTORY_IDX i_idx = (INVENTORY_IDX)randint0(INVEN_PACK);
@@ -152,8 +150,7 @@ void process_eat_item(player_type *target_ptr, monap_type *monap_ptr)
     }
 }
 
-void process_eat_food(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_eat_food(player_type* target_ptr, monap_type* monap_ptr) {
     for (int i = 0; i < 10; i++) {
         INVENTORY_IDX i_idx = (INVENTORY_IDX)randint0(INVEN_PACK);
         monap_ptr->o_ptr = &target_ptr->inventory_list[i_idx];
@@ -176,8 +173,7 @@ void process_eat_food(player_type *target_ptr, monap_type *monap_ptr)
     }
 }
 
-void process_eat_lite(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_eat_lite(player_type* target_ptr, monap_type* monap_ptr) {
     if ((monap_ptr->o_ptr->xtra4 <= 0) || object_is_fixed_artifact(monap_ptr->o_ptr))
         return;
 
@@ -201,8 +197,7 @@ void process_eat_lite(player_type *target_ptr, monap_type *monap_ptr)
  * @details 魔道具使用能力向上フラグがあれば、吸収量は全部ではない
  * 詳細はOSDN #40911の議論を参照のこと
  */
-bool process_un_power(player_type *target_ptr, monap_type *monap_ptr)
-{
+bool process_un_power(player_type* target_ptr, monap_type* monap_ptr) {
     if (((monap_ptr->o_ptr->tval != TV_STAFF) && (monap_ptr->o_ptr->tval != TV_WAND)) || (monap_ptr->o_ptr->pval == 0))
         return FALSE;
 
@@ -229,8 +224,7 @@ bool process_un_power(player_type *target_ptr, monap_type *monap_ptr)
     return TRUE;
 }
 
-bool check_drain_hp(player_type *target_ptr, const s32b d)
-{
+bool check_drain_hp(player_type* target_ptr, const s32b d) {
     bool resist_drain = !drain_exp(target_ptr, d, d / 10, 50);
     if (target_ptr->mimic_form)
         return (mimic_info[target_ptr->mimic_form].MIMIC_FLAGS & MIMIC_IS_NONLIVING) != 0 ? TRUE : resist_drain;
@@ -249,8 +243,7 @@ bool check_drain_hp(player_type *target_ptr, const s32b d)
     }
 }
 
-void process_drain_life(player_type *target_ptr, monap_type *monap_ptr, const bool resist_drain)
-{
+void process_drain_life(player_type* target_ptr, monap_type* monap_ptr, const bool resist_drain) {
     if ((monap_ptr->damage <= 5) || resist_drain)
         return;
 
@@ -269,8 +262,7 @@ void process_drain_life(player_type *target_ptr, monap_type *monap_ptr, const bo
         msg_format(_("%sは体力を回復したようだ。", "%^s appears healthier."), monap_ptr->m_name);
 }
 
-void process_drain_mana(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_drain_mana(player_type* target_ptr, monap_type* monap_ptr) {
     if (check_multishadow(target_ptr)) {
         msg_print(_("攻撃は幻影に命中し、あなたには届かなかった。", "The attack hits Shadow, but you are unharmed!"));
         return;

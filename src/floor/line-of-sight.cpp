@@ -45,8 +45,7 @@
  *\n
  * Use the "update_view()" function to determine player line-of-sight.\n
  */
-bool los(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2)
-{
+bool los(player_type* player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2) {
     POSITION dy = y2 - y1;
     POSITION dx = x2 - x1;
     POSITION ay = ABS(dy);
@@ -55,7 +54,7 @@ bool los(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITIO
         return TRUE;
 
     /* Directly South/North */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     POSITION tx, ty;
     if (!dx) {
         /* South -- check for walls */
@@ -107,7 +106,8 @@ bool los(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITIO
             if (cave_los_bold(floor_ptr, y1 + sy, x1))
                 return TRUE;
         }
-    } else if (ay == 1) {
+    }
+    else if (ay == 1) {
         if (ax == 2) {
             if (cave_los_bold(floor_ptr, y1, x1 + sx))
                 return TRUE;
@@ -125,7 +125,8 @@ bool los(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITIO
         if (qy == f2) {
             ty = y1 + sy;
             qy -= f1;
-        } else {
+        }
+        else {
             ty = y1;
         }
 
@@ -166,7 +167,8 @@ bool los(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITIO
     if (qx == f2) {
         tx = x1 + sx;
         qx -= f1;
-    } else {
+    }
+    else {
         tx = x1;
     }
 

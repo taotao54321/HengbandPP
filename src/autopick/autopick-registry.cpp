@@ -24,11 +24,10 @@ static const char autoregister_header[] = "?:$AUTOREGISTER";
 /*
  *  Clear auto registered lines in the picktype.prf .
  */
-static bool clear_auto_register(player_type *player_ptr)
-{
+static bool clear_auto_register(player_type* player_ptr) {
     char pref_file[1024];
     path_build(pref_file, sizeof(pref_file), ANGBAND_DIR_USER, pickpref_filename(player_ptr, PT_WITH_PNAME));
-    FILE *pref_fff;
+    FILE* pref_fff;
     pref_fff = angband_fopen(pref_file, "r");
 
     if (!pref_fff) {
@@ -41,7 +40,7 @@ static bool clear_auto_register(player_type *player_ptr)
     }
 
     char tmp_file[1024];
-    FILE *tmp_fff;
+    FILE* tmp_fff;
     tmp_fff = angband_fopen_temp(tmp_file, sizeof(tmp_file));
     if (!tmp_fff) {
         fclose(pref_fff);
@@ -65,7 +64,8 @@ static bool clear_auto_register(player_type *player_ptr)
 
         if (streq(buf, autoregister_header)) {
             autoregister = TRUE;
-        } else {
+        }
+        else {
             fprintf(tmp_fff, "%s\n", buf);
         }
     }
@@ -104,8 +104,7 @@ static bool clear_auto_register(player_type *player_ptr)
 /*
  *  Automatically register an auto-destroy preference line
  */
-bool autopick_autoregister(player_type *player_ptr, object_type *o_ptr)
-{
+bool autopick_autoregister(player_type* player_ptr, object_type* o_ptr) {
     autopick_type an_entry, *entry = &an_entry;
     int autopick_registered = find_autopick_list(player_ptr, o_ptr);
     if (autopick_registered != -1) {
@@ -139,7 +138,7 @@ bool autopick_autoregister(player_type *player_ptr, object_type *o_ptr)
 
     char buf[1024];
     char pref_file[1024];
-    FILE *pref_fff;
+    FILE* pref_fff;
     path_build(pref_file, sizeof(pref_file), ANGBAND_DIR_USER, pickpref_filename(player_ptr, PT_WITH_PNAME));
     pref_fff = angband_fopen(pref_file, "r");
 
@@ -162,7 +161,8 @@ bool autopick_autoregister(player_type *player_ptr, object_type *o_ptr)
         }
 
         fclose(pref_fff);
-    } else {
+    }
+    else {
         /*
          * File could not be opened for reading.  Assume header not
          * present.

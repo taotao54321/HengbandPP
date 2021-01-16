@@ -3,8 +3,7 @@
 #include "mind/mind-force-trainer.h"
 #include "mind/mind-types.h"
 
-static void switch_mind_mindcrafter(player_type *caster_ptr, const PLAYER_LEVEL plev, const int power, char *p)
-{
+static void switch_mind_mindcrafter(player_type* caster_ptr, const PLAYER_LEVEL plev, const int power, char* p) {
     switch (power) {
     case 0:
         break;
@@ -54,8 +53,7 @@ static void switch_mind_mindcrafter(player_type *caster_ptr, const PLAYER_LEVEL 
     }
 }
 
-static void switch_mind_ki(player_type *caster_ptr, const PLAYER_LEVEL plev, const int power, char *p)
-{
+static void switch_mind_ki(player_type* caster_ptr, const PLAYER_LEVEL plev, const int power, char* p) {
     int boost = get_current_ki(caster_ptr);
     if (heavy_armor(caster_ptr))
         boost /= 2;
@@ -103,8 +101,7 @@ static void switch_mind_ki(player_type *caster_ptr, const PLAYER_LEVEL plev, con
     }
 }
 
-static void switch_mind_mirror_master(const PLAYER_LEVEL plev, const int power, char *p)
-{
+static void switch_mind_mirror_master(const PLAYER_LEVEL plev, const int power, char* p) {
     switch (power) {
     case 0:
         break;
@@ -163,8 +160,7 @@ static void switch_mind_mirror_master(const PLAYER_LEVEL plev, const int power, 
     }
 }
 
-static void switch_mind_ninja(const PLAYER_LEVEL plev, const int power, char *p)
-{
+static void switch_mind_ninja(const PLAYER_LEVEL plev, const int power, char* p) {
     switch (power) {
     case 0:
     case 1:
@@ -218,8 +214,7 @@ static void switch_mind_ninja(const PLAYER_LEVEL plev, const int power, char *p)
  * @param power モンスター魔法のID
  * @return なし
  */
-void mindcraft_info(player_type *caster_ptr, char *p, int use_mind, int power)
-{
+void mindcraft_info(player_type* caster_ptr, char* p, int use_mind, int power) {
     const PLAYER_LEVEL plev = caster_ptr->lev;
     strcpy(p, "");
     switch (use_mind) {

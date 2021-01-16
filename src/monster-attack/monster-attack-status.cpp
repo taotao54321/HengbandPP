@@ -9,14 +9,13 @@
 #include "mind/mind-mirror-master.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-indice-types.h"
+#include "player/player-status-flags.h"
 #include "status/bad-status-setter.h"
 #include "status/base-status.h"
 #include "status/experience.h"
-#include "player/player-status-flags.h"
 #include "view/display-messages.h"
 
-void process_blind_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_blind_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_resist_blind(target_ptr) || check_multishadow(target_ptr))
         return;
 
@@ -29,12 +28,11 @@ void process_blind_attack(player_type *target_ptr, monap_type *monap_ptr)
     monap_ptr->obvious = TRUE;
 }
 
-void process_terrify_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_terrify_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (check_multishadow(target_ptr))
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if (has_resist_fear(target_ptr)) {
         msg_print(_("しかし恐怖に侵されなかった！", "You stand your ground!"));
         monap_ptr->obvious = TRUE;
@@ -51,12 +49,11 @@ void process_terrify_attack(player_type *target_ptr, monap_type *monap_ptr)
         monap_ptr->obvious = TRUE;
 }
 
-void process_paralyze_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_paralyze_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (check_multishadow(target_ptr))
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if (target_ptr->free_act) {
         msg_print(_("しかし効果がなかった！", "You are unaffected!"));
         monap_ptr->obvious = TRUE;
@@ -73,8 +70,7 @@ void process_paralyze_attack(player_type *target_ptr, monap_type *monap_ptr)
         monap_ptr->obvious = TRUE;
 }
 
-void process_lose_all_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_lose_all_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (do_dec_stat(target_ptr, A_STR))
         monap_ptr->obvious = TRUE;
 
@@ -94,12 +90,11 @@ void process_lose_all_attack(player_type *target_ptr, monap_type *monap_ptr)
         monap_ptr->obvious = TRUE;
 }
 
-void process_stun_attack(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_stun_attack(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_resist_sound(target_ptr) || check_multishadow(target_ptr))
         return;
 
-    monster_race *r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[monap_ptr->m_ptr->r_idx];
     if (set_stun(target_ptr, target_ptr->stun + 10 + randint1(r_ptr->level / 4)))
         monap_ptr->obvious = TRUE;
 }
@@ -110,8 +105,7 @@ void process_stun_attack(player_type *target_ptr, monap_type *monap_ptr)
  * @monap_ptr モンスターからモンスターへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-static void describe_disability(player_type *target_ptr, monap_type *monap_ptr)
-{
+static void describe_disability(player_type* target_ptr, monap_type* monap_ptr) {
     int stat = randint0(6);
     switch (stat) {
     case A_STR:
@@ -140,8 +134,7 @@ static void describe_disability(player_type *target_ptr, monap_type *monap_ptr)
         target_ptr->stat_cur[stat] = 3;
 }
 
-void process_monster_attack_time(player_type *target_ptr, monap_type *monap_ptr)
-{
+void process_monster_attack_time(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_resist_time(target_ptr) || check_multishadow(target_ptr))
         return;
 

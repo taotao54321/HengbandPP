@@ -2,8 +2,8 @@
 #include "core/asking-player.h"
 #include "game-option/birth-options.h"
 #include "store/say-comments.h"
-#include "store/store.h"
 #include "store/store-util.h"
+#include "store/store.h"
 #include "term/screen-processor.h"
 #include "view/display-messages.h"
 #include "world/world.h"
@@ -16,8 +16,7 @@ static s32b last_inc = 0L;
  * Increase the insult counter and get angry if too many -RAK-
  * @return プレイヤーを締め出す場合TRUEを返す
  */
-int increase_insults(void)
-{
+int increase_insults(void) {
     st_ptr->insult_cur++;
     if (st_ptr->insult_cur <= ot_ptr->insult_max)
         return FALSE;
@@ -35,8 +34,7 @@ int increase_insults(void)
  * Decrease insults 				-RAK-
  * @return プレイヤーを締め出す場合TRUEを返す
  */
-void decrease_insults(void)
-{
+void decrease_insults(void) {
     if (st_ptr->insult_cur)
         st_ptr->insult_cur--;
 }
@@ -46,8 +44,7 @@ void decrease_insults(void)
  * Have insulted while haggling 			-RAK-
  * @return プレイヤーを締め出す場合TRUEを返す
  */
-int haggle_insults(void)
-{
+int haggle_insults(void) {
     if (increase_insults())
         return TRUE;
 
@@ -63,8 +60,7 @@ int haggle_insults(void)
  * @param num 売買数
  * @return なし
  */
-void updatebargain(PRICE price, PRICE minprice, int num)
-{
+void updatebargain(PRICE price, PRICE minprice, int num) {
     if (!manual_haggle)
         return;
     if ((minprice / num) < 10L)
@@ -73,7 +69,8 @@ void updatebargain(PRICE price, PRICE minprice, int num)
         if (st_ptr->good_buy < MAX_SHORT) {
             st_ptr->good_buy++;
         }
-    } else {
+    }
+    else {
         if (st_ptr->bad_buy < MAX_SHORT) {
             st_ptr->bad_buy++;
         }
@@ -89,19 +86,21 @@ void updatebargain(PRICE price, PRICE minprice, int num)
  * @param final 最終確定価格ならばTRUE
  * @return プレイヤーを締め出す場合TRUEを返す
  */
-static int get_haggle(concptr pmt, s32b *poffer, PRICE price, int final)
-{
+static int get_haggle(concptr pmt, s32b* poffer, PRICE price, int final) {
     GAME_TEXT buf[128];
     if (!allow_inc)
         last_inc = 0L;
 
     if (final) {
         sprintf(buf, _("%s [承諾] ", "%s [accept] "), pmt);
-    } else if (last_inc < 0) {
+    }
+    else if (last_inc < 0) {
         sprintf(buf, _("%s [-$%ld] ", "%s [-%ld] "), pmt, (long)(ABS(last_inc)));
-    } else if (last_inc > 0) {
+    }
+    else if (last_inc > 0) {
         sprintf(buf, _("%s [+$%ld] ", "%s [+%ld] "), pmt, (long)(ABS(last_inc)));
-    } else {
+    }
+    else {
         sprintf(buf, "%s ", pmt);
     }
 
@@ -149,7 +148,8 @@ static int get_haggle(concptr pmt, s32b *poffer, PRICE price, int final)
                 last_inc = i;
                 break;
             }
-        } else {
+        }
+        else {
             *poffer = i;
             last_inc = 0L;
             break;
@@ -171,8 +171,7 @@ static int get_haggle(concptr pmt, s32b *poffer, PRICE price, int final)
  * @return プレイヤーの価格に対して不服ならばTRUEを返す /
  * Return TRUE if offer is NOT okay
  */
-bool receive_offer(concptr pmt, s32b *poffer, s32b last_offer, int factor, PRICE price, int final)
-{
+bool receive_offer(concptr pmt, s32b* poffer, s32b last_offer, int factor, PRICE price, int final) {
     while (TRUE) {
         if (!get_haggle(pmt, poffer, price, final))
             return TRUE;

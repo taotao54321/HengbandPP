@@ -53,10 +53,9 @@ POSITION temp2_y[MAX_SHORT];
  * @param x 対象となるマスのX座標
  * @return なし
  */
-static void discover_hidden_things(player_type *creature_ptr, POSITION y, POSITION x)
-{
-    grid_type *g_ptr;
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+static void discover_hidden_things(player_type* creature_ptr, POSITION y, POSITION x) {
+    grid_type* g_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     g_ptr = &floor_ptr->grid_array[y][x];
     if (g_ptr->mimic && is_trap(creature_ptr, g_ptr->feat)) {
         disclose_grid(creature_ptr, y, x);
@@ -72,7 +71,7 @@ static void discover_hidden_things(player_type *creature_ptr, POSITION y, POSITI
 
     OBJECT_IDX next_o_idx = 0;
     for (OBJECT_IDX this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         if (o_ptr->tval != TV_CHEST)
@@ -92,8 +91,7 @@ static void discover_hidden_things(player_type *creature_ptr, POSITION y, POSITI
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void search(player_type *creature_ptr)
-{
+void search(player_type* creature_ptr) {
     PERCENTAGE chance = creature_ptr->skill_srh;
     if (creature_ptr->blind || no_lite(creature_ptr))
         chance = chance / 10;
@@ -114,15 +112,14 @@ void search(player_type *creature_ptr)
  * @param mpe_mode 移動オプションフラグ
  * @return プレイヤーが死亡やフロア離脱を行わず、実際に移動が可能ならばTRUEを返す。
  */
-bool move_player_effect(player_type *creature_ptr, POSITION ny, POSITION nx, BIT_FLAGS mpe_mode)
-{
+bool move_player_effect(player_type* creature_ptr, POSITION ny, POSITION nx, BIT_FLAGS mpe_mode) {
     POSITION oy = creature_ptr->y;
     POSITION ox = creature_ptr->x;
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[ny][nx];
-    grid_type *oc_ptr = &floor_ptr->grid_array[oy][ox];
-    feature_type *f_ptr = &f_info[g_ptr->feat];
-    feature_type *of_ptr = &f_info[oc_ptr->feat];
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[ny][nx];
+    grid_type* oc_ptr = &floor_ptr->grid_array[oy][ox];
+    feature_type* f_ptr = &f_info[g_ptr->feat];
+    feature_type* of_ptr = &f_info[oc_ptr->feat];
 
     if (!(mpe_mode & MPE_STAYING)) {
         MONSTER_IDX om_idx = oc_ptr->m_idx;
@@ -133,14 +130,14 @@ bool move_player_effect(player_type *creature_ptr, POSITION ny, POSITION nx, BIT
             g_ptr->m_idx = om_idx;
             oc_ptr->m_idx = nm_idx;
             if (om_idx > 0) {
-                monster_type *om_ptr = &floor_ptr->m_list[om_idx];
+                monster_type* om_ptr = &floor_ptr->m_list[om_idx];
                 om_ptr->fy = ny;
                 om_ptr->fx = nx;
                 update_monster(creature_ptr, om_idx, TRUE);
             }
 
             if (nm_idx > 0) {
-                monster_type *nm_ptr = &floor_ptr->m_list[nm_idx];
+                monster_type* nm_ptr = &floor_ptr->m_list[nm_idx];
                 nm_ptr->fy = oy;
                 nm_ptr->fx = ox;
                 update_monster(creature_ptr, nm_idx, TRUE);
@@ -209,15 +206,18 @@ bool move_player_effect(player_type *creature_ptr, POSITION ny, POSITION nx, BIT
         disturb(creature_ptr, FALSE, TRUE);
         free_turn(creature_ptr);
         command_new = SPECIAL_KEY_STORE;
-    } else if (has_flag(f_ptr->flags, FF_BLDG)) {
+    }
+    else if (has_flag(f_ptr->flags, FF_BLDG)) {
         disturb(creature_ptr, FALSE, TRUE);
         free_turn(creature_ptr);
         command_new = SPECIAL_KEY_BUILDING;
-    } else if (has_flag(f_ptr->flags, FF_QUEST_ENTER)) {
+    }
+    else if (has_flag(f_ptr->flags, FF_QUEST_ENTER)) {
         disturb(creature_ptr, FALSE, TRUE);
         free_turn(creature_ptr);
         command_new = SPECIAL_KEY_QUEST;
-    } else if (has_flag(f_ptr->flags, FF_QUEST_EXIT)) {
+    }
+    else if (has_flag(f_ptr->flags, FF_QUEST_EXIT)) {
         if (quest[floor_ptr->inside_quest].type == QUEST_TYPE_FIND_EXIT)
             complete_quest(creature_ptr, floor_ptr->inside_quest);
 
@@ -227,7 +227,8 @@ bool move_player_effect(player_type *creature_ptr, POSITION ny, POSITION nx, BIT
         creature_ptr->oldpx = 0;
         creature_ptr->oldpy = 0;
         creature_ptr->leaving = TRUE;
-    } else if (has_flag(f_ptr->flags, FF_HIT_TRAP) && !(mpe_mode & MPE_STAYING)) {
+    }
+    else if (has_flag(f_ptr->flags, FF_HIT_TRAP) && !(mpe_mode & MPE_STAYING)) {
         disturb(creature_ptr, FALSE, TRUE);
         if (g_ptr->mimic || has_flag(f_ptr->flags, FF_SECRET)) {
             msg_print(_("トラップだ！", "You found a trap!"));
@@ -259,9 +260,8 @@ bool move_player_effect(player_type *creature_ptr, POSITION ny, POSITION nx, BIT
  * @param feat 地形ID
  * @return トラップが自動的に無効ならばTRUEを返す
  */
-bool trap_can_be_ignored(player_type *creature_ptr, FEAT_IDX feat)
-{
-    feature_type *f_ptr = &f_info[feat];
+bool trap_can_be_ignored(player_type* creature_ptr, FEAT_IDX feat) {
+    feature_type* f_ptr = &f_info[feat];
     if (!has_flag(f_ptr->flags, FF_TRAP))
         return TRUE;
 

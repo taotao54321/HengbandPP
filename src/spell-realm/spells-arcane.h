@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void phlogiston(player_type *caster_ptr);
+void phlogiston(player_type* caster_ptr);

@@ -49,8 +49,7 @@
 bool load = TRUE;
 bool can_save = FALSE;
 
-static void process_fishing(player_type *creature_ptr)
-{
+static void process_fishing(player_type* creature_ptr) {
     term_xtra(TERM_XTRA_DELAY, 10);
     if (one_in_(1000)) {
         MONRACE_IDX r_idx;
@@ -89,8 +88,7 @@ static void process_fishing(player_type *creature_ptr)
  * must come first just in case somebody manages to corrupt\n
  * the savefiles by clever use of menu commands or something.\n
  */
-void process_player(player_type *creature_ptr)
-{
+void process_player(player_type* creature_ptr) {
     if (creature_ptr->hack_mutation) {
         msg_print(_("何か変わった気がする！", "You feel different!"));
         (void)gain_mutation(creature_ptr, 0);
@@ -105,7 +103,7 @@ void process_player(player_type *creature_ptr)
 
     if (creature_ptr->phase_out) {
         for (MONSTER_IDX m_idx = 1; m_idx < creature_ptr->current_floor_ptr->m_max; m_idx++) {
-            monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
+            monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
             if (!monster_is_valid(m_ptr))
                 continue;
 
@@ -114,7 +112,8 @@ void process_player(player_type *creature_ptr)
         }
 
         print_time(creature_ptr);
-    } else if (!(load && creature_ptr->energy_need <= 0)) {
+    }
+    else if (!(load && creature_ptr->energy_need <= 0)) {
         creature_ptr->energy_need -= SPEED_TO_ENERGY(creature_ptr->pspeed);
     }
 
@@ -128,7 +127,8 @@ void process_player(player_type *creature_ptr)
             if ((creature_ptr->chp == creature_ptr->mhp) && (creature_ptr->csp >= creature_ptr->msp)) {
                 set_action(creature_ptr, ACTION_NONE);
             }
-        } else if (creature_ptr->resting == COMMAND_ARG_REST_UNTIL_DONE) {
+        }
+        else if (creature_ptr->resting == COMMAND_ARG_REST_UNTIL_DONE) {
             if ((creature_ptr->chp == creature_ptr->mhp) && (creature_ptr->csp >= creature_ptr->msp) && !creature_ptr->blind && !creature_ptr->confused
                 && !creature_ptr->poisoned && !creature_ptr->afraid && !creature_ptr->stun && !creature_ptr->cut && !creature_ptr->slow
                 && !creature_ptr->paralyzed && !creature_ptr->image && !creature_ptr->word_recall && !creature_ptr->alter_reality) {
@@ -152,8 +152,8 @@ void process_player(player_type *creature_ptr)
     }
 
     if (creature_ptr->riding && !creature_ptr->confused && !creature_ptr->blind) {
-        monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (monster_csleep_remaining(m_ptr)) {
             GAME_TEXT m_name[MAX_NLEN];
             (void)set_monster_csleep(creature_ptr, creature_ptr->riding, 0);
@@ -211,7 +211,8 @@ void process_player(player_type *creature_ptr)
             creature_ptr->csp = 0;
             creature_ptr->csp_frac = 0;
             set_action(creature_ptr, ACTION_NONE);
-        } else {
+        }
+        else {
             s64b_sub(&(creature_ptr->csp), &(creature_ptr->csp_frac), cost, cost_frac);
         }
 
@@ -222,7 +223,8 @@ void process_player(player_type *creature_ptr)
         if (creature_ptr->special_defense & KATA_MUSOU) {
             if (creature_ptr->csp < 3) {
                 set_action(creature_ptr, ACTION_NONE);
-            } else {
+            }
+            else {
                 creature_ptr->csp -= 2;
                 creature_ptr->redraw |= (PR_MANA);
             }
@@ -250,9 +252,11 @@ void process_player(player_type *creature_ptr)
             move_cursor_relative(creature_ptr->y, creature_ptr->x);
             command_cmd = SPECIAL_KEY_BUILDING;
             process_command(creature_ptr);
-        } else if (creature_ptr->paralyzed || (creature_ptr->stun >= 100)) {
+        }
+        else if (creature_ptr->paralyzed || (creature_ptr->stun >= 100)) {
             take_turn(creature_ptr, 100);
-        } else if (creature_ptr->action == ACTION_REST) {
+        }
+        else if (creature_ptr->action == ACTION_REST) {
             if (creature_ptr->resting > 0) {
                 creature_ptr->resting--;
                 if (!creature_ptr->resting)
@@ -261,20 +265,25 @@ void process_player(player_type *creature_ptr)
             }
 
             take_turn(creature_ptr, 100);
-        } else if (creature_ptr->action == ACTION_FISH) {
+        }
+        else if (creature_ptr->action == ACTION_FISH) {
             take_turn(creature_ptr, 100);
-        } else if (creature_ptr->running) {
+        }
+        else if (creature_ptr->running) {
             run_step(creature_ptr, 0);
-        } else if (travel.run) {
+        }
+        else if (travel.run) {
             travel_step(creature_ptr);
-        } else if (command_rep) {
+        }
+        else if (command_rep) {
             command_rep--;
             creature_ptr->redraw |= (PR_STATE);
             handle_stuff(creature_ptr);
             msg_flag = FALSE;
             prt("", 0, 0);
             process_command(creature_ptr);
-        } else {
+        }
+        else {
             move_cursor_relative(creature_ptr->y, creature_ptr->x);
             can_save = TRUE;
             request_command(creature_ptr, FALSE);
@@ -286,7 +295,8 @@ void process_player(player_type *creature_ptr)
         if (creature_ptr->energy_use) {
             if (creature_ptr->timewalk || creature_ptr->energy_use > 400) {
                 creature_ptr->energy_need += creature_ptr->energy_use * TURNS_PER_TICK / 10;
-            } else {
+            }
+            else {
                 creature_ptr->energy_need += (s16b)((s32b)creature_ptr->energy_use * ENERGY_NEED() / 100L);
             }
 
@@ -294,8 +304,8 @@ void process_player(player_type *creature_ptr)
                 creature_ptr->redraw |= (PR_MAP);
 
             for (MONSTER_IDX m_idx = 1; m_idx < creature_ptr->current_floor_ptr->m_max; m_idx++) {
-                monster_type *m_ptr;
-                monster_race *r_ptr;
+                monster_type* m_ptr;
+                monster_race* r_ptr;
                 m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
                 if (!monster_is_valid(m_ptr))
                     continue;
@@ -312,7 +322,7 @@ void process_player(player_type *creature_ptr)
             if (repair_monsters) {
                 repair_monsters = FALSE;
                 for (MONSTER_IDX m_idx = 1; m_idx < creature_ptr->current_floor_ptr->m_max; m_idx++) {
-                    monster_type *m_ptr;
+                    monster_type* m_ptr;
                     m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
                     if (!monster_is_valid(m_ptr))
                         continue;
@@ -325,7 +335,8 @@ void process_player(player_type *creature_ptr)
                         if (m_ptr->mflag2 & MFLAG2_SHOW) {
                             m_ptr->mflag2 &= ~(MFLAG2_SHOW);
                             repair_monsters = TRUE;
-                        } else {
+                        }
+                        else {
                             m_ptr->mflag2 &= ~(MFLAG2_MARK);
                             m_ptr->ml = FALSE;
                             update_monster(creature_ptr, m_idx, FALSE);
@@ -341,7 +352,8 @@ void process_player(player_type *creature_ptr)
             }
 
             if (creature_ptr->pclass == CLASS_IMITATOR) {
-                if (creature_ptr->mane_num > (creature_ptr->lev > 44 ? 3 : creature_ptr->lev > 29 ? 2 : 1)) {
+                if (creature_ptr->mane_num > (creature_ptr->lev > 44 ? 3 : creature_ptr->lev > 29 ? 2
+                                                                                                  : 1)) {
                     creature_ptr->mane_num--;
                     for (int j = 0; j < creature_ptr->mane_num; j++) {
                         creature_ptr->mane_spell[j] = creature_ptr->mane_spell[j + 1];
@@ -392,8 +404,7 @@ void process_player(player_type *creature_ptr)
  * @brief プレイヤーの行動エネルギーが充填される（＝プレイヤーのターンが回る）毎に行われる処理  / process the effects per 100 energy at player speed.
  * @return なし
  */
-void process_upkeep_with_speed(player_type *creature_ptr)
-{
+void process_upkeep_with_speed(player_type* creature_ptr) {
     if (!load && creature_ptr->enchant_energy_need > 0 && !creature_ptr->leaving) {
         creature_ptr->enchant_energy_need -= SPEED_TO_ENERGY(creature_ptr->pspeed);
     }

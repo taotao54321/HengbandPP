@@ -1,16 +1,16 @@
 ﻿#include "cmd-io/macro-util.h"
 
 /* Array of macro types [MACRO_MAX] */
-bool *macro__cmd;
+bool* macro__cmd;
 
 /* Current macro action [1024] */
-char *macro__buf;
+char* macro__buf;
 
 /* Array of macro patterns [MACRO_MAX] */
-concptr *macro__pat;
+concptr* macro__pat;
 
 /* Array of macro actions [MACRO_MAX] */
-concptr *macro__act;
+concptr* macro__act;
 
 /* Number of active macros */
 s16b macro__num;
@@ -22,8 +22,7 @@ bool get_com_no_macros = FALSE;
 static bool macro__use[256];
 
 /* Find the macro (if any) which exactly matches the given pattern */
-int macro_find_exact(concptr pat)
-{
+int macro_find_exact(concptr pat) {
     if (!macro__use[(byte)(pat[0])]) {
         return -1;
     }
@@ -41,8 +40,7 @@ int macro_find_exact(concptr pat)
 /*
  * Find the first macro (if any) which contains the given pattern
  */
-int macro_find_check(concptr pat)
-{
+int macro_find_check(concptr pat) {
     if (!macro__use[(byte)(pat[0])]) {
         return -1;
     }
@@ -60,8 +58,7 @@ int macro_find_check(concptr pat)
 /*
  * Find the first macro (if any) which contains the given pattern and more
  */
-int macro_find_maybe(concptr pat)
-{
+int macro_find_maybe(concptr pat) {
     if (!macro__use[(byte)(pat[0])]) {
         return -1;
     }
@@ -81,8 +78,7 @@ int macro_find_maybe(concptr pat)
 /*
  * Find the longest macro (if any) which starts with the given pattern
  */
-int macro_find_ready(concptr pat)
-{
+int macro_find_ready(concptr pat) {
     int t, n = -1, s = -1;
 
     if (!macro__use[(byte)(pat[0])]) {
@@ -118,15 +114,15 @@ int macro_find_ready(concptr pat)
  * with some kind of "powerful keymap" ability, but this might make it hard
  * to change the "roguelike" option from inside the game.
  */
-errr macro_add(concptr pat, concptr act)
-{
+errr macro_add(concptr pat, concptr act) {
     if (!pat || !act)
         return -1;
 
     int n = macro_find_exact(pat);
     if (n >= 0) {
         string_free(macro__act[n]);
-    } else {
+    }
+    else {
         n = macro__num++;
         macro__pat[n] = string_make(pat);
     }

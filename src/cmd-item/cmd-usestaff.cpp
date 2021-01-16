@@ -60,8 +60,7 @@
  * @param known 判明済ならばTRUE
  * @return 発動により効果内容が確定したならばTRUEを返す
  */
-int staff_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, bool *use_charge, bool powerful, bool magic, bool known)
-{
+int staff_effect(player_type* creature_ptr, OBJECT_SUBTYPE_VALUE sval, bool* use_charge, bool powerful, bool magic, bool known) {
     int k;
     int ident = FALSE;
     PLAYER_LEVEL lev = powerful ? creature_ptr->lev * 2 : creature_ptr->lev;
@@ -112,7 +111,8 @@ int staff_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, bool *use
         if (powerful) {
             if (!identify_fully(creature_ptr, FALSE, TV_NONE))
                 *use_charge = FALSE;
-        } else {
+        }
+        else {
             if (!ident_spell(creature_ptr, FALSE, TV_NONE))
                 *use_charge = FALSE;
         }
@@ -298,10 +298,9 @@ int staff_effect(player_type *creature_ptr, OBJECT_SUBTYPE_VALUE sval, bool *use
  * One charge of one staff disappears.
  * Hack -- staffs of identify can be "cancelled".
  */
-void exe_use_staff(player_type *creature_ptr, INVENTORY_IDX item)
-{
+void exe_use_staff(player_type* creature_ptr, INVENTORY_IDX item) {
     int ident, chance, lev;
-    object_type *o_ptr;
+    object_type* o_ptr;
 
     /* Hack -- let staffs of identify get aborted */
     bool use_charge = TRUE;
@@ -399,7 +398,7 @@ void exe_use_staff(player_type *creature_ptr, INVENTORY_IDX item)
     /* XXX Hack -- unstack if necessary */
     if ((item >= 0) && (o_ptr->number > 1)) {
         object_type forge;
-        object_type *q_ptr;
+        object_type* q_ptr;
         q_ptr = &forge;
         object_copy(q_ptr, o_ptr);
 
@@ -431,8 +430,7 @@ void exe_use_staff(player_type *creature_ptr, INVENTORY_IDX item)
  * @brief 杖を使うコマンドのメインルーチン /
  * @return なし
  */
-void do_cmd_use_staff(player_type *creature_ptr)
-{
+void do_cmd_use_staff(player_type* creature_ptr) {
     OBJECT_IDX item;
     concptr q, s;
 

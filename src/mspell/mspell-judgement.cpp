@@ -23,8 +23,8 @@
 #include "monster/monster-status.h"
 #include "player/attack-defense-types.h"
 #include "player/player-race.h"
-#include "player/special-defense-types.h"
 #include "player/player-status-flags.h"
+#include "player/special-defense-types.h"
 #include "realm/realm-song-numbers.h"
 #include "spell/range-calc.h"
 #include "spell/spell-types.h"
@@ -42,9 +42,8 @@
  * @param m_ptr 使用するモンスターの構造体参照ポインタ
  * @return ビームが到達可能ならばTRUEを返す
  */
-bool direct_beam(player_type *target_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, monster_type *m_ptr)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+bool direct_beam(player_type* target_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, monster_type* m_ptr) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     u16b grid_g[512];
     int grid_n = projection_path(target_ptr, grid_g, get_max_range(target_ptr), y1, x1, y2, x2, PROJECT_THRU);
     if (!grid_n)
@@ -84,8 +83,7 @@ bool direct_beam(player_type *target_ptr, POSITION y1, POSITION x1, POSITION y2,
  * @param is_friend TRUEならば、プレイヤーを巻き込む時にブレスの判定をFALSEにする。
  * @return ブレスを直接当てられるならばTRUEを返す
  */
-bool breath_direct(player_type *master_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, POSITION rad, EFFECT_ID typ, bool is_friend)
-{
+bool breath_direct(player_type* master_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2, POSITION rad, EFFECT_ID typ, bool is_friend) {
     BIT_FLAGS flg;
     switch (typ) {
     case GF_LITE:
@@ -112,10 +110,12 @@ bool breath_direct(player_type *master_ptr, POSITION y1, POSITION x1, POSITION y
         if (flg & PROJECT_DISI) {
             if (cave_stop_disintegration(master_ptr->current_floor_ptr, ny, nx))
                 break;
-        } else if (flg & PROJECT_LOS) {
+        }
+        else if (flg & PROJECT_LOS) {
             if (!cave_los_bold(master_ptr->current_floor_ptr, ny, nx))
                 break;
-        } else {
+        }
+        else {
             if (!cave_has_flag_bold(master_ptr->current_floor_ptr, ny, nx, FF_PROJECT))
                 break;
         }
@@ -134,18 +134,21 @@ bool breath_direct(player_type *master_ptr, POSITION y1, POSITION x1, POSITION y
             if (in_disintegration_range(master_ptr->current_floor_ptr, y1, x1, master_ptr->y, master_ptr->x)
                 && (distance(y1, x1, master_ptr->y, master_ptr->x) <= rad))
                 hityou = TRUE;
-        } else if (flg & PROJECT_LOS) {
+        }
+        else if (flg & PROJECT_LOS) {
             if (los(master_ptr, y1, x1, y2, x2) && (distance(y1, x1, y2, x2) <= rad))
                 hit2 = TRUE;
             if (los(master_ptr, y1, x1, master_ptr->y, master_ptr->x) && (distance(y1, x1, master_ptr->y, master_ptr->x) <= rad))
                 hityou = TRUE;
-        } else {
+        }
+        else {
             if (projectable(master_ptr, y1, x1, y2, x2) && (distance(y1, x1, y2, x2) <= rad))
                 hit2 = TRUE;
             if (projectable(master_ptr, y1, x1, master_ptr->y, master_ptr->x) && (distance(y1, x1, master_ptr->y, master_ptr->x) <= rad))
                 hityou = TRUE;
         }
-    } else {
+    }
+    else {
         int grids = 0;
         POSITION gx[1024], gy[1024];
         POSITION gm[32];
@@ -180,8 +183,7 @@ bool breath_direct(player_type *master_ptr, POSITION y1, POSITION x1, POSITION y
  * @param flg 判定のフラグ配列
  * @return なし
  */
-void get_project_point(player_type *target_ptr, POSITION sy, POSITION sx, POSITION *ty, POSITION *tx, BIT_FLAGS flg)
-{
+void get_project_point(player_type* target_ptr, POSITION sy, POSITION sx, POSITION* ty, POSITION* tx, BIT_FLAGS flg) {
     u16b path_g[128];
     int path_n = projection_path(target_ptr, path_g, get_max_range(target_ptr), sy, sx, *ty, *tx, flg);
     *ty = sy;
@@ -205,9 +207,8 @@ void get_project_point(player_type *target_ptr, POSITION sy, POSITION sx, POSITI
  * @param t_idx 目標のモンスターID
  * @return 魔力消去を使うべきならばTRUEを変えす。
  */
-bool dispel_check_monster(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx)
-{
-    monster_type *t_ptr = &target_ptr->current_floor_ptr->m_list[t_idx];
+bool dispel_check_monster(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx) {
+    monster_type* t_ptr = &target_ptr->current_floor_ptr->m_list[t_idx];
     if (monster_invulner_remaining(t_ptr))
         return TRUE;
 
@@ -226,8 +227,7 @@ bool dispel_check_monster(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_ID
  * @param m_idx モンスターの構造体配列ID
  * @return 魔力消去をかけるべきならTRUEを返す。
  */
-bool dispel_check(player_type *creature_ptr, MONSTER_IDX m_idx)
-{
+bool dispel_check(player_type* creature_ptr, MONSTER_IDX m_idx) {
     if (is_invuln(creature_ptr))
         return TRUE;
 
@@ -252,8 +252,8 @@ bool dispel_check(player_type *creature_ptr, MONSTER_IDX m_idx)
     if (creature_ptr->mimic_form == MIMIC_DEMON_LORD)
         return TRUE;
 
-    monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     if (r_ptr->flags4 & RF4_BR_ACID) {
         if (!has_immune_acid(creature_ptr) && (creature_ptr->oppose_acid || music_singing(creature_ptr, MUSIC_RESIST)))
             return TRUE;

@@ -25,9 +25,8 @@
 /*
  * List virtues & status
  */
-void do_cmd_knowledge_virtues(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_virtues(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
@@ -45,8 +44,7 @@ void do_cmd_knowledge_virtues(player_type *creature_ptr)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_yourself(player_type *creature_ptr, FILE *fff)
-{
+static void dump_yourself(player_type* creature_ptr, FILE* fff) {
     if (!fff)
         return;
 
@@ -122,9 +120,8 @@ static void dump_yourself(player_type *creature_ptr, FILE *fff)
  * List virtues & status
  *
  */
-void do_cmd_knowledge_stat(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_stat(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
@@ -156,16 +153,15 @@ void do_cmd_knowledge_stat(player_type *creature_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_knowledge_home(player_type *player_ptr)
-{
+void do_cmd_knowledge_home(player_type* player_ptr) {
     parse_fixed_map(player_ptr, "w_info.txt", 0, 0, current_world_ptr->max_wild_y, current_world_ptr->max_wild_x);
 
-    FILE *fff = NULL;
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
 
-    store_type *store_ptr;
+    store_type* store_ptr;
     store_ptr = &town_info[1].store[STORE_HOME];
 
     if (store_ptr->stock_num) {
@@ -182,9 +178,10 @@ void do_cmd_knowledge_home(player_type *player_ptr)
             describe_flavor(player_ptr, o_name, &store_ptr->stock[i], 0);
             if (strlen(o_name) <= 80 - 3) {
                 fprintf(fff, "%c%s %s\n", I2A(i % 12), paren, o_name);
-            } else {
+            }
+            else {
                 int n;
-                char *t;
+                char* t;
                 for (n = 0, t = o_name; n < 80 - 3; n++, t++)
                     if (iskanji(*t)) {
                         t++;

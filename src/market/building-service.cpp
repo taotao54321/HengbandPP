@@ -12,8 +12,7 @@
  * @param bldg 施設構造体の参照ポインタ
  * @return 種族、職業、魔法領域のいずれかが一致しているかの是非。
  */
-bool is_owner(player_type *player_ptr, building_type *bldg)
-{
+bool is_owner(player_type* player_ptr, building_type* bldg) {
     if (bldg->member_class[player_ptr->pclass] == BUILDING_OWNER) {
         return TRUE;
     }
@@ -41,8 +40,7 @@ bool is_owner(player_type *player_ptr, building_type *bldg)
  * @return 種族、職業、魔法領域のいずれかが一致しているかの是非。
  * @todo is_owner()との実質的な多重実装なので、リファクタリングを行うべきである。
  */
-bool is_member(player_type *player_ptr, building_type *bldg)
-{
+bool is_member(player_type* player_ptr, building_type* bldg) {
     if (bldg->member_class[player_ptr->pclass]) {
         return TRUE;
     }
@@ -74,8 +72,7 @@ bool is_member(player_type *player_ptr, building_type *bldg)
  * @param bldg 施設構造体の参照ポインタ
  * @return なし
  */
-void display_buikding_service(player_type *player_ptr, building_type *bldg)
-{
+void display_buikding_service(player_type* player_ptr, building_type* bldg) {
     char buff[20];
     byte action_color;
     char tmp_str[80];
@@ -92,10 +89,12 @@ void display_buikding_service(player_type *player_ptr, building_type *bldg)
             if ((is_owner(player_ptr, bldg) && (bldg->member_costs[i] == 0)) || (!is_owner(player_ptr, bldg) && (bldg->other_costs[i] == 0))) {
                 action_color = TERM_WHITE;
                 buff[0] = '\0';
-            } else if (is_owner(player_ptr, bldg)) {
+            }
+            else if (is_owner(player_ptr, bldg)) {
                 action_color = TERM_YELLOW;
                 sprintf(buff, _("($%ld)", "(%ldgp)"), (long int)bldg->member_costs[i]);
-            } else {
+            }
+            else {
                 action_color = TERM_YELLOW;
                 sprintf(buff, _("($%ld)", "(%ldgp)"), (long int)bldg->other_costs[i]);
             }
@@ -109,13 +108,16 @@ void display_buikding_service(player_type *player_ptr, building_type *bldg)
             if (!is_member(player_ptr, bldg)) {
                 action_color = TERM_L_DARK;
                 strcpy(buff, _("(閉店)", "(closed)"));
-            } else if ((is_owner(player_ptr, bldg) && (bldg->member_costs[i] == 0)) || (is_member(player_ptr, bldg) && (bldg->other_costs[i] == 0))) {
+            }
+            else if ((is_owner(player_ptr, bldg) && (bldg->member_costs[i] == 0)) || (is_member(player_ptr, bldg) && (bldg->other_costs[i] == 0))) {
                 action_color = TERM_WHITE;
                 buff[0] = '\0';
-            } else if (is_owner(player_ptr, bldg)) {
+            }
+            else if (is_owner(player_ptr, bldg)) {
                 action_color = TERM_YELLOW;
                 sprintf(buff, _("($%ld)", "(%ldgp)"), (long int)bldg->member_costs[i]);
-            } else {
+            }
+            else {
                 action_color = TERM_YELLOW;
                 sprintf(buff, _("($%ld)", "(%ldgp)"), (long int)bldg->other_costs[i]);
             }
@@ -128,10 +130,12 @@ void display_buikding_service(player_type *player_ptr, building_type *bldg)
         if (!is_owner(player_ptr, bldg)) {
             action_color = TERM_L_DARK;
             strcpy(buff, _("(閉店)", "(closed)"));
-        } else if (bldg->member_costs[i] != 0) {
+        }
+        else if (bldg->member_costs[i] != 0) {
             action_color = TERM_YELLOW;
             sprintf(buff, _("($%ld)", "(%ldgp)"), (long int)bldg->member_costs[i]);
-        } else {
+        }
+        else {
             action_color = TERM_WHITE;
             buff[0] = '\0';
         }

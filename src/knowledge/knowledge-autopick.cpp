@@ -18,8 +18,7 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_reload_autopick(player_type *creature_ptr)
-{
+void do_cmd_reload_autopick(player_type* creature_ptr) {
     if (!get_check(_("自動拾い設定ファイルをロードしますか? ", "Reload auto-pick preference file? ")))
         return;
 
@@ -29,16 +28,16 @@ void do_cmd_reload_autopick(player_type *creature_ptr)
 /*
  * Check the status of "autopick"
  */
-void do_cmd_knowledge_autopick(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_autopick(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
 
     if (!max_autopick) {
         fprintf(fff, _("自動破壊/拾いには何も登録されていません。", "No preference for auto picker/destroyer."));
-    } else {
+    }
+    else {
         fprintf(fff, _("   自動拾い/破壊には現在 %d行登録されています。\n\n", "   There are %d registered lines for auto picker/destroyer.\n\n"), max_autopick);
     }
 
@@ -47,11 +46,14 @@ void do_cmd_knowledge_autopick(player_type *creature_ptr)
         byte act = autopick_list[k].action;
         if (act & DONT_AUTOPICK) {
             tmp = _("放置", "Leave");
-        } else if (act & DO_AUTODESTROY) {
+        }
+        else if (act & DO_AUTODESTROY) {
             tmp = _("破壊", "Destroy");
-        } else if (act & DO_AUTOPICK) {
+        }
+        else if (act & DO_AUTOPICK) {
             tmp = _("拾う", "Pickup");
-        } else {
+        }
+        else {
             tmp = _("確認", "Query");
         }
 

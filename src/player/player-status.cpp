@@ -99,49 +99,49 @@
 #include "view/display-messages.h"
 #include "world/world.h"
 
-static bool is_martial_arts_mode(player_type *creature_ptr);
+static bool is_martial_arts_mode(player_type* creature_ptr);
 
-static ACTION_SKILL_POWER calc_intra_vision(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_stealth(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_disarming(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_device_ability(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_saving_throw(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_search(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_search_freq(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_to_hit_melee(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_to_hit_shoot(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_to_hit_throw(player_type *creature_ptr);
-static ACTION_SKILL_POWER calc_skill_dig(player_type *creature_ptr);
-static s16b calc_num_blow(player_type *creature_ptr, int i);
-static s16b calc_strength_addition(player_type *creature_ptr);
-static s16b calc_intelligence_addition(player_type *creature_ptr);
-static s16b calc_wisdom_addition(player_type *creature_ptr);
-static s16b calc_dexterity_addition(player_type *creature_ptr);
-static s16b calc_constitution_addition(player_type *creature_ptr);
-static s16b calc_charisma_addition(player_type *creature_ptr);
-static s16b calc_to_magic_chance(player_type *creature_ptr);
-static ARMOUR_CLASS calc_base_ac(player_type *creature_ptr);
-static ARMOUR_CLASS calc_to_ac(player_type *creature_ptr, bool is_true_value);
-static s16b calc_speed(player_type *creature_ptr);
-static s16b calc_double_weapon_penalty(player_type *creature_ptr, INVENTORY_IDX slot);
-static void calc_use_status(player_type *creature_ptr, int status);
-static void calc_top_status(player_type *creature_ptr, int status);
-static void calc_ind_status(player_type *creature_ptr, int status);
-static s16b calc_riding_bow_penalty(player_type *creature_ptr);
-static void put_equipment_warning(player_type *creature_ptr);
+static ACTION_SKILL_POWER calc_intra_vision(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_stealth(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_disarming(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_device_ability(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_saving_throw(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_search(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_search_freq(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_to_hit_melee(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_to_hit_shoot(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_to_hit_throw(player_type* creature_ptr);
+static ACTION_SKILL_POWER calc_skill_dig(player_type* creature_ptr);
+static s16b calc_num_blow(player_type* creature_ptr, int i);
+static s16b calc_strength_addition(player_type* creature_ptr);
+static s16b calc_intelligence_addition(player_type* creature_ptr);
+static s16b calc_wisdom_addition(player_type* creature_ptr);
+static s16b calc_dexterity_addition(player_type* creature_ptr);
+static s16b calc_constitution_addition(player_type* creature_ptr);
+static s16b calc_charisma_addition(player_type* creature_ptr);
+static s16b calc_to_magic_chance(player_type* creature_ptr);
+static ARMOUR_CLASS calc_base_ac(player_type* creature_ptr);
+static ARMOUR_CLASS calc_to_ac(player_type* creature_ptr, bool is_true_value);
+static s16b calc_speed(player_type* creature_ptr);
+static s16b calc_double_weapon_penalty(player_type* creature_ptr, INVENTORY_IDX slot);
+static void calc_use_status(player_type* creature_ptr, int status);
+static void calc_top_status(player_type* creature_ptr, int status);
+static void calc_ind_status(player_type* creature_ptr, int status);
+static s16b calc_riding_bow_penalty(player_type* creature_ptr);
+static void put_equipment_warning(player_type* creature_ptr);
 
-static s16b calc_to_damage(player_type *creature_ptr, INVENTORY_IDX slot, bool is_true_value);
-static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_true_value);
+static s16b calc_to_damage(player_type* creature_ptr, INVENTORY_IDX slot, bool is_true_value);
+static s16b calc_to_hit(player_type* creature_ptr, INVENTORY_IDX slot, bool is_true_value);
 
-static s16b calc_to_hit_bow(player_type *creature_ptr, bool is_true_value);
+static s16b calc_to_hit_bow(player_type* creature_ptr, bool is_true_value);
 
-static s16b calc_to_damage_misc(player_type *creature_ptr);
-static s16b calc_to_hit_misc(player_type *creature_ptr);
+static s16b calc_to_damage_misc(player_type* creature_ptr);
+static s16b calc_to_hit_misc(player_type* creature_ptr);
 
-static DICE_NUMBER calc_to_weapon_dice_num(player_type *creature_ptr, INVENTORY_IDX slot);
-static DICE_NUMBER calc_to_weapon_dice_side(player_type *creature_ptr, INVENTORY_IDX slot);
+static DICE_NUMBER calc_to_weapon_dice_num(player_type* creature_ptr, INVENTORY_IDX slot);
+static DICE_NUMBER calc_to_weapon_dice_side(player_type* creature_ptr, INVENTORY_IDX slot);
 
-static int get_default_hand(player_type *creature_ptr);
+static int get_default_hand(player_type* creature_ptr);
 
 /*** Player information ***/
 
@@ -153,15 +153,14 @@ player_type p_body;
 /*!
  * @brief プレイヤー用のクリーチャー構造体参照ポインタ / Pointer to the player info
  */
-player_type *p_ptr = &p_body;
+player_type* p_ptr = &p_body;
 
 /*!
  * @brief クリーチャーの抽象的善悪アライメントの表記を返す。 / Return alignment title
  * @param creature_ptr 算出するクリーチャーの参照ポインタ。
  * @return アライメントの表記を返す。
  */
-concptr your_alignment(player_type *creature_ptr)
-{
+concptr your_alignment(player_type* creature_ptr) {
     if (creature_ptr->align > 150)
         return _("大善", "Lawful");
     else if (creature_ptr->align > 50)
@@ -183,8 +182,7 @@ concptr your_alignment(player_type *creature_ptr)
  * @param weapon_exp 経験値
  * @return ランク値
  */
-int weapon_exp_level(int weapon_exp)
-{
+int weapon_exp_level(int weapon_exp) {
     if (weapon_exp < WEAPON_EXP_BEGINNER)
         return EXP_LEVEL_UNSKILLED;
     else if (weapon_exp < WEAPON_EXP_SKILLED)
@@ -202,8 +200,7 @@ int weapon_exp_level(int weapon_exp)
  * @param weapon_exp 経験値
  * @return ランク値
  */
-int riding_exp_level(int riding_exp)
-{
+int riding_exp_level(int riding_exp) {
     if (riding_exp < RIDING_EXP_BEGINNER)
         return EXP_LEVEL_UNSKILLED;
     else if (riding_exp < RIDING_EXP_SKILLED)
@@ -221,8 +218,7 @@ int riding_exp_level(int riding_exp)
  * @param spell_exp 経験値
  * @return ランク値
  */
-int spell_exp_level(int spell_exp)
-{
+int spell_exp_level(int spell_exp) {
     if (spell_exp < SPELL_EXP_BEGINNER)
         return EXP_LEVEL_UNSKILLED;
     else if (spell_exp < SPELL_EXP_SKILLED)
@@ -242,13 +238,12 @@ int spell_exp_level(int spell_exp)
  * @todo 将来独自インターフェース実装にはz-term系に追い出すべきか？
  * @return なし
  */
-static void delayed_visual_update(player_type *player_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void delayed_visual_update(player_type* player_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (int i = 0; i < floor_ptr->redraw_n; i++) {
         POSITION y = floor_ptr->redraw_y[i];
         POSITION x = floor_ptr->redraw_x[i];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[y][x];
         if (!(g_ptr->info & CAVE_REDRAW))
             continue;
@@ -271,8 +266,7 @@ static void delayed_visual_update(player_type *player_ptr)
  * @param o_ptr 判定する射撃武器のアイテム情報参照ポインタ
  * @return 重すぎるならばTRUE
  */
-static bool is_heavy_shoot(player_type *creature_ptr, object_type *o_ptr)
-{
+static bool is_heavy_shoot(player_type* creature_ptr, object_type* o_ptr) {
     int hold = adj_str_hold[creature_ptr->stat_ind[A_STR]];
     return (hold < o_ptr->weight / 10);
 }
@@ -282,11 +276,10 @@ static bool is_heavy_shoot(player_type *creature_ptr, object_type *o_ptr)
  * @param creature_ptr 計算対象となるクリーチャーの参照ポインタ
  * @return 総重量
  */
-WEIGHT calc_inventory_weight(player_type *creature_ptr)
-{
+WEIGHT calc_inventory_weight(player_type* creature_ptr) {
     WEIGHT weight = 0;
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     for (int i = 0; i < INVEN_TOTAL; i++) {
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -320,10 +313,9 @@ WEIGHT calc_inventory_weight(player_type *creature_ptr)
  * </pre>
  * @todo ここで計算していた各値は一部の状態変化メッセージ処理を除き、今後必要な時に適示計算する形に移行するためほぼすべて削られる。
  */
-void calc_bonuses(player_type *creature_ptr)
-{
+void calc_bonuses(player_type* creature_ptr) {
     int empty_hands_status = empty_hands(creature_ptr, TRUE);
-    object_type *o_ptr;
+    object_type* o_ptr;
 
     /* Save the old vision stuff */
     BIT_FLAGS old_telepathy = creature_ptr->telepathy;
@@ -484,13 +476,12 @@ void calc_bonuses(player_type *creature_ptr)
     put_equipment_warning(creature_ptr);
 }
 
-static void calc_alignment(player_type *creature_ptr)
-{
+static void calc_alignment(player_type* creature_ptr) {
     creature_ptr->align = 0;
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     for (MONSTER_IDX m_idx = floor_ptr->m_max - 1; m_idx >= 1; m_idx--) {
-        monster_type *m_ptr;
-        monster_race *r_ptr;
+        monster_type* m_ptr;
+        monster_race* r_ptr;
         m_ptr = &floor_ptr->m_list[m_idx];
         if (!monster_is_valid(m_ptr))
             continue;
@@ -514,7 +505,8 @@ static void calc_alignment(player_type *creature_ptr)
             creature_ptr->align -= 200;
             break;
         }
-    } else {
+    }
+    else {
         switch (creature_ptr->prace) {
         case RACE_ARCHON:
             creature_ptr->align += 200;
@@ -560,7 +552,8 @@ static void calc_alignment(player_type *creature_ptr)
             creature_ptr->align -= creature_ptr->virtues[neutral[i]] / 2;
             if (creature_ptr->align < 0)
                 creature_ptr->align = 0;
-        } else if (creature_ptr->align < 0) {
+        }
+        else if (creature_ptr->align < 0) {
             creature_ptr->align += creature_ptr->virtues[neutral[i]] / 2;
             if (creature_ptr->align > 0)
                 creature_ptr->align = 0;
@@ -575,8 +568,7 @@ static void calc_alignment(player_type *creature_ptr)
  * @return なし
  * @details
  */
-static void calc_hitpoints(player_type *creature_ptr)
-{
+static void calc_hitpoints(player_type* creature_ptr) {
     int bonus = ((int)(adj_con_mhp[creature_ptr->stat_ind[A_CON]]) - 128) * creature_ptr->lev / 4;
     int mhp = creature_ptr->player_hp[creature_ptr->lev - 1];
 
@@ -643,8 +635,7 @@ static void calc_hitpoints(player_type *creature_ptr)
  * Note that this function induces various "status" messages,
  * which must be bypasses until the character is created.
  */
-static void calc_spells(player_type *creature_ptr)
-{
+static void calc_spells(player_type* creature_ptr) {
     if (!mp_ptr->spell_book)
         return;
     if (!current_world_ptr->character_generated)
@@ -669,14 +660,17 @@ static void calc_spells(player_type *creature_ptr)
 
     if (creature_ptr->pclass == CLASS_SAMURAI) {
         num_allowed = 32;
-    } else if (creature_ptr->realm2 == REALM_NONE) {
+    }
+    else if (creature_ptr->realm2 == REALM_NONE) {
         num_allowed = (num_allowed + 1) / 2;
         if (num_allowed > (32 + bonus))
             num_allowed = 32 + bonus;
-    } else if ((creature_ptr->pclass == CLASS_MAGE) || (creature_ptr->pclass == CLASS_PRIEST)) {
+    }
+    else if ((creature_ptr->pclass == CLASS_MAGE) || (creature_ptr->pclass == CLASS_PRIEST)) {
         if (num_allowed > (96 + bonus))
             num_allowed = 96 + bonus;
-    } else {
+    }
+    else {
         if (num_allowed > (80 + bonus))
             num_allowed = 80 + bonus;
     }
@@ -697,13 +691,14 @@ static void calc_spells(player_type *creature_ptr)
         if (j >= 99)
             continue;
 
-        const magic_type *s_ptr;
+        const magic_type* s_ptr;
         if (!is_magic((j < 32) ? creature_ptr->realm1 : creature_ptr->realm2)) {
             if (j < 32)
                 s_ptr = &technic_info[creature_ptr->realm1 - MIN_TECHNIC][j];
             else
                 s_ptr = &technic_info[creature_ptr->realm2 - MIN_TECHNIC][j % 32];
-        } else if (j < 32)
+        }
+        else if (j < 32)
             s_ptr = &mp_ptr->info[creature_ptr->realm1 - 1][j];
         else
             s_ptr = &mp_ptr->info[creature_ptr->realm2 - 1][j % 32];
@@ -719,7 +714,8 @@ static void calc_spells(player_type *creature_ptr)
         if (j < 32) {
             creature_ptr->spell_forgotten1 |= (1L << j);
             which = creature_ptr->realm1;
-        } else {
+        }
+        else {
             creature_ptr->spell_forgotten2 |= (1L << (j - 32));
             which = creature_ptr->realm2;
         }
@@ -727,7 +723,8 @@ static void calc_spells(player_type *creature_ptr)
         if (j < 32) {
             creature_ptr->spell_learned1 &= ~(1L << j);
             which = creature_ptr->realm1;
-        } else {
+        }
+        else {
             creature_ptr->spell_learned2 &= ~(1L << (j - 32));
             which = creature_ptr->realm2;
         }
@@ -759,7 +756,8 @@ static void calc_spells(player_type *creature_ptr)
         if (j < 32) {
             creature_ptr->spell_forgotten1 |= (1L << j);
             which = creature_ptr->realm1;
-        } else {
+        }
+        else {
             creature_ptr->spell_forgotten2 |= (1L << (j - 32));
             which = creature_ptr->realm2;
         }
@@ -767,7 +765,8 @@ static void calc_spells(player_type *creature_ptr)
         if (j < 32) {
             creature_ptr->spell_learned1 &= ~(1L << j);
             which = creature_ptr->realm1;
-        } else {
+        }
+        else {
             creature_ptr->spell_learned2 &= ~(1L << (j - 32));
             which = creature_ptr->realm2;
         }
@@ -790,13 +789,14 @@ static void calc_spells(player_type *creature_ptr)
         if (j >= 99)
             break;
 
-        const magic_type *s_ptr;
+        const magic_type* s_ptr;
         if (!is_magic((j < 32) ? creature_ptr->realm1 : creature_ptr->realm2)) {
             if (j < 32)
                 s_ptr = &technic_info[creature_ptr->realm1 - MIN_TECHNIC][j];
             else
                 s_ptr = &technic_info[creature_ptr->realm2 - MIN_TECHNIC][j % 32];
-        } else if (j < 32)
+        }
+        else if (j < 32)
             s_ptr = &mp_ptr->info[creature_ptr->realm1 - 1][j];
         else
             s_ptr = &mp_ptr->info[creature_ptr->realm2 - 1][j % 32];
@@ -812,7 +812,8 @@ static void calc_spells(player_type *creature_ptr)
         if (j < 32) {
             creature_ptr->spell_forgotten1 &= ~(1L << j);
             which = creature_ptr->realm1;
-        } else {
+        }
+        else {
             creature_ptr->spell_forgotten2 &= ~(1L << (j - 32));
             which = creature_ptr->realm2;
         }
@@ -820,7 +821,8 @@ static void calc_spells(player_type *creature_ptr)
         if (j < 32) {
             creature_ptr->spell_learned1 |= (1L << j);
             which = creature_ptr->realm1;
-        } else {
+        }
+        else {
             creature_ptr->spell_learned2 |= (1L << (j - 32));
             which = creature_ptr->realm2;
         }
@@ -836,7 +838,7 @@ static void calc_spells(player_type *creature_ptr)
     if (creature_ptr->realm2 == REALM_NONE) {
         int k = 0;
         for (int j = 0; j < 32; j++) {
-            const magic_type *s_ptr;
+            const magic_type* s_ptr;
             if (!is_magic(creature_ptr->realm1))
                 s_ptr = &technic_info[creature_ptr->realm1 - MIN_TECHNIC][j];
             else
@@ -869,7 +871,8 @@ static void calc_spells(player_type *creature_ptr)
 #ifdef JP
         if (creature_ptr->new_spells < 10) {
             msg_format("あと %d つの%sを学べる。", creature_ptr->new_spells, p);
-        } else {
+        }
+        else {
             msg_format("あと %d 個の%sを学べる。", creature_ptr->new_spells, p);
         }
 #else
@@ -890,15 +893,15 @@ static void calc_spells(player_type *creature_ptr)
  * @details
  * This function induces status messages.
  */
-static void calc_mana(player_type *creature_ptr)
-{
+static void calc_mana(player_type* creature_ptr) {
     if (!mp_ptr->spell_book)
         return;
 
     int levels;
     if ((creature_ptr->pclass == CLASS_MINDCRAFTER) || (creature_ptr->pclass == CLASS_MIRROR_MASTER) || (creature_ptr->pclass == CLASS_BLUE_MAGE)) {
         levels = creature_ptr->lev;
-    } else {
+    }
+    else {
         if (mp_ptr->spell_first > creature_ptr->lev) {
             creature_ptr->msp = 0;
             creature_ptr->redraw |= (PR_MANA);
@@ -913,7 +916,8 @@ static void calc_mana(player_type *creature_ptr)
         msp = (adj_mag_mana[creature_ptr->stat_ind[mp_ptr->spell_stat]] + 10) * 2;
         if (msp)
             msp += (msp * rp_ptr->r_adj[mp_ptr->spell_stat] / 20);
-    } else {
+    }
+    else {
         msp = adj_mag_mana[creature_ptr->stat_ind[mp_ptr->spell_stat]] * (levels + 3) / 4;
         if (msp)
             msp++;
@@ -930,7 +934,7 @@ static void calc_mana(player_type *creature_ptr)
     if (mp_ptr->spell_xtra & MAGIC_GLOVE_REDUCE_MANA) {
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         creature_ptr->cumber_glove = FALSE;
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[INVEN_HANDS];
         object_flags(creature_ptr, o_ptr, flgs);
         if (o_ptr->k_idx && !(has_flag(flgs, TR_FREE_ACT)) && !(has_flag(flgs, TR_DEC_MANA)) && !(has_flag(flgs, TR_EASY_SPELL))
@@ -1103,13 +1107,12 @@ static void calc_mana(player_type *creature_ptr)
  * @param o_ptr 計算する射撃武器のアイテム情報参照ポインタ
  * @return 射撃倍率の値(100で1.00倍)
  */
-s16b calc_num_fire(player_type *creature_ptr, object_type *o_ptr)
-{
+s16b calc_num_fire(player_type* creature_ptr, object_type* o_ptr) {
     int extra_shots = 0;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *q_ptr;
+        object_type* q_ptr;
         q_ptr = &creature_ptr->inventory_list[i];
         if (!q_ptr->k_idx)
             continue;
@@ -1170,10 +1173,9 @@ s16b calc_num_fire(player_type *creature_ptr, object_type *o_ptr)
  * * 魔法効果tim_infraによる加算(+3)
  * * 装備がTR_INFRAフラグ持ちなら加算(+pval*1)
  */
-static ACTION_SKILL_POWER calc_intra_vision(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_intra_vision(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
@@ -1191,7 +1193,7 @@ static ACTION_SKILL_POWER calc_intra_vision(player_type *creature_ptr)
     }
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -1223,23 +1225,22 @@ static ACTION_SKILL_POWER calc_intra_vision(player_type *creature_ptr)
  * * 隠密の歌で加算(+99)
  * * 最大30、最低0に補正
  */
-static ACTION_SKILL_POWER calc_stealth(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_stealth(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
 
     pow = 1 + tmp_rp_ptr->r_stl + c_ptr->c_stl + a_ptr->a_stl;
     pow += (c_ptr->x_stl * creature_ptr->lev / 10);
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -1269,7 +1270,8 @@ static ACTION_SKILL_POWER calc_stealth(player_type *creature_ptr)
 
     if (creature_ptr->pclass == CLASS_NINJA && heavy_armor(creature_ptr)) {
         pow -= (creature_ptr->lev) / 10;
-    } else if ((!creature_ptr->inventory_list[INVEN_RARM].k_idx || has_right_hand_weapon(creature_ptr))
+    }
+    else if ((!creature_ptr->inventory_list[INVEN_RARM].k_idx || has_right_hand_weapon(creature_ptr))
         && (!creature_ptr->inventory_list[INVEN_LARM].k_idx || has_left_hand_weapon(creature_ptr))) {
         pow += (creature_ptr->lev) / 10;
     }
@@ -1295,17 +1297,16 @@ static ACTION_SKILL_POWER calc_stealth(player_type *creature_ptr)
  * * 器用さに応じたadj_dex_disテーブルによる加算
  * * 知力に応じたadj_int_disテーブルによる加算
  */
-static ACTION_SKILL_POWER calc_disarming(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_disarming(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
 
     pow = tmp_rp_ptr->r_dis + c_ptr->c_dis + a_ptr->a_dis;
     pow += ((cp_ptr->x_dis * creature_ptr->lev / 10) + (ap_ptr->a_dis * creature_ptr->lev / 50));
@@ -1325,23 +1326,22 @@ static ACTION_SKILL_POWER calc_disarming(player_type *creature_ptr)
  * * 知力に応じたadj_int_devテーブルによる加算
  * * 狂戦士化による減算(-20)
  */
-static ACTION_SKILL_POWER calc_device_ability(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_device_ability(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
 
     pow = tmp_rp_ptr->r_dev + c_ptr->c_dev + a_ptr->a_dev;
     pow += ((c_ptr->x_dev * creature_ptr->lev / 10) + (ap_ptr->a_dev * creature_ptr->lev / 50));
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -1374,17 +1374,16 @@ static ACTION_SKILL_POWER calc_device_ability(player_type *creature_ptr)
  * * 生命の「究極の耐性」や regist_magic,magicdef持ちなら大なり上書き(95+レベル未満ならその値に上書き)
  * * 呪いのdown_savingがかかっているなら半減
  */
-static ACTION_SKILL_POWER calc_saving_throw(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_saving_throw(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
 
     pow = tmp_rp_ptr->r_sav + c_ptr->c_sav + a_ptr->a_sav;
     pow += ((cp_ptr->x_sav * creature_ptr->lev / 10) + (ap_ptr->a_sav * creature_ptr->lev / 50));
@@ -1423,23 +1422,22 @@ static ACTION_SKILL_POWER calc_saving_throw(player_type *creature_ptr)
  * * 狂戦士化による減算(-15)
  * * 変異(MUT3_XTRA_EYES)による加算(+15)
  */
-static ACTION_SKILL_POWER calc_search(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_search(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
 
     pow = tmp_rp_ptr->r_srh + c_ptr->c_srh + a_ptr->a_srh;
     pow += (c_ptr->x_srh * creature_ptr->lev / 10);
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -1471,23 +1469,22 @@ static ACTION_SKILL_POWER calc_search(player_type *creature_ptr)
  * * 狂戦士化による減算(-15)
  * * 変異(MUT3_XTRA_EYES)による加算(+15)
  */
-static ACTION_SKILL_POWER calc_search_freq(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_search_freq(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
 
     pow = tmp_rp_ptr->r_fos + c_ptr->c_fos + a_ptr->a_fos;
     pow += (c_ptr->x_fos * creature_ptr->lev / 10);
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -1515,12 +1512,11 @@ static ACTION_SKILL_POWER calc_search_freq(player_type *creature_ptr)
  * @details
  * * 種族/職業/性格による加算とレベルによる追加加算
  */
-static ACTION_SKILL_POWER calc_to_hit_melee(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_to_hit_melee(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_race* tmp_rp_ptr;
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
@@ -1539,12 +1535,11 @@ static ACTION_SKILL_POWER calc_to_hit_melee(player_type *creature_ptr)
  * @details
  * * 種族/職業/性格による加算とレベルによる追加加算
  */
-static ACTION_SKILL_POWER calc_to_hit_shoot(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_to_hit_shoot(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_race* tmp_rp_ptr;
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
@@ -1564,12 +1559,11 @@ static ACTION_SKILL_POWER calc_to_hit_shoot(player_type *creature_ptr)
  * * 種族/職業/性格による加算とレベルによる追加加算
  * * 狂戦士による減算(-20)
  */
-static ACTION_SKILL_POWER calc_to_hit_throw(player_type *creature_ptr)
-{
+static ACTION_SKILL_POWER calc_to_hit_throw(player_type* creature_ptr) {
     ACTION_SKILL_POWER pow;
-    const player_race *tmp_rp_ptr;
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_race* tmp_rp_ptr;
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
 
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
@@ -1599,9 +1593,8 @@ static ACTION_SKILL_POWER calc_to_hit_throw(player_type *creature_ptr)
  * * 武器重量によるプラス修正
  * * 最終算出値に1を保証
  */
-static ACTION_SKILL_POWER calc_skill_dig(player_type *creature_ptr)
-{
-    object_type *o_ptr;
+static ACTION_SKILL_POWER calc_skill_dig(player_type* creature_ptr) {
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
 
     ACTION_SKILL_POWER pow;
@@ -1646,15 +1639,13 @@ static ACTION_SKILL_POWER calc_skill_dig(player_type *creature_ptr)
     return pow;
 }
 
-static bool is_martial_arts_mode(player_type *creature_ptr)
-{
+static bool is_martial_arts_mode(player_type* creature_ptr) {
     return ((creature_ptr->pclass == CLASS_MONK) || (creature_ptr->pclass == CLASS_FORCETRAINER) || (creature_ptr->pclass == CLASS_BERSERKER))
         && (empty_hands(creature_ptr, TRUE) & EMPTY_HAND_RARM) && !has_left_hand_weapon(creature_ptr);
 }
 
-static s16b calc_num_blow(player_type *creature_ptr, int i)
-{
-    object_type *o_ptr;
+static s16b calc_num_blow(player_type* creature_ptr, int i) {
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     s16b num_blow = 0;
 
@@ -1663,7 +1654,8 @@ static s16b calc_num_blow(player_type *creature_ptr, int i)
     creature_ptr->heavy_wield[i] = FALSE;
     if (!has_melee_weapon(creature_ptr, INVEN_RARM + i)) {
         num_blow = 1;
-    } else {
+    }
+    else {
         if (calc_weapon_weight_limit(creature_ptr) < o_ptr->weight / 10) {
             creature_ptr->heavy_wield[i] = TRUE;
         }
@@ -1747,7 +1739,8 @@ static s16b calc_num_blow(player_type *creature_ptr, int i)
                 creature_ptr->to_d[i] += current_ki / 5;
                 creature_ptr->dis_to_d[i] += current_ki / 5;
             }
-        } else {
+        }
+        else {
             if (blow_base > 12)
                 num_blow++;
             if (blow_base > 22)
@@ -1775,7 +1768,8 @@ static s16b calc_num_blow(player_type *creature_ptr, int i)
                 num_blow--;
             if (num_blow < 0)
                 num_blow = 0;
-        } else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
+        }
+        else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
             creature_ptr->to_h[i] -= (creature_ptr->lev / 3);
             creature_ptr->to_d[i] -= (creature_ptr->lev / 6);
 
@@ -1813,16 +1807,15 @@ static s16b calc_num_blow(player_type *creature_ptr, int i)
  * * 変異MUT3_PUNYで減算(-4)
  * * ネオ・つよしスペシャル中で加算(+4)
  */
-static s16b calc_strength_addition(player_type *creature_ptr)
-{
+static s16b calc_strength_addition(player_type* creature_ptr) {
     s16b pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
     pow = tmp_rp_ptr->r_adj[A_STR] + c_ptr->c_adj[A_STR] + a_ptr->a_adj[A_STR];
 
     if (!creature_ptr->mimic_form && creature_ptr->prace == RACE_ENT) {
@@ -1835,7 +1828,7 @@ static s16b calc_strength_addition(player_type *creature_ptr)
     }
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -1861,7 +1854,8 @@ static s16b calc_strength_addition(player_type *creature_ptr)
 
     if (creature_ptr->special_defense & KAMAE_BYAKKO) {
         pow += 2;
-    } else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
+    }
+    else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
         pow -= 2;
     }
 
@@ -1897,20 +1891,19 @@ static s16b calc_strength_addition(player_type *creature_ptr)
  * * 変異MUT3_HYPER_INTで加算(+4)
  * * 変異MUT3_MORONICで減算(-4)
  */
-s16b calc_intelligence_addition(player_type *creature_ptr)
-{
+s16b calc_intelligence_addition(player_type* creature_ptr) {
     s16b pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
     pow = tmp_rp_ptr->r_adj[A_INT] + c_ptr->c_adj[A_INT] + a_ptr->a_adj[A_INT];
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -1927,7 +1920,8 @@ s16b calc_intelligence_addition(player_type *creature_ptr)
 
     if (creature_ptr->special_defense & KAMAE_GENBU) {
         pow -= 1;
-    } else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
+    }
+    else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
         pow += 1;
     }
 
@@ -1959,20 +1953,19 @@ s16b calc_intelligence_addition(player_type *creature_ptr)
  * * 変異MUT3_HYPER_INTで加算(+4)
  * * 変異MUT3_MORONICで減算(-4)
  */
-static s16b calc_wisdom_addition(player_type *creature_ptr)
-{
+static s16b calc_wisdom_addition(player_type* creature_ptr) {
     s16b pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
     pow = tmp_rp_ptr->r_adj[A_WIS] + c_ptr->c_adj[A_WIS] + a_ptr->a_adj[A_WIS];
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -1989,7 +1982,8 @@ static s16b calc_wisdom_addition(player_type *creature_ptr)
 
     if (creature_ptr->special_defense & KAMAE_GENBU) {
         pow -= 1;
-    } else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
+    }
+    else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
         pow += 1;
     }
 
@@ -2024,16 +2018,15 @@ static s16b calc_wisdom_addition(player_type *creature_ptr)
  * * 変異MUT3_LIMBERで加算(+3)
  * * 変異MUT3_ARTHRITISで減算(-3)
  */
-static s16b calc_dexterity_addition(player_type *creature_ptr)
-{
+static s16b calc_dexterity_addition(player_type* creature_ptr) {
     s16b pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
     pow = tmp_rp_ptr->r_adj[A_DEX] + c_ptr->c_adj[A_DEX] + a_ptr->a_adj[A_DEX];
 
     if (!creature_ptr->mimic_form && creature_ptr->prace == RACE_ENT) {
@@ -2046,7 +2039,7 @@ static s16b calc_dexterity_addition(player_type *creature_ptr)
     }
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -2069,9 +2062,11 @@ static s16b calc_dexterity_addition(player_type *creature_ptr)
 
     if (creature_ptr->special_defense & KAMAE_BYAKKO) {
         pow += 2;
-    } else if (creature_ptr->special_defense & KAMAE_GENBU) {
+    }
+    else if (creature_ptr->special_defense & KAMAE_GENBU) {
         pow -= 2;
-    } else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
+    }
+    else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
         pow += 2;
     }
 
@@ -2109,16 +2104,15 @@ static s16b calc_dexterity_addition(player_type *creature_ptr)
  * * 変異MUT3_FLESH_ROTで減算(-2)
  * * ネオ・つよしスペシャル中で加算(+4)
  */
-static s16b calc_constitution_addition(player_type *creature_ptr)
-{
+static s16b calc_constitution_addition(player_type* creature_ptr) {
     s16b pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
     pow = tmp_rp_ptr->r_adj[A_CON] + c_ptr->c_adj[A_CON] + a_ptr->a_adj[A_CON];
 
     if (!creature_ptr->mimic_form && creature_ptr->prace == RACE_ENT) {
@@ -2131,7 +2125,7 @@ static s16b calc_constitution_addition(player_type *creature_ptr)
     }
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -2153,9 +2147,11 @@ static s16b calc_constitution_addition(player_type *creature_ptr)
 
     if (creature_ptr->special_defense & KAMAE_BYAKKO) {
         pow -= 3;
-    } else if (creature_ptr->special_defense & KAMAE_GENBU) {
+    }
+    else if (creature_ptr->special_defense & KAMAE_GENBU) {
         pow += 3;
-    } else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
+    }
+    else if (creature_ptr->special_defense & KAMAE_SUZAKU) {
         pow -= 2;
     }
 
@@ -2200,20 +2196,19 @@ static s16b calc_constitution_addition(player_type *creature_ptr)
  * * 変異MUT3_SCALESで減算(-1)
  * * 変異MUT3_ILL_NORMで0固定(後で個体値のみ上書きを行う)
  */
-static s16b calc_charisma_addition(player_type *creature_ptr)
-{
+static s16b calc_charisma_addition(player_type* creature_ptr) {
     s16b pow;
-    const player_race *tmp_rp_ptr;
+    const player_race* tmp_rp_ptr;
     if (creature_ptr->mimic_form)
         tmp_rp_ptr = &mimic_info[creature_ptr->mimic_form];
     else
         tmp_rp_ptr = &race_info[creature_ptr->prace];
-    const player_class *c_ptr = &class_info[creature_ptr->pclass];
-    const player_personality *a_ptr = &personality_info[creature_ptr->pseikaku];
+    const player_class* c_ptr = &class_info[creature_ptr->pclass];
+    const player_personality* a_ptr = &personality_info[creature_ptr->pseikaku];
     pow = tmp_rp_ptr->r_adj[A_CHR] + c_ptr->c_adj[A_CHR] + a_ptr->a_adj[A_CHR];
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -2262,8 +2257,7 @@ static s16b calc_charisma_addition(player_type *creature_ptr)
  * * 性格チャージマンなら加算(+5)
  * * 装備品にTRC_LOW_MAGICがあるなら加算(軽い呪いなら+3/重い呪いなら+10)
  */
-static s16b calc_to_magic_chance(player_type *creature_ptr)
-{
+static s16b calc_to_magic_chance(player_type* creature_ptr) {
     s16b chance = 0;
 
     if (creature_ptr->pseikaku == PERSONALITY_LAZY)
@@ -2276,7 +2270,7 @@ static s16b calc_to_magic_chance(player_type *creature_ptr)
         chance += 5;
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -2285,7 +2279,8 @@ static s16b calc_to_magic_chance(player_type *creature_ptr)
         if (o_ptr->curse_flags & TRC_LOW_MAGIC) {
             if (o_ptr->curse_flags & TRC_HEAVY_CURSE) {
                 chance += 10;
-            } else {
+            }
+            else {
                 chance += 3;
             }
         }
@@ -2293,14 +2288,13 @@ static s16b calc_to_magic_chance(player_type *creature_ptr)
     return chance;
 }
 
-static ARMOUR_CLASS calc_base_ac(player_type *creature_ptr)
-{
+static ARMOUR_CLASS calc_base_ac(player_type* creature_ptr) {
     ARMOUR_CLASS ac = 0;
     if (creature_ptr->yoiyami)
         return 0;
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
@@ -2315,8 +2309,7 @@ static ARMOUR_CLASS calc_base_ac(player_type *creature_ptr)
     return ac;
 }
 
-static ARMOUR_CLASS calc_to_ac(player_type *creature_ptr, bool is_true_value)
-{
+static ARMOUR_CLASS calc_to_ac(player_type* creature_ptr, bool is_true_value) {
     ARMOUR_CLASS ac = 0;
     if (creature_ptr->yoiyami)
         return 0;
@@ -2344,7 +2337,7 @@ static ARMOUR_CLASS calc_to_ac(player_type *creature_ptr, bool is_true_value)
     }
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
@@ -2355,7 +2348,8 @@ static ARMOUR_CLASS calc_to_ac(player_type *creature_ptr, bool is_true_value)
             if (o_ptr->curse_flags & TRC_HEAVY_CURSE) {
                 if (is_true_value || object_is_fully_known(o_ptr))
                     ac -= 30;
-            } else {
+            }
+            else {
                 if (is_true_value || object_is_fully_known(o_ptr))
                     ac -= 10;
             }
@@ -2417,7 +2411,7 @@ static ARMOUR_CLASS calc_to_ac(player_type *creature_ptr, bool is_true_value)
         }
 
         for (int i = INVEN_RARM; i <= INVEN_FEET; i++) {
-            object_type *o_ptr = &creature_ptr->inventory_list[i];
+            object_type* o_ptr = &creature_ptr->inventory_list[i];
             if (!o_ptr->k_idx)
                 continue;
             if (!object_is_armour(creature_ptr, o_ptr))
@@ -2435,15 +2429,18 @@ static ARMOUR_CLASS calc_to_ac(player_type *creature_ptr, bool is_true_value)
 
     if (creature_ptr->special_defense & KAMAE_BYAKKO) {
         ac -= 40;
-    } else if (creature_ptr->special_defense & KAMAE_SEIRYU) {
+    }
+    else if (creature_ptr->special_defense & KAMAE_SEIRYU) {
         ac -= 50;
-    } else if (creature_ptr->special_defense & KATA_KOUKIJIN) {
+    }
+    else if (creature_ptr->special_defense & KATA_KOUKIJIN) {
         ac -= 50;
     }
 
     if (creature_ptr->ult_res || (creature_ptr->special_defense & KATA_MUSOU)) {
         ac += 100;
-    } else if (creature_ptr->tsubureru || creature_ptr->shield || creature_ptr->magicdef) {
+    }
+    else if (creature_ptr->tsubureru || creature_ptr->shield || creature_ptr->magicdef) {
         ac += 50;
     }
 
@@ -2497,10 +2494,9 @@ static ARMOUR_CLASS calc_to_ac(player_type *creature_ptr, bool is_true_value)
  * * 光速移動中かこの時点で+99を超えていたら+99にキャップ
  * * -99未満なら-99にキャップ
  */
-static s16b calc_speed(player_type *creature_ptr)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
-    feature_type *f_ptr = &f_info[floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].feat];
+static s16b calc_speed(player_type* creature_ptr) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
+    feature_type* f_ptr = &f_info[floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].feat];
 
     s16b pow = 110;
 
@@ -2526,7 +2522,7 @@ static s16b calc_speed(player_type *creature_ptr)
         }
 
         for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-            object_type *o_ptr = &creature_ptr->inventory_list[i];
+            object_type* o_ptr = &creature_ptr->inventory_list[i];
             BIT_FLAGS flgs[TR_FLAG_SIZE];
             object_flags(creature_ptr, o_ptr, flgs);
 
@@ -2539,7 +2535,8 @@ static s16b calc_speed(player_type *creature_ptr)
         if (creature_ptr->pclass == CLASS_NINJA) {
             if (heavy_armor(creature_ptr)) {
                 pow -= (creature_ptr->lev) / 10;
-            } else if ((!creature_ptr->inventory_list[INVEN_RARM].k_idx || has_right_hand_weapon(creature_ptr))
+            }
+            else if ((!creature_ptr->inventory_list[INVEN_RARM].k_idx || has_right_hand_weapon(creature_ptr))
                 && (!creature_ptr->inventory_list[INVEN_LARM].k_idx || has_left_hand_weapon(creature_ptr))) {
                 pow += 3;
                 if (!(is_specific_player_race(creature_ptr, RACE_KLACKON) || is_specific_player_race(creature_ptr, RACE_SPRITE)
@@ -2608,7 +2605,8 @@ static s16b calc_speed(player_type *creature_ptr)
         if (creature_ptr->prace == RACE_MERFOLK) {
             if (has_flag(f_ptr->flags, FF_WATER)) {
                 pow += (2 + creature_ptr->lev / 10);
-            } else if (!creature_ptr->levitation) {
+            }
+            else if (!creature_ptr->levitation) {
                 pow -= 2;
             }
         }
@@ -2622,17 +2620,18 @@ static s16b calc_speed(player_type *creature_ptr)
         count = (int)calc_weight_limit(creature_ptr);
         if (j > count)
             pow -= ((j - count) / (count / 5));
-
-    } else {
-        monster_type *riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
-        monster_race *riding_r_ptr = &r_info[riding_m_ptr->r_idx];
+    }
+    else {
+        monster_type* riding_m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+        monster_race* riding_r_ptr = &r_info[riding_m_ptr->r_idx];
         SPEED speed = riding_m_ptr->mspeed;
 
         if (riding_m_ptr->mspeed > 110) {
             pow = 110 + (s16b)((speed - 110) * (creature_ptr->skill_exp[GINOU_RIDING] * 3 + creature_ptr->lev * 160L - 10000L) / (22000L));
             if (pow < 110)
                 pow = 110;
-        } else {
+        }
+        else {
             pow = speed;
         }
 
@@ -2680,8 +2679,7 @@ static s16b calc_speed(player_type *creature_ptr)
  * * 武蔵セットによる軽減
  * * 竿上武器による増加
  */
-s16b calc_double_weapon_penalty(player_type *creature_ptr, INVENTORY_IDX slot)
-{
+s16b calc_double_weapon_penalty(player_type* creature_ptr, INVENTORY_IDX slot) {
     int penalty = 0;
     if (has_melee_weapon(creature_ptr, INVEN_RARM) && has_melee_weapon(creature_ptr, INVEN_LARM)) {
         penalty = ((100 - creature_ptr->skill_exp[GINOU_NITOURYU] / 160) - (130 - creature_ptr->inventory_list[slot].weight) / 8);
@@ -2691,13 +2689,15 @@ s16b calc_double_weapon_penalty(player_type *creature_ptr, INVENTORY_IDX slot)
         if (creature_ptr->easy_2weapon) {
             if (penalty > 0)
                 penalty /= 2;
-        } else if ((creature_ptr->inventory_list[INVEN_LARM].tval == TV_SWORD)
+        }
+        else if ((creature_ptr->inventory_list[INVEN_LARM].tval == TV_SWORD)
             && ((creature_ptr->inventory_list[INVEN_LARM].sval == SV_MAIN_GAUCHE) || (creature_ptr->inventory_list[INVEN_LARM].sval == SV_WAKIZASHI))) {
             penalty = MAX(0, penalty - 10);
         }
         if ((creature_ptr->inventory_list[INVEN_RARM].name1 == ART_MUSASI_KATANA) && (creature_ptr->inventory_list[INVEN_LARM].name1 == ART_MUSASI_WAKIZASI)) {
             penalty = MIN(0, penalty);
-        } else {
+        }
+        else {
             if ((creature_ptr->inventory_list[INVEN_RARM].name1 == ART_MUSASI_KATANA) && (penalty > 0))
                 penalty /= 2;
             if ((creature_ptr->inventory_list[INVEN_LARM].name1 == ART_MUSASI_WAKIZASI) && (penalty > 0))
@@ -2710,8 +2710,7 @@ s16b calc_double_weapon_penalty(player_type *creature_ptr, INVENTORY_IDX slot)
     return (s16b)penalty;
 }
 
-static void calc_ind_status(player_type *creature_ptr, int status)
-{
+static void calc_ind_status(player_type* creature_ptr, int status) {
     int ind;
     if (creature_ptr->stat_use[status] <= 18)
         ind = (creature_ptr->stat_use[status] - 3);
@@ -2726,15 +2725,18 @@ static void calc_ind_status(player_type *creature_ptr, int status)
     creature_ptr->stat_ind[status] = (s16b)ind;
     if (status == A_CON) {
         creature_ptr->update |= (PU_HP);
-    } else if (status == A_INT) {
+    }
+    else if (status == A_INT) {
         if (mp_ptr->spell_stat == A_INT) {
             creature_ptr->update |= (PU_MANA | PU_SPELLS);
         }
-    } else if (status == A_WIS) {
+    }
+    else if (status == A_WIS) {
         if (mp_ptr->spell_stat == A_WIS) {
             creature_ptr->update |= (PU_MANA | PU_SPELLS);
         }
-    } else if (status == A_CHR) {
+    }
+    else if (status == A_CHR) {
         if (mp_ptr->spell_stat == A_CHR) {
             creature_ptr->update |= (PU_MANA | PU_SPELLS);
         }
@@ -2743,8 +2745,7 @@ static void calc_ind_status(player_type *creature_ptr, int status)
     creature_ptr->window |= (PW_PLAYER);
 }
 
-static void calc_use_status(player_type *creature_ptr, int status)
-{
+static void calc_use_status(player_type* creature_ptr, int status) {
     int use = modify_stat_value(creature_ptr->stat_cur[status], creature_ptr->stat_add[status]);
 
     if ((status == A_CHR) && (creature_ptr->muta3 & MUT3_ILL_NORM)) {
@@ -2761,8 +2762,7 @@ static void calc_use_status(player_type *creature_ptr, int status)
     }
 }
 
-static void calc_top_status(player_type *creature_ptr, int status)
-{
+static void calc_top_status(player_type* creature_ptr, int status) {
     int top = modify_stat_value(creature_ptr->stat_max[status], creature_ptr->stat_add[status]);
 
     if (creature_ptr->stat_top[status] != top) {
@@ -2772,9 +2772,8 @@ static void calc_top_status(player_type *creature_ptr, int status)
     }
 }
 
-static s16b calc_riding_bow_penalty(player_type *creature_ptr)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+static s16b calc_riding_bow_penalty(player_type* creature_ptr) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (!creature_ptr->riding)
         return 0;
 
@@ -2799,7 +2798,8 @@ static s16b calc_riding_bow_penalty(player_type *creature_ptr)
     if ((creature_ptr->pclass == CLASS_BEASTMASTER) || (creature_ptr->pclass == CLASS_CAVALRY)) {
         if (creature_ptr->tval_ammo != TV_ARROW)
             penalty = 5;
-    } else {
+    }
+    else {
         penalty = r_info[floor_ptr->m_list[creature_ptr->riding].r_idx].level - creature_ptr->skill_exp[GINOU_RIDING] / 80;
         penalty += 30;
         if (penalty < 30)
@@ -2812,15 +2812,16 @@ static s16b calc_riding_bow_penalty(player_type *creature_ptr)
     return penalty;
 }
 
-void put_equipment_warning(player_type *creature_ptr)
-{
+void put_equipment_warning(player_type* creature_ptr) {
     bool heavy_shoot = is_heavy_shoot(creature_ptr, &creature_ptr->inventory_list[INVEN_BOW]);
     if (creature_ptr->old_heavy_shoot != heavy_shoot) {
         if (heavy_shoot) {
             msg_print(_("こんな重い弓を装備しているのは大変だ。", "You have trouble wielding such a heavy bow."));
-        } else if (creature_ptr->inventory_list[INVEN_BOW].k_idx) {
+        }
+        else if (creature_ptr->inventory_list[INVEN_BOW].k_idx) {
             msg_print(_("この弓なら装備していても辛くない。", "You have no trouble wielding your bow."));
-        } else {
+        }
+        else {
             msg_print(_("重い弓を装備からはずして体が楽になった。", "You feel relieved to put down your heavy bow."));
         }
         creature_ptr->old_heavy_shoot = heavy_shoot;
@@ -2830,11 +2831,14 @@ void put_equipment_warning(player_type *creature_ptr)
         if (creature_ptr->old_heavy_wield[i] != creature_ptr->heavy_wield[i]) {
             if (creature_ptr->heavy_wield[i]) {
                 msg_print(_("こんな重い武器を装備しているのは大変だ。", "You have trouble wielding such a heavy weapon."));
-            } else if (has_melee_weapon(creature_ptr, INVEN_RARM + i)) {
+            }
+            else if (has_melee_weapon(creature_ptr, INVEN_RARM + i)) {
                 msg_print(_("これなら装備していても辛くない。", "You have no trouble wielding your weapon."));
-            } else if (creature_ptr->heavy_wield[1 - i]) {
+            }
+            else if (creature_ptr->heavy_wield[1 - i]) {
                 msg_print(_("まだ武器が重い。", "You have still trouble wielding a heavy weapon."));
-            } else {
+            }
+            else {
                 msg_print(_("重い武器を装備からはずして体が楽になった。", "You feel relieved to put down your heavy weapon."));
             }
 
@@ -2844,9 +2848,11 @@ void put_equipment_warning(player_type *creature_ptr)
         if (creature_ptr->old_riding_wield[i] != creature_ptr->riding_wield[i]) {
             if (creature_ptr->riding_wield[i]) {
                 msg_print(_("この武器は乗馬中に使うにはむかないようだ。", "This weapon is not suitable for use while riding."));
-            } else if (!creature_ptr->riding) {
+            }
+            else if (!creature_ptr->riding) {
                 msg_print(_("この武器は徒歩で使いやすい。", "This weapon is suitable for use on foot."));
-            } else if (has_melee_weapon(creature_ptr, INVEN_RARM + i)) {
+            }
+            else if (has_melee_weapon(creature_ptr, INVEN_RARM + i)) {
                 msg_print(_("これなら乗馬中にぴったりだ。", "This weapon is suitable for use while riding."));
             }
 
@@ -2861,9 +2867,11 @@ void put_equipment_warning(player_type *creature_ptr)
             if (current_world_ptr->is_loading_now) {
                 chg_virtue(creature_ptr, V_FAITH, -1);
             }
-        } else if (has_melee_weapon(creature_ptr, INVEN_RARM + i)) {
+        }
+        else if (has_melee_weapon(creature_ptr, INVEN_RARM + i)) {
             msg_print(_("今の装備は自分にふさわしい気がする。", "You feel comfortable with your weapon."));
-        } else {
+        }
+        else {
             msg_print(_("装備をはずしたら随分と気が楽になった。", "You feel more comfortable after removing your weapon."));
         }
 
@@ -2877,7 +2885,8 @@ void put_equipment_warning(player_type *creature_ptr)
 #else
             msg_print("You are using both hand for fighting, and you can't control the pet you're riding.");
 #endif
-        } else {
+        }
+        else {
 #ifdef JP
             msg_format("%s馬を操れるようになった。", (empty_hands(creature_ptr, FALSE) == EMPTY_HAND_NONE) ? "手が空いて" : "");
 #else
@@ -2895,7 +2904,8 @@ void put_equipment_warning(player_type *creature_ptr)
             if (current_world_ptr->is_loading_now) {
                 chg_virtue(creature_ptr, V_HARMONY, -1);
             }
-        } else {
+        }
+        else {
             msg_print(_("バランスがとれるようになった。", "You regain your balance."));
         }
 
@@ -2903,9 +2913,8 @@ void put_equipment_warning(player_type *creature_ptr)
     }
 }
 
-static s16b calc_to_damage(player_type *creature_ptr, INVENTORY_IDX slot, bool is_true_value)
-{
-    object_type *o_ptr = &creature_ptr->inventory_list[slot];
+static s16b calc_to_damage(player_type* creature_ptr, INVENTORY_IDX slot, bool is_true_value) {
+    object_type* o_ptr = &creature_ptr->inventory_list[slot];
     int id = slot - INVEN_RARM;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(creature_ptr, o_ptr, flgs);
@@ -2919,21 +2928,25 @@ static s16b calc_to_damage(player_type *creature_ptr, INVENTORY_IDX slot, bool i
 
     if (creature_ptr->stun > 50) {
         damage -= 20;
-    } else if (creature_ptr->stun) {
+    }
+    else if (creature_ptr->stun) {
         damage -= 5;
     }
 
     if ((creature_ptr->pclass == CLASS_PRIEST) && (!(has_flag(flgs, TR_BLESSED))) && ((o_ptr->tval == TV_SWORD) || (o_ptr->tval == TV_POLEARM))) {
         damage -= 2;
-    } else if (creature_ptr->pclass == CLASS_BERSERKER) {
+    }
+    else if (creature_ptr->pclass == CLASS_BERSERKER) {
         damage += creature_ptr->lev / 6;
         if (((id == 0) && !has_left_hand_weapon(creature_ptr)) || has_two_handed_weapons(creature_ptr)) {
             damage += creature_ptr->lev / 6;
         }
-    } else if (creature_ptr->pclass == CLASS_SORCERER) {
+    }
+    else if (creature_ptr->pclass == CLASS_SORCERER) {
         if (!((o_ptr->tval == TV_HAFTED) && ((o_ptr->sval == SV_WIZSTAFF) || (o_ptr->sval == SV_NAMAKE_HAMMER)))) {
             damage -= 200;
-        } else {
+        }
+        else {
             damage -= 10;
         }
     }
@@ -2970,12 +2983,14 @@ static s16b calc_to_damage(player_type *creature_ptr, INVENTORY_IDX slot, bool i
 
         if ((i == INVEN_LEFT || i == INVEN_RIGHT) && !has_two_handed_weapons(creature_ptr)) {
             damage += (s16b)bonus_to_d;
-        } else if (has_right_hand_weapon(creature_ptr) && has_left_hand_weapon(creature_ptr)) {
+        }
+        else if (has_right_hand_weapon(creature_ptr) && has_left_hand_weapon(creature_ptr)) {
             if (id == 0)
                 damage += (bonus_to_d > 0) ? (bonus_to_d + 1) / 2 : bonus_to_d;
             if (id == 1)
                 damage += (bonus_to_d > 0) ? bonus_to_d / 2 : bonus_to_d;
-        } else if (id == get_default_hand(creature_ptr)) {
+        }
+        else if (id == get_default_hand(creature_ptr)) {
             damage += (s16b)bonus_to_d;
         }
     }
@@ -3001,8 +3016,7 @@ static s16b calc_to_damage(player_type *creature_ptr, INVENTORY_IDX slot, bool i
  * @details
  * 'slot' MUST be INVEN_RARM or INVEM_LARM.
  */
-static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_true_value)
-{
+static s16b calc_to_hit(player_type* creature_ptr, INVENTORY_IDX slot, bool is_true_value) {
     s16b hit = 0;
 
     /* Base bonuses */
@@ -3024,7 +3038,8 @@ static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_t
 
     if (creature_ptr->stun > 50) {
         hit -= 20;
-    } else if (creature_ptr->stun) {
+    }
+    else if (creature_ptr->stun) {
         hit -= 5;
     }
 
@@ -3048,7 +3063,7 @@ static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_t
 
     /* Bonuses and penalties by weapon */
     if (has_melee_weapon(creature_ptr, slot)) {
-        object_type *o_ptr = &creature_ptr->inventory_list[slot];
+        object_type* o_ptr = &creature_ptr->inventory_list[slot];
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         object_flags(creature_ptr, o_ptr, flgs);
 
@@ -3067,7 +3082,8 @@ static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_t
         if ((object_is_fully_known(o_ptr) || is_true_value) && o_ptr->curse_flags & TRC_LOW_MELEE) {
             if (o_ptr->curse_flags & TRC_HEAVY_CURSE) {
                 hit -= 15;
-            } else {
+            }
+            else {
                 hit -= 5;
             }
         }
@@ -3085,7 +3101,8 @@ static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_t
             int penalty;
             if ((creature_ptr->pclass == CLASS_BEASTMASTER) || (creature_ptr->pclass == CLASS_CAVALRY)) {
                 penalty = 5;
-            } else {
+            }
+            else {
                 penalty = r_info[creature_ptr->current_floor_ptr->m_list[creature_ptr->riding].r_idx].level - creature_ptr->skill_exp[GINOU_RIDING] / 80;
                 penalty += 30;
                 if (penalty < 30)
@@ -3097,15 +3114,18 @@ static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_t
         /* Class penalties */
         if ((creature_ptr->pclass == CLASS_PRIEST) && (!(has_flag(flgs, TR_BLESSED))) && ((o_ptr->tval == TV_SWORD) || (o_ptr->tval == TV_POLEARM))) {
             hit -= 2;
-        } else if (creature_ptr->pclass == CLASS_BERSERKER) {
+        }
+        else if (creature_ptr->pclass == CLASS_BERSERKER) {
             hit += creature_ptr->lev / 5;
             if (((id == 0) && !has_left_hand_weapon(creature_ptr)) || has_two_handed_weapons(creature_ptr)) {
                 hit += creature_ptr->lev / 5;
             }
-        } else if (creature_ptr->pclass == CLASS_SORCERER) {
+        }
+        else if (creature_ptr->pclass == CLASS_SORCERER) {
             if (!((o_ptr->tval == TV_HAFTED) && ((o_ptr->sval == SV_WIZSTAFF) || (o_ptr->sval == SV_NAMAKE_HAMMER)))) {
                 hit -= 200;
-            } else {
+            }
+            else {
                 hit -= 30;
             }
         }
@@ -3133,7 +3153,7 @@ static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_t
 
     /* Bonuses from inventory */
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
 
         /* Ignore empty hands, handed weapons, bows and capture balls */
         if (!o_ptr->k_idx || o_ptr->tval == TV_CAPTURE || (i == INVEN_RARM && has_melee_weapon(creature_ptr, i))
@@ -3181,15 +3201,14 @@ static s16b calc_to_hit(player_type *creature_ptr, INVENTORY_IDX slot, bool is_t
     return hit;
 }
 
-static s16b calc_to_hit_bow(player_type *creature_ptr, bool is_true_value)
-{
+static s16b calc_to_hit_bow(player_type* creature_ptr, bool is_true_value) {
     s16b pow = 0;
 
     pow += ((int)(adj_dex_th[creature_ptr->stat_ind[A_DEX]]) - 128);
     pow += ((int)(adj_str_th[creature_ptr->stat_ind[A_STR]]) - 128);
 
     {
-        object_type *o_ptr;
+        object_type* o_ptr;
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         o_ptr = &creature_ptr->inventory_list[INVEN_BOW];
         if (o_ptr->k_idx) {
@@ -3198,7 +3217,8 @@ static s16b calc_to_hit_bow(player_type *creature_ptr, bool is_true_value)
             if (o_ptr->curse_flags & TRC_LOW_MELEE) {
                 if (o_ptr->curse_flags & TRC_HEAVY_CURSE) {
                     pow -= 15;
-                } else {
+                }
+                else {
                     pow -= 5;
                 }
             }
@@ -3207,7 +3227,8 @@ static s16b calc_to_hit_bow(player_type *creature_ptr, bool is_true_value)
 
     if (creature_ptr->stun > 50) {
         pow -= 20;
-    } else if (creature_ptr->stun) {
+    }
+    else if (creature_ptr->stun) {
         pow -= 5;
     }
 
@@ -3223,7 +3244,7 @@ static s16b calc_to_hit_bow(player_type *creature_ptr, bool is_true_value)
         pow -= 12;
     }
 
-    object_type *o_ptr = &creature_ptr->inventory_list[INVEN_BOW];
+    object_type* o_ptr = &creature_ptr->inventory_list[INVEN_BOW];
 
     if (is_heavy_shoot(creature_ptr, o_ptr)) {
         pow += 2 * (calc_weapon_weight_limit(creature_ptr) - o_ptr->weight / 10);
@@ -3261,9 +3282,8 @@ static s16b calc_to_hit_bow(player_type *creature_ptr, bool is_true_value)
     return pow;
 }
 
-static s16b calc_to_damage_misc(player_type *creature_ptr)
-{
-    object_type *o_ptr;
+static s16b calc_to_damage_misc(player_type* creature_ptr) {
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
 
     s16b to_dam = 0;
@@ -3289,7 +3309,8 @@ static s16b calc_to_damage_misc(player_type *creature_ptr)
 
     if (creature_ptr->stun > 50) {
         to_dam -= 20;
-    } else if (creature_ptr->stun) {
+    }
+    else if (creature_ptr->stun) {
         to_dam -= 5;
     }
 
@@ -3297,9 +3318,8 @@ static s16b calc_to_damage_misc(player_type *creature_ptr)
     return to_dam;
 }
 
-static s16b calc_to_hit_misc(player_type *creature_ptr)
-{
-    object_type *o_ptr;
+static s16b calc_to_hit_misc(player_type* creature_ptr) {
+    object_type* o_ptr;
     BIT_FLAGS flgs[TR_FLAG_SIZE];
 
     s16b to_hit = 0;
@@ -3333,7 +3353,8 @@ static s16b calc_to_hit_misc(player_type *creature_ptr)
 
     if (creature_ptr->stun > 50) {
         to_hit -= 20;
-    } else if (creature_ptr->stun) {
+    }
+    else if (creature_ptr->stun) {
         to_hit -= 5;
     }
 
@@ -3343,9 +3364,8 @@ static s16b calc_to_hit_misc(player_type *creature_ptr)
     return to_hit;
 }
 
-static DICE_NUMBER calc_to_weapon_dice_num(player_type *creature_ptr, INVENTORY_IDX slot)
-{
-    object_type *o_ptr = &creature_ptr->inventory_list[slot];
+static DICE_NUMBER calc_to_weapon_dice_num(player_type* creature_ptr, INVENTORY_IDX slot) {
+    object_type* o_ptr = &creature_ptr->inventory_list[slot];
     DICE_NUMBER dn = 0;
 
     if (creature_ptr->riding) {
@@ -3358,8 +3378,7 @@ static DICE_NUMBER calc_to_weapon_dice_num(player_type *creature_ptr, INVENTORY_
     return dn;
 }
 
-static DICE_NUMBER calc_to_weapon_dice_side(player_type *creature_ptr, INVENTORY_IDX slot)
-{
+static DICE_NUMBER calc_to_weapon_dice_side(player_type* creature_ptr, INVENTORY_IDX slot) {
     (void)creature_ptr; // unused
     (void)slot; // unused
     return 0;
@@ -3370,8 +3389,7 @@ static DICE_NUMBER calc_to_weapon_dice_side(player_type *creature_ptr, INVENTORY
  * Computes current weight limit.
  * @return 制限重量(ポンド)
  */
-WEIGHT calc_weight_limit(player_type *creature_ptr)
-{
+WEIGHT calc_weight_limit(player_type* creature_ptr) {
     WEIGHT i = (WEIGHT)adj_str_wgt[creature_ptr->stat_ind[A_STR]] * 50;
     if (creature_ptr->pclass == CLASS_BERSERKER)
         i = i * 3 / 2;
@@ -3383,8 +3401,7 @@ WEIGHT calc_weight_limit(player_type *creature_ptr)
  * @param i 判定する手のID(右手:INVEN_RARM 左手:INVEN_LARM)
  * @return 持っているならばTRUE
  */
-bool has_melee_weapon(player_type *creature_ptr, int slot)
-{
+bool has_melee_weapon(player_type* creature_ptr, int slot) {
     return ((creature_ptr->inventory_list[slot].k_idx) && object_is_melee_weapon(&creature_ptr->inventory_list[slot]));
 }
 
@@ -3393,8 +3410,7 @@ bool has_melee_weapon(player_type *creature_ptr, int slot)
  * @param riding_control 乗馬中により片手を必要としている状態ならばTRUEを返す。
  * @return 開いている手のビットフラグ
  */
-BIT_FLAGS16 empty_hands(player_type *creature_ptr, bool riding_control)
-{
+BIT_FLAGS16 empty_hands(player_type* creature_ptr, bool riding_control) {
     BIT_FLAGS16 status = EMPTY_HAND_NONE;
     if (!creature_ptr->inventory_list[INVEN_RARM].k_idx)
         status |= EMPTY_HAND_RARM;
@@ -3415,8 +3431,7 @@ BIT_FLAGS16 empty_hands(player_type *creature_ptr, bool riding_control)
  * @brief プレイヤーが防具重量制限のある職業時にペナルティを受ける状態にあるかどうかを返す。
  * @return ペナルティが適用されるならばTRUE。
  */
-bool heavy_armor(player_type *creature_ptr)
-{
+bool heavy_armor(player_type* creature_ptr) {
     if ((creature_ptr->pclass != CLASS_MONK) && (creature_ptr->pclass != CLASS_FORCETRAINER) && (creature_ptr->pclass != CLASS_NINJA))
         return FALSE;
 
@@ -3439,12 +3454,11 @@ bool heavy_armor(player_type *creature_ptr)
  * @return なし
  * @details 更新処理の対象はプレイヤーの能力修正/光源寿命/HP/MP/魔法の学習状態、他多数の外界の状態判定。
  */
-void update_creature(player_type *creature_ptr)
-{
+void update_creature(player_type* creature_ptr) {
     if (!creature_ptr->update)
         return;
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (creature_ptr->update & (PU_AUTODESTROY)) {
         creature_ptr->update &= ~(PU_AUTODESTROY);
         autopick_delayed_alter(creature_ptr);
@@ -3541,16 +3555,15 @@ void update_creature(player_type *creature_ptr)
  * @brief プレイヤーが魔道書を一冊も持っていないかを判定する
  * @return 魔道書を一冊も持っていないならTRUEを返す
  */
-bool player_has_no_spellbooks(player_type *creature_ptr)
-{
-    object_type *o_ptr;
+bool player_has_no_spellbooks(player_type* creature_ptr) {
+    object_type* o_ptr;
     for (int i = 0; i < INVEN_PACK; i++) {
         o_ptr = &creature_ptr->inventory_list[i];
         if (o_ptr->k_idx && check_book_realm(creature_ptr, o_ptr->tval, o_ptr->sval))
             return FALSE;
     }
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     for (int i = floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].o_idx; i; i = o_ptr->next_o_idx) {
         o_ptr = &floor_ptr->o_list[i];
         if (o_ptr->k_idx && (o_ptr->marked & OM_FOUND) && check_book_realm(creature_ptr, o_ptr->tval, o_ptr->sval))
@@ -3560,9 +3573,9 @@ bool player_has_no_spellbooks(player_type *creature_ptr)
     return TRUE;
 }
 
-void take_turn(player_type *creature_ptr, PERCENTAGE need_cost) { creature_ptr->energy_use = (ENERGY)need_cost; }
+void take_turn(player_type* creature_ptr, PERCENTAGE need_cost) { creature_ptr->energy_use = (ENERGY)need_cost; }
 
-void free_turn(player_type *creature_ptr) { creature_ptr->energy_use = 0; }
+void free_turn(player_type* creature_ptr) { creature_ptr->energy_use = 0; }
 
 /*!
  * @brief プレイヤーを指定座標に配置する / Place the player in the dungeon XXX XXX
@@ -3570,8 +3583,7 @@ void free_turn(player_type *creature_ptr) { creature_ptr->energy_use = 0; }
  * @param y 配置先Y座標
  * @return 配置に成功したらTRUE
  */
-bool player_place(player_type *creature_ptr, POSITION y, POSITION x)
-{
+bool player_place(player_type* creature_ptr, POSITION y, POSITION x) {
     if (creature_ptr->current_floor_ptr->grid_array[y][x].m_idx != 0)
         return FALSE;
 
@@ -3585,9 +3597,8 @@ bool player_place(player_type *creature_ptr, POSITION y, POSITION x)
  * @brief 種族アンバライトが出血時パターンの上に乗った際のペナルティ処理
  * @return なし
  */
-void wreck_the_pattern(player_type *creature_ptr)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+void wreck_the_pattern(player_type* creature_ptr) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     int pattern_type = f_info[floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].feat].subtype;
     if (pattern_type == PATTERN_TILE_WRECKED)
         return;
@@ -3616,8 +3627,7 @@ void wreck_the_pattern(player_type *creature_ptr)
  * Advance experience levels and print experience
  * @return なし
  */
-void check_experience(player_type *creature_ptr)
-{
+void check_experience(player_type* creature_ptr) {
     if (creature_ptr->exp < 0)
         creature_ptr->exp = 0;
     if (creature_ptr->max_exp < 0)
@@ -3717,7 +3727,8 @@ void check_experience(player_type *creature_ptr)
                 }
                 do_inc_stat(creature_ptr, choice - 'a');
                 screen_load();
-            } else if (!(creature_ptr->max_plv % 2))
+            }
+            else if (!(creature_ptr->max_plv % 2))
                 do_inc_stat(creature_ptr, randint0(6));
         }
 
@@ -3752,8 +3763,7 @@ void check_experience(player_type *creature_ptr)
  * @param out_val 出力先文字列ポインタ
  * @return なし
  */
-void cnv_stat(int val, char *out_val)
-{
+void cnv_stat(int val, char* out_val) {
     if (val <= 18) {
         sprintf(out_val, "    %2d", val);
         return;
@@ -3762,9 +3772,11 @@ void cnv_stat(int val, char *out_val)
     int bonus = (val - 18);
     if (bonus >= 220) {
         sprintf(out_val, "18/%3s", "***");
-    } else if (bonus >= 100) {
+    }
+    else if (bonus >= 100) {
         sprintf(out_val, "18/%03d", bonus);
-    } else {
+    }
+    else {
         sprintf(out_val, " 18/%02d", bonus);
     }
 }
@@ -3783,8 +3795,7 @@ void cnv_stat(int val, char *out_val)
  * Or even: 18/13, 18/03, 18, 17, ..., 3
  * </pre>
  */
-s16b modify_stat_value(int value, int amount)
-{
+s16b modify_stat_value(int value, int amount) {
     if (amount > 0) {
         for (int i = 0; i < amount; i++) {
             if (value < 18)
@@ -3792,7 +3803,8 @@ s16b modify_stat_value(int value, int amount)
             else
                 value += 10;
         }
-    } else if (amount < 0) {
+    }
+    else if (amount < 0) {
         for (int i = 0; i < (0 - amount); i++) {
             if (value >= 18 + 10)
                 value -= 10;
@@ -3812,8 +3824,7 @@ s16b modify_stat_value(int value, int amount)
  * @return なし
  * @details
  */
-long calc_score(player_type *creature_ptr)
-{
+long calc_score(player_type* creature_ptr) {
     int arena_win = MIN(creature_ptr->arena_number, MAX_ARENA_MONS);
 
     int mult = 100;
@@ -3885,33 +3896,29 @@ long calc_score(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return 祝福状態ならばTRUE
  */
-bool is_blessed(player_type *creature_ptr)
-{
+bool is_blessed(player_type* creature_ptr) {
     return creature_ptr->blessed || music_singing(creature_ptr, MUSIC_BLESS) || hex_spelling(creature_ptr, HEX_BLESS);
 }
 
-bool is_tim_esp(player_type *creature_ptr)
-{
+bool is_tim_esp(player_type* creature_ptr) {
     return creature_ptr->tim_esp || music_singing(creature_ptr, MUSIC_MIND) || (creature_ptr->concent >= CONCENT_TELE_THRESHOLD);
 }
 
-bool is_tim_stealth(player_type *creature_ptr) { return creature_ptr->tim_stealth || music_singing(creature_ptr, MUSIC_STEALTH); }
+bool is_tim_stealth(player_type* creature_ptr) { return creature_ptr->tim_stealth || music_singing(creature_ptr, MUSIC_STEALTH); }
 
-bool is_time_limit_esp(player_type *creature_ptr)
-{
+bool is_time_limit_esp(player_type* creature_ptr) {
     return creature_ptr->tim_esp || music_singing(creature_ptr, MUSIC_MIND) || (creature_ptr->concent >= CONCENT_TELE_THRESHOLD);
 }
 
-bool is_time_limit_stealth(player_type *creature_ptr) { return creature_ptr->tim_stealth || music_singing(creature_ptr, MUSIC_STEALTH); }
+bool is_time_limit_stealth(player_type* creature_ptr) { return creature_ptr->tim_stealth || music_singing(creature_ptr, MUSIC_STEALTH); }
 
-bool can_two_hands_wielding(player_type *creature_ptr) { return !creature_ptr->riding || (creature_ptr->pet_extra_flags & PF_TWO_HANDS); }
+bool can_two_hands_wielding(player_type* creature_ptr) { return !creature_ptr->riding || (creature_ptr->pet_extra_flags & PF_TWO_HANDS); }
 
 /*!
  * @brief 歌の停止を処理する / Stop singing if the player is a Bard
  * @return なし
  */
-void stop_singing(player_type *creature_ptr)
-{
+void stop_singing(player_type* creature_ptr) {
     if (creature_ptr->pclass != CLASS_BARD)
         return;
 
@@ -3944,8 +3951,7 @@ void stop_singing(player_type *creature_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void stop_mouth(player_type *caster_ptr)
-{
+void stop_mouth(player_type* caster_ptr) {
     if (music_singing_any(caster_ptr))
         stop_singing(caster_ptr);
     if (hex_spelling_any(caster_ptr))
@@ -3956,8 +3962,7 @@ void stop_mouth(player_type *caster_ptr)
  * @brief ペットの維持コスト計算
  * @return 維持コスト(%)
  */
-PERCENTAGE calculate_upkeep(player_type *creature_ptr)
-{
+PERCENTAGE calculate_upkeep(player_type* creature_ptr) {
     MONSTER_IDX m_idx;
     bool has_a_unique = FALSE;
     DEPTH total_friend_levels = 0;
@@ -3965,8 +3970,8 @@ PERCENTAGE calculate_upkeep(player_type *creature_ptr)
     total_friends = 0;
 
     for (m_idx = creature_ptr->current_floor_ptr->m_max - 1; m_idx >= 1; m_idx--) {
-        monster_type *m_ptr;
-        monster_race *r_ptr;
+        monster_type* m_ptr;
+        monster_race* r_ptr;
 
         m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
         if (!monster_is_valid(m_ptr))
@@ -3984,9 +3989,11 @@ PERCENTAGE calculate_upkeep(player_type *creature_ptr)
                     else
                         total_friend_levels += (r_ptr->level + 5) * 10;
                     has_a_unique = TRUE;
-                } else
+                }
+                else
                     total_friend_levels += (r_ptr->level + 5) * 10;
-            } else
+            }
+            else
                 total_friend_levels += r_ptr->level;
         }
     }
@@ -3999,27 +4006,26 @@ PERCENTAGE calculate_upkeep(player_type *creature_ptr)
         if (upkeep_factor > 1000)
             upkeep_factor = 1000;
         return upkeep_factor;
-    } else
+    }
+    else
         return 0;
 }
 
-bool music_singing(player_type *caster_ptr, int music_songs) { return (caster_ptr->pclass == CLASS_BARD) && (caster_ptr->magic_num1[0] == music_songs); }
+bool music_singing(player_type* caster_ptr, int music_songs) { return (caster_ptr->pclass == CLASS_BARD) && (caster_ptr->magic_num1[0] == music_songs); }
 
-bool is_fast(player_type *creature_ptr) { return creature_ptr->fast || music_singing(creature_ptr, MUSIC_SPEED) || music_singing(creature_ptr, MUSIC_SHERO); }
+bool is_fast(player_type* creature_ptr) { return creature_ptr->fast || music_singing(creature_ptr, MUSIC_SPEED) || music_singing(creature_ptr, MUSIC_SHERO); }
 
-bool is_invuln(player_type *creature_ptr) { return creature_ptr->invuln || music_singing(creature_ptr, MUSIC_INVULN); }
+bool is_invuln(player_type* creature_ptr) { return creature_ptr->invuln || music_singing(creature_ptr, MUSIC_INVULN); }
 
-bool is_hero(player_type *creature_ptr) { return creature_ptr->hero || music_singing(creature_ptr, MUSIC_HERO) || music_singing(creature_ptr, MUSIC_SHERO); }
+bool is_hero(player_type* creature_ptr) { return creature_ptr->hero || music_singing(creature_ptr, MUSIC_HERO) || music_singing(creature_ptr, MUSIC_SHERO); }
 
-bool is_shero(player_type *creature_ptr) { return creature_ptr->shero || creature_ptr->pclass == CLASS_BERSERKER; }
+bool is_shero(player_type* creature_ptr) { return creature_ptr->shero || creature_ptr->pclass == CLASS_BERSERKER; }
 
-bool is_echizen(player_type *creature_ptr)
-{
+bool is_echizen(player_type* creature_ptr) {
     return (creature_ptr->pseikaku == PERSONALITY_COMBAT) || (creature_ptr->inventory_list[INVEN_BOW].name1 == ART_CRIMSON);
 }
 
-int calc_weapon_weight_limit(player_type *creature_ptr)
-{
+int calc_weapon_weight_limit(player_type* creature_ptr) {
     int weight = adj_str_hold[creature_ptr->stat_ind[A_STR]];
 
     if (has_two_handed_weapons(creature_ptr))
@@ -4028,8 +4034,7 @@ int calc_weapon_weight_limit(player_type *creature_ptr)
     return weight;
 }
 
-static int get_default_hand(player_type *creature_ptr)
-{
+static int get_default_hand(player_type* creature_ptr) {
     int default_hand = 0;
 
     if (has_melee_weapon(creature_ptr, INVEN_LARM)) {
@@ -4040,9 +4045,11 @@ static int get_default_hand(player_type *creature_ptr)
     if (can_two_hands_wielding(creature_ptr)) {
         if (has_right_hand_weapon(creature_ptr) && (empty_hands(creature_ptr, FALSE) == EMPTY_HAND_LARM)
             && object_allow_two_hands_wielding(&creature_ptr->inventory_list[INVEN_RARM])) {
-        } else if (has_left_hand_weapon(creature_ptr) && (empty_hands(creature_ptr, FALSE) == EMPTY_HAND_RARM)
+        }
+        else if (has_left_hand_weapon(creature_ptr) && (empty_hands(creature_ptr, FALSE) == EMPTY_HAND_RARM)
             && object_allow_two_hands_wielding(&creature_ptr->inventory_list[INVEN_LARM])) {
-        } else {
+        }
+        else {
             default_hand = 1;
         }
     }

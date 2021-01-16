@@ -11,8 +11,8 @@
 #include "main/sound-of-music.h"
 #include "mspell/monster-power-table.h"
 #include "mspell/mspell-type.h"
-#include "player/player-status-table.h"
 #include "player-info/avatar.h"
+#include "player/player-status-table.h"
 #include "realm/realm-types.h"
 #include "spell/spell-info.h"
 #include "status/bad-status-setter.h"
@@ -25,8 +25,7 @@
  * do_cmd_cast calls this function if the player's class is 'Blue-Mage'.
  * @return 処理を実行したらTRUE、キャンセルした場合FALSEを返す。
  */
-bool do_cmd_cast_learned(player_type *caster_ptr)
-{
+bool do_cmd_cast_learned(player_type* caster_ptr) {
     SPELL_IDX n = 0;
     PERCENTAGE chance;
     PERCENTAGE minfail = 0;
@@ -85,7 +84,8 @@ bool do_cmd_cast_learned(player_type *caster_ptr)
         sound(SOUND_FAIL);
         if (n >= MS_S_KIN)
             cast = cast_learned_spell(caster_ptr, n, FALSE);
-    } else {
+    }
+    else {
         sound(SOUND_ZAP);
         cast = cast_learned_spell(caster_ptr, n, TRUE);
         if (!cast)
@@ -94,7 +94,8 @@ bool do_cmd_cast_learned(player_type *caster_ptr)
 
     if (need_mana <= caster_ptr->csp) {
         caster_ptr->csp -= need_mana;
-    } else {
+    }
+    else {
         int oops = need_mana;
         caster_ptr->csp = 0;
         caster_ptr->csp_frac = 0;

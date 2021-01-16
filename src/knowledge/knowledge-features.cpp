@@ -24,11 +24,10 @@
  *
  * mode & 0x01 : check for non-empty group
  */
-static FEAT_IDX collect_features(FEAT_IDX *feat_idx, BIT_FLAGS8 mode)
-{
+static FEAT_IDX collect_features(FEAT_IDX* feat_idx, BIT_FLAGS8 mode) {
     FEAT_IDX feat_cnt = 0;
     for (FEAT_IDX i = 0; i < max_f_idx; i++) {
-        feature_type *f_ptr = &f_info[i];
+        feature_type* f_ptr = &f_info[i];
         if (!f_ptr->name)
             continue;
         if (f_ptr->mimic != i)
@@ -46,8 +45,7 @@ static FEAT_IDX collect_features(FEAT_IDX *feat_idx, BIT_FLAGS8 mode)
 /*
  * Display the features in a group.
  */
-static void display_feature_list(int col, int row, int per_page, FEAT_IDX *feat_idx, FEAT_IDX feat_cur, FEAT_IDX feat_top, bool visual_only, int lighting_level)
-{
+static void display_feature_list(int col, int row, int per_page, FEAT_IDX* feat_idx, FEAT_IDX feat_cur, FEAT_IDX feat_top, bool visual_only, int lighting_level) {
     int lit_col[F_LIT_MAX], i;
     int f_idx_col = use_bigtile ? 62 : 64;
 
@@ -58,7 +56,7 @@ static void display_feature_list(int col, int row, int per_page, FEAT_IDX *feat_
     for (i = 0; i < per_page && (feat_idx[feat_top + i] >= 0); i++) {
         TERM_COLOR attr;
         FEAT_IDX f_idx = feat_idx[feat_top + i];
-        feature_type *f_ptr = &f_info[f_idx];
+        feature_type* f_ptr = &f_info[f_idx];
         int row_i = row + i;
         attr = ((i + feat_top == feat_cur) ? TERM_L_BLUE : TERM_WHITE);
         c_prt(attr, f_name + f_ptr->name, row_i, col);
@@ -91,8 +89,7 @@ static void display_feature_list(int col, int row, int per_page, FEAT_IDX *feat_
 /*
  * Interact with feature visuals.
  */
-void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f_idx, IDX *lighting_level)
-{
+void do_cmd_knowledge_features(bool* need_redraw, bool visual_only, IDX direct_f_idx, IDX* lighting_level) {
     TERM_COLOR attr_old[F_LIT_MAX];
     (void)C_WIPE(attr_old, F_LIT_MAX, TERM_COLOR);
     SYMBOL_CODE char_old[F_LIT_MAX];
@@ -101,7 +98,7 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
     TERM_LEN wid, hgt;
     term_get_size(&wid, &hgt);
 
-    FEAT_IDX *feat_idx;
+    FEAT_IDX* feat_idx;
     C_MAKE(feat_idx, max_f_idx, FEAT_IDX);
 
     concptr feature_group_text[] = { "terrains", NULL };
@@ -126,8 +123,9 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
         }
 
         feat_cnt = 0;
-    } else {
-        feature_type *f_ptr = &f_info[direct_f_idx];
+    }
+    else {
+        feature_type* f_ptr = &f_info[direct_f_idx];
 
         feat_idx[0] = direct_f_idx;
         feat_cnt = 1;
@@ -152,11 +150,11 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
     TERM_LEN column = 0;
     bool flag = FALSE;
     bool redraw = TRUE;
-    TERM_COLOR *cur_attr_ptr;
-    SYMBOL_CODE *cur_char_ptr;
+    TERM_COLOR* cur_attr_ptr;
+    SYMBOL_CODE* cur_char_ptr;
     while (!flag) {
         char ch;
-        feature_type *f_ptr;
+        feature_type* f_ptr;
 
         if (redraw) {
             clear_from(0);
@@ -169,7 +167,8 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
                 if (current_world_ptr->wizard || visual_only)
                     prt("Idx", 4, 62);
                 prt(_("文字 ( l/ d)", "Sym ( l/ d)"), 4, 66);
-            } else {
+            }
+            else {
                 if (current_world_ptr->wizard || visual_only)
                     prt("Idx", 4, 64);
                 prt(_("文字 (l/d)", "Sym (l/d)"), 4, 68);
@@ -208,7 +207,8 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
 
         if (!visual_list) {
             display_feature_list(max + 3, 6, browser_rows, feat_idx, feat_cur, feat_top, visual_only, F_LIT_STANDARD);
-        } else {
+        }
+        else {
             feat_top = feat_cur;
             display_feature_list(max + 3, 6, 1, feat_idx, feat_cur, feat_top, visual_only, *lighting_level);
             display_visual_list(max + 3, 7, browser_rows - 1, wid - (max + 3), attr_top, char_left);
@@ -226,9 +226,11 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
 
         if (visual_list) {
             place_visual_list_cursor(max + 3, 7, *cur_attr_ptr, *cur_char_ptr, attr_top, char_left);
-        } else if (!column) {
+        }
+        else if (!column) {
             term_gotoxy(0, 6 + (grp_cur - grp_top));
-        } else {
+        }
+        else {
             term_gotoxy(max + 3, 6 + (feat_cur - feat_top));
         }
 
@@ -241,7 +243,8 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
                     *lighting_level = F_LIT_MAX - 1;
                 else
                     (*lighting_level)--;
-            } else {
+            }
+            else {
                 if (*lighting_level >= F_LIT_MAX - 1)
                     *lighting_level = 0;
                 else
@@ -255,7 +258,8 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
                 char_left = MAX(0, f_ptr->x_char[*lighting_level] - 10);
 
             continue;
-        } else if ((ch == 'D') || (ch == 'd')) {
+        }
+        else if ((ch == 'D') || (ch == 'd')) {
             TERM_COLOR prev_x_attr = f_ptr->x_attr[*lighting_level];
             byte prev_x_char = f_ptr->x_char[*lighting_level];
 
@@ -267,11 +271,13 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
 
                 if (prev_x_char != f_ptr->x_char[*lighting_level])
                     char_left = MAX(0, f_ptr->x_char[*lighting_level] - 10);
-            } else
+            }
+            else
                 *need_redraw = TRUE;
 
             continue;
-        } else if (visual_mode_command(ch, &visual_list, browser_rows - 1, wid - (max + 3), &attr_top, &char_left, cur_attr_ptr, cur_char_ptr, need_redraw)) {
+        }
+        else if (visual_mode_command(ch, &visual_list, browser_rows - 1, wid - (max + 3), &attr_top, &char_left, cur_attr_ptr, cur_char_ptr, need_redraw)) {
             switch (ch) {
             case ESCAPE:
                 for (FEAT_IDX i = 0; i < F_LIT_MAX; i++) {
@@ -340,9 +346,8 @@ void do_cmd_knowledge_features(bool *need_redraw, bool visual_only, IDX direct_f
 /*
  * Dungeon
  */
-void do_cmd_knowledge_dungeon(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_dungeon(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
@@ -357,7 +362,8 @@ void do_cmd_knowledge_dungeon(player_type *creature_ptr)
         if (d_info[i].final_guardian) {
             if (!r_info[d_info[i].final_guardian].max_num)
                 seiha = TRUE;
-        } else if (max_dlv[i] == d_info[i].maxdepth)
+        }
+        else if (max_dlv[i] == d_info[i].maxdepth)
             seiha = TRUE;
 
         fprintf(fff, _("%c%-12s :  %3d 階\n", "%c%-16s :  level %3d\n"), seiha ? '!' : ' ', d_name + d_info[i].name, (int)max_dlv[i]);

@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-int bow_tval_ammo(object_type *o_ptr);
+int bow_tval_ammo(object_type* o_ptr);

@@ -17,8 +17,7 @@
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void rd_extra(player_type *creature_ptr)
-{
+void rd_extra(player_type* creature_ptr) {
     if (z_older_than(10, 0, 7))
         creature_ptr->riding = 0;
     else

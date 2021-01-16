@@ -8,8 +8,7 @@
  * @brief プレイヤーの全ての時限効果をリセットする。 / reset timed flags
  * @return なし
  */
-void reset_tim_flags(player_type *creature_ptr)
-{
+void reset_tim_flags(player_type* creature_ptr) {
     creature_ptr->fast = 0; /* Timed -- Fast */
     creature_ptr->lightspeed = 0;
     creature_ptr->slow = 0; /* Timed -- Slow */

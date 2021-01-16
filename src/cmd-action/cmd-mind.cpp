@@ -60,8 +60,7 @@ typedef struct cm_type {
     bool on_mirror;
 } cm_type;
 
-static cm_type *initialize_cm_type(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static cm_type* initialize_cm_type(player_type* caster_ptr, cm_type* cm_ptr) {
     cm_ptr->n = 0;
     cm_ptr->b = 0;
     cm_ptr->minfail = 0;
@@ -71,8 +70,7 @@ static cm_type *initialize_cm_type(player_type *caster_ptr, cm_type *cm_ptr)
     return cm_ptr;
 }
 
-static void switch_mind_kind(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static void switch_mind_kind(player_type* caster_ptr, cm_type* cm_ptr) {
     switch (caster_ptr->pclass) {
     case CLASS_MINDCRAFTER:
         cm_ptr->use_mind = MIND_MINDCRAFTER;
@@ -101,8 +99,7 @@ static void switch_mind_kind(player_type *caster_ptr, cm_type *cm_ptr)
     }
 }
 
-static void decide_mind_ki_chance(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static void decide_mind_ki_chance(player_type* caster_ptr, cm_type* cm_ptr) {
     if (cm_ptr->use_mind != MIND_KI)
         return;
 
@@ -124,8 +121,7 @@ static void decide_mind_ki_chance(player_type *caster_ptr, cm_type *cm_ptr)
             cm_ptr->mana_cost += (j + 1) * 3 / 2;
 }
 
-static bool check_mind_hp_mp_sufficiency(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static bool check_mind_hp_mp_sufficiency(player_type* caster_ptr, cm_type* cm_ptr) {
     if ((cm_ptr->use_mind == MIND_BERSERKER) || (cm_ptr->use_mind == MIND_NINJUTSU)) {
         if (cm_ptr->mana_cost > caster_ptr->chp) {
             msg_print(_("ＨＰが足りません。", "You do not have enough hp to use this power."));
@@ -145,8 +141,7 @@ static bool check_mind_hp_mp_sufficiency(player_type *caster_ptr, cm_type *cm_pt
     return get_check(_("それでも挑戦しますか? ", "Attempt it anyway? "));
 }
 
-static void decide_mind_chance(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static void decide_mind_chance(player_type* caster_ptr, cm_type* cm_ptr) {
     if (cm_ptr->chance == 0)
         return;
 
@@ -178,8 +173,7 @@ static void decide_mind_chance(player_type *caster_ptr, cm_type *cm_ptr)
         cm_ptr->chance += 5;
 }
 
-static void check_mind_mindcrafter(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static void check_mind_mindcrafter(player_type* caster_ptr, cm_type* cm_ptr) {
     if (cm_ptr->use_mind != MIND_MINDCRAFTER)
         return;
 
@@ -212,8 +206,7 @@ static void check_mind_mindcrafter(player_type *caster_ptr, cm_type *cm_ptr)
     caster_ptr->csp = MAX(0, caster_ptr->csp - cm_ptr->plev * MAX(1, cm_ptr->plev / 10));
 }
 
-static void check_mind_mirror_master(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static void check_mind_mirror_master(player_type* caster_ptr, cm_type* cm_ptr) {
     if (cm_ptr->use_mind != MIND_MIRROR_MASTER)
         return;
 
@@ -238,8 +231,7 @@ static void check_mind_mirror_master(player_type *caster_ptr, cm_type *cm_ptr)
     caster_ptr->csp = MAX(0, caster_ptr->csp - cm_ptr->plev * MAX(1, cm_ptr->plev / 10));
 }
 
-static void check_mind_class(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static void check_mind_class(player_type* caster_ptr, cm_type* cm_ptr) {
     if ((cm_ptr->use_mind == MIND_BERSERKER) || (cm_ptr->use_mind == MIND_NINJUTSU))
         return;
 
@@ -256,8 +248,7 @@ static void check_mind_class(player_type *caster_ptr, cm_type *cm_ptr)
     check_mind_mirror_master(caster_ptr, cm_ptr);
 }
 
-static bool switch_mind_class(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static bool switch_mind_class(player_type* caster_ptr, cm_type* cm_ptr) {
     switch (cm_ptr->use_mind) {
     case MIND_MINDCRAFTER:
         cm_ptr->cast = cast_mindcrafter_spell(caster_ptr, mind_mindcrafter_type(cm_ptr->n));
@@ -283,8 +274,7 @@ static bool switch_mind_class(player_type *caster_ptr, cm_type *cm_ptr)
     }
 }
 
-static void mind_turn_passing(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static void mind_turn_passing(player_type* caster_ptr, cm_type* cm_ptr) {
     if (!cm_ptr->on_mirror || (caster_ptr->pclass != CLASS_MIRROR_MASTER)) {
         take_turn(caster_ptr, 100);
         return;
@@ -294,8 +284,7 @@ static void mind_turn_passing(player_type *caster_ptr, cm_type *cm_ptr)
         take_turn(caster_ptr, 50);
 }
 
-static bool judge_mind_chance(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static bool judge_mind_chance(player_type* caster_ptr, cm_type* cm_ptr) {
     if (randint0(100) >= cm_ptr->chance) {
         sound(SOUND_ZAP);
         return switch_mind_class(caster_ptr, cm_ptr) && cm_ptr->cast;
@@ -310,8 +299,7 @@ static bool judge_mind_chance(player_type *caster_ptr, cm_type *cm_ptr)
     return TRUE;
 }
 
-static void mind_reflection(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static void mind_reflection(player_type* caster_ptr, cm_type* cm_ptr) {
     int oops = cm_ptr->mana_cost - cm_ptr->old_csp;
     if ((caster_ptr->csp - cm_ptr->mana_cost) < 0)
         caster_ptr->csp_frac = 0;
@@ -327,8 +315,7 @@ static void mind_reflection(player_type *caster_ptr, cm_type *cm_ptr)
     (void)dec_stat(caster_ptr, A_WIS, 15 + randint1(10), perm);
 }
 
-static void process_hard_concentration(player_type *caster_ptr, cm_type *cm_ptr)
-{
+static void process_hard_concentration(player_type* caster_ptr, cm_type* cm_ptr) {
     if ((cm_ptr->use_mind == MIND_BERSERKER) || (cm_ptr->use_mind == MIND_NINJUTSU)) {
         take_hit(caster_ptr, DAMAGE_USELIFE, cm_ptr->mana_cost, _("過度の集中", "concentrating too hard"), -1);
         caster_ptr->redraw |= PR_HP;
@@ -354,10 +341,9 @@ static void process_hard_concentration(player_type *caster_ptr, cm_type *cm_ptr)
  * @brief 特殊技能コマンドのメインルーチン /
  * @return なし
  */
-void do_cmd_mind(player_type *caster_ptr)
-{
+void do_cmd_mind(player_type* caster_ptr) {
     cm_type tmp_cm;
-    cm_type *cm_ptr = initialize_cm_type(caster_ptr, &tmp_cm);
+    cm_type* cm_ptr = initialize_cm_type(caster_ptr, &tmp_cm);
     if (cmd_limit_confused(caster_ptr) || !get_mind_power(caster_ptr, &cm_ptr->n, FALSE))
         return;
 
@@ -383,8 +369,7 @@ void do_cmd_mind(player_type *caster_ptr)
     caster_ptr->window |= PW_SPELL;
 }
 
-static mind_kind_type decide_use_mind_browse(player_type *caster_ptr)
-{
+static mind_kind_type decide_use_mind_browse(player_type* caster_ptr) {
     switch (caster_ptr->pclass) {
     case CLASS_MINDCRAFTER:
         return MIND_MINDCRAFTER;
@@ -405,8 +390,7 @@ static mind_kind_type decide_use_mind_browse(player_type *caster_ptr)
  * @brief 現在プレイヤーが使用可能な特殊技能の一覧表示 /
  * @return なし
  */
-void do_cmd_mind_browse(player_type *caster_ptr)
-{
+void do_cmd_mind_browse(player_type* caster_ptr) {
     SPELL_IDX n = 0;
     char temp[62 * 5];
     mind_kind_type use_mind = decide_use_mind_browse(caster_ptr);

@@ -17,8 +17,7 @@
  * @param mode オプションフラグ
  * @return クリティカル修正が入ったダメージ値
  */
-HIT_POINT critical_norm(player_type *attacker_ptr, WEIGHT weight, int plus, HIT_POINT dam, s16b meichuu, combat_options mode)
-{
+HIT_POINT critical_norm(player_type* attacker_ptr, WEIGHT weight, int plus, HIT_POINT dam, s16b meichuu, combat_options mode) {
     /* Extract "blow" power */
     int i = (weight + (meichuu * 3 + plus * 5) + attacker_ptr->skill_thn);
 
@@ -73,8 +72,7 @@ HIT_POINT critical_norm(player_type *attacker_ptr, WEIGHT weight, int plus, HIT_
  * and which also do at least 20 damage, or, sometimes, N damage.
  * This is used only to determine "cuts" and "stuns".
  */
-int calc_monster_critical(DICE_NUMBER dice, DICE_SID sides, HIT_POINT dam)
-{
+int calc_monster_critical(DICE_NUMBER dice, DICE_SID sides, HIT_POINT dam) {
     int total = dice * sides;
     if (dam < total * 19 / 20)
         return 0;
@@ -117,11 +115,11 @@ int calc_monster_critical(DICE_NUMBER dice, DICE_SID sides, HIT_POINT dam)
  * @details 闇討ち＆追討ちを実施した後に致命傷チェックを行う
  * チェックを通ったら、ユニークならば2倍ダメージ、それ以外は一撃死
  */
-static void ninja_critical(player_type *attacker_ptr, player_attack_type *pa_ptr)
-{
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+static void ninja_critical(player_type* attacker_ptr, player_attack_type* pa_ptr) {
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     int maxhp = pa_ptr->m_ptr->maxhp;
-    if (one_in_(pa_ptr->backstab ? 13 : (pa_ptr->stab_fleeing || pa_ptr->surprise_attack) ? 15 : 27)) {
+    if (one_in_(pa_ptr->backstab ? 13 : (pa_ptr->stab_fleeing || pa_ptr->surprise_attack) ? 15
+                                                                                          : 27)) {
         pa_ptr->attack_damage *= 5;
         pa_ptr->drain_result *= 2;
         msg_format(_("刃が%sに深々と突き刺さった！", "You critically injured %s!"), pa_ptr->m_name);
@@ -139,7 +137,8 @@ static void ninja_critical(player_type *attacker_ptr, player_attack_type *pa_ptr
         pa_ptr->attack_damage = MAX(pa_ptr->attack_damage * 5, pa_ptr->m_ptr->hp / 2);
         pa_ptr->drain_result *= 2;
         msg_format(_("%sに致命傷を負わせた！", "You fatally injured %s!"), pa_ptr->m_name);
-    } else {
+    }
+    else {
         pa_ptr->attack_damage = pa_ptr->m_ptr->hp + 1;
         msg_format(_("刃が%sの急所を貫いた！", "You hit %s on a fatal spot!"), pa_ptr->m_name);
     }
@@ -151,15 +150,15 @@ static void ninja_critical(player_type *attacker_ptr, player_attack_type *pa_ptr
  * @param pa_ptr 直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void critical_attack(player_type *attacker_ptr, player_attack_type *pa_ptr)
-{
-    object_type *o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+void critical_attack(player_type* attacker_ptr, player_attack_type* pa_ptr) {
+    object_type* o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if (((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_POISON_NEEDLE)) || (pa_ptr->mode == HISSATSU_KYUSHO)) {
         if ((randint1(randint1(r_ptr->level / 7) + 5) == 1) && !(r_ptr->flags1 & RF1_UNIQUE) && !(r_ptr->flags7 & RF7_UNIQUE2)) {
             pa_ptr->attack_damage = pa_ptr->m_ptr->hp + 1;
             msg_format(_("%sの急所を突き刺した！", "You hit %s on a fatal spot!"), pa_ptr->m_name);
-        } else
+        }
+        else
             pa_ptr->attack_damage = 1;
 
         return;

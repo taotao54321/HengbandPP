@@ -11,7 +11,7 @@
  * @param o_ptr 初期化したいオブジェクトの構造体参照ポインタ
  * @return なし
  */
-void object_wipe(object_type *o_ptr) { (void)WIPE(o_ptr, object_type); }
+void object_wipe(object_type* o_ptr) { (void)WIPE(o_ptr, object_type); }
 
 /*!
  * @brief オブジェクトを複製する
@@ -20,7 +20,7 @@ void object_wipe(object_type *o_ptr) { (void)WIPE(o_ptr, object_type); }
  * @param j_ptr 複製先のオブジェクトの構造体参照ポインタ
  * @return なし
  */
-void object_copy(object_type *o_ptr, object_type *j_ptr) { (void)COPY(o_ptr, j_ptr, object_type); }
+void object_copy(object_type* o_ptr, object_type* j_ptr) { (void)COPY(o_ptr, j_ptr, object_type); }
 
 /*!
  * @brief オブジェクト構造体にベースアイテムを作成する
@@ -29,9 +29,8 @@ void object_copy(object_type *o_ptr, object_type *j_ptr) { (void)COPY(o_ptr, j_p
  * @param k_idx 新たに作成したいベースアイテム情報のID
  * @return なし
  */
-void object_prep(player_type *player_ptr, object_type *o_ptr, KIND_OBJECT_IDX k_idx)
-{
-    object_kind *k_ptr = &k_info[k_idx];
+void object_prep(player_type* player_ptr, object_type* o_ptr, KIND_OBJECT_IDX k_idx) {
+    object_kind* k_ptr = &k_info[k_idx];
     object_wipe(o_ptr);
     o_ptr->k_idx = k_idx;
     o_ptr->tval = k_ptr->tval;

@@ -58,8 +58,7 @@
  * Note - this should be used only on allocated regions
  * within another room.
  */
-void build_small_room(player_type *player_ptr, POSITION x0, POSITION y0)
-{
+void build_small_room(player_type* player_ptr, POSITION x0, POSITION y0) {
     for (POSITION y = y0 - 1; y <= y0 + 1; y++) {
         place_bold(player_ptr, y, x0 - 1, GB_INNER);
         place_bold(player_ptr, y, x0 + 1, GB_INNER);
@@ -92,11 +91,10 @@ void build_small_room(player_type *player_ptr, POSITION x0, POSITION y0)
 /*
  * Builds a cave system in the center of the dungeon.
  */
-void build_cavern(player_type *player_ptr)
-{
+void build_cavern(player_type* player_ptr) {
     bool light = FALSE;
     bool done = FALSE;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if ((floor_ptr->dun_level <= randint1(50)) && !(d_info[floor_ptr->dungeon_idx].flags1 & DF1_DARKNESS))
         light = TRUE;
 
@@ -119,14 +117,13 @@ void build_cavern(player_type *player_ptr)
 /*
  * makes a lake/collapsed floor in the center of the dungeon
  */
-void build_lake(player_type *player_ptr, int type)
-{
+void build_lake(player_type* player_ptr, int type) {
     if ((type < LAKE_T_LAVA) || (type > LAKE_T_FIRE_VAULT)) {
         msg_format("Invalid lake type (%d)", type);
         return;
     }
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     int xsize = floor_ptr->width - 1;
     int ysize = floor_ptr->height - 1;
     int x0 = xsize / 2;
@@ -151,8 +148,7 @@ void build_lake(player_type *player_ptr, int type)
  * The area inside the walls is not touched:
  * only granite is removed- normal walls stay
  */
-void build_room(player_type *player_ptr, POSITION x1, POSITION x2, POSITION y1, POSITION y2)
-{
+void build_room(player_type* player_ptr, POSITION x1, POSITION x2, POSITION y1, POSITION y2) {
     int temp;
     if ((x1 == x2) || (y1 == y2))
         return;
@@ -171,7 +167,7 @@ void build_room(player_type *player_ptr, POSITION x1, POSITION x2, POSITION y1, 
 
     POSITION xsize = x2 - x1;
     POSITION ysize = y2 - y1;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (int i = 0; i <= xsize; i++) {
         place_bold(player_ptr, y1, x1 + i, GB_OUTER_NOPERM);
         floor_ptr->grid_array[y1][x1 + i].info |= (CAVE_ROOM | CAVE_ICKY);
@@ -191,7 +187,8 @@ void build_room(player_type *player_ptr, POSITION x1, POSITION x2, POSITION y1, 
             if (is_extra_bold(floor_ptr, y1 + y, x1 + x)) {
                 place_bold(player_ptr, y1 + y, x1 + x, GB_FLOOR);
                 floor_ptr->grid_array[y1 + y][x1 + x].info |= (CAVE_ROOM | CAVE_ICKY);
-            } else {
+            }
+            else {
                 floor_ptr->grid_array[y1 + y][x1 + x].info |= (CAVE_ROOM | CAVE_ICKY);
             }
         }
@@ -206,22 +203,24 @@ void build_room(player_type *player_ptr, POSITION x1, POSITION x2, POSITION y1, 
  * The power variable is a measure of how well defended a region is.
  * This alters the possible choices.
  */
-void build_recursive_room(player_type *player_ptr, POSITION x1, POSITION y1, POSITION x2, POSITION y2, int power)
-{
+void build_recursive_room(player_type* player_ptr, POSITION x1, POSITION y1, POSITION x2, POSITION y2, int power) {
     POSITION xsize = x2 - x1;
     POSITION ysize = y2 - y1;
 
     int choice;
     if ((power < 3) && (xsize > 12) && (ysize > 12)) {
         choice = 1;
-    } else {
+    }
+    else {
         if (power < 10) {
             if ((randint1(10) > 2) && (xsize < 8) && (ysize < 8)) {
                 choice = 4;
-            } else {
+            }
+            else {
                 choice = randint1(2) + 1;
             }
-        } else {
+        }
+        else {
             choice = randint1(3) + 1;
         }
     }
@@ -245,7 +244,8 @@ void build_recursive_room(player_type *player_ptr, POSITION x1, POSITION y1, POS
             y = randint1(ysize) + y1;
             place_bold(player_ptr, y, x1, GB_FLOOR);
             place_bold(player_ptr, y, x2, GB_FLOOR);
-        } else {
+        }
+        else {
             x = randint1(xsize) + x1;
             place_bold(player_ptr, y1, x, GB_FLOOR);
             place_bold(player_ptr, y2, x, GB_FLOOR);
@@ -297,7 +297,8 @@ void build_recursive_room(player_type *player_ptr, POSITION x1, POSITION y1, POS
         if (one_in_(2)) {
             /* left */
             place_bold(player_ptr, y, x1 + 1, GB_FLOOR);
-        } else {
+        }
+        else {
             /* right */
             place_bold(player_ptr, y, x2 - 1, GB_FLOOR);
         }
@@ -344,19 +345,18 @@ void build_recursive_room(player_type *player_ptr, POSITION x1, POSITION y1, POS
  * Note: no range checking is done so must be inside dungeon
  * This routine also stomps on doors
  */
-void add_outer_wall(player_type *player_ptr, POSITION x, POSITION y, int light, POSITION x1, POSITION y1, POSITION x2, POSITION y2)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void add_outer_wall(player_type* player_ptr, POSITION x, POSITION y, int light, POSITION x1, POSITION y1, POSITION x2, POSITION y2) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!in_bounds(floor_ptr, y, x))
         return;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &floor_ptr->grid_array[y][x];
     if (g_ptr->info & CAVE_ROOM)
         return;
 
     g_ptr->info |= CAVE_ROOM;
-    feature_type *f_ptr;
+    feature_type* f_ptr;
     f_ptr = &f_info[g_ptr->feat];
     if (is_floor_bold(floor_ptr, y, x)) {
         for (int i = -1; i <= 1; i++) {
@@ -390,8 +390,7 @@ void add_outer_wall(player_type *player_ptr, POSITION x, POSITION y, int light, 
  * Hacked distance formula - gives the 'wrong' answer.
  * Used to build crypts
  */
-POSITION dist2(POSITION x1, POSITION y1, POSITION x2, POSITION y2, POSITION h1, POSITION h2, POSITION h3, POSITION h4)
-{
+POSITION dist2(POSITION x1, POSITION y1, POSITION x2, POSITION y2, POSITION h1, POSITION h2, POSITION h3, POSITION h4) {
     POSITION dx = abs(x2 - x1);
     POSITION dy = abs(y2 - y1);
     if (dx >= 2 * dy)

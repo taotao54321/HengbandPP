@@ -47,17 +47,16 @@
  * @param mode ？？？
  * @return The number of monsters in the group
  */
-static IDX collect_monsters(player_type *creature_ptr, IDX grp_cur, IDX mon_idx[], BIT_FLAGS8 mode)
-{
+static IDX collect_monsters(player_type* creature_ptr, IDX grp_cur, IDX mon_idx[], BIT_FLAGS8 mode) {
     concptr group_char = monster_group_char[grp_cur];
-    bool grp_unique = (monster_group_char[grp_cur] == (char *)-1L);
-    bool grp_riding = (monster_group_char[grp_cur] == (char *)-2L);
-    bool grp_wanted = (monster_group_char[grp_cur] == (char *)-3L);
-    bool grp_amberite = (monster_group_char[grp_cur] == (char *)-4L);
+    bool grp_unique = (monster_group_char[grp_cur] == (char*)-1L);
+    bool grp_riding = (monster_group_char[grp_cur] == (char*)-2L);
+    bool grp_wanted = (monster_group_char[grp_cur] == (char*)-3L);
+    bool grp_amberite = (monster_group_char[grp_cur] == (char*)-4L);
 
     IDX mon_cnt = 0;
     for (IDX i = 0; i < max_r_idx; i++) {
-        monster_race *r_ptr = &r_info[i];
+        monster_race* r_ptr = &r_info[i];
         if (!r_ptr->name)
             continue;
         if (!(mode & 0x02) && !cheat_know && !r_ptr->r_sights)
@@ -66,10 +65,12 @@ static IDX collect_monsters(player_type *creature_ptr, IDX grp_cur, IDX mon_idx[
         if (grp_unique) {
             if (!(r_ptr->flags1 & RF1_UNIQUE))
                 continue;
-        } else if (grp_riding) {
+        }
+        else if (grp_riding) {
             if (!(r_ptr->flags7 & RF7_RIDING))
                 continue;
-        } else if (grp_wanted) {
+        }
+        else if (grp_wanted) {
             bool wanted = FALSE;
             for (int j = 0; j < MAX_BOUNTY; j++) {
                 if (current_world_ptr->bounty_r_idx[j] == i || current_world_ptr->bounty_r_idx[j] - 10000 == i
@@ -81,10 +82,12 @@ static IDX collect_monsters(player_type *creature_ptr, IDX grp_cur, IDX mon_idx[
 
             if (!wanted)
                 continue;
-        } else if (grp_amberite) {
+        }
+        else if (grp_amberite) {
             if (!(r_ptr->flags3 & RF3_AMBERITE))
                 continue;
-        } else {
+        }
+        else {
             if (!angband_strchr(group_char, r_ptr->d_char))
                 continue;
         }
@@ -106,14 +109,13 @@ static IDX collect_monsters(player_type *creature_ptr, IDX grp_cur, IDX mon_idx[
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_knowledge_pets(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_pets(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
 
-    monster_type *m_ptr;
+    monster_type* m_ptr;
     GAME_TEXT pet_name[MAX_NLEN];
     int t_friends = 0;
     for (int i = creature_ptr->current_floor_ptr->m_max - 1; i >= 1; i--) {
@@ -148,18 +150,17 @@ void do_cmd_knowledge_pets(player_type *creature_ptr)
  * @return なし
  * @note the player ghosts are ignored.
  */
-void do_cmd_knowledge_kill_count(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_kill_count(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
 
-    MONRACE_IDX *who;
+    MONRACE_IDX* who;
     C_MAKE(who, max_r_idx, MONRACE_IDX);
     s32b total = 0;
     for (int kk = 1; kk < max_r_idx; kk++) {
-        monster_race *r_ptr = &r_info[kk];
+        monster_race* r_ptr = &r_info[kk];
 
         if (r_ptr->flags1 & (RF1_UNIQUE)) {
             bool dead = (r_ptr->max_num == 0);
@@ -167,7 +168,8 @@ void do_cmd_knowledge_kill_count(player_type *creature_ptr)
             if (dead) {
                 total++;
             }
-        } else {
+        }
+        else {
             MONSTER_NUMBER this_monster = r_ptr->r_pkills;
 
             if (this_monster > 0) {
@@ -188,7 +190,7 @@ void do_cmd_knowledge_kill_count(player_type *creature_ptr)
     total = 0;
     int n = 0;
     for (MONRACE_IDX i = 1; i < max_r_idx; i++) {
-        monster_race *r_ptr = &r_info[i];
+        monster_race* r_ptr = &r_info[i];
         if (r_ptr->name)
             who[n++] = i;
     }
@@ -196,7 +198,7 @@ void do_cmd_knowledge_kill_count(player_type *creature_ptr)
     u16b why = 2;
     ang_sort(creature_ptr, who, &why, n, ang_sort_comp_hook, ang_sort_swap_hook);
     for (int k = 0; k < n; k++) {
-        monster_race *r_ptr = &r_info[who[k]];
+        monster_race* r_ptr = &r_info[who[k]];
         if (r_ptr->flags1 & (RF1_UNIQUE)) {
             bool dead = (r_ptr->max_num == 0);
             if (dead) {
@@ -212,16 +214,18 @@ void do_cmd_knowledge_kill_count(player_type *creature_ptr)
             continue;
 
 #ifdef JP
-        const char *number_of_kills = angband_strchr("pt", r_ptr->d_char) ? "人" : "体";
+        const char* number_of_kills = angband_strchr("pt", r_ptr->d_char) ? "人" : "体";
         fprintf(fff, "     %3d %sの %s\n", (int)this_monster, number_of_kills, r_name + r_ptr->name);
 #else
         if (this_monster < 2) {
             if (angband_strstr(r_name + r_ptr->name, "coins")) {
                 fprintf(fff, "     1 pile of %s\n", (r_name + r_ptr->name));
-            } else {
+            }
+            else {
                 fprintf(fff, "     1 %s\n", (r_name + r_ptr->name));
             }
-        } else {
+        }
+        else {
             char ToPlural[80];
             strcpy(ToPlural, (r_name + r_ptr->name));
             plural_aux(ToPlural);
@@ -247,13 +251,12 @@ void do_cmd_knowledge_kill_count(player_type *creature_ptr)
 /*
  * Display the monsters in a group.
  */
-static void display_monster_list(int col, int row, int per_page, s16b mon_idx[], int mon_cur, int mon_top, bool visual_only)
-{
+static void display_monster_list(int col, int row, int per_page, s16b mon_idx[], int mon_cur, int mon_top, bool visual_only) {
     int i;
     for (i = 0; i < per_page && (mon_idx[mon_top + i] >= 0); i++) {
         TERM_COLOR attr;
         MONRACE_IDX r_idx = mon_idx[mon_top + i];
-        monster_race *r_ptr = &r_info[r_idx];
+        monster_race* r_ptr = &r_info[r_idx];
         attr = ((i + mon_top == mon_cur) ? TERM_L_BLUE : TERM_WHITE);
         c_prt(attr, (r_name + r_ptr->name), row + i, col);
         if (per_page == 1)
@@ -286,11 +289,10 @@ static void display_monster_list(int col, int row, int per_page, s16b mon_idx[],
  * @param direct_r_idx モンスターID
  * @return なし
  */
-void do_cmd_knowledge_monsters(player_type *creature_ptr, bool *need_redraw, bool visual_only, IDX direct_r_idx)
-{
+void do_cmd_knowledge_monsters(player_type* creature_ptr, bool* need_redraw, bool visual_only, IDX direct_r_idx) {
     TERM_LEN wid, hgt;
     term_get_size(&wid, &hgt);
-    IDX *mon_idx;
+    IDX* mon_idx;
     C_MAKE(mon_idx, max_r_idx, MONRACE_IDX);
 
     int max = 0;
@@ -310,13 +312,14 @@ void do_cmd_knowledge_monsters(player_type *creature_ptr, bool *need_redraw, boo
             if (len > max)
                 max = len;
 
-            if ((monster_group_char[i] == ((char *)-1L)) || collect_monsters(creature_ptr, i, mon_idx, mode)) {
+            if ((monster_group_char[i] == ((char*)-1L)) || collect_monsters(creature_ptr, i, mon_idx, mode)) {
                 grp_idx[grp_cnt++] = i;
             }
         }
 
         mon_cnt = 0;
-    } else {
+    }
+    else {
         mon_idx[0] = direct_r_idx;
         mon_cnt = 1;
         mon_idx[1] = -1;
@@ -381,7 +384,8 @@ void do_cmd_knowledge_monsters(player_type *creature_ptr, bool *need_redraw, boo
 
         if (!visual_list) {
             display_monster_list(max + 3, 6, browser_rows, mon_idx, mon_cur, mon_top, visual_only);
-        } else {
+        }
+        else {
             mon_top = mon_cur;
             display_monster_list(max + 3, 6, 1, mon_idx, mon_cur, mon_top, visual_only);
             display_visual_list(max + 3, 7, browser_rows - 1, wid - (max + 3), attr_top, char_left);
@@ -392,7 +396,7 @@ void do_cmd_knowledge_monsters(player_type *creature_ptr, bool *need_redraw, boo
                 (attr_idx || char_idx) ? _(", 'c', 'p'でペースト", ", 'c', 'p' to paste") : _(", 'c'でコピー", ", 'c' to copy")),
             hgt - 1, 0);
 
-        monster_race *r_ptr;
+        monster_race* r_ptr;
         r_ptr = &r_info[mon_idx[mon_cur]];
 
         if (!visual_only) {
@@ -403,9 +407,11 @@ void do_cmd_knowledge_monsters(player_type *creature_ptr, bool *need_redraw, boo
 
         if (visual_list) {
             place_visual_list_cursor(max + 3, 7, r_ptr->x_attr, r_ptr->x_char, attr_top, char_left);
-        } else if (!column) {
+        }
+        else if (!column) {
             term_gotoxy(0, 6 + (grp_cur - grp_top));
-        } else {
+        }
+        else {
             term_gotoxy(max + 3, 6 + (mon_cur - mon_top));
         }
 
@@ -459,9 +465,8 @@ void do_cmd_knowledge_monsters(player_type *creature_ptr, bool *need_redraw, boo
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_knowledge_bounty(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_bounty(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;

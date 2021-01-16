@@ -39,8 +39,7 @@
  * @return なし
  * @details
  */
-static void center_string(char *buf, concptr str)
-{
+static void center_string(char* buf, concptr str) {
     int i = strlen(str);
     int j = GRAVE_LINE_WIDTH / 2 - i / 2;
     (void)sprintf(buf, "%*s%s%*s", j, "", str, GRAVE_LINE_WIDTH - i - j, "");
@@ -52,8 +51,7 @@ static void center_string(char *buf, concptr str)
  * @param buf 墓テンプレ
  * @return なし
  */
-static void show_basic_params(player_type *dead_ptr, char *buf)
-{
+static void show_basic_params(player_type* dead_ptr, char* buf) {
     char tomb_message[160];
     (void)sprintf(tomb_message, _("レベル: %d", "Level: %d"), (int)dead_ptr->lev);
     center_string(buf, tomb_message);
@@ -76,10 +74,9 @@ static void show_basic_params(player_type *dead_ptr, char *buf)
  * @param tomb_message 墓碑に刻む言葉
  * @return 追加の行数
  */
-static int show_killing_monster(player_type *dead_ptr, char *buf, char *tomb_message, size_t tomb_message_size)
-{
+static int show_killing_monster(player_type* dead_ptr, char* buf, char* tomb_message, size_t tomb_message_size) {
     shape_buffer(dead_ptr->died_from, GRAVE_LINE_WIDTH + 1, tomb_message, tomb_message_size);
-    char *t;
+    char* t;
     t = tomb_message + strlen(tomb_message) + 1;
     if (!*t)
         return 0;
@@ -91,17 +88,19 @@ static int show_killing_monster(player_type *dead_ptr, char *buf, char *tomb_mes
         for (t = dummy + strlen(dummy) - 2; iskanji(*(t - 1)); t--) /* Loop */
             ;
         strcpy(t, "…");
-    } else if (angband_strstr(tomb_message, "『") && suffix(dummy, "』")) {
+    }
+    else if (angband_strstr(tomb_message, "『") && suffix(dummy, "』")) {
         char dummy2[80];
-        char *name_head = angband_strstr(tomb_message, "『");
+        char* name_head = angband_strstr(tomb_message, "『");
         sprintf(dummy2, "%s%s", name_head, dummy);
         if (strlen(dummy2) <= GRAVE_LINE_WIDTH) {
             strcpy(dummy, dummy2);
             *name_head = '\0';
         }
-    } else if (angband_strstr(tomb_message, "「") && suffix(dummy, "」")) {
+    }
+    else if (angband_strstr(tomb_message, "「") && suffix(dummy, "」")) {
         char dummy2[80];
-        char *name_head = angband_strstr(tomb_message, "「");
+        char* name_head = angband_strstr(tomb_message, "「");
         sprintf(dummy2, "%s%s", name_head, dummy);
         if (strlen(dummy2) <= GRAVE_LINE_WIDTH) {
             strcpy(dummy, dummy2);
@@ -122,8 +121,7 @@ static int show_killing_monster(player_type *dead_ptr, char *buf, char *tomb_mes
  * @param extra_line 追加の行数
  * @return なし
  */
-static void show_dead_place(player_type *dead_ptr, char *buf, char *tomb_message, int extra_line)
-{
+static void show_dead_place(player_type* dead_ptr, char* buf, char* tomb_message, int extra_line) {
     if (streq(dead_ptr->died_from, "ripe") || streq(dead_ptr->died_from, "Seppuku"))
         return;
 
@@ -131,13 +129,16 @@ static void show_dead_place(player_type *dead_ptr, char *buf, char *tomb_message
         concptr field_name = dead_ptr->town_num ? "街" : "荒野";
         if (streq(dead_ptr->died_from, "途中終了")) {
             sprintf(tomb_message, "%sで死んだ", field_name);
-        } else {
+        }
+        else {
             sprintf(tomb_message, "に%sで殺された", field_name);
         }
-    } else {
+    }
+    else {
         if (streq(dead_ptr->died_from, "途中終了")) {
             sprintf(tomb_message, "地下 %d 階で死んだ", (int)dead_ptr->current_floor_ptr->dun_level);
-        } else {
+        }
+        else {
             sprintf(tomb_message, "に地下 %d 階で殺された", (int)dead_ptr->current_floor_ptr->dun_level);
         }
     }
@@ -152,17 +153,19 @@ static void show_dead_place(player_type *dead_ptr, char *buf, char *tomb_message
  * @param buf 墓テンプレ
  * @return なし
  */
-static void show_tomb_detail(player_type *dead_ptr, char *buf)
-{
+static void show_tomb_detail(player_type* dead_ptr, char* buf) {
     char tomb_message[160];
     int extra_line = 0;
     if (streq(dead_ptr->died_from, "途中終了")) {
         strcpy(tomb_message, "<自殺>");
-    } else if (streq(dead_ptr->died_from, "ripe")) {
+    }
+    else if (streq(dead_ptr->died_from, "ripe")) {
         strcpy(tomb_message, "引退後に天寿を全う");
-    } else if (streq(dead_ptr->died_from, "Seppuku")) {
+    }
+    else if (streq(dead_ptr->died_from, "Seppuku")) {
         strcpy(tomb_message, "勝利の後、切腹");
-    } else {
+    }
+    else {
         extra_line = show_killing_monster(dead_ptr, buf, tomb_message, sizeof(tomb_message));
     }
 
@@ -179,8 +182,7 @@ static void show_tomb_detail(player_type *dead_ptr, char *buf)
  * @param buf template of the tomb
  * @return nothing
  */
-static void show_tomb_detail(player_type *dead_ptr, char *buf)
-{
+static void show_tomb_detail(player_type* dead_ptr, char* buf) {
     char tomb_message[160];
     (void)sprintf(tomb_message, "Killed on Level %d", dead_ptr->current_floor_ptr->dun_level);
     center_string(buf, tomb_message);
@@ -188,7 +190,7 @@ static void show_tomb_detail(player_type *dead_ptr, char *buf)
 
     shape_buffer(format("by %s.", dead_ptr->died_from), GRAVE_LINE_WIDTH + 1, tomb_message, sizeof(tomb_message));
     center_string(buf, tomb_message);
-    char *t;
+    char* t;
     put_str(buf, 15, 11);
     t = tomb_message + strlen(tomb_message) + 1;
     if (!*t)
@@ -213,8 +215,7 @@ static void show_tomb_detail(player_type *dead_ptr, char *buf)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void print_tomb(player_type *dead_ptr)
-{
+void print_tomb(player_type* dead_ptr) {
     term_clear();
     char buf[1024];
     read_dead_file(buf, sizeof(buf));
@@ -240,7 +241,7 @@ void print_tomb(player_type *dead_ptr)
     show_tomb_detail(dead_ptr, buf);
 
     char current_time[80];
-    time_t ct = time((time_t *)0);
+    time_t ct = time((time_t*)0);
     (void)sprintf(current_time, "%-.24s", ctime(&ct));
     center_string(buf, current_time);
     put_str(buf, 17, 11);
@@ -252,9 +253,8 @@ void print_tomb(player_type *dead_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void inventory_aware(player_type *creature_ptr)
-{
-    object_type *o_ptr;
+static void inventory_aware(player_type* creature_ptr) {
+    object_type* o_ptr;
     for (int i = 0; i < INVEN_TOTAL; i++) {
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
@@ -270,10 +270,9 @@ static void inventory_aware(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void home_aware(player_type *creature_ptr)
-{
-    object_type *o_ptr;
-    store_type *store_ptr;
+static void home_aware(player_type* creature_ptr) {
+    object_type* o_ptr;
+    store_type* store_ptr;
     for (int i = 1; i < max_towns; i++) {
         store_ptr = &town_info[i].store[STORE_HOME];
         for (int j = 0; j < store_ptr->stock_num; j++) {
@@ -292,8 +291,7 @@ static void home_aware(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return Escキーでゲームを終了する時TRUE
  */
-static bool show_dead_player_items(player_type *creature_ptr)
-{
+static bool show_dead_player_items(player_type* creature_ptr) {
     if (creature_ptr->equip_cnt) {
         term_clear();
         (void)show_equipment(creature_ptr, 0, USE_FULL, TV_NONE);
@@ -319,10 +317,9 @@ static bool show_dead_player_items(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void show_dead_home_items(player_type *creature_ptr)
-{
+static void show_dead_home_items(player_type* creature_ptr) {
     for (int l = 1; l < max_towns; l++) {
-        store_type *store_ptr;
+        store_type* store_ptr;
         store_ptr = &town_info[l].store[STORE_HOME];
         if (store_ptr->stock_num == 0)
             continue;
@@ -332,7 +329,7 @@ static void show_dead_home_items(player_type *creature_ptr)
             for (int j = 0; (j < 12) && (i < store_ptr->stock_num); j++, i++) {
                 GAME_TEXT o_name[MAX_NLEN];
                 char tmp_val[80];
-                object_type *o_ptr;
+                object_type* o_ptr;
                 o_ptr = &store_ptr->stock[i];
                 sprintf(tmp_val, "%c) ", I2A(j));
                 prt(tmp_val, j + 2, 4);
@@ -353,8 +350,7 @@ static void show_dead_home_items(player_type *creature_ptr)
  * @param file_character ステータスダンプへのコールバック
  * @return なし
  */
-static void export_player_info(player_type *creature_ptr, update_playtime_pf update_playtime, display_player_pf display_player)
-{
+static void export_player_info(player_type* creature_ptr, update_playtime_pf update_playtime, display_player_pf display_player) {
     prt(_("キャラクターの記録をファイルに書き出すことができます。", "You may now dump a character record to one or more files."), 21, 0);
     prt(_("リターンキーでキャラクターを見ます。ESCで中断します。", "Then, hit RETURN to see the character, or ESC to abort."), 22, 0);
     while (TRUE) {
@@ -376,10 +372,9 @@ static void export_player_info(player_type *creature_ptr, update_playtime_pf upd
  * @brief 自動的にプレイヤーステータスをファイルダンプ出力する
  * @return なし
  */
-static void file_character_auto(player_type *creature_ptr, update_playtime_pf update_playtime, display_player_pf display_player)
-{
+static void file_character_auto(player_type* creature_ptr, update_playtime_pf update_playtime, display_player_pf display_player) {
     time_t now_t = time(NULL);
-    struct tm *now_tm = localtime(&now_t);
+    struct tm* now_tm = localtime(&now_t);
 
     char datetime[32];
     char filename[128];
@@ -401,8 +396,7 @@ static void file_character_auto(player_type *creature_ptr, update_playtime_pf up
  * @param display_player ステータス表示へのコールバック
  * @return なし
  */
-void show_death_info(player_type *creature_ptr, update_playtime_pf update_playtime, display_player_pf display_player)
-{
+void show_death_info(player_type* creature_ptr, update_playtime_pf update_playtime, display_player_pf display_player) {
     inventory_aware(creature_ptr);
     home_aware(creature_ptr);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "system/angband.h"
 #include "info-reader/info-reader-util.h"
+#include "system/angband.h"
 
-errr parse_k_info(char *buf, angband_header *head);
+errr parse_k_info(char* buf, angband_header* head);

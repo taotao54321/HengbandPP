@@ -21,9 +21,8 @@
 /*
  * Display weapon-exp
  */
-void do_cmd_knowledge_weapon_exp(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_weapon_exp(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
@@ -33,7 +32,7 @@ void do_cmd_knowledge_weapon_exp(player_type *creature_ptr)
             SUB_EXP weapon_exp;
             char tmp[30];
             for (KIND_OBJECT_IDX j = 0; j < max_k_idx; j++) {
-                object_kind *k_ptr = &k_info[j];
+                object_kind* k_ptr = &k_info[j];
 
                 if ((k_ptr->tval != TV_SWORD - i) || (k_ptr->sval != num))
                     continue;
@@ -66,9 +65,8 @@ void do_cmd_knowledge_weapon_exp(player_type *creature_ptr)
  * Display spell-exp
  * @return なし
  */
-void do_cmd_knowledge_spell_exp(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_spell_exp(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
@@ -76,10 +74,11 @@ void do_cmd_knowledge_spell_exp(player_type *creature_ptr)
     if (creature_ptr->realm1 != REALM_NONE) {
         fprintf(fff, _("%sの魔法書\n", "%s Spellbook\n"), realm_names[creature_ptr->realm1]);
         for (SPELL_IDX i = 0; i < 32; i++) {
-            const magic_type *s_ptr;
+            const magic_type* s_ptr;
             if (!is_magic(creature_ptr->realm1)) {
                 s_ptr = &technic_info[creature_ptr->realm1 - MIN_TECHNIC][i];
-            } else {
+            }
+            else {
                 s_ptr = &mp_ptr->info[creature_ptr->realm1 - 1][i];
             }
 
@@ -107,10 +106,11 @@ void do_cmd_knowledge_spell_exp(player_type *creature_ptr)
     if (creature_ptr->realm2 != REALM_NONE) {
         fprintf(fff, _("%sの魔法書\n", "\n%s Spellbook\n"), realm_names[creature_ptr->realm2]);
         for (SPELL_IDX i = 0; i < 32; i++) {
-            const magic_type *s_ptr;
+            const magic_type* s_ptr;
             if (!is_magic(creature_ptr->realm1)) {
                 s_ptr = &technic_info[creature_ptr->realm2 - MIN_TECHNIC][i];
-            } else {
+            }
+            else {
                 s_ptr = &mp_ptr->info[creature_ptr->realm2 - 1][i];
             }
 
@@ -141,12 +141,11 @@ void do_cmd_knowledge_spell_exp(player_type *creature_ptr)
  * Display skill-exp
  * @return なし
  */
-void do_cmd_knowledge_skill_exp(player_type *creature_ptr)
-{
+void do_cmd_knowledge_skill_exp(player_type* creature_ptr) {
     char skill_name[GINOU_TEMPMAX][20] = { _("マーシャルアーツ", "Martial Arts    "), _("二刀流          ", "Dual Wielding   "),
         _("乗馬            ", "Riding          "), _("盾              ", "Shield          ") };
 
-    FILE *fff = NULL;
+    FILE* fff = NULL;
     char file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;

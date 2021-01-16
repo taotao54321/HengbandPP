@@ -56,8 +56,7 @@ const int QUEST_ROYAL_CRYPT = 28; // 王家の墓.
  * @param o_ptr アイテムオブジェクト読み取り先ポインタ
  * @return なし
  */
-void rd_item_old(player_type *player_ptr, object_type *o_ptr)
-{
+void rd_item_old(player_type* player_ptr, object_type* o_ptr) {
     rd_s16b(&o_ptr->k_idx);
 
     byte tmp8u;
@@ -133,13 +132,14 @@ void rd_item_old(player_type *player_ptr, object_type *o_ptr)
             if (o_ptr->art_flags[2] & 0x80000000L)
                 o_ptr->curse_flags |= TRC_PERMA_CURSE;
             if (object_is_fixed_artifact(o_ptr)) {
-                artifact_type *a_ptr = &a_info[o_ptr->name1];
+                artifact_type* a_ptr = &a_info[o_ptr->name1];
                 if (a_ptr->gen_flags & (TRG_HEAVY_CURSE))
                     o_ptr->curse_flags |= TRC_HEAVY_CURSE;
                 if (a_ptr->gen_flags & (TRG_PERMA_CURSE))
                     o_ptr->curse_flags |= TRC_PERMA_CURSE;
-            } else if (object_is_ego(o_ptr)) {
-                ego_item_type *e_ptr = &e_info[o_ptr->name2];
+            }
+            else if (object_is_ego(o_ptr)) {
+                ego_item_type* e_ptr = &e_info[o_ptr->name2];
                 if (e_ptr->gen_flags & (TRG_HEAVY_CURSE))
                     o_ptr->curse_flags |= TRC_HEAVY_CURSE;
                 if (e_ptr->gen_flags & (TRG_PERMA_CURSE))
@@ -147,7 +147,8 @@ void rd_item_old(player_type *player_ptr, object_type *o_ptr)
             }
         }
         o_ptr->art_flags[2] &= (0x1FFFFFFFL);
-    } else {
+    }
+    else {
         rd_u32b(&o_ptr->curse_flags);
     }
 
@@ -178,7 +179,8 @@ void rd_item_old(player_type *player_ptr, object_type *o_ptr)
                 break;
             }
             o_ptr->xtra2 = 0;
-        } else if (o_ptr->xtra1 == EGO_XTRA_POWER) {
+        }
+        else if (o_ptr->xtra1 == EGO_XTRA_POWER) {
             switch (o_ptr->xtra2 % 11) {
             case 0:
                 add_flag(o_ptr->art_flags, TR_RES_BLIND);
@@ -215,7 +217,8 @@ void rd_item_old(player_type *player_ptr, object_type *o_ptr)
                 break;
             }
             o_ptr->xtra2 = 0;
-        } else if (o_ptr->xtra1 == EGO_XTRA_ABILITY) {
+        }
+        else if (o_ptr->xtra1 == EGO_XTRA_ABILITY) {
             switch (o_ptr->xtra2 % 8) {
             case 0:
                 add_flag(o_ptr->art_flags, TR_LEVITATION);
@@ -265,7 +268,8 @@ void rd_item_old(player_type *player_ptr, object_type *o_ptr)
             }
             o_ptr->xtra4 = o_ptr->xtra5;
         }
-    } else {
+    }
+    else {
         rd_byte(&o_ptr->xtra3);
         if (h_older_than(1, 3, 0, 1)) {
             if (object_is_smith(player_ptr, o_ptr) && o_ptr->xtra3 >= 1 + 96)
@@ -315,14 +319,14 @@ void rd_item_old(player_type *player_ptr, object_type *o_ptr)
     }
 
     if (object_is_fixed_artifact(o_ptr)) {
-        artifact_type *a_ptr;
+        artifact_type* a_ptr;
         a_ptr = &a_info[o_ptr->name1];
         if (!a_ptr->name)
             o_ptr->name1 = 0;
     }
 
     if (object_is_ego(o_ptr)) {
-        ego_item_type *e_ptr;
+        ego_item_type* e_ptr;
         e_ptr = &e_info[o_ptr->name2];
         if (!e_ptr->name)
             o_ptr->name2 = 0;
@@ -335,8 +339,7 @@ void rd_item_old(player_type *player_ptr, object_type *o_ptr)
  * @param m_ptr モンスター保存先ポインタ
  * @return なし
  */
-void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
-{
+void rd_monster_old(player_type* player_ptr, monster_type* m_ptr) {
     rd_s16b(&m_ptr->r_idx);
 
     if (z_older_than(11, 0, 12))
@@ -345,14 +348,15 @@ void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
         rd_s16b(&m_ptr->ap_r_idx);
 
     if (z_older_than(11, 0, 14)) {
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
         m_ptr->sub_align = SUB_ALIGN_NEUTRAL;
         if (r_ptr->flags3 & RF3_EVIL)
             m_ptr->sub_align |= SUB_ALIGN_EVIL;
         if (r_ptr->flags3 & RF3_GOOD)
             m_ptr->sub_align |= SUB_ALIGN_GOOD;
-    } else
+    }
+    else
         rd_byte(&m_ptr->sub_align);
 
     byte tmp8u;
@@ -370,13 +374,15 @@ void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
 
     if (z_older_than(11, 0, 5)) {
         m_ptr->max_maxhp = m_ptr->maxhp;
-    } else {
+    }
+    else {
         rd_s16b(&tmp16s);
         m_ptr->max_maxhp = (HIT_POINT)tmp16s;
     }
     if (h_older_than(2, 1, 2, 1)) {
         m_ptr->dealt_damage = 0;
-    } else {
+    }
+    else {
         rd_s32b(&m_ptr->dealt_damage);
     }
 
@@ -387,7 +393,8 @@ void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
     if (z_older_than(10, 4, 2)) {
         rd_byte(&tmp8u);
         m_ptr->energy_need = (s16b)tmp8u;
-    } else
+    }
+    else
         rd_s16b(&m_ptr->energy_need);
 
     if (z_older_than(11, 0, 13))
@@ -396,7 +403,8 @@ void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
     if (z_older_than(10, 0, 7)) {
         m_ptr->mtimed[MTIMED_FAST] = 0;
         m_ptr->mtimed[MTIMED_SLOW] = 0;
-    } else {
+    }
+    else {
         rd_byte(&tmp8u);
         m_ptr->mtimed[MTIMED_FAST] = (s16b)tmp8u;
         rd_byte(&tmp8u);
@@ -412,10 +420,12 @@ void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
 
     if (z_older_than(10, 0, 10)) {
         reset_target(m_ptr);
-    } else if (z_older_than(10, 0, 11)) {
+    }
+    else if (z_older_than(10, 0, 11)) {
         rd_s16b(&tmp16s);
         reset_target(m_ptr);
-    } else {
+    }
+    else {
         rd_s16b(&tmp16s);
         m_ptr->target_y = (POSITION)tmp16s;
         rd_s16b(&tmp16s);
@@ -433,7 +443,8 @@ void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
     u32b tmp32u;
     if (z_older_than(10, 4, 5)) {
         m_ptr->exp = 0;
-    } else {
+    }
+    else {
         rd_u32b(&tmp32u);
         m_ptr->exp = tmp32u;
     }
@@ -443,7 +454,8 @@ void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
             m_ptr->r_idx = (0 - m_ptr->r_idx);
             m_ptr->mflag2 |= MFLAG2_KAGE;
         }
-    } else {
+    }
+    else {
         rd_byte(&m_ptr->mflag2);
     }
 
@@ -454,7 +466,8 @@ void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
 
     if (z_older_than(10, 1, 3)) {
         m_ptr->nickname = 0;
-    } else {
+    }
+    else {
         char buf[128];
         rd_string(buf, sizeof(buf));
         if (buf[0])
@@ -464,16 +477,14 @@ void rd_monster_old(player_type *player_ptr, monster_type *m_ptr)
     rd_byte(&tmp8u);
 }
 
-static void move_RF3_to_RFR(monster_race *r_ptr, const BIT_FLAGS rf3, const BIT_FLAGS rfr)
-{
+static void move_RF3_to_RFR(monster_race* r_ptr, const BIT_FLAGS rf3, const BIT_FLAGS rfr) {
     if (r_ptr->r_flags3 & rf3) {
         r_ptr->r_flags3 &= ~rf3;
         r_ptr->r_flagsr |= rfr;
     }
 }
 
-static void move_RF4_BR_to_RFR(monster_race *r_ptr, const BIT_FLAGS rf4_br, const BIT_FLAGS rfr)
-{
+static void move_RF4_BR_to_RFR(monster_race* r_ptr, const BIT_FLAGS rf4_br, const BIT_FLAGS rfr) {
     if (r_ptr->r_flags4 & rf4_br)
         r_ptr->r_flagsr |= rfr;
 }
@@ -484,8 +495,7 @@ static void move_RF4_BR_to_RFR(monster_race *r_ptr, const BIT_FLAGS rf4_br, cons
  * @param r_idx モンスター種族ID
  * @details 本来はr_idxからr_ptrを決定可能だが、互換性を優先するため元コードのままとする
  */
-void set_old_lore(monster_race *r_ptr, const MONRACE_IDX r_idx)
-{
+void set_old_lore(monster_race* r_ptr, const MONRACE_IDX r_idx) {
     r_ptr->r_flagsr = 0L;
     move_RF3_to_RFR(r_ptr, RF3_IM_ACID, RFR_IM_ACID);
     move_RF3_to_RFR(r_ptr, RF3_IM_ELEC, RFR_IM_ELEC);
@@ -528,11 +538,10 @@ void set_old_lore(monster_race *r_ptr, const MONRACE_IDX r_idx)
  * The monsters/objects must be loaded in the same order
  * that they were stored, since the actual indexes matter.
  */
-errr rd_dungeon_old(player_type *player_ptr)
-{
+errr rd_dungeon_old(player_type* player_ptr) {
     s16b tmp16s;
     rd_s16b(&tmp16s);
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     floor_ptr->dun_level = (DEPTH)tmp16s;
     if (z_older_than(10, 3, 8))
         player_ptr->dungeon_idx = DUNGEON_ANGBAND;
@@ -574,13 +583,14 @@ errr rd_dungeon_old(player_type *player_ptr)
             byte tmp8u;
             rd_byte(&tmp8u);
             info = (u16b)tmp8u;
-        } else {
+        }
+        else {
             rd_u16b(&info);
             info &= ~(CAVE_LITE | CAVE_VIEW | CAVE_MNLT | CAVE_MNDK);
         }
 
         for (int i = count; i > 0; i--) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[y][x];
             g_ptr->info = info;
             if (++x >= xmax) {
@@ -597,7 +607,7 @@ errr rd_dungeon_old(player_type *player_ptr)
         byte tmp8u;
         rd_byte(&tmp8u);
         for (int i = count; i > 0; i--) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[y][x];
             g_ptr->feat = (s16b)tmp8u;
             if (++x >= xmax) {
@@ -614,7 +624,7 @@ errr rd_dungeon_old(player_type *player_ptr)
         byte tmp8u;
         rd_byte(&tmp8u);
         for (int i = count; i > 0; i--) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[y][x];
             g_ptr->mimic = (s16b)tmp8u;
             if (++x >= xmax) {
@@ -630,7 +640,7 @@ errr rd_dungeon_old(player_type *player_ptr)
         rd_byte(&count);
         rd_s16b(&tmp16s);
         for (int i = count; i > 0; i--) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[y][x];
             g_ptr->special = tmp16s;
             if (++x >= xmax) {
@@ -652,7 +662,7 @@ errr rd_dungeon_old(player_type *player_ptr)
     if (h_older_than(1, 1, 1, 0)) {
         for (int y = 0; y < ymax; y++) {
             for (int x = 0; x < xmax; x++) {
-                grid_type *g_ptr;
+                grid_type* g_ptr;
                 g_ptr = &floor_ptr->grid_array[y][x];
 
                 /* Very old */
@@ -673,21 +683,24 @@ errr rd_dungeon_old(player_type *player_ptr)
     if (h_older_than(1, 3, 1, 0)) {
         for (int y = 0; y < ymax; y++) {
             for (int x = 0; x < xmax; x++) {
-                grid_type *g_ptr;
+                grid_type* g_ptr;
                 g_ptr = &floor_ptr->grid_array[y][x];
 
                 /* Old CAVE_IN_MIRROR flag */
                 if (g_ptr->info & CAVE_OBJECT) {
                     g_ptr->mimic = feat_mirror;
-                } else if ((g_ptr->feat == OLD_FEAT_MINOR_GLYPH) || (g_ptr->feat == OLD_FEAT_GLYPH)) {
+                }
+                else if ((g_ptr->feat == OLD_FEAT_MINOR_GLYPH) || (g_ptr->feat == OLD_FEAT_GLYPH)) {
                     g_ptr->info |= CAVE_OBJECT;
                     g_ptr->mimic = g_ptr->feat;
                     g_ptr->feat = feat_floor;
-                } else if (g_ptr->info & CAVE_TRAP) {
+                }
+                else if (g_ptr->info & CAVE_TRAP) {
                     g_ptr->info &= ~CAVE_TRAP;
                     g_ptr->mimic = g_ptr->feat;
                     g_ptr->feat = choose_random_trap(player_ptr);
-                } else if (g_ptr->feat == OLD_FEAT_INVIS) {
+                }
+                else if (g_ptr->feat == OLD_FEAT_INVIS) {
                     g_ptr->mimic = feat_floor;
                     g_ptr->feat = feat_trap_open;
                 }
@@ -699,17 +712,19 @@ errr rd_dungeon_old(player_type *player_ptr)
     if (!vanilla_town) {
         for (int y = 0; y < ymax; y++) {
             for (int x = 0; x < xmax; x++) {
-                grid_type *g_ptr;
+                grid_type* g_ptr;
                 g_ptr = &floor_ptr->grid_array[y][x];
 
                 if ((g_ptr->special == OLD_QUEST_WATER_CAVE) && !floor_ptr->dun_level) {
                     if (g_ptr->feat == OLD_FEAT_QUEST_ENTER) {
                         g_ptr->feat = feat_tree;
                         g_ptr->special = 0;
-                    } else if (g_ptr->feat == OLD_FEAT_BLDG_1) {
+                    }
+                    else if (g_ptr->feat == OLD_FEAT_BLDG_1) {
                         g_ptr->special = lite_town ? QUEST_OLD_CASTLE : QUEST_ROYAL_CRYPT;
                     }
-                } else if ((g_ptr->feat == OLD_FEAT_QUEST_EXIT) && (floor_ptr->inside_quest == OLD_QUEST_WATER_CAVE)) {
+                }
+                else if ((g_ptr->feat == OLD_FEAT_QUEST_EXIT) && (floor_ptr->inside_quest == OLD_QUEST_WATER_CAVE)) {
                     g_ptr->feat = feat_up_stair;
                     g_ptr->special = 0;
                 }
@@ -731,18 +746,18 @@ errr rd_dungeon_old(player_type *player_ptr)
             return (152);
         }
 
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[o_idx];
         rd_item(player_ptr, o_ptr);
         if (object_is_held_monster(o_ptr)) {
-            monster_type *m_ptr;
+            monster_type* m_ptr;
             m_ptr = &floor_ptr->m_list[o_ptr->held_m_idx];
             o_ptr->next_o_idx = m_ptr->hold_o_idx;
             m_ptr->hold_o_idx = o_idx;
             continue;
         }
 
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[o_ptr->iy][o_ptr->ix];
         o_ptr->next_o_idx = g_ptr->o_idx;
         g_ptr->o_idx = o_idx;
@@ -756,7 +771,7 @@ errr rd_dungeon_old(player_type *player_ptr)
 
     for (int i = 1; i < limit; i++) {
         MONSTER_IDX m_idx;
-        monster_type *m_ptr;
+        monster_type* m_ptr;
         m_idx = m_pop(floor_ptr);
         if (i != m_idx) {
             load_note(format(_("モンスター配置エラー (%d <> %d)", "Monster allocation error (%d <> %d)"), i, m_idx));
@@ -765,7 +780,7 @@ errr rd_dungeon_old(player_type *player_ptr)
 
         m_ptr = &floor_ptr->m_list[m_idx];
         rd_monster(player_ptr, m_ptr);
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[m_ptr->fy][m_ptr->fx];
         g_ptr->m_idx = m_idx;
         real_r_ptr(m_ptr)->cur_num++;

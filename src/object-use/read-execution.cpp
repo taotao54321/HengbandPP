@@ -75,10 +75,9 @@
  * cancelled before use.  XXX Reading them still takes a turn, though.
  * </pre>
  */
-void exe_read(player_type *creature_ptr, INVENTORY_IDX item, bool known)
-{
+void exe_read(player_type* creature_ptr, INVENTORY_IDX item, bool known) {
     int k, used_up, ident, lev;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = ref_item(creature_ptr, item);
     take_turn(creature_ptr, 100);
     if (cmd_limit_time_walk(creature_ptr))
@@ -127,7 +126,8 @@ void exe_read(player_type *creature_ptr, INVENTORY_IDX item, bool known)
                 k = INVEN_RARM;
                 if (has_melee_weapon(creature_ptr, INVEN_LARM) && one_in_(2))
                     k = INVEN_LARM;
-            } else if (has_melee_weapon(creature_ptr, INVEN_LARM))
+            }
+            else if (has_melee_weapon(creature_ptr, INVEN_LARM))
                 k = INVEN_LARM;
 
             if (k && curse_weapon_object(creature_ptr, FALSE, &creature_ptr->inventory_list[k]))
@@ -469,11 +469,13 @@ void exe_read(player_type *creature_ptr, INVENTORY_IDX item, bool known)
             break;
         }
         }
-    } else if (o_ptr->name1 == ART_GHB) {
+    }
+    else if (o_ptr->name1 == ART_GHB) {
         msg_print(_("私は苦労して『グレーター・ヘル=ビースト』を倒した。", "I had a very hard time to kill the Greater hell-beast, "));
         msg_print(_("しかし手に入ったのはこのきたないＴシャツだけだった。", "but all I got was this lousy t-shirt!"));
         used_up = FALSE;
-    } else if (o_ptr->name1 == ART_POWER) {
+    }
+    else if (o_ptr->name1 == ART_POWER) {
         msg_print(_("「一つの指輪は全てを統べ、", "'One Ring to rule them all, "));
         msg_print(NULL);
         msg_print(_("一つの指輪は全てを見つけ、", "One Ring to find them, "));
@@ -482,7 +484,8 @@ void exe_read(player_type *creature_ptr, INVENTORY_IDX item, bool known)
         msg_print(NULL);
         msg_print(_("暗闇の中に繋ぎとめる。」", "and in the darkness bind them.'"));
         used_up = FALSE;
-    } else if (o_ptr->tval == TV_PARCHMENT) {
+    }
+    else if (o_ptr->tval == TV_PARCHMENT) {
         concptr q;
         GAME_TEXT o_name[MAX_NLEN];
         char buf[1024];

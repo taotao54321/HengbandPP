@@ -2,7 +2,6 @@
 #include "cmd-building/cmd-building.h"
 #include "core/asking-player.h"
 #include "core/show-file.h"
-#include "status/buff-setter.h"
 #include "core/stuff-handler.h"
 #include "core/window-redrawer.h"
 #include "dungeon/dungeon.h"
@@ -12,15 +11,16 @@
 #include "market/arena-info-table.h"
 #include "market/building-actions-table.h"
 #include "market/building-util.h"
+#include "monster-race/monster-race-hook.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-flags-ability1.h"
 #include "monster-race/race-flags-ability2.h"
 #include "monster-race/race-flags-resistance.h"
 #include "monster-race/race-flags1.h"
 #include "monster-race/race-flags7.h"
-#include "monster-race/monster-race-hook.h"
 #include "monster/monster-list.h"
 #include "monster/monster-util.h"
+#include "status/buff-setter.h"
 #include "system/building-type-definition.h"
 #include "system/floor-type-definition.h"
 #include "term/screen-processor.h"
@@ -33,8 +33,7 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return まだ優勝していないか、挑戦者モンスターとの戦いではFALSE
  */
-static bool process_ostensible_arena_victory(player_type *player_ptr)
-{
+static bool process_ostensible_arena_victory(player_type* player_ptr) {
     if (player_ptr->arena_number != MAX_ARENA_MONS)
         return FALSE;
 
@@ -57,8 +56,7 @@ static bool process_ostensible_arena_victory(player_type *player_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return まだパワー・ワイアーム以下を倒していないならFALSE、倒していたらTRUE
  */
-static bool battle_metal_babble(player_type *player_ptr)
-{
+static bool battle_metal_babble(player_type* player_ptr) {
     if (player_ptr->arena_number <= MAX_ARENA_MONS)
         return FALSE;
 
@@ -90,8 +88,7 @@ static bool battle_metal_babble(player_type *player_ptr)
     return TRUE;
 }
 
-static void go_to_arena(player_type *player_ptr)
-{
+static void go_to_arena(player_type* player_ptr) {
     if (process_ostensible_arena_victory(player_ptr))
         return;
 
@@ -113,8 +110,7 @@ static void go_to_arena(player_type *player_ptr)
     player_ptr->leave_bldg = TRUE;
 }
 
-static void see_arena_poster(player_type *player_ptr)
-{
+static void see_arena_poster(player_type* player_ptr) {
     if (player_ptr->arena_number == MAX_ARENA_MONS) {
         msg_print(_("あなたは勝利者だ。 アリーナでのセレモニーに参加しなさい。", "You are victorious. Enter the arena for the ceremony."));
         return;
@@ -125,7 +121,7 @@ static void see_arena_poster(player_type *player_ptr)
         return;
     }
 
-    monster_race *r_ptr;
+    monster_race* r_ptr;
     r_ptr = &r_info[arena_info[player_ptr->arena_number].r_idx];
     concptr name = (r_name + r_ptr->name);
     msg_format(_("%s に挑戦するものはいないか？", "Do I hear any challenges against: %s"), name);
@@ -141,8 +137,7 @@ static void see_arena_poster(player_type *player_ptr)
  * @param cmd 闘技場処理のID
  * @return なし
  */
-void arena_comm(player_type *player_ptr, int cmd)
-{
+void arena_comm(player_type* player_ptr, int cmd) {
     switch (cmd) {
     case BACT_ARENA:
         go_to_arena(player_ptr);
@@ -165,8 +160,7 @@ void arena_comm(player_type *player_ptr, int cmd)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void update_gambling_monsters(player_type *player_ptr)
-{
+void update_gambling_monsters(player_type* player_ptr) {
     int total, i;
     int max_dl = 0;
     int mon_level;
@@ -220,7 +214,7 @@ void update_gambling_monsters(player_type *player_ptr)
         }
 
         for (i = 0; i < 4; i++) {
-            monster_race *r_ptr = &r_info[battle_mon[i]];
+            monster_race* r_ptr = &r_info[battle_mon[i]];
             int num_taisei = count_bits(r_ptr->flagsr & (RFR_IM_ACID | RFR_IM_ELEC | RFR_IM_FIRE | RFR_IM_COLD | RFR_IM_POIS));
 
             if (r_ptr->flags1 & RF1_FORCE_MAXHP)
@@ -274,8 +268,7 @@ void update_gambling_monsters(player_type *player_ptr)
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return 賭けを開始したか否か
  */
-bool monster_arena_comm(player_type *player_ptr)
-{
+bool monster_arena_comm(player_type* player_ptr) {
     PRICE maxbet;
     PRICE wager;
     char out_val[160], tmp_str[80];
@@ -301,7 +294,7 @@ bool monster_arena_comm(player_type *player_ptr)
     prt(_("モンスター                                                     倍率", "Monsters                                                       Odds"), 4, 4);
     for (int i = 0; i < 4; i++) {
         char buf[80];
-        monster_race *r_ptr = &r_info[battle_mon[i]];
+        monster_race* r_ptr = &r_info[battle_mon[i]];
 
         sprintf(buf, _("%d) %-58s  %4ld.%02ld倍", "%d) %-58s  %4ld.%02ld"), i + 1,
             _(format("%s%s", r_name + r_ptr->name, (r_ptr->flags1 & RF1_UNIQUE) ? "もどき" : "      "),
@@ -362,11 +355,13 @@ bool monster_arena_comm(player_type *player_ptr)
         msg_print(NULL);
         screen_load();
         return FALSE;
-    } else if (wager > maxbet) {
+    }
+    else if (wager > maxbet) {
         msg_format(_("%ldゴールドだけ受けよう。残りは取っときな。", "I'll take %ld gold of that. Keep the rest."), (long int)maxbet);
 
         wager = maxbet;
-    } else if (wager < 1) {
+    }
+    else if (wager < 1) {
         msg_print(_("ＯＫ、１ゴールドでいこう。", "Ok, we'll start with 1 gold."));
         wager = 1;
     }

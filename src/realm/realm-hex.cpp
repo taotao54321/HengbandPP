@@ -67,8 +67,7 @@
  * @param o_ptr オブジェクト構造体の参照ポインタ
  * @return 呪縛可能な武器ならばTRUEを返す
  */
-static bool item_tester_hook_weapon_except_bow(player_type *player_ptr, object_type *o_ptr)
-{
+static bool item_tester_hook_weapon_except_bow(player_type* player_ptr, object_type* o_ptr) {
     /* Unused */
     (void)player_ptr;
 
@@ -90,8 +89,7 @@ static bool item_tester_hook_weapon_except_bow(player_type *player_ptr, object_t
  * @param mode 処理内容 (SPELL_NAME / SPELL_DESC / SPELL_INFO / SPELL_CAST / SPELL_CONT / SPELL_STOP)
  * @return SPELL_NAME / SPELL_DESC / SPELL_INFO 時には文字列ポインタを返す。SPELL_CAST / SPELL_CONT / SPELL_STOP 時はNULL文字列を返す。
  */
-concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
-{
+concptr do_hex_spell(player_type* caster_ptr, SPELL_IDX spell, spell_type mode) {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
@@ -182,7 +180,7 @@ concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
             OBJECT_IDX item;
             concptr q, s;
             GAME_TEXT o_name[MAX_NLEN];
-            object_type *o_ptr;
+            object_type* o_ptr;
             u32b f[TR_FLAG_SIZE];
 
             item_tester_hook = item_tester_hook_weapon_except_bow;
@@ -219,7 +217,8 @@ concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
                     }
                     msg_format(_("%s は劣化してしまった。", "Your %s was disenchanted!"), o_name);
                 }
-            } else {
+            }
+            else {
                 int curse_rank = 0;
                 msg_format(_("恐怖の暗黒オーラがあなたの%sを包み込んだ！", "A terrible black aura blasts your %s!"), o_name);
                 o_ptr->curse_flags |= (TRC_CURSED);
@@ -489,7 +488,7 @@ concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
             OBJECT_IDX item;
             concptr q, s;
             GAME_TEXT o_name[MAX_NLEN];
-            object_type *o_ptr;
+            object_type* o_ptr;
             u32b f[TR_FLAG_SIZE];
 
             item_tester_hook = object_is_armour;
@@ -527,7 +526,8 @@ concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
                     }
                     msg_format(_("%s は劣化してしまった。", "Your %s was disenchanted!"), o_name);
                 }
-            } else {
+            }
+            else {
                 int curse_rank = 0;
                 msg_format(_("恐怖の暗黒オーラがあなたの%sを包み込んだ！", "A terrible black aura blasts your %s!"), o_name);
                 o_ptr->curse_flags |= (TRC_CURSED);
@@ -564,20 +564,22 @@ concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
         if (desc)
             return _("影のオーラを身にまとい、敵に影のダメージを与える。", "Gives aura of shadow.");
         if (cast) {
-            object_type *o_ptr = &caster_ptr->inventory_list[INVEN_OUTER];
+            object_type* o_ptr = &caster_ptr->inventory_list[INVEN_OUTER];
 
             if (!o_ptr->k_idx) {
                 msg_print(_("クロークを身につけていない！", "You are not wearing a cloak."));
                 return NULL;
-            } else if (!object_is_cursed(o_ptr)) {
+            }
+            else if (!object_is_cursed(o_ptr)) {
                 msg_print(_("クロークは呪われていない！", "Your cloak is not cursed."));
                 return NULL;
-            } else {
+            }
+            else {
                 msg_print(_("影のオーラを身にまとった。", "You are enveloped by a shadowy aura!"));
             }
         }
         if (cont) {
-            object_type *o_ptr = &caster_ptr->inventory_list[INVEN_OUTER];
+            object_type* o_ptr = &caster_ptr->inventory_list[INVEN_OUTER];
 
             if ((!o_ptr->k_idx) || (!object_is_cursed(o_ptr))) {
                 exe_spell(caster_ptr, REALM_HEX, spell, SPELL_STOP);
@@ -691,7 +693,7 @@ concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
             OBJECT_IDX item;
             concptr s, q;
             u32b f[TR_FLAG_SIZE];
-            object_type *o_ptr;
+            object_type* o_ptr;
 
             item_tester_hook = item_tester_hook_cursed;
             q = _("どの装備品から吸収しますか？", "Which cursed equipment do you drain mana from?");
@@ -711,12 +713,14 @@ concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
 
             if (o_ptr->curse_flags & TRC_PERMA_CURSE) {
                 /* Nothing */
-            } else if (o_ptr->curse_flags & TRC_HEAVY_CURSE) {
+            }
+            else if (o_ptr->curse_flags & TRC_HEAVY_CURSE) {
                 if (one_in_(7)) {
                     msg_print(_("呪いを全て吸い取った。", "A heavy curse vanished."));
                     o_ptr->curse_flags = 0L;
                 }
-            } else if ((o_ptr->curse_flags & (TRC_CURSED)) && one_in_(3)) {
+            }
+            else if ((o_ptr->curse_flags & (TRC_CURSED)) && one_in_(3)) {
                 msg_print(_("呪いを全て吸い取った。", "A curse vanished."));
                 o_ptr->curse_flags = 0L;
             }
@@ -797,7 +801,8 @@ concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
 
             if (flag && randint0(plev * plev / 2)) {
                 teleport_player_to(caster_ptr, y, x, TELEPORT_SPONTANEOUS);
-            } else {
+            }
+            else {
                 msg_print(_("おっと！", "Oops!"));
                 teleport_player(caster_ptr, 30, TELEPORT_SPONTANEOUS);
             }
@@ -861,7 +866,8 @@ concptr do_hex_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
                     if (current_world_ptr->wizard) {
                         msg_format(_("%d点のダメージを返した。", "You return %d damage."), power);
                     }
-                } else {
+                }
+                else {
                     msg_print(_("復讐する気が失せた。", "You are not in the mood for revenge."));
                 }
                 hex_revenge_power(caster_ptr) = 0;

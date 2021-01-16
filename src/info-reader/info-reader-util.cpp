@@ -19,14 +19,14 @@ int error_line; /*!< データ読み込み/初期化時に汎用的にエラー�
  * Returns FALSE when there isn't enough space available to store
  * the text.
  */
-bool add_text(u32b *offset, angband_header *head, concptr buf, bool normal_text)
-{
+bool add_text(u32b* offset, angband_header* head, concptr buf, bool normal_text) {
     if (head->text_size + strlen(buf) + 8 > FAKE_TEXT_SIZE)
         return FALSE;
 
     if (*offset == 0) {
         *offset = ++head->text_size;
-    } else if (normal_text) {
+    }
+    else if (normal_text) {
         /*
          * If neither the end of the last line nor
          * the beginning of current line is not a space,
@@ -61,8 +61,7 @@ bool add_text(u32b *offset, angband_header *head, concptr buf, bool normal_text)
  * Returns FALSE when there isn't enough space available to store
  * the text.
  */
-bool add_name(u32b *offset, angband_header *head, concptr buf)
-{
+bool add_name(u32b* offset, angband_header* head, concptr buf) {
     if (head->name_size + strlen(buf) + 8 > FAKE_NAME_SIZE)
         return FALSE;
 
@@ -86,8 +85,7 @@ bool add_name(u32b *offset, angband_header *head, concptr buf)
  * Returns FALSE when there isn't enough space available to store
  * the text.
  */
-bool add_tag(STR_OFFSET *offset, angband_header *head, concptr buf)
-{
+bool add_tag(STR_OFFSET* offset, angband_header* head, concptr buf) {
     u32b i;
     for (i = 1; i < head->tag_size; i += strlen(&head->tag_ptr[i]) + 1) {
         if (streq(&head->tag_ptr[i], buf))
@@ -115,8 +113,7 @@ bool add_tag(STR_OFFSET *offset, angband_header *head, concptr buf)
  * @param what 参照元の文字列ポインタ
  * @return エラーコード
  */
-errr grab_one_flag(u32b *flags, concptr names[], concptr what)
-{
+errr grab_one_flag(u32b* flags, concptr names[], concptr what) {
     for (int i = 0; i < 32; i++) {
         if (streq(what, names[i])) {
             *flags |= (1L << i);
@@ -133,8 +130,7 @@ errr grab_one_flag(u32b *flags, concptr names[], concptr what)
  * @param what 参照元の文字列ポインタ
  * @return 発動能力ID
  */
-byte grab_one_activation_flag(concptr what)
-{
+byte grab_one_activation_flag(concptr what) {
     for (int i = 0;; i++) {
         if (activation_info[i].flag == NULL)
             break;

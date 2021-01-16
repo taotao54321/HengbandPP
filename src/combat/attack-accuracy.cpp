@@ -19,8 +19,7 @@
  * @return 命中と判定された場合TRUEを返す
  * @note Always miss 5%, always hit 5%, otherwise random.
  */
-bool test_hit_norm(player_type *attacker_ptr, HIT_RELIABILITY chance, ARMOUR_CLASS ac, bool visible)
-{
+bool test_hit_norm(player_type* attacker_ptr, HIT_RELIABILITY chance, ARMOUR_CLASS ac, bool visible) {
     if (!visible)
         chance = (chance + 1) / 2;
     return hit_chance(attacker_ptr, chance, ac) >= randint1(100);
@@ -33,8 +32,7 @@ bool test_hit_norm(player_type *attacker_ptr, HIT_RELIABILITY chance, ARMOUR_CLA
  * @param ac 敵AC
  * @return 命中確率
  */
-PERCENTAGE hit_chance(player_type *attacker_ptr, HIT_RELIABILITY reli, ARMOUR_CLASS ac)
-{
+PERCENTAGE hit_chance(player_type* attacker_ptr, HIT_RELIABILITY reli, ARMOUR_CLASS ac) {
     PERCENTAGE chance = 5, chance_left = 90;
     if (reli <= 0)
         return 5;
@@ -57,8 +55,7 @@ PERCENTAGE hit_chance(player_type *attacker_ptr, HIT_RELIABILITY reli, ARMOUR_CL
  * Always miss 5% of the time, Always hit 5% of the time.
  * Otherwise, match monster power against player armor.
  */
-int check_hit_from_monster_to_player(player_type *target_ptr, int power, DEPTH level, int stun)
-{
+int check_hit_from_monster_to_player(player_type* target_ptr, int power, DEPTH level, int stun) {
     int k = randint0(100);
     if (stun && one_in_(2))
         return FALSE;
@@ -83,8 +80,7 @@ int check_hit_from_monster_to_player(player_type *target_ptr, int power, DEPTH l
  * @param stun 攻撃側モンスターが朦朧状態ならTRUEを返す
  * @return 命中ならばTRUEを返す
  */
-int check_hit_from_monster_to_monster(int power, DEPTH level, ARMOUR_CLASS ac, int stun)
-{
+int check_hit_from_monster_to_monster(int power, DEPTH level, ARMOUR_CLASS ac, int stun) {
     int k = randint0(100);
     if (stun && one_in_(2))
         return FALSE;
@@ -104,11 +100,10 @@ int check_hit_from_monster_to_monster(int power, DEPTH level, ARMOUR_CLASS ac, i
  * @param chance 基本命中値
  * @return なし
  */
-static bool decide_attack_hit(player_type *attacker_ptr, player_attack_type *pa_ptr, int chance)
-{
+static bool decide_attack_hit(player_type* attacker_ptr, player_attack_type* pa_ptr, int chance) {
     bool success_hit = FALSE;
-    object_type *o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
-    monster_race *r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
+    object_type* o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
+    monster_race* r_ptr = &r_info[pa_ptr->m_ptr->r_idx];
     if (((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_POISON_NEEDLE)) || (pa_ptr->mode == HISSATSU_KYUSHO)) {
         int n = 1;
 
@@ -119,7 +114,8 @@ static bool decide_attack_hit(player_type *attacker_ptr, player_attack_type *pa_
             n *= 2;
 
         success_hit = one_in_(n);
-    } else if ((attacker_ptr->pclass == CLASS_NINJA) && ((pa_ptr->backstab || pa_ptr->surprise_attack) && !(r_ptr->flagsr & RFR_RES_ALL)))
+    }
+    else if ((attacker_ptr->pclass == CLASS_NINJA) && ((pa_ptr->backstab || pa_ptr->surprise_attack) && !(r_ptr->flagsr & RFR_RES_ALL)))
         success_hit = TRUE;
     else
         success_hit = test_hit_norm(attacker_ptr, chance, r_ptr->ac, pa_ptr->m_ptr->ml);
@@ -137,9 +133,8 @@ static bool decide_attack_hit(player_type *attacker_ptr, player_attack_type *pa_
  * @param chance 基本命中値
  * @return 当たればTRUE、外れればFALSE
  */
-bool process_attack_hit(player_type *attacker_ptr, player_attack_type *pa_ptr, int chance)
-{
-    object_type *o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
+bool process_attack_hit(player_type* attacker_ptr, player_attack_type* pa_ptr, int chance) {
+    object_type* o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
     if (decide_attack_hit(attacker_ptr, pa_ptr, chance))
         return TRUE;
 
@@ -148,7 +143,8 @@ bool process_attack_hit(player_type *attacker_ptr, player_attack_type *pa_ptr, i
 
     if ((o_ptr->tval == TV_POLEARM) && (o_ptr->sval == SV_DEATH_SCYTHE) && one_in_(3)) {
         process_death_scythe_reflection(attacker_ptr, pa_ptr);
-    } else {
+    }
+    else {
         sound(SOUND_MISS);
         msg_format(_("ミス！ %sにかわされた。", "You miss %s."), pa_ptr->m_name);
     }

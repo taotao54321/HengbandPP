@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum trg_type {
-	TRG_INSTA_ART = 0x00000001L, /* Item must be an artifact */
+    TRG_INSTA_ART = 0x00000001L, /* Item must be an artifact */
     TRG_QUESTITEM = 0x00000002L, /* quest level item -KMW- */
     TRG_XTRA_POWER = 0x00000004L, /* Extra power */
     TRG_ONE_SUSTAIN = 0x00000008L, /* One sustain */

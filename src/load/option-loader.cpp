@@ -22,8 +22,7 @@
  * The window options are stored in the same way, but note that each
  * window gets 32 options, and their order is fixed by certain defines.
  */
-void rd_options(void)
-{
+void rd_options(void) {
     strip_bytes(16);
 
     byte b;
@@ -35,7 +34,8 @@ void rd_options(void)
 
     if (h_older_than(1, 7, 0, 0)) {
         mana_warn = 2;
-    } else {
+    }
+    else {
         rd_byte(&b);
         mana_warn = b;
     }
@@ -57,8 +57,8 @@ void rd_options(void)
     cheat_turn = (c & 0x0080) ? TRUE : FALSE;
     cheat_sight = (c & 0x0040) ? TRUE : FALSE;
 
-    rd_byte((byte *)&autosave_l);
-    rd_byte((byte *)&autosave_t);
+    rd_byte((byte*)&autosave_l);
+    rd_byte((byte*)&autosave_t);
     rd_s16b(&autosave_freq);
 
     BIT_FLAGS flag[8];
@@ -78,7 +78,8 @@ void rd_options(void)
 
             if (flag[n] & (1L << i)) {
                 option_flag[n] |= (1L << i);
-            } else {
+            }
+            else {
                 option_flag[n] &= ~(1L << i);
             }
         }
@@ -103,7 +104,8 @@ void rd_options(void)
 
             if (flag[n] & (1L << i)) {
                 window_flag[n] |= (1L << i);
-            } else {
+            }
+            else {
                 window_flag[n] &= ~(1L << i);
             }
         }

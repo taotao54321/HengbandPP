@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum art_dragon_armor_type {
-	ART_RAZORBACK = 129,
+    ART_RAZORBACK = 129,
     ART_BLADETURNER = 130,
     ART_SEIRYU = 201,
 } art_dragon_type;

@@ -33,8 +33,7 @@
  * @param col 表示行
  * @return なし
  */
-static void prt_alloc(tval_type tval, OBJECT_SUBTYPE_VALUE sval, TERM_LEN row, TERM_LEN col)
-{
+static void prt_alloc(tval_type tval, OBJECT_SUBTYPE_VALUE sval, TERM_LEN row, TERM_LEN col) {
     u32b rarity[K_MAX_DEPTH];
     (void)C_WIPE(rarity, K_MAX_DEPTH, u32b);
     u32b total[K_MAX_DEPTH];
@@ -45,14 +44,15 @@ static void prt_alloc(tval_type tval, OBJECT_SUBTYPE_VALUE sval, TERM_LEN row, T
     int home = 0;
     for (int i = 0; i < K_MAX_DEPTH; i++) {
         int total_frac = 0;
-        object_kind *k_ptr;
-        alloc_entry *table = alloc_kind_table;
+        object_kind* k_ptr;
+        alloc_entry* table = alloc_kind_table;
         for (int j = 0; j < alloc_kind_size; j++) {
             PERCENTAGE prob = 0;
 
             if (table[j].level <= i) {
                 prob = table[j].prob1 * GREAT_OBJ * K_MAX_DEPTH;
-            } else if (table[j].level - 1 > 0) {
+            }
+            else if (table[j].level - 1 > 0) {
                 prob = table[j].prob1 * i * K_MAX_DEPTH / (table[j].level - 1);
             }
 
@@ -95,8 +95,7 @@ static void prt_alloc(tval_type tval, OBJECT_SUBTYPE_VALUE sval, TERM_LEN row, T
  * @brief 32ビット変数のビット配列を並べて描画する / Output a long int in binary format.
  * @return なし
  */
-static void prt_binary(BIT_FLAGS flags, const int row, int col)
-{
+static void prt_binary(BIT_FLAGS flags, const int row, int col) {
     u32b bitmask;
     for (int i = bitmask = 1; i <= 32; i++, bitmask *= 2)
         if (flags & bitmask)
@@ -112,8 +111,7 @@ static void prt_binary(BIT_FLAGS flags, const int row, int col)
  * @param o_ptr 詳細を表示するアイテム情報の参照ポインタ
  * @return なし
  */
-static void wiz_display_item(player_type *player_ptr, object_type *o_ptr)
-{
+static void wiz_display_item(player_type* player_ptr, object_type* o_ptr) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     int j = 13;
@@ -176,8 +174,7 @@ static void wiz_display_item(player_type *player_ptr, object_type *o_ptr)
  * counter flags to prevent weirdness.  We use the items to collect
  * statistics on item creation relative to the initial item.
  */
-static void wiz_statistics(player_type *caster_ptr, object_type *o_ptr)
-{
+static void wiz_statistics(player_type* caster_ptr, object_type* o_ptr) {
     concptr q = "Rolls: %ld  Correct: %ld  Matches: %ld  Better: %ld  Worse: %ld  Other: %ld";
     concptr p = "Enter number of items to roll: ";
     char tmp_val[80];
@@ -199,13 +196,16 @@ static void wiz_statistics(player_type *caster_ptr, object_type *o_ptr)
         if (ch == 'n' || ch == 'N') {
             mode = 0L;
             quality = "normal";
-        } else if (ch == 'g' || ch == 'G') {
+        }
+        else if (ch == 'g' || ch == 'G') {
             mode = AM_GOOD;
             quality = "good";
-        } else if (ch == 'e' || ch == 'E') {
+        }
+        else if (ch == 'e' || ch == 'E') {
             mode = AM_GOOD | AM_GREAT;
             quality = "excellent";
-        } else {
+        }
+        else {
             break;
         }
 
@@ -230,7 +230,7 @@ static void wiz_statistics(player_type *caster_ptr, object_type *o_ptr)
             }
 
             object_type forge;
-            object_type *q_ptr = &forge;
+            object_type* q_ptr = &forge;
             object_wipe(q_ptr);
             make_object(caster_ptr, q_ptr, mode);
             if (object_is_fixed_artifact(q_ptr))
@@ -243,11 +243,14 @@ static void wiz_statistics(player_type *caster_ptr, object_type *o_ptr)
             if ((q_ptr->pval == o_ptr->pval) && (q_ptr->to_a == o_ptr->to_a) && (q_ptr->to_h == o_ptr->to_h) && (q_ptr->to_d == o_ptr->to_d)
                 && (q_ptr->name1 == o_ptr->name1)) {
                 matches++;
-            } else if ((q_ptr->pval >= o_ptr->pval) && (q_ptr->to_a >= o_ptr->to_a) && (q_ptr->to_h >= o_ptr->to_h) && (q_ptr->to_d >= o_ptr->to_d)) {
+            }
+            else if ((q_ptr->pval >= o_ptr->pval) && (q_ptr->to_a >= o_ptr->to_a) && (q_ptr->to_h >= o_ptr->to_h) && (q_ptr->to_d >= o_ptr->to_d)) {
                 better++;
-            } else if ((q_ptr->pval <= o_ptr->pval) && (q_ptr->to_a <= o_ptr->to_a) && (q_ptr->to_h <= o_ptr->to_h) && (q_ptr->to_d <= o_ptr->to_d)) {
+            }
+            else if ((q_ptr->pval <= o_ptr->pval) && (q_ptr->to_a <= o_ptr->to_a) && (q_ptr->to_h <= o_ptr->to_h) && (q_ptr->to_d <= o_ptr->to_d)) {
                 worse++;
-            } else {
+            }
+            else {
                 other++;
             }
         }
@@ -266,13 +269,12 @@ static void wiz_statistics(player_type *caster_ptr, object_type *o_ptr)
  * @param o_ptr 再生成の対象となるアイテム情報の参照ポインタ
  * @return なし
  */
-static void wiz_reroll_item(player_type *owner_ptr, object_type *o_ptr)
-{
+static void wiz_reroll_item(player_type* owner_ptr, object_type* o_ptr) {
     if (object_is_artifact(o_ptr))
         return;
 
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
     q_ptr = &forge;
     object_copy(q_ptr, o_ptr);
 
@@ -359,8 +361,7 @@ static void wiz_reroll_item(player_type *owner_ptr, object_type *o_ptr)
  * @param o_ptr 調整するアイテムの参照ポインタ
  * @return なし
  */
-static void wiz_tweak_item(player_type *player_ptr, object_type *o_ptr)
-{
+static void wiz_tweak_item(player_type* player_ptr, object_type* o_ptr) {
     if (object_is_artifact(o_ptr))
         return;
 
@@ -402,8 +403,7 @@ static void wiz_tweak_item(player_type *player_ptr, object_type *o_ptr)
  * @param o_ptr 変更するアイテム情報構造体の参照ポインタ
  * @return なし
  */
-static void wiz_quantity_item(object_type *o_ptr)
-{
+static void wiz_quantity_item(object_type* o_ptr) {
     if (object_is_artifact(o_ptr))
         return;
 
@@ -435,12 +435,11 @@ static void wiz_quantity_item(object_type *o_ptr)
  *   - Change properties (via wiz_tweak_item)<br>
  *   - Change the number of items (via wiz_quantity_item)<br>
  */
-void wiz_modify_item(player_type *creature_ptr)
-{
+void wiz_modify_item(player_type* creature_ptr) {
     concptr q = "Play with which object? ";
     concptr s = "You have nothing to play with.";
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(creature_ptr, &item, q, s, USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT, TV_NONE);
     if (!o_ptr)
         return;
@@ -448,7 +447,7 @@ void wiz_modify_item(player_type *creature_ptr)
     screen_save();
 
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
     q_ptr = &forge;
     object_copy(q_ptr, o_ptr);
     char ch;
@@ -490,7 +489,8 @@ void wiz_modify_item(player_type *creature_ptr)
         creature_ptr->update |= PU_BONUS;
         creature_ptr->update |= PU_COMBINE | PU_REORDER;
         creature_ptr->window |= PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER;
-    } else {
+    }
+    else {
         msg_print("Changes ignored.");
     }
 }

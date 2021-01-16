@@ -24,8 +24,7 @@
  * @param m_ptr 目標モンスターの構造体参照ポインタ
  * @return スレイング加味後の倍率(/10倍)
  */
-MULTIPLY mult_slaying(player_type *player_ptr, MULTIPLY mult, const BIT_FLAGS *flgs, monster_type *m_ptr)
-{
+MULTIPLY mult_slaying(player_type* player_ptr, MULTIPLY mult, const BIT_FLAGS* flgs, monster_type* m_ptr) {
     static const struct slay_table_t {
         int slay_flag;
         BIT_FLAGS affect_race_flag;
@@ -57,9 +56,9 @@ MULTIPLY mult_slaying(player_type *player_ptr, MULTIPLY mult, const BIT_FLAGS *f
 #undef OFFSET
     };
 
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     for (size_t i = 0; i < sizeof(slay_table) / sizeof(slay_table[0]); ++i) {
-        const struct slay_table_t *p = &slay_table[i];
+        const struct slay_table_t* p = &slay_table[i];
 
         if (!has_flag(flgs, p->slay_flag) || !(atoffset(BIT_FLAGS, r_ptr, p->flag_offset) & p->affect_race_flag))
             continue;
@@ -82,8 +81,7 @@ MULTIPLY mult_slaying(player_type *player_ptr, MULTIPLY mult, const BIT_FLAGS *f
  * @param m_ptr 目標モンスターの構造体参照ポインタ
  * @return スレイング加味後の倍率(/10倍)
  */
-MULTIPLY mult_brand(player_type *player_ptr, MULTIPLY mult, const BIT_FLAGS *flgs, monster_type *m_ptr)
-{
+MULTIPLY mult_brand(player_type* player_ptr, MULTIPLY mult, const BIT_FLAGS* flgs, monster_type* m_ptr) {
     static const struct brand_table_t {
         int brand_flag;
         BIT_FLAGS resist_mask;
@@ -96,9 +94,9 @@ MULTIPLY mult_brand(player_type *player_ptr, MULTIPLY mult, const BIT_FLAGS *flg
         { TR_BRAND_POIS, RFR_EFF_IM_POIS_MASK, 0U },
     };
 
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     for (size_t i = 0; i < sizeof(brand_table) / sizeof(brand_table[0]); ++i) {
-        const struct brand_table_t *p = &brand_table[i];
+        const struct brand_table_t* p = &brand_table[i];
 
         if (!has_flag(flgs, p->brand_flag))
             continue;
@@ -144,8 +142,7 @@ MULTIPLY mult_brand(player_type *player_ptr, MULTIPLY mult, const BIT_FLAGS *flg
  * Note that most brands and slays are x3, except Slay Animal (x2),\n
  * Slay Evil (x2), and Kill dragon (x5).\n
  */
-HIT_POINT calc_attack_damage_with_slay(player_type *attacker_ptr, object_type *o_ptr, HIT_POINT tdam, monster_type *m_ptr, combat_options mode, bool thrown)
-{
+HIT_POINT calc_attack_damage_with_slay(player_type* attacker_ptr, object_type* o_ptr, HIT_POINT tdam, monster_type* m_ptr, combat_options mode, bool thrown) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(attacker_ptr, o_ptr, flgs);
     torch_flags(o_ptr, flgs); /* torches has secret flags */

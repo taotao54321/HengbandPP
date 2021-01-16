@@ -1,9 +1,8 @@
 ﻿#include "cmd-io/cmd-lore.h"
 #include "core/asking-player.h"
-#include "util/sort.h"
 #include "core/stuff-handler.h"
-#include "game-option/game-play-options.h"
 #include "game-option/cheat-options.h"
+#include "game-option/game-play-options.h"
 #include "io/input-key-acceptor.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-flags1.h"
@@ -12,6 +11,7 @@
 #include "term/screen-processor.h"
 #include "term/term-color-types.h"
 #include "util/int-char-converter.h"
+#include "util/sort.h"
 #include "util/string-processor.h"
 #include "view/display-lore.h"
 
@@ -32,8 +32,7 @@
  * Note that the player ghosts are ignored.
  * </pre>
  */
-void do_cmd_query_symbol(player_type *creature_ptr)
-{
+void do_cmd_query_symbol(player_type* creature_ptr) {
     MONRACE_IDX i;
     int n;
     MONRACE_IDX r_idx;
@@ -49,7 +48,7 @@ void do_cmd_query_symbol(player_type *creature_ptr)
     bool recall = FALSE;
 
     u16b why = 0;
-    MONRACE_IDX *who;
+    MONRACE_IDX* who;
 
     if (!get_com(_("知りたい文字を入力して下さい(記号 or ^A全,^Uユ,^N非ユ,^R乗馬,^M名前): ",
                      "Enter character to be identified(^A:All,^U:Uniqs,^N:Non uniqs,^M:Name): "),
@@ -64,32 +63,38 @@ void do_cmd_query_symbol(player_type *creature_ptr)
     if (sym == KTRL('A')) {
         all = TRUE;
         strcpy(buf, _("全モンスターのリスト", "Full monster list."));
-    } else if (sym == KTRL('U')) {
+    }
+    else if (sym == KTRL('U')) {
         all = uniq = TRUE;
         strcpy(buf, _("ユニーク・モンスターのリスト", "Unique monster list."));
-    } else if (sym == KTRL('N')) {
+    }
+    else if (sym == KTRL('N')) {
         all = norm = TRUE;
         strcpy(buf, _("ユニーク外モンスターのリスト", "Non-unique monster list."));
-    } else if (sym == KTRL('R')) {
+    }
+    else if (sym == KTRL('R')) {
         all = ride = TRUE;
         strcpy(buf, _("乗馬可能モンスターのリスト", "Ridable monster list."));
-    } else if (sym == KTRL('M')) {
+    }
+    else if (sym == KTRL('M')) {
         all = TRUE;
         if (!get_string(_("名前(英語の場合小文字で可)", "Enter name:"), temp, 70)) {
             temp[0] = 0;
             return;
         }
         sprintf(buf, _("名前:%sにマッチ", "Monsters with a name \"%s\""), temp);
-    } else if (ident_info[i]) {
+    }
+    else if (ident_info[i]) {
         sprintf(buf, "%c - %s.", sym, ident_info[i] + 2);
-    } else {
+    }
+    else {
         sprintf(buf, "%c - %s", sym, _("無効な文字", "Unknown Symbol"));
     }
 
     prt(buf, 0, 0);
     C_MAKE(who, max_r_idx, MONRACE_IDX);
     for (n = 0, i = 1; i < max_r_idx; i++) {
-        monster_race *r_ptr = &r_info[i];
+        monster_race* r_ptr = &r_info[i];
         if (!cheat_know && !r_ptr->r_sights)
             continue;
 
@@ -194,7 +199,8 @@ void do_cmd_query_symbol(player_type *creature_ptr)
                 if (!expand_list)
                     break;
             }
-        } else {
+        }
+        else {
             if (i-- == 0) {
                 i = n - 1;
                 if (!expand_list)

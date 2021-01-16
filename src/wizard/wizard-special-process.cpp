@@ -90,8 +90,7 @@
  * Cure everything instantly
  * @return なし
  */
-void wiz_cure_all(player_type *creature_ptr)
-{
+void wiz_cure_all(player_type* creature_ptr) {
     (void)life_stream(creature_ptr, FALSE, FALSE);
     (void)restore_mana(creature_ptr, TRUE);
     (void)set_food(creature_ptr, PY_FOOD_MAX - 1);
@@ -106,8 +105,7 @@ void wiz_cure_all(player_type *creature_ptr)
  * This function returns the k_idx of an object type, or zero if failed
  * List up to 50 choices in three columns
  */
-KIND_OBJECT_IDX wiz_create_itemtype(void)
-{
+KIND_OBJECT_IDX wiz_create_itemtype(void) {
     term_clear();
     int num;
     TERM_LEN col, row;
@@ -137,7 +135,7 @@ KIND_OBJECT_IDX wiz_create_itemtype(void)
     KIND_OBJECT_IDX choice[80];
     char buf[160];
     for (KIND_OBJECT_IDX i = 1; (num < 80) && (i < max_k_idx); i++) {
-        object_kind *k_ptr = &k_info[i];
+        object_kind* k_ptr = &k_info[i];
         if (k_ptr->tval != tval)
             continue;
 
@@ -176,8 +174,7 @@ KIND_OBJECT_IDX wiz_create_itemtype(void)
  * Hack -- this routine always makes a "dungeon object", and applies
  * magic to it, and attempts to decline cursed items.
  */
-void wiz_create_item(player_type *caster_ptr)
-{
+void wiz_create_item(player_type* caster_ptr) {
     screen_save();
     OBJECT_IDX k_idx = wiz_create_itemtype();
     screen_load();
@@ -196,7 +193,7 @@ void wiz_create_item(player_type *caster_ptr)
     }
 
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
     q_ptr = &forge;
     object_prep(caster_ptr, q_ptr, k_idx);
     apply_magic(caster_ptr, q_ptr, caster_ptr->current_floor_ptr->dun_level, AM_NO_FIXED_ART);
@@ -209,8 +206,7 @@ void wiz_create_item(player_type *caster_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void wiz_create_named_art(player_type *caster_ptr)
-{
+void wiz_create_named_art(player_type* caster_ptr) {
     char tmp_val[10] = "";
     if (!get_string("Artifact ID:", tmp_val, 3))
         return;
@@ -228,8 +224,7 @@ void wiz_create_named_art(player_type *caster_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void wiz_change_status(player_type *creature_ptr)
-{
+void wiz_change_status(player_type* creature_ptr) {
     int tmp_int;
     char tmp_val[160];
     char ppp[80];
@@ -312,13 +307,12 @@ void wiz_change_status(player_type *creature_ptr)
  * @param creaturer_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void wiz_create_feature(player_type *creature_ptr)
-{
+void wiz_create_feature(player_type* creature_ptr) {
     POSITION y, x;
     if (!tgt_pt(creature_ptr, &x, &y))
         return;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &creature_ptr->current_floor_ptr->grid_array[y][x];
     static int prev_feat = 0;
     char tmp_val[160];
@@ -347,7 +341,7 @@ void wiz_create_feature(player_type *creature_ptr)
 
     cave_set_feat(creature_ptr, y, x, tmp_feat);
     g_ptr->mimic = (s16b)tmp_mimic;
-    feature_type *f_ptr;
+    feature_type* f_ptr;
     f_ptr = &f_info[get_feat_mimic(g_ptr)];
 
     if (has_flag(f_ptr->flags, FF_GLYPH) || has_flag(f_ptr->flags, FF_MINOR_GLYPH))
@@ -367,8 +361,7 @@ void wiz_create_feature(player_type *creature_ptr)
  * Go to any level
  * @return なし
  */
-void wiz_jump_to_dungeon(player_type *creature_ptr)
-{
+void wiz_jump_to_dungeon(player_type* creature_ptr) {
     if (command_arg <= 0) {
         char ppp[80];
         char tmp_val[160];
@@ -425,12 +418,11 @@ void wiz_jump_to_dungeon(player_type *creature_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void wiz_learn_items_all(player_type *caster_ptr)
-{
+void wiz_learn_items_all(player_type* caster_ptr) {
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
     for (KIND_OBJECT_IDX i = 1; i < max_k_idx; i++) {
-        object_kind *k_ptr = &k_info[i];
+        object_kind* k_ptr = &k_info[i];
         if (k_ptr->level <= command_arg) {
             q_ptr = &forge;
             object_prep(caster_ptr, q_ptr, i);
@@ -444,8 +436,7 @@ void wiz_learn_items_all(player_type *caster_ptr)
  * @return なし
  * @todo 魔法領域の再選択などがまだ不完全、要実装。
  */
-void wiz_reset_class(player_type *creature_ptr)
-{
+void wiz_reset_class(player_type* creature_ptr) {
     char ppp[80];
     sprintf(ppp, "Class (0-%d): ", MAX_CLASS - 1);
 
@@ -471,11 +462,10 @@ void wiz_reset_class(player_type *creature_ptr)
  * Hack -- Dump option bits usage
  * @return なし
  */
-void wiz_dump_options(void)
-{
+void wiz_dump_options(void) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "opt_info.txt");
-    FILE *fff;
+    FILE* fff;
     fff = angband_fopen(buf, "a");
     if (fff == NULL) {
         msg_format(_("ファイル %s を開けませんでした。", "Failed to open file %s."), buf);
@@ -483,14 +473,14 @@ void wiz_dump_options(void)
         return;
     }
 
-    int **exist;
-    C_MAKE(exist, NUM_O_SET, int *);
+    int** exist;
+    C_MAKE(exist, NUM_O_SET, int*);
     C_MAKE(*exist, NUM_O_BIT * NUM_O_SET, int);
     for (int i = 1; i < NUM_O_SET; i++)
         exist[i] = *exist + i * NUM_O_BIT;
 
     for (int i = 0; option_info[i].o_desc; i++) {
-        const option_type *ot_ptr = &option_info[i];
+        const option_type* ot_ptr = &option_info[i];
         if (ot_ptr->o_var)
             exist[ot_ptr->o_set][ot_ptr->o_bit] = i + 1;
     }
@@ -501,9 +491,10 @@ void wiz_dump_options(void)
     for (int i = 0; i < NUM_O_SET; i++) {
         for (int j = 0; j < NUM_O_BIT; j++) {
             if (exist[i][j]) {
-                const option_type *ot_ptr = &option_info[exist[i][j] - 1];
+                const option_type* ot_ptr = &option_info[exist[i][j] - 1];
                 fprintf(fff, "  %d -  %02d (%4d) %s\n", i, j, ot_ptr->o_page, ot_ptr->o_text);
-            } else {
+            }
+            else {
                 fprintf(fff, "  %d -  %02d\n", i, j);
             }
         }
@@ -512,7 +503,7 @@ void wiz_dump_options(void)
     }
 
     C_KILL(*exist, NUM_O_BIT * NUM_O_SET, int);
-    C_KILL(exist, NUM_O_SET, int *);
+    C_KILL(exist, NUM_O_SET, int*);
     angband_fclose(fff);
     msg_format(_("オプションbit使用状況をファイル %s に書き出しました。", "Option bits usage dump saved to file %s."), buf);
 }
@@ -521,8 +512,7 @@ void wiz_dump_options(void)
  * @brief プレイ日数を変更する / Set gametime.
  * @return 実際に変更を行ったらTRUEを返す
  */
-void set_gametime(void)
-{
+void set_gametime(void) {
     int tmp_int = 0;
     char ppp[80], tmp_val[40];
     sprintf(ppp, "Dungeon Turn (0-%ld): ", (long)current_world_ptr->dungeon_turn_limit);
@@ -543,10 +533,9 @@ void set_gametime(void)
  * @brief プレイヤー近辺の全モンスターを消去する / Delete all nearby monsters
  * @return なし
  */
-void wiz_zap_surrounding_monsters(player_type *caster_ptr)
-{
+void wiz_zap_surrounding_monsters(player_type* caster_ptr) {
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr) || (i == caster_ptr->riding) || (m_ptr->cdis > MAX_SIGHT))
             continue;
 
@@ -566,10 +555,9 @@ void wiz_zap_surrounding_monsters(player_type *caster_ptr)
  * @param caster_ptr 術者の参照ポインタ
  * @return なし
  */
-void wiz_zap_floor_monsters(player_type *caster_ptr)
-{
+void wiz_zap_floor_monsters(player_type* caster_ptr) {
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr) || (i == caster_ptr->riding))
             continue;
 
@@ -583,8 +571,7 @@ void wiz_zap_floor_monsters(player_type *caster_ptr)
     }
 }
 
-void cheat_death(player_type *creature_ptr)
-{
+void cheat_death(player_type* creature_ptr) {
     if (creature_ptr->sc)
         creature_ptr->sc = creature_ptr->age = 0;
     creature_ptr->age++;
@@ -603,7 +590,7 @@ void cheat_death(player_type *creature_ptr)
     creature_ptr->is_dead = FALSE;
     (void)set_food(creature_ptr, PY_FOOD_MAX - 1);
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     floor_ptr->dun_level = 0;
     floor_ptr->inside_arena = FALSE;
     creature_ptr->phase_out = FALSE;
@@ -618,11 +605,13 @@ void cheat_death(player_type *creature_ptr)
         if (vanilla_town) {
             creature_ptr->oldpy = 10;
             creature_ptr->oldpx = 34;
-        } else {
+        }
+        else {
             creature_ptr->oldpy = 33;
             creature_ptr->oldpx = 131;
         }
-    } else {
+    }
+    else {
         creature_ptr->wilderness_y = 48;
         creature_ptr->wilderness_x = 5;
         creature_ptr->oldpy = 33;

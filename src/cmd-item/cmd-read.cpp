@@ -22,8 +22,7 @@
  * Eat some food (from the pack or floor)
  * @return なし
  */
-void do_cmd_read_scroll(player_type *creature_ptr)
-{
+void do_cmd_read_scroll(player_type* creature_ptr) {
     if (creature_ptr->wild_mode || cmd_limit_arena(creature_ptr))
         return;
 
@@ -36,7 +35,7 @@ void do_cmd_read_scroll(player_type *creature_ptr)
     item_tester_hook = item_tester_hook_readable;
     concptr q = _("どの巻物を読みますか? ", "Read which scroll? ");
     concptr s = _("読める巻物がない。", "You have no scrolls to read.");
-    object_type *o_ptr;
+    object_type* o_ptr;
     OBJECT_IDX item;
     o_ptr = choose_object(creature_ptr, &item, q, s, USE_INVEN | USE_FLOOR, TV_NONE);
     if (!o_ptr)

@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void display_player_stat_info(player_type *creature_ptr);
+void display_player_stat_info(player_type* creature_ptr);

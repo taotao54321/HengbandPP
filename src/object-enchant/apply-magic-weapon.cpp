@@ -28,8 +28,7 @@
  * Hack -- note special base damage dice boosting\n
  * Hack -- note special processing for weapon/digger\n
  */
-void apply_magic_weapon(player_type *owner_ptr, object_type *o_ptr, DEPTH level, int power)
-{
+void apply_magic_weapon(player_type* owner_ptr, object_type* o_ptr, DEPTH level, int power) {
     HIT_PROB tohit1 = randint1(5) + (HIT_PROB)m_bonus(5, level);
     HIT_POINT todam1 = randint1(5) + (HIT_POINT)m_bonus(5, level);
 
@@ -48,7 +47,8 @@ void apply_magic_weapon(player_type *owner_ptr, object_type *o_ptr, DEPTH level,
             o_ptr->to_h += tohit2;
             o_ptr->to_d += todam2;
         }
-    } else if (power < 0) {
+    }
+    else if (power < 0) {
         o_ptr->to_h -= tohit1;
         o_ptr->to_d -= todam1;
         if (power < -1) {
@@ -71,9 +71,11 @@ void apply_magic_weapon(player_type *owner_ptr, object_type *o_ptr, DEPTH level,
                 become_random_artifact(owner_ptr, o_ptr, FALSE);
             else
                 o_ptr->name2 = EGO_DIGGING;
-        } else if (power < -1) {
+        }
+        else if (power < -1) {
             o_ptr->pval = 0 - (5 + randint1(5));
-        } else if (power < 0) {
+        }
+        else if (power < 0) {
             o_ptr->pval = 0 - (o_ptr->pval);
         }
 
@@ -169,8 +171,9 @@ void apply_magic_weapon(player_type *owner_ptr, object_type *o_ptr, DEPTH level,
 
                 if (one_in_(3))
                     o_ptr->curse_flags |= (TRC_HEAVY_CURSE);
-                one_in_(3) ? add_flag(o_ptr->art_flags, TR_DRAIN_EXP)
-                           : one_in_(2) ? add_flag(o_ptr->art_flags, TR_DRAIN_HP) : add_flag(o_ptr->art_flags, TR_DRAIN_MANA);
+                one_in_(3)       ? add_flag(o_ptr->art_flags, TR_DRAIN_EXP)
+                    : one_in_(2) ? add_flag(o_ptr->art_flags, TR_DRAIN_HP)
+                                 : add_flag(o_ptr->art_flags, TR_DRAIN_MANA);
 
                 if (one_in_(3))
                     add_flag(o_ptr->art_flags, TR_CHAOTIC);
@@ -190,7 +193,8 @@ void apply_magic_weapon(player_type *owner_ptr, object_type *o_ptr, DEPTH level,
                 if (o_ptr->dd > 9)
                     o_ptr->dd = 9;
             }
-        } else if (power < -1) {
+        }
+        else if (power < -1) {
             if (randint0(MAX_DEPTH) < level) {
                 while (TRUE) {
                     o_ptr->name2 = get_random_ego(INVEN_RARM, FALSE);
@@ -249,7 +253,8 @@ void apply_magic_weapon(player_type *owner_ptr, object_type *o_ptr, DEPTH level,
 
             if (o_ptr->dd > 9)
                 o_ptr->dd = 9;
-        } else if (power < -1) {
+        }
+        else if (power < -1) {
             if (randint0(MAX_DEPTH) < level) {
                 o_ptr->name2 = get_random_ego(INVEN_AMMO, FALSE);
             }

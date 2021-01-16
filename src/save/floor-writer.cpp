@@ -23,12 +23,12 @@
  * @param sf_ptr 保存したいフロアの参照ポインタ
  * @return なし
  */
-void wr_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void wr_saved_floor(player_type* player_ptr, saved_floor_type* sf_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!sf_ptr) {
         wr_s16b((s16b)floor_ptr->dun_level);
-    } else {
+    }
+    else {
         wr_s16b(sf_ptr->floor_id);
         wr_byte((byte)sf_ptr->savefile_id);
         wr_s16b((s16b)sf_ptr->dun_level);
@@ -60,12 +60,12 @@ void wr_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
     /* Fake max number */
     u16b max_num_temp = 255;
 
-    grid_template_type *templates;
+    grid_template_type* templates;
     C_MAKE(templates, max_num_temp, grid_template_type);
     u16b num_temp = 0;
     for (int y = 0; y < floor_ptr->height; y++) {
         for (int x = 0; x < floor_ptr->width; x++) {
-            grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+            grid_type* g_ptr = &floor_ptr->grid_array[y][x];
             int i;
             for (i = 0; i < num_temp; i++) {
                 if (templates[i].info == g_ptr->info && templates[i].feat == g_ptr->feat && templates[i].mimic == g_ptr->mimic
@@ -79,7 +79,7 @@ void wr_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
                 continue;
 
             if (num_temp >= max_num_temp) {
-                grid_template_type *old_template = templates;
+                grid_template_type* old_template = templates;
                 C_MAKE(templates, max_num_temp + 255, grid_template_type);
                 (void)C_COPY(templates, old_template, max_num_temp, grid_template_type);
                 C_KILL(old_template, max_num_temp, grid_template_type);
@@ -101,7 +101,7 @@ void wr_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
     /*** Dump templates ***/
     wr_u16b(num_temp);
     for (int i = 0; i < num_temp; i++) {
-        grid_template_type *ct_ptr = &templates[i];
+        grid_template_type* ct_ptr = &templates[i];
         wr_u16b((u16b)ct_ptr->info);
         wr_s16b(ct_ptr->feat);
         wr_s16b(ct_ptr->mimic);
@@ -112,7 +112,7 @@ void wr_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
     u16b prev_u16b = 0;
     for (int y = 0; y < floor_ptr->height; y++) {
         for (int x = 0; x < floor_ptr->width; x++) {
-            grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+            grid_type* g_ptr = &floor_ptr->grid_array[y][x];
             int i;
             for (i = 0; i < num_temp; i++) {
                 if (templates[i].info == g_ptr->info && templates[i].feat == g_ptr->feat && templates[i].mimic == g_ptr->mimic
@@ -153,14 +153,14 @@ void wr_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
     /*** Dump objects ***/
     wr_u16b(floor_ptr->o_max);
     for (int i = 1; i < floor_ptr->o_max; i++) {
-        object_type *o_ptr = &floor_ptr->o_list[i];
+        object_type* o_ptr = &floor_ptr->o_list[i];
         wr_item(o_ptr);
     }
 
     /*** Dump the monsters ***/
     wr_u16b(floor_ptr->m_max);
     for (int i = 1; i < floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &floor_ptr->m_list[i];
+        monster_type* m_ptr = &floor_ptr->m_list[i];
         wr_monster(m_ptr);
     }
 }
@@ -171,8 +171,7 @@ void wr_saved_floor(player_type *player_ptr, saved_floor_type *sf_ptr)
  * @player_ptr プレーヤーへの参照ポインタ
  * @return 保存に成功したらTRUE
  */
-bool wr_dungeon(player_type *player_ptr)
-{
+bool wr_dungeon(player_type* player_ptr) {
     forget_lite(player_ptr->current_floor_ptr);
     forget_view(player_ptr->current_floor_ptr);
     clear_mon_lite(player_ptr->current_floor_ptr);
@@ -190,7 +189,7 @@ bool wr_dungeon(player_type *player_ptr)
     /*** In the dungeon ***/
     wr_byte(MAX_SAVED_FLOORS);
     for (int i = 0; i < MAX_SAVED_FLOORS; i++) {
-        saved_floor_type *sf_ptr = &saved_floors[i];
+        saved_floor_type* sf_ptr = &saved_floors[i];
         wr_s16b(sf_ptr->floor_id);
         wr_byte((byte)sf_ptr->savefile_id);
         wr_s16b((s16b)sf_ptr->dun_level);
@@ -200,13 +199,13 @@ bool wr_dungeon(player_type *player_ptr)
         wr_s16b(sf_ptr->lower_floor_id);
     }
 
-    saved_floor_type *cur_sf_ptr;
+    saved_floor_type* cur_sf_ptr;
     cur_sf_ptr = get_sf_ptr(player_ptr->floor_id);
     if (!save_floor(player_ptr, cur_sf_ptr, SLF_SECOND))
         return FALSE;
 
     for (int i = 0; i < MAX_SAVED_FLOORS; i++) {
-        saved_floor_type *sf_ptr = &saved_floors[i];
+        saved_floor_type* sf_ptr = &saved_floors[i];
         if (!sf_ptr->floor_id)
             continue;
         if (!load_floor(player_ptr, sf_ptr, (SLF_SECOND | SLF_NO_KILL))) {
@@ -227,8 +226,7 @@ bool wr_dungeon(player_type *player_ptr)
  * @param sf_ptr 保存フロア参照ポインタ
  * @return なし
  */
-static bool save_floor_aux(player_type *player_ptr, saved_floor_type *sf_ptr)
-{
+static bool save_floor_aux(player_type* player_ptr, saved_floor_type* sf_ptr) {
     compact_objects(player_ptr, 0);
     compact_monsters(player_ptr, 0);
 
@@ -253,9 +251,8 @@ static bool save_floor_aux(player_type *player_ptr, saved_floor_type *sf_ptr)
  * @param mode 保存オプション
  * @return なし
  */
-bool save_floor(player_type *player_ptr, saved_floor_type *sf_ptr, BIT_FLAGS mode)
-{
-    FILE *old_fff = NULL;
+bool save_floor(player_type* player_ptr, saved_floor_type* sf_ptr, BIT_FLAGS mode) {
+    FILE* old_fff = NULL;
     byte old_xor_byte = 0;
     u32b old_v_stamp = 0;
     u32b old_x_stamp = 0;

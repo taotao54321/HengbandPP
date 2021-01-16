@@ -39,8 +39,7 @@ static concptr inven_res_label = _("                               酸電火冷�
  * @param fff 一時ファイルへのポインタ
  * @return なし
  */
-static void print_im_or_res_flag(int immunity, int resistance, BIT_FLAGS *flags, FILE *fff)
-{
+static void print_im_or_res_flag(int immunity, int resistance, BIT_FLAGS* flags, FILE* fff) {
     fputs(has_flag(flags, immunity) ? IM_FLAG_STR : (has_flag(flags, resistance) ? HAS_FLAG_STR : NO_FLAG_STR), fff);
 }
 
@@ -51,7 +50,7 @@ static void print_im_or_res_flag(int immunity, int resistance, BIT_FLAGS *flags,
  * @param fff 一時ファイルへのポインタ
  * @return なし
  */
-static void print_flag(int tr, BIT_FLAGS *flags, FILE *fff) { fputs(has_flag(flags, tr) ? HAS_FLAG_STR : NO_FLAG_STR, fff); }
+static void print_flag(int tr, BIT_FLAGS* flags, FILE* fff) { fputs(has_flag(flags, tr) ? HAS_FLAG_STR : NO_FLAG_STR, fff); }
 
 /*!
  * @brief 特殊なアイテムかどうかを調べる
@@ -59,8 +58,7 @@ static void print_flag(int tr, BIT_FLAGS *flags, FILE *fff) { fputs(has_flag(fla
  * @param tval アイテム主分類番号
  * @return 特殊なアイテムならTRUE
  */
-static bool determine_spcial_item_type(object_type *o_ptr, tval_type tval)
-{
+static bool determine_spcial_item_type(object_type* o_ptr, tval_type tval) {
     bool is_special_item_type = (object_is_wearable(o_ptr) && object_is_ego(o_ptr)) || ((tval == TV_AMULET) && (o_ptr->sval == SV_AMULET_RESISTANCE))
         || ((tval == TV_RING) && (o_ptr->sval == SV_RING_LORDLY)) || ((tval == TV_SHIELD) && (o_ptr->sval == SV_DRAGON_SHIELD))
         || ((tval == TV_HELM) && (o_ptr->sval == SV_DRAGON_HELM)) || ((tval == TV_GLOVES) && (o_ptr->sval == SV_SET_OF_DRAGON_GLOVES))
@@ -75,8 +73,7 @@ static bool determine_spcial_item_type(object_type *o_ptr, tval_type tval)
  * @param tval アイテム主分類番号
  * @return 必要があるならTRUE
  */
-static bool check_item_knowledge(object_type *o_ptr, tval_type tval)
-{
+static bool check_item_knowledge(object_type* o_ptr, tval_type tval) {
     if (o_ptr->k_idx == 0)
         return FALSE;
     if (o_ptr->tval != tval)
@@ -96,8 +93,7 @@ static bool check_item_knowledge(object_type *o_ptr, tval_type tval)
  * @param fff 一時ファイルへの参照ポインタ
  * @return なし
  */
-static void display_identified_resistances_flag(player_type *creature_ptr, object_type *o_ptr, FILE *fff)
-{
+static void display_identified_resistances_flag(player_type* creature_ptr, object_type* o_ptr, FILE* fff) {
     BIT_FLAGS flags[TR_FLAG_SIZE];
     object_flags_known(creature_ptr, o_ptr, flags);
 
@@ -139,8 +135,7 @@ static void display_identified_resistances_flag(player_type *creature_ptr, objec
  * @param where アイテムの場所 (手持ち、家等) を示す文字列への参照ポインタ
  * @return なし
  */
-static void do_cmd_knowledge_inventory_aux(player_type *creature_ptr, FILE *fff, object_type *o_ptr, char *where)
-{
+static void do_cmd_knowledge_inventory_aux(player_type* creature_ptr, FILE* fff, object_type* o_ptr, char* where) {
     int i = 0;
     GAME_TEXT o_name[MAX_NLEN];
     describe_flavor(creature_ptr, o_name, o_ptr, OD_NAME_ONLY);
@@ -177,8 +172,7 @@ static void do_cmd_knowledge_inventory_aux(player_type *creature_ptr, FILE *fff,
  * @param fff 一時ファイルへの参照ポインタ
  * @return なし
  */
-static void add_res_label(int *label_number, FILE *fff)
-{
+static void add_res_label(int* label_number, FILE* fff) {
     (*label_number)++;
     if (*label_number == 9) {
         *label_number = 0;
@@ -192,8 +186,7 @@ static void add_res_label(int *label_number, FILE *fff)
  * @param fff 一時ファイルへの参照ポインタ
  * @return なし
  */
-static void reset_label_number(int *label_number, FILE *fff)
-{
+static void reset_label_number(int* label_number, FILE* fff) {
     if (*label_number == 0)
         return;
 
@@ -213,12 +206,11 @@ static void reset_label_number(int *label_number, FILE *fff)
  * @param fff ファイルへの参照ポインタ
  * @return なし
  */
-static void show_wearing_equipment_resistances(player_type *creature_ptr, tval_type tval, int *label_number, FILE *fff)
-{
+static void show_wearing_equipment_resistances(player_type* creature_ptr, tval_type tval, int* label_number, FILE* fff) {
     char where[32];
     strcpy(where, _("装", "E "));
     for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i = inventory_slot_type(i + 1)) {
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
         if (!check_item_knowledge(o_ptr, tval))
             continue;
 
@@ -235,12 +227,11 @@ static void show_wearing_equipment_resistances(player_type *creature_ptr, tval_t
  * @param fff ファイルへの参照ポインタ
  * @return なし
  */
-static void show_holding_equipment_resistances(player_type *creature_ptr, tval_type tval, int *label_number, FILE *fff)
-{
+static void show_holding_equipment_resistances(player_type* creature_ptr, tval_type tval, int* label_number, FILE* fff) {
     char where[32];
     strcpy(where, _("持", "I "));
     for (int i = 0; i < INVEN_PACK; i++) {
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
         if (!check_item_knowledge(o_ptr, tval))
             continue;
 
@@ -257,14 +248,13 @@ static void show_holding_equipment_resistances(player_type *creature_ptr, tval_t
  * @param fff ファイルへの参照ポインタ
  * @return なし
  */
-static void show_home_equipment_resistances(player_type *creature_ptr, tval_type tval, int *label_number, FILE *fff)
-{
-    store_type *store_ptr;
+static void show_home_equipment_resistances(player_type* creature_ptr, tval_type tval, int* label_number, FILE* fff) {
+    store_type* store_ptr;
     store_ptr = &town_info[1].store[STORE_HOME];
     char where[32];
     strcpy(where, _("家", "H "));
     for (int i = 0; i < store_ptr->stock_num; i++) {
-        object_type *o_ptr = &store_ptr->stock[i];
+        object_type* o_ptr = &store_ptr->stock[i];
         if (!check_item_knowledge(o_ptr, tval))
             continue;
 
@@ -278,9 +268,8 @@ static void show_home_equipment_resistances(player_type *creature_ptr, tval_type
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_knowledge_inventory(player_type *creature_ptr)
-{
-    FILE *fff = NULL;
+void do_cmd_knowledge_inventory(player_type* creature_ptr) {
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;

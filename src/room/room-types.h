@@ -2,7 +2,7 @@
 
 /* 部屋型ID / Room types for room_build() */
 typedef enum room_type {
-	ROOM_T_NORMAL = 0, /*!<部屋型ID:基本長方形 / Simple (33x11) */
+    ROOM_T_NORMAL = 0, /*!<部屋型ID:基本長方形 / Simple (33x11) */
     ROOM_T_OVERLAP = 1, /*!<部屋型ID:長方形二つ重ね / Overlapping (33x11) */
     ROOM_T_CROSS = 2, /*!<部屋型ID:十字 / Crossed (33x11) */
     ROOM_T_INNER_FEAT = 3, /*!<部屋型ID:二重壁 / Large (33x11) */

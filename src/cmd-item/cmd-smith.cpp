@@ -197,8 +197,7 @@ static concptr const kaji_tips[5] = {
  * @brief 所持しているエッセンス一覧を表示する
  * @return なし
  */
-static void display_essence(player_type *creature_ptr)
-{
+static void display_essence(player_type* creature_ptr) {
     int i, num = 0;
 
     screen_save();
@@ -223,8 +222,7 @@ static void display_essence(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void drain_essence(player_type *creature_ptr)
-{
+static void drain_essence(player_type* creature_ptr) {
     int drain_value[sizeof(creature_ptr->magic_num1) / sizeof(s32b)];
     size_t i;
     OBJECT_IDX item;
@@ -233,7 +231,7 @@ static void drain_essence(player_type *creature_ptr)
     int old_ds, old_dd, old_to_h, old_to_d, old_ac, old_to_a, old_pval, old_name2;
     TIME_EFFECT old_timeout;
     BIT_FLAGS old_flgs[TR_FLAG_SIZE], new_flgs[TR_FLAG_SIZE];
-    object_type *o_ptr;
+    object_type* o_ptr;
     concptr q, s;
     POSITION iy, ix;
     byte marked;
@@ -351,7 +349,7 @@ static void drain_essence(player_type *creature_ptr)
     object_flags(creature_ptr, o_ptr, new_flgs);
 
     for (i = 0; essence_info[i].add_name; i++) {
-        essence_type *es_ptr = &essence_info[i];
+        essence_type* es_ptr = &essence_info[i];
         PARAMETER_VALUE pval = 0;
 
         if (es_ptr->add < TR_FLAG_MAX && is_pval_flag(es_ptr->add) && old_pval)
@@ -360,20 +358,26 @@ static void drain_essence(player_type *creature_ptr)
         if (es_ptr->add < TR_FLAG_MAX && (!has_flag(new_flgs, es_ptr->add) || pval) && has_flag(old_flgs, es_ptr->add)) {
             if (pval) {
                 drain_value[es_ptr->essence] += 10 * pval;
-            } else if (es_ptr->essence != -2) {
+            }
+            else if (es_ptr->essence != -2) {
                 drain_value[es_ptr->essence] += 10;
-            } else if (es_ptr->add == TR_SH_FIRE) {
+            }
+            else if (es_ptr->add == TR_SH_FIRE) {
                 drain_value[TR_BRAND_FIRE] += 10;
                 drain_value[TR_RES_FIRE] += 10;
-            } else if (es_ptr->add == TR_SH_ELEC) {
+            }
+            else if (es_ptr->add == TR_SH_ELEC) {
                 drain_value[TR_BRAND_ELEC] += 10;
                 drain_value[TR_RES_ELEC] += 10;
-            } else if (es_ptr->add == TR_SH_COLD) {
+            }
+            else if (es_ptr->add == TR_SH_COLD) {
                 drain_value[TR_BRAND_COLD] += 10;
                 drain_value[TR_RES_COLD] += 10;
-            } else if (es_ptr->add == TR_LITE_2) {
+            }
+            else if (es_ptr->add == TR_LITE_2) {
                 drain_value[TR_LITE_1] += 20;
-            } else if (es_ptr->add == TR_LITE_3) {
+            }
+            else if (es_ptr->add == TR_LITE_3) {
                 drain_value[TR_LITE_1] += 30;
             }
         }
@@ -430,7 +434,8 @@ static void drain_essence(player_type *creature_ptr)
     }
     if (!observe) {
         msg_print(_("エッセンスは抽出できませんでした。", "You were not able to extract any essence."));
-    } else {
+    }
+    else {
         msg_print(_("抽出したエッセンス:", "Extracted essences:"));
 
         for (i = 0; essence_name[i]; i++) {
@@ -456,8 +461,7 @@ static void drain_essence(player_type *creature_ptr)
  * @brief 付加するエッセンスの大別を選択する
  * @return 選んだエッセンスの大別ID
  */
-static COMMAND_CODE choose_essence(void)
-{
+static COMMAND_CODE choose_essence(void) {
     COMMAND_CODE mode = 0;
     char choice;
     COMMAND_CODE menu_line = (use_menu ? 1 : 0);
@@ -514,7 +518,8 @@ static COMMAND_CODE choose_essence(void)
                 menu_line -= mode_max;
         }
         screen_load();
-    } else {
+    }
+    else {
         screen_save();
         while (!mode) {
             int i;
@@ -545,21 +550,20 @@ static COMMAND_CODE choose_essence(void)
  * @param mode エッセンスの大別ID
  * @return なし
  */
-static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
-{
+static void add_essence(player_type* creature_ptr, ESSENCE_IDX mode) {
     OBJECT_IDX item;
     int max_num = 0;
     COMMAND_CODE i;
     bool flag, redraw;
     char choice;
     concptr q, s;
-    object_type *o_ptr;
+    object_type* o_ptr;
     int ask = TRUE;
     char out_val[160];
     int num[22];
     GAME_TEXT o_name[MAX_NLEN];
     int use_essence;
-    essence_type *es_ptr;
+    essence_type* es_ptr;
     bool able[22] = { 0 };
     tval_type tval = TV_NONE;
     int menu_line = (use_menu ? 1 : 0);
@@ -666,7 +670,6 @@ static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
                                 strcpy(dummy, _("》 ", ">  "));
                             else
                                 strcpy(dummy, "   ");
-
                         }
                         /* letter/number for power selection */
                         else {
@@ -682,7 +685,8 @@ static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
                             strcat(dummy, format("(%s)", essence_name[es_ptr->essence]));
                             if (creature_ptr->magic_num1[es_ptr->essence] < es_ptr->value)
                                 able[ctr] = FALSE;
-                        } else {
+                        }
+                        else {
                             switch (es_ptr->add) {
                             case ESSENCE_SH_FIRE:
                                 strcat(dummy, _("(焼棄+耐火炎)", "(brand fire + res.fire)"));
@@ -735,7 +739,8 @@ static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
 
                         if (es_ptr->essence != -1) {
                             sprintf(dummy2, "%-49s %3d/%d", dummy, es_ptr->value, (int)creature_ptr->magic_num1[es_ptr->essence]);
-                        } else {
+                        }
+                        else {
                             sprintf(dummy2, "%-49s %3d/(\?\?)", dummy, es_ptr->value);
                         }
 
@@ -839,7 +844,8 @@ static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
             if (o_ptr->pval < 0) {
                 msg_print(_("このアイテムの能力修正を強化することはできない。", "You cannot increase magic number of this item."));
                 return;
-            } else if (es_ptr->add == TR_BLOWS) {
+            }
+            else if (es_ptr->add == TR_BLOWS) {
                 if (o_ptr->pval > 1) {
                     if (!get_check(_("修正値は1になります。よろしいですか？", "The magic number of this weapon will become 1. Are you sure? ")))
                         return;
@@ -847,10 +853,12 @@ static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
 
                 o_ptr->pval = 1;
                 msg_format(_("エッセンスを%d個使用します。", "It will take %d essences."), use_essence);
-            } else if (o_ptr->pval > 0) {
+            }
+            else if (o_ptr->pval > 0) {
                 use_essence *= o_ptr->pval;
                 msg_format(_("エッセンスを%d個使用します。", "It will take %d essences."), use_essence);
-            } else {
+            }
+            else {
                 char tmp[80];
                 char tmp_val[160];
                 PARAMETER_VALUE pval;
@@ -875,7 +883,8 @@ static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
                 msg_print(_("エッセンスが足りない。", "You don't have enough essences."));
                 return;
             }
-        } else if (es_ptr->add == ESSENCE_SLAY_GLOVE) {
+        }
+        else if (es_ptr->add == ESSENCE_SLAY_GLOVE) {
             char tmp_val[160];
             int val;
             HIT_PROB get_to_h;
@@ -907,25 +916,30 @@ static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
                 msg_print(_("改良に失敗した。", "You failed to enchant."));
                 take_turn(creature_ptr, 100);
                 return;
-            } else {
+            }
+            else {
                 if (o_ptr->to_h < creature_ptr->lev / 5 + 5)
                     o_ptr->to_h++;
                 if (o_ptr->to_d < creature_ptr->lev / 5 + 5)
                     o_ptr->to_d++;
             }
-        } else if (es_ptr->add == ESSENCE_AC) {
+        }
+        else if (es_ptr->add == ESSENCE_AC) {
             if (o_ptr->to_a >= creature_ptr->lev / 5 + 5) {
                 msg_print(_("改良に失敗した。", "You failed to enchant."));
                 take_turn(creature_ptr, 100);
                 return;
-            } else {
+            }
+            else {
                 if (o_ptr->to_a < creature_ptr->lev / 5 + 5)
                     o_ptr->to_a++;
             }
-        } else {
+        }
+        else {
             o_ptr->xtra3 = es_ptr->add + 1;
         }
-    } else {
+    }
+    else {
         bool success = TRUE;
 
         switch (es_ptr->add) {
@@ -975,7 +989,8 @@ static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
             add_flag(o_ptr->art_flags, TR_IGNORE_ELEC);
             add_flag(o_ptr->art_flags, TR_IGNORE_FIRE);
             add_flag(o_ptr->art_flags, TR_IGNORE_COLD);
-        } else {
+        }
+        else {
             o_ptr->xtra3 = es_ptr->add + 1;
         }
     }
@@ -990,11 +1005,10 @@ static void add_essence(player_type *creature_ptr, ESSENCE_IDX mode)
  * @brief エッセンスを消去する
  * @return なし
  */
-static void erase_essence(player_type *creature_ptr)
-{
+static void erase_essence(player_type* creature_ptr) {
     OBJECT_IDX item;
     concptr q, s;
-    object_type *o_ptr;
+    object_type* o_ptr;
     GAME_TEXT o_name[MAX_NLEN];
     BIT_FLAGS flgs[TR_FLAG_SIZE];
 
@@ -1036,8 +1050,7 @@ static void erase_essence(player_type *creature_ptr)
  * @param only_browse TRUEならばエッセンス一覧の表示のみを行う
  * @return なし
  */
-void do_cmd_kaji(player_type *creature_ptr, bool only_browse)
-{
+void do_cmd_kaji(player_type* creature_ptr, bool only_browse) {
     COMMAND_CODE mode = 0;
     char choice;
 

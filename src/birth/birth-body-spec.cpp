@@ -7,8 +7,7 @@
  * @brief プレイヤーの身長体重を決める / Get character's height and weight
  * @return なし
  */
-void get_height_weight(player_type *creature_ptr)
-{
+void get_height_weight(player_type* creature_ptr) {
     int deviation;
     switch (creature_ptr->psex) {
     case SEX_MALE:
@@ -30,8 +29,7 @@ void get_height_weight(player_type *creature_ptr)
  * @details 内部でget_height_weight()も呼び出している。
  * @return なし
  */
-void get_ahw(player_type *creature_ptr)
-{
+void get_ahw(player_type* creature_ptr) {
     creature_ptr->age = rp_ptr->b_age + randint1(rp_ptr->m_age);
     get_height_weight(creature_ptr);
 }
@@ -41,8 +39,7 @@ void get_ahw(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void get_money(player_type *creature_ptr)
-{
+void get_money(player_type* creature_ptr) {
     int gold = (creature_ptr->sc * 6) + randint1(100) + 300;
     if (creature_ptr->pclass == CLASS_TOURIST)
         gold += 2000;

@@ -4,8 +4,7 @@
 #include "target/target-getter.h"
 #include "view/display-messages.h"
 
-bool demonic_breath(player_type *creature_ptr)
-{
+bool demonic_breath(player_type* creature_ptr) {
     DIRECTION dir;
     int type = (one_in_(2) ? GF_NETHER : GF_FIRE);
     if (!get_aim_dir(creature_ptr, &dir))

@@ -1,8 +1,8 @@
 ﻿#include "grid/stair.h"
 #include "dungeon/dungeon.h"
 #include "dungeon/quest.h"
-#include "game-option/birth-options.h"
 #include "floor/cave.h"
+#include "game-option/birth-options.h"
 #include "grid/grid.h"
 #include "object-hook/hook-enchant.h"
 #include "system/floor-type-definition.h"
@@ -15,12 +15,11 @@
  * @param x 配置を試みたいマスのX座標
  * @return なし
  */
-void place_random_stairs(player_type *player_ptr, POSITION y, POSITION x)
-{
+void place_random_stairs(player_type* player_ptr, POSITION y, POSITION x) {
     bool up_stairs = TRUE;
     bool down_stairs = TRUE;
-    grid_type *g_ptr;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    grid_type* g_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     g_ptr = &floor_ptr->grid_array[y][x];
     if (!is_floor_grid(g_ptr) || g_ptr->o_idx)
         return;
@@ -59,15 +58,14 @@ void place_random_stairs(player_type *player_ptr, POSITION y, POSITION x)
  * @details
  * 条件は永久地形でなく、なおかつ該当のマスにアーティファクトが存在しないか、である。英語の旧コメントに反して＊破壊＊の抑止判定には現在使われていない。
  */
-bool cave_valid_bold(floor_type *floor_ptr, POSITION y, POSITION x)
-{
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+bool cave_valid_bold(floor_type* floor_ptr, POSITION y, POSITION x) {
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     if (cave_has_flag_grid(g_ptr, FF_PERMANENT))
         return FALSE;
 
     OBJECT_IDX next_o_idx = 0;
     for (OBJECT_IDX this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         if (object_is_artifact(o_ptr))

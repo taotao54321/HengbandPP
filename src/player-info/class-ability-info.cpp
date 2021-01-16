@@ -3,8 +3,7 @@
 #include "realm/realm-names-table.h"
 #include "realm/realm-types.h"
 
-void set_class_ability_info(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void set_class_ability_info(player_type* creature_ptr, self_info_type* self_ptr) {
     switch (creature_ptr->pclass) {
     case CLASS_WARRIOR:
         if (creature_ptr->lev > 39)

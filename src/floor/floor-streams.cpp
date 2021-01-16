@@ -50,13 +50,12 @@
  * @param width 基本幅
  * @return なし
  */
-static void recursive_river(floor_type *floor_ptr, POSITION x1, POSITION y1, POSITION x2, POSITION y2, FEAT_IDX feat1, FEAT_IDX feat2, POSITION width)
-{
+static void recursive_river(floor_type* floor_ptr, POSITION x1, POSITION y1, POSITION x2, POSITION y2, FEAT_IDX feat1, FEAT_IDX feat2, POSITION width) {
     POSITION dx, dy, length, l, x, y;
     POSITION changex, changey;
     POSITION ty, tx;
     bool done;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
 
     length = distance(x1, y1, x2, y2);
 
@@ -71,14 +70,16 @@ static void recursive_river(floor_type *floor_ptr, POSITION x1, POSITION y1, POS
         if (dy != 0) {
             /* perturbation perpendicular to path */
             changex = randint1(abs(dy)) * 2 - abs(dy);
-        } else {
+        }
+        else {
             changex = 0;
         }
 
         if (dx != 0) {
             /* perturbation perpendicular to path */
             changey = randint1(abs(dx)) * 2 - abs(dx);
-        } else {
+        }
+        else {
             changey = 0;
         }
 
@@ -95,7 +96,8 @@ static void recursive_river(floor_type *floor_ptr, POSITION x1, POSITION y1, POS
         if (one_in_(DUN_WAT_CHG) && (width > 0)) {
             recursive_river(floor_ptr, x1 + dx + changex, y1 + dy + changey, x1 + 8 * (dx + changex), y1 + 8 * (dy + changey), feat1, feat2, width - 1);
         }
-    } else {
+    }
+    else {
         /* Actually build the river */
         for (l = 0; l < length; l++) {
             x = x1 + l * (x2 - x1) / length;
@@ -159,9 +161,8 @@ static void recursive_river(floor_type *floor_ptr, POSITION x1, POSITION y1, POS
  * @param feat2 境界部地形ID
  * @return なし
  */
-void add_river(floor_type *floor_ptr, dun_data_type *dd_ptr)
-{
-    dungeon_type *dungeon_ptr;
+void add_river(floor_type* floor_ptr, dun_data_type* dd_ptr) {
+    dungeon_type* dungeon_ptr;
     POSITION y2, x2;
     POSITION y1 = 0, x1 = 0;
     POSITION wid;
@@ -173,7 +174,8 @@ void add_river(floor_type *floor_ptr, dun_data_type *dd_ptr)
     if ((randint1(MAX_DEPTH * 2) - 1 > floor_ptr->dun_level) && (dungeon_ptr->flags1 & DF1_WATER_RIVER)) {
         feat1 = feat_deep_water;
         feat2 = feat_shallow_water;
-    } else /* others */
+    }
+    else /* others */
     {
         FEAT_IDX select_deep_feat[10];
         FEAT_IDX select_shallow_feat[10];
@@ -199,13 +201,14 @@ void add_river(floor_type *floor_ptr, dun_data_type *dd_ptr)
             selected = randint0(select_id_max);
             feat1 = select_deep_feat[selected];
             feat2 = select_shallow_feat[selected];
-        } else {
+        }
+        else {
             return;
         }
     }
 
     if (feat1) {
-        feature_type *f_ptr = &f_info[feat1];
+        feature_type* f_ptr = &f_info[feat1];
 
         /* Only add river if matches lake type or if have no lake at all */
         if (!(((dd_ptr->laketype == LAKE_T_LAVA) && has_flag(f_ptr->flags, FF_LAVA))
@@ -272,22 +275,21 @@ void add_river(floor_type *floor_ptr, dun_data_type *dd_ptr)
  * hidden gold types are currently unused.
  * </pre>
  */
-void build_streamer(player_type *player_ptr, FEAT_IDX feat, int chance)
-{
+void build_streamer(player_type* player_ptr, FEAT_IDX feat, int chance) {
     int i;
     POSITION y, x, tx, ty;
     DIRECTION dir;
     int dummy = 0;
 
-    grid_type *g_ptr;
-    feature_type *f_ptr;
+    grid_type* g_ptr;
+    feature_type* f_ptr;
 
-    feature_type *streamer_ptr = &f_info[feat];
+    feature_type* streamer_ptr = &f_info[feat];
     bool streamer_is_wall = has_flag(streamer_ptr->flags, FF_WALL) && !has_flag(streamer_ptr->flags, FF_PERMANENT);
     bool streamer_may_have_gold = has_flag(streamer_ptr->flags, FF_MAY_HAVE_GOLD);
 
     /* Hack -- Choose starting point */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     y = rand_spread(floor_ptr->height / 2, floor_ptr->height / 6);
     x = rand_spread(floor_ptr->width / 2, floor_ptr->width / 6);
 
@@ -340,7 +342,7 @@ void build_streamer(player_type *player_ptr, FEAT_IDX feat, int chance)
 
                 /* Scan all objects in the grid */
                 for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-                    object_type *o_ptr = &floor_ptr->o_list[this_o_idx];
+                    object_type* o_ptr = &floor_ptr->o_list[this_o_idx];
                     next_o_idx = o_ptr->next_o_idx;
 
                     /* Hack -- Preserve unknown artifacts */
@@ -353,7 +355,8 @@ void build_streamer(player_type *player_ptr, FEAT_IDX feat, int chance)
                             describe_flavor(player_ptr, o_name, o_ptr, (OD_NAME_ONLY | OD_STORE));
                             msg_format(_("伝説のアイテム (%s) はストリーマーにより削除された。", "Artifact (%s) was deleted by streamer."), o_name);
                         }
-                    } else if (cheat_peek && o_ptr->art_name) {
+                    }
+                    else if (cheat_peek && o_ptr->art_name) {
                         msg_print(_("ランダム・アーティファクトの1つはストリーマーにより削除された。", "One of the random artifacts was deleted by streamer."));
                     }
                 }
@@ -415,13 +418,12 @@ void build_streamer(player_type *player_ptr, FEAT_IDX feat, int chance)
  * This happens in real world lava tubes.
  * </pre>
  */
-void place_trees(player_type *player_ptr, POSITION x, POSITION y)
-{
+void place_trees(player_type* player_ptr, POSITION x, POSITION y) {
     int i, j;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
 
     /* place trees/ rubble in ovalish distribution */
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (i = x - 3; i < x + 4; i++) {
         for (j = y - 3; j < y + 4; j++) {
             if (!in_bounds(floor_ptr, j, i))
@@ -442,7 +444,8 @@ void place_trees(player_type *player_ptr, POSITION x, POSITION y)
                 if ((distance(j, i, y, x) > 1) || (randint1(100) < 25)) {
                     if (randint1(100) < 75)
                         floor_ptr->grid_array[j][i].feat = feat_tree;
-                } else {
+                }
+                else {
                     floor_ptr->grid_array[j][i].feat = feat_rubble;
                 }
 
@@ -468,13 +471,12 @@ void place_trees(player_type *player_ptr, POSITION x, POSITION y)
  * Build a destroyed level
  * @return なし
  */
-void destroy_level(player_type *player_ptr)
-{
+void destroy_level(player_type* player_ptr) {
     msg_print_wizard(player_ptr, CHEAT_DUNGEON, _("階に*破壊*の痕跡を生成しました。", "Destroyed Level."));
 
     /* Drop a few epi-centers (usually about two) */
     POSITION y1, x1;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (int n = 0; n < randint1(5); n++) {
         /* Pick an epi-center */
         x1 = rand_range(5, floor_ptr->width - 1 - 5);

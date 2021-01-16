@@ -34,8 +34,7 @@
  * @param length
  * @return 両者の値が等しければTRUEを返す
  */
-static bool int_n_cmp(int *a, int *b, int length)
-{
+static bool int_n_cmp(int* a, int* b, int length) {
     if (!length)
         return TRUE;
 
@@ -56,8 +55,7 @@ static bool int_n_cmp(int *a, int *b, int length)
  * @param partial_tree 部分木かどうか判定したい木構造リスト
  * @return 部分木ならばTRUEを返す
  */
-static bool is_partial_tree(int *tree, int *partial_tree)
-{
+static bool is_partial_tree(int* tree, int* partial_tree) {
     int pt_head = *(partial_tree++);
     int pt_len = 0;
     while (partial_tree[pt_len])
@@ -79,12 +77,11 @@ static bool is_partial_tree(int *tree, int *partial_tree)
  * @param fname 出力ファイル名
  * @return なし
  */
-static void spoil_mon_evol(player_type *player_ptr, concptr fname)
-{
+static void spoil_mon_evol(player_type* player_ptr, concptr fname) {
     char buf[1024];
-    monster_race *r_ptr;
+    monster_race* r_ptr;
     int **evol_tree, i, j, n, r_idx;
-    int *evol_tree_zero; /* For C_KILL() */
+    int* evol_tree_zero; /* For C_KILL() */
     path_build(buf, sizeof buf, ANGBAND_DIR_USER, fname);
     spoiler_file = angband_fopen(buf, "w");
     if (!spoiler_file) {
@@ -95,7 +92,7 @@ static void spoil_mon_evol(player_type *player_ptr, concptr fname)
     sprintf(buf, "Monster Spoilers for Hengband Version %d.%d.%d\n", FAKE_VER_MAJOR - 10, FAKE_VER_MINOR, FAKE_VER_PATCH);
     spoil_out(buf);
     spoil_out("------------------------------------------\n\n");
-    C_MAKE(evol_tree, max_r_idx, int *);
+    C_MAKE(evol_tree, max_r_idx, int*);
     C_MAKE(*evol_tree, max_r_idx * (max_evolution_depth + 1), int);
     for (i = 1; i < max_r_idx; i++)
         evol_tree[i] = *evol_tree + i * (max_evolution_depth + 1);
@@ -151,7 +148,7 @@ static void spoil_mon_evol(player_type *player_ptr, concptr fname)
     }
 
     C_KILL(evol_tree_zero, max_r_idx * (max_evolution_depth + 1), int);
-    C_KILL(evol_tree, max_r_idx, int *);
+    C_KILL(evol_tree, max_r_idx, int*);
     if (ferror(spoiler_file) || angband_fclose(spoiler_file)) {
         msg_print("Cannot close spoiler file.");
         return;
@@ -165,8 +162,7 @@ static void spoil_mon_evol(player_type *player_ptr, concptr fname)
  * Create Spoiler files -BEN-
  * @return なし
  */
-void exe_output_spoilers(player_type *player_ptr)
-{
+void exe_output_spoilers(player_type* player_ptr) {
     screen_save();
     while (TRUE) {
         term_clear();

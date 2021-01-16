@@ -14,12 +14,11 @@
 #include "mutation/mutation-calculator.h"
 #include "mutation/mutation-flag-types.h"
 
- /*!
+/*!
  * @brief 現在プレイヤー得ている突然変異の数を返す。
  * @return 現在得ている突然変異の数
  */
-static int count_mutations(player_type *creature_ptr)
-{
+static int count_mutations(player_type* creature_ptr) {
     return count_bits(creature_ptr->muta1) + count_bits(creature_ptr->muta2) + count_bits(creature_ptr->muta3);
 }
 
@@ -31,8 +30,7 @@ static int count_mutations(player_type *creature_ptr)
  * Beastman get 10 "free" mutations and only 5% decrease per additional mutation.
  * Max 90% decrease in regeneration speed.
  */
-int calc_mutant_regenerate_mod(player_type *creature_ptr)
-{
+int calc_mutant_regenerate_mod(player_type* creature_ptr) {
     int regen;
     int mod = 10;
     int count = count_mutations(creature_ptr);

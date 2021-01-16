@@ -16,8 +16,7 @@
  * Based on a suggestion by "Lee Vogt" <lvogt@cig.mcel.mot.com>
  * </pre>
  */
-bool black_market_crap(player_type *player_ptr, object_type *o_ptr)
-{
+bool black_market_crap(player_type* player_ptr, object_type* o_ptr) {
     if (object_is_ego(o_ptr))
         return FALSE;
 
@@ -37,7 +36,7 @@ bool black_market_crap(player_type *player_ptr, object_type *o_ptr)
             continue;
 
         for (int j = 0; j < town_info[player_ptr->town_num].store[i].stock_num; j++) {
-            object_type *j_ptr = &town_info[player_ptr->town_num].store[i].stock[j];
+            object_type* j_ptr = &town_info[player_ptr->town_num].store[i].stock[j];
             if (o_ptr->k_idx == j_ptr->k_idx)
                 return TRUE;
         }

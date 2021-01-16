@@ -1,10 +1,10 @@
 ﻿#include "spell/spells-diceroll.h"
+#include "monster-race/monster-race-hook.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-flags-resistance.h"
 #include "monster-race/race-flags1.h"
 #include "monster-race/race-flags3.h"
 #include "monster-race/race-flags7.h"
-#include "monster-race/monster-race-hook.h"
 #include "monster/monster-flag-types.h"
 #include "monster/monster-info.h"
 #include "player/player-class.h"
@@ -18,30 +18,27 @@
  * @param m_ptr 対象モンスター
  * @return 魅了に抵抗したらTRUE
  */
-bool common_saving_throw_charm(player_type *operator_ptr, HIT_POINT pow, monster_type *m_ptr)
-{
-	monster_race *r_ptr = &r_info[m_ptr->r_idx];
+bool common_saving_throw_charm(player_type* operator_ptr, HIT_POINT pow, monster_type* m_ptr) {
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
-	if (operator_ptr->current_floor_ptr->inside_arena) return TRUE;
+    if (operator_ptr->current_floor_ptr->inside_arena) return TRUE;
 
-	/* Memorize a flag */
-	if (r_ptr->flagsr & RFR_RES_ALL)
-	{
-		if (is_original_ap_and_seen(operator_ptr, m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
-		return TRUE;
-	}
+    /* Memorize a flag */
+    if (r_ptr->flagsr & RFR_RES_ALL) {
+        if (is_original_ap_and_seen(operator_ptr, m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+        return TRUE;
+    }
 
-	if (r_ptr->flags3 & RF3_NO_CONF)
-	{
-		if (is_original_ap_and_seen(operator_ptr, m_ptr)) r_ptr->r_flags3 |= (RF3_NO_CONF);
-		return TRUE;
-	}
+    if (r_ptr->flags3 & RF3_NO_CONF) {
+        if (is_original_ap_and_seen(operator_ptr, m_ptr)) r_ptr->r_flags3 |= (RF3_NO_CONF);
+        return TRUE;
+    }
 
-	if (r_ptr->flags1 & RF1_QUESTOR || m_ptr->mflag2 & MFLAG2_NOPET) return TRUE;
+    if (r_ptr->flags1 & RF1_QUESTOR || m_ptr->mflag2 & MFLAG2_NOPET) return TRUE;
 
-	pow += (adj_chr_chm[operator_ptr->stat_ind[A_CHR]] - 1);
-	if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL)) pow = pow * 2 / 3;
-	return (r_ptr->level > randint1((pow - 10) < 1 ? 1 : (pow - 10)) + 5);
+    pow += (adj_chr_chm[operator_ptr->stat_ind[A_CHR]] - 1);
+    if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL)) pow = pow * 2 / 3;
+    return (r_ptr->level > randint1((pow - 10) < 1 ? 1 : (pow - 10)) + 5);
 }
 
 /*!
@@ -50,24 +47,22 @@ bool common_saving_throw_charm(player_type *operator_ptr, HIT_POINT pow, monster
  * @param m_ptr 対象モンスター
  * @return 服従に抵抗したらTRUE
  */
-bool common_saving_throw_control(player_type *operator_ptr, HIT_POINT pow, monster_type *m_ptr)
-{
-	monster_race *r_ptr = &r_info[m_ptr->r_idx];
+bool common_saving_throw_control(player_type* operator_ptr, HIT_POINT pow, monster_type* m_ptr) {
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
-	if (operator_ptr->current_floor_ptr->inside_arena) return TRUE;
+    if (operator_ptr->current_floor_ptr->inside_arena) return TRUE;
 
-	/* Memorize a flag */
-	if (r_ptr->flagsr & RFR_RES_ALL)
-	{
-		if (is_original_ap_and_seen(operator_ptr, m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
-		return TRUE;
-	}
+    /* Memorize a flag */
+    if (r_ptr->flagsr & RFR_RES_ALL) {
+        if (is_original_ap_and_seen(operator_ptr, m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
+        return TRUE;
+    }
 
-	if (r_ptr->flags1 & RF1_QUESTOR || m_ptr->mflag2 & MFLAG2_NOPET) return TRUE;
+    if (r_ptr->flags1 & RF1_QUESTOR || m_ptr->mflag2 & MFLAG2_NOPET) return TRUE;
 
-	pow += adj_chr_chm[operator_ptr->stat_ind[A_CHR]] - 1;
-	if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL)) pow = pow * 2 / 3;
-	return (r_ptr->level > randint1((pow - 10) < 1 ? 1 : (pow - 10)) + 5);
+    pow += adj_chr_chm[operator_ptr->stat_ind[A_CHR]] - 1;
+    if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags7 & RF7_NAZGUL)) pow = pow * 2 / 3;
+    return (r_ptr->level > randint1((pow - 10) < 1 ? 1 : (pow - 10)) + 5);
 }
 
 /*!
@@ -77,12 +72,11 @@ bool common_saving_throw_control(player_type *operator_ptr, HIT_POINT pow, monst
 * ハードコーティングによる実装が行われている。
 * メイジは(レベル)%、ハイメイジ、スペルマスターは(レベル)%、それ以外の職業は(レベル/2)%
 */
-PERCENTAGE beam_chance(player_type *caster_ptr)
-{
-	if (caster_ptr->pclass == CLASS_MAGE)
-		return (PERCENTAGE)(caster_ptr->lev);
-	if (caster_ptr->pclass == CLASS_HIGH_MAGE || caster_ptr->pclass == CLASS_SORCERER)
-		return (PERCENTAGE)(caster_ptr->lev + 10);
+PERCENTAGE beam_chance(player_type* caster_ptr) {
+    if (caster_ptr->pclass == CLASS_MAGE)
+        return (PERCENTAGE)(caster_ptr->lev);
+    if (caster_ptr->pclass == CLASS_HIGH_MAGE || caster_ptr->pclass == CLASS_SORCERER)
+        return (PERCENTAGE)(caster_ptr->lev + 10);
 
-	return (PERCENTAGE)(caster_ptr->lev / 2);
+    return (PERCENTAGE)(caster_ptr->lev / 2);
 }

@@ -17,8 +17,7 @@
  * @return なし
  * @details 10% (毒の一次耐性があれば4%、二重耐性ならば1.6%)の確率で耐久が低下し、更に1/10の確率で永久低下する
  */
-void calc_blow_disease(player_type *target_ptr, monap_type *monap_ptr)
-{
+void calc_blow_disease(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_resist_pois(target_ptr))
         monap_ptr->damage = monap_ptr->damage * (randint1(4) + 4) / 9;
 
@@ -49,8 +48,7 @@ void calc_blow_disease(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void calc_blow_lose_strength(player_type *target_ptr, monap_type *monap_ptr)
-{
+void calc_blow_lose_strength(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_sustain_str(target_ptr))
         monap_ptr->get_damage = monap_ptr->get_damage * (randint1(4) + 4) / 9;
 
@@ -68,8 +66,7 @@ void calc_blow_lose_strength(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void calc_blow_lose_intelligence(player_type *target_ptr, monap_type *monap_ptr)
-{
+void calc_blow_lose_intelligence(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_sustain_int(target_ptr))
         monap_ptr->get_damage = monap_ptr->get_damage * (randint1(4) + 4) / 9;
 
@@ -87,8 +84,7 @@ void calc_blow_lose_intelligence(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void calc_blow_lose_wisdom(player_type *target_ptr, monap_type *monap_ptr)
-{
+void calc_blow_lose_wisdom(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_sustain_wis(target_ptr))
         monap_ptr->get_damage = monap_ptr->get_damage * (randint1(4) + 4) / 9;
 
@@ -106,8 +102,7 @@ void calc_blow_lose_wisdom(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void calc_blow_lose_dexterity(player_type *target_ptr, monap_type *monap_ptr)
-{
+void calc_blow_lose_dexterity(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_sustain_dex(target_ptr))
         monap_ptr->get_damage = monap_ptr->get_damage * (randint1(4) + 4) / 9;
 
@@ -125,8 +120,7 @@ void calc_blow_lose_dexterity(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void calc_blow_lose_constitution(player_type *target_ptr, monap_type *monap_ptr)
-{
+void calc_blow_lose_constitution(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_sustain_con(target_ptr))
         monap_ptr->get_damage = monap_ptr->get_damage * (randint1(4) + 4) / 9;
 
@@ -144,8 +138,7 @@ void calc_blow_lose_constitution(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void calc_blow_lose_charisma(player_type *target_ptr, monap_type *monap_ptr)
-{
+void calc_blow_lose_charisma(player_type* target_ptr, monap_type* monap_ptr) {
     if (has_sustain_chr(target_ptr))
         monap_ptr->get_damage = monap_ptr->get_damage * (randint1(4) + 4) / 9;
 
@@ -163,8 +156,7 @@ void calc_blow_lose_charisma(player_type *target_ptr, monap_type *monap_ptr)
  * @param monap_ptr モンスターからプレーヤーへの直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void calc_blow_lose_all(player_type *target_ptr, monap_type *monap_ptr)
-{
+void calc_blow_lose_all(player_type* target_ptr, monap_type* monap_ptr) {
     int damage_ratio = 100;
     if (has_sustain_str(target_ptr))
         damage_ratio -= 3;

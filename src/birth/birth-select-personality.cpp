@@ -8,8 +8,7 @@
 
 static const char p2 = ')';
 
-static void enumerate_personality_list(player_type *creature_ptr, concptr *str, char *sym)
-{
+static void enumerate_personality_list(player_type* creature_ptr, concptr* str, char* sym) {
     char buf[80];
     for (int n = 0; n < MAX_PERSONALITIES; n++) {
         if (personality_info[n].sex && (personality_info[n].sex != (creature_ptr->psex + 1)))
@@ -27,8 +26,7 @@ static void enumerate_personality_list(player_type *creature_ptr, concptr *str, 
     }
 }
 
-static void display_personality_stat(int cs, int *os, concptr *str, char *cur, char *sym)
-{
+static void display_personality_stat(int cs, int* os, concptr* str, char* cur, char* sym) {
     char buf[80];
     if (cs == *os)
         return;
@@ -39,7 +37,8 @@ static void display_personality_stat(int cs, int *os, concptr *str, char *cur, c
         sprintf(cur, "%c%c%s", '*', p2, _("ランダム", "Random"));
         put_str("                                   ", 4, 40);
         put_str("                                   ", 5, 40);
-    } else {
+    }
+    else {
         ap_ptr = &personality_info[cs];
         *str = ap_ptr->title;
         sprintf(cur, "%c%c%s", sym[cs], p2, *str);
@@ -55,8 +54,7 @@ static void display_personality_stat(int cs, int *os, concptr *str, char *cur, c
     *os = cs;
 }
 
-static void interpret_personality_select_key_move(player_type *creature_ptr, char c, int *cs)
-{
+static void interpret_personality_select_key_move(player_type* creature_ptr, char c, int* cs) {
     if (c == '8') {
         if (*cs >= 4)
             *cs -= 4;
@@ -102,8 +100,7 @@ static void interpret_personality_select_key_move(player_type *creature_ptr, cha
     }
 }
 
-static bool select_personality(player_type *creature_ptr, int *k, concptr *str, char *sym)
-{
+static bool select_personality(player_type* creature_ptr, int* k, concptr* str, char* sym) {
     char cur[80];
     sprintf(cur, "%c%c%s", '*', p2, _("ランダム", "Random"));
     int cs = creature_ptr->pseikaku;
@@ -132,7 +129,8 @@ static bool select_personality(player_type *creature_ptr, int *k, concptr *str, 
 
                 cs = *k;
                 continue;
-            } else {
+            }
+            else {
                 *k = cs;
                 break;
             }
@@ -162,7 +160,8 @@ static bool select_personality(player_type *creature_ptr, int *k, concptr *str, 
                 cs = *k;
                 continue;
             }
-        } else
+        }
+        else
             *k = -1;
 
         birth_help_option(creature_ptr, c, BK_PERSONALITY);
@@ -175,8 +174,7 @@ static bool select_personality(player_type *creature_ptr, int *k, concptr *str, 
  * @brief プレイヤーの性格選択を行う / Player Player seikaku
  * @return なし
  */
-bool get_player_personality(player_type *creature_ptr)
-{
+bool get_player_personality(player_type* creature_ptr) {
     clear_from(10);
     put_str(_("注意：《性格》によってキャラクターの能力やボーナスが変化します。", "Note: Your personality determines various intrinsic abilities and bonuses."),
         23, 5);

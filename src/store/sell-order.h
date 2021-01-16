@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void store_sell(player_type *owner_ptr);
+void store_sell(player_type* owner_ptr);

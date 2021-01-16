@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool rustproof(player_type *caster_ptr);
+bool rustproof(player_type* caster_ptr);

@@ -29,8 +29,7 @@
  * Redraw a term when it is resized
  * @return なし
  */
-void redraw_window(void)
-{
+void redraw_window(void) {
     if (!current_world_ptr->character_dungeon)
         return;
 
@@ -46,8 +45,7 @@ void redraw_window(void)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-static void print_dungeon(player_type *creature_ptr)
-{
+static void print_dungeon(player_type* creature_ptr) {
     c_put_str(TERM_WHITE, "             ", ROW_DUNGEON, COL_DUNGEON);
     concptr dungeon_name = map_name(creature_ptr);
     TERM_LEN col = COL_DUNGEON + 6 - strlen(dungeon_name) / 2;
@@ -62,8 +60,7 @@ static void print_dungeon(player_type *creature_ptr)
  * @return なし
  * @details 更新処理の対象はゲーム中の全描画処理
  */
-void redraw_stuff(player_type *creature_ptr)
-{
+void redraw_stuff(player_type* creature_ptr) {
     if (!creature_ptr->redraw)
         return;
 
@@ -224,8 +221,7 @@ void redraw_stuff(player_type *creature_ptr)
  * @return なし
  * @details 更新処理の対象はサブウィンドウ全般
  */
-void window_stuff(player_type *player_ptr)
-{
+void window_stuff(player_type* player_ptr) {
     if (!player_ptr->window)
         return;
 

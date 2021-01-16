@@ -7,8 +7,7 @@
 #include "player/player-race.h"
 #include "player/player-status-flags.h"
 
-void add_cheat_remove_flags_others(player_type *target_ptr, msr_type *msr_ptr)
-{
+void add_cheat_remove_flags_others(player_type* target_ptr, msr_type* msr_ptr) {
     if (has_resist_neth(target_ptr))
         msr_ptr->smart |= SM_RES_NETH;
 
@@ -52,8 +51,7 @@ void add_cheat_remove_flags_others(player_type *target_ptr, msr_type *msr_ptr)
         msr_ptr->smart |= SM_IMM_MANA;
 }
 
-static void check_nether_resistance(player_type *target_ptr, msr_type *msr_ptr)
-{
+static void check_nether_resistance(player_type* target_ptr, msr_type* msr_ptr) {
     if ((msr_ptr->smart & SM_RES_NETH) == 0)
         return;
 
@@ -74,8 +72,7 @@ static void check_nether_resistance(player_type *target_ptr, msr_type *msr_ptr)
         msr_ptr->f5 &= ~(RF5_BO_NETH);
 }
 
-static void check_lite_resistance(msr_type *msr_ptr)
-{
+static void check_lite_resistance(msr_type* msr_ptr) {
     if ((msr_ptr->smart & SM_RES_LITE) == 0)
         return;
 
@@ -86,8 +83,7 @@ static void check_lite_resistance(msr_type *msr_ptr)
         msr_ptr->f5 &= ~(RF5_BA_LITE);
 }
 
-static void check_dark_resistance(player_type *target_ptr, msr_type *msr_ptr)
-{
+static void check_dark_resistance(player_type* target_ptr, msr_type* msr_ptr) {
     if ((msr_ptr->smart & SM_RES_DARK) == 0)
         return;
 
@@ -104,8 +100,7 @@ static void check_dark_resistance(player_type *target_ptr, msr_type *msr_ptr)
         msr_ptr->f5 &= ~(RF5_BA_DARK);
 }
 
-static void check_conf_resistance(msr_type *msr_ptr)
-{
+static void check_conf_resistance(msr_type* msr_ptr) {
     if ((msr_ptr->smart & SM_RES_CONF) == 0)
         return;
 
@@ -114,8 +109,7 @@ static void check_conf_resistance(msr_type *msr_ptr)
         msr_ptr->f4 &= ~(RF4_BR_CONF);
 }
 
-static void check_chaos_resistance(msr_type *msr_ptr)
-{
+static void check_chaos_resistance(msr_type* msr_ptr) {
     if ((msr_ptr->smart & SM_RES_CHAOS) == 0)
         return;
 
@@ -126,8 +120,7 @@ static void check_chaos_resistance(msr_type *msr_ptr)
         msr_ptr->f4 &= ~(RF4_BA_CHAO);
 }
 
-static void check_nexus_resistance(msr_type *msr_ptr)
-{
+static void check_nexus_resistance(msr_type* msr_ptr) {
     if ((msr_ptr->smart & SM_RES_NEXUS) == 0)
         return;
 
@@ -137,8 +130,7 @@ static void check_nexus_resistance(msr_type *msr_ptr)
     msr_ptr->f6 &= ~(RF6_TELE_LEVEL);
 }
 
-static void check_reflection(msr_type *msr_ptr)
-{
+static void check_reflection(msr_type* msr_ptr) {
     if ((msr_ptr->smart & SM_IMM_REFLECT) == 0)
         return;
 
@@ -173,8 +165,7 @@ static void check_reflection(msr_type *msr_ptr)
         msr_ptr->f5 &= ~(RF5_MISSILE);
 }
 
-void check_high_resistances(player_type *target_ptr, msr_type *msr_ptr)
-{
+void check_high_resistances(player_type* target_ptr, msr_type* msr_ptr) {
     check_nether_resistance(target_ptr, msr_ptr);
     check_lite_resistance(msr_ptr);
     check_dark_resistance(target_ptr, msr_ptr);

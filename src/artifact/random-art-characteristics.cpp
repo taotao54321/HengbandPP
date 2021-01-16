@@ -9,8 +9,7 @@
 #include "util/bit-flags-calculator.h"
 #include "wizard/wizard-messages.h"
 
-static void pval_subtraction(object_type *o_ptr)
-{
+static void pval_subtraction(object_type* o_ptr) {
     if (o_ptr->pval > 0)
         o_ptr->pval = 0 - (o_ptr->pval + randint1(4));
 
@@ -24,8 +23,7 @@ static void pval_subtraction(object_type *o_ptr)
         o_ptr->to_d = 0 - (o_ptr->to_d + randint1(4));
 }
 
-static void add_negative_flags(object_type *o_ptr)
-{
+static void add_negative_flags(object_type* o_ptr) {
     if (one_in_(4))
         o_ptr->curse_flags |= TRC_PERMA_CURSE;
 
@@ -66,8 +64,7 @@ static void add_negative_flags(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void curse_artifact(player_type *player_ptr, object_type *o_ptr)
-{
+void curse_artifact(player_type* player_ptr, object_type* o_ptr) {
     pval_subtraction(o_ptr);
     o_ptr->curse_flags |= (TRC_HEAVY_CURSE | TRC_CURSED);
     remove_flag(o_ptr->art_flags, TR_BLESSED);
@@ -84,8 +81,7 @@ void curse_artifact(player_type *player_ptr, object_type *o_ptr)
  * @return ファイル名
  * @details 二重switch文だが短いので執行猶予とする
  */
-static concptr get_random_art_filename(const bool armour, const int power)
-{
+static concptr get_random_art_filename(const bool armour, const int power) {
     concptr filename;
     switch (armour) {
     case 1:
@@ -131,8 +127,7 @@ static concptr get_random_art_filename(const bool armour, const int power)
  * @param power 銘の基準となるオブジェクトの価値レベル(0=呪い、1=低位、2=中位、3以上=高位)
  * @return なし
  */
-void get_random_name(object_type *o_ptr, char *return_name, bool armour, int power)
-{
+void get_random_name(object_type* o_ptr, char* return_name, bool armour, int power) {
     PERCENTAGE prob = randint1(100);
     if (prob <= SINDARIN_NAME) {
         get_table_sindarin(return_name);
@@ -153,8 +148,7 @@ void get_random_name(object_type *o_ptr, char *return_name, bool armour, int pow
 }
 
 /*対邪平均ダメージの計算処理*/
-static HIT_POINT calc_arm_avgdamage(player_type *player_ptr, object_type *o_ptr)
-{
+static HIT_POINT calc_arm_avgdamage(player_type* player_ptr, object_type* o_ptr) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     HIT_POINT base, forced, vorpal;
@@ -162,19 +156,23 @@ static HIT_POINT calc_arm_avgdamage(player_type *player_ptr, object_type *o_ptr)
     HIT_POINT dam = base = (o_ptr->dd * o_ptr->ds + o_ptr->dd) / 2;
     if (has_flag(flgs, TR_KILL_EVIL)) {
         dam = s_evil = dam * 7 / 2;
-    } else if (!has_flag(flgs, TR_KILL_EVIL) && has_flag(flgs, TR_SLAY_EVIL)) {
+    }
+    else if (!has_flag(flgs, TR_KILL_EVIL) && has_flag(flgs, TR_SLAY_EVIL)) {
         dam = s_evil = dam * 2;
-    } else
+    }
+    else
         s_evil = dam;
 
     if (has_flag(flgs, TR_FORCE_WEAPON)) {
         dam = forced = dam * 3 / 2 + (o_ptr->dd * o_ptr->ds + o_ptr->dd);
-    } else
+    }
+    else
         forced = dam;
 
     if (has_flag(flgs, TR_VORPAL)) {
         dam = vorpal = dam * 11 / 9;
-    } else
+    }
+    else
         vorpal = dam;
 
     dam = dam + o_ptr->to_d;
@@ -182,8 +180,7 @@ static HIT_POINT calc_arm_avgdamage(player_type *player_ptr, object_type *o_ptr)
     return dam;
 }
 
-bool has_extreme_damage_rate(player_type *player_ptr, object_type *o_ptr)
-{
+bool has_extreme_damage_rate(player_type* player_ptr, object_type* o_ptr) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(player_ptr, o_ptr, flgs);
     if (has_flag(flgs, TR_VAMPIRIC)) {

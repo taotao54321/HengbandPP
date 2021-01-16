@@ -40,10 +40,9 @@
  * this is done in two passes. -- JDL
  * </pre>
  */
-bool project_all_los(player_type *caster_ptr, EFFECT_ID typ, HIT_POINT dam)
-{
+bool project_all_los(player_type* caster_ptr, EFFECT_ID typ, HIT_POINT dam) {
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -58,7 +57,7 @@ bool project_all_los(player_type *caster_ptr, EFFECT_ID typ, HIT_POINT dam)
     BIT_FLAGS flg = PROJECT_JUMP | PROJECT_KILL | PROJECT_HIDE;
     bool obvious = FALSE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
         if (!(m_ptr->mflag & (MFLAG_LOS)))
             continue;
 
@@ -78,35 +77,34 @@ bool project_all_los(player_type *caster_ptr, EFFECT_ID typ, HIT_POINT dam)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool speed_monsters(player_type *caster_ptr) { return (project_all_los(caster_ptr, GF_OLD_SPEED, caster_ptr->lev)); }
+bool speed_monsters(player_type* caster_ptr) { return (project_all_los(caster_ptr, GF_OLD_SPEED, caster_ptr->lev)); }
 
 /*!
  * @brief 視界内モンスターを加速する処理 / Slow monsters
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool slow_monsters(player_type *caster_ptr, int power) { return (project_all_los(caster_ptr, GF_OLD_SLOW, power)); }
+bool slow_monsters(player_type* caster_ptr, int power) { return (project_all_los(caster_ptr, GF_OLD_SLOW, power)); }
 
 /*!
  * @brief 視界内モンスターを眠らせる処理 / Sleep monsters
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool sleep_monsters(player_type *caster_ptr, int power) { return (project_all_los(caster_ptr, GF_OLD_SLEEP, power)); }
+bool sleep_monsters(player_type* caster_ptr, int power) { return (project_all_los(caster_ptr, GF_OLD_SLEEP, power)); }
 
 /*!
  * @brief 視界内の邪悪なモンスターをテレポート・アウェイさせる処理 / Banish evil monsters
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool banish_evil(player_type *caster_ptr, int dist) { return (project_all_los(caster_ptr, GF_AWAY_EVIL, dist)); }
+bool banish_evil(player_type* caster_ptr, int dist) { return (project_all_los(caster_ptr, GF_AWAY_EVIL, dist)); }
 
 /*!
  * @brief 視界内のアンデッド・モンスターを恐怖させる処理 / Turn undead
  * @return 効力があった場合TRUEを返す
  */
-bool turn_undead(player_type *caster_ptr)
-{
+bool turn_undead(player_type* caster_ptr) {
     bool tester = (project_all_los(caster_ptr, GF_TURN_UNDEAD, caster_ptr->lev));
     if (tester)
         chg_virtue(caster_ptr, V_UNLIFE, -1);
@@ -118,8 +116,7 @@ bool turn_undead(player_type *caster_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool dispel_undead(player_type *caster_ptr, HIT_POINT dam)
-{
+bool dispel_undead(player_type* caster_ptr, HIT_POINT dam) {
     bool tester = (project_all_los(caster_ptr, GF_DISP_UNDEAD, dam));
     if (tester)
         chg_virtue(caster_ptr, V_UNLIFE, -2);
@@ -131,42 +128,42 @@ bool dispel_undead(player_type *caster_ptr, HIT_POINT dam)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool dispel_evil(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_EVIL, dam)); }
+bool dispel_evil(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_EVIL, dam)); }
 
 /*!
  * @brief 視界内の善良なモンスターにダメージを与える処理 / Dispel good monsters
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool dispel_good(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_GOOD, dam)); }
+bool dispel_good(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_GOOD, dam)); }
 
 /*!
  * @brief 視界内のあらゆるモンスターにダメージを与える処理 / Dispel all monsters
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool dispel_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_ALL, dam)); }
+bool dispel_monsters(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_ALL, dam)); }
 
 /*!
  * @brief 視界内の生命のあるモンスターにダメージを与える処理 / Dispel 'living' monsters
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool dispel_living(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_LIVING, dam)); }
+bool dispel_living(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_LIVING, dam)); }
 
 /*!
  * @brief 視界内の悪魔系モンスターにダメージを与える処理 / Dispel 'living' monsters
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool dispel_demons(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_DEMON, dam)); }
+bool dispel_demons(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_DISP_DEMON, dam)); }
 
 /*!
  * @brief 視界内のモンスターに「聖戦」効果を与える処理
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 効力があった場合TRUEを返す
  */
-bool crusade(player_type *caster_ptr) { return (project_all_los(caster_ptr, GF_CRUSADE, caster_ptr->lev * 4)); }
+bool crusade(player_type* caster_ptr) { return (project_all_los(caster_ptr, GF_CRUSADE, caster_ptr->lev * 4)); }
 
 /*!
  * @brief 視界内モンスターを怒らせる処理 / Wake up all monsters, and speed up "los" monsters.
@@ -174,12 +171,11 @@ bool crusade(player_type *caster_ptr) { return (project_all_los(caster_ptr, GF_C
  * @param who 怒らせる原因を起こしたモンスター(0ならばプレイヤー)
  * @return なし
  */
-void aggravate_monsters(player_type *caster_ptr, MONSTER_IDX who)
-{
+void aggravate_monsters(player_type* caster_ptr, MONSTER_IDX who) {
     bool sleep = FALSE;
     bool speed = FALSE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr))
             continue;
         if (i == who)
@@ -217,7 +213,7 @@ void aggravate_monsters(player_type *caster_ptr, MONSTER_IDX who)
  * @param dam 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool confuse_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_OLD_CONF, dam)); }
+bool confuse_monsters(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_OLD_CONF, dam)); }
 
 /*!
  * @brief チャーム・モンスター効果(プレイヤー視界範囲内) / Charm monsters
@@ -225,7 +221,7 @@ bool confuse_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_
  * @param dam 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool charm_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_CHARM, dam)); }
+bool charm_monsters(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_CHARM, dam)); }
 
 /*!
  * @brief 動物魅了効果(プレイヤー視界範囲内) / Charm Animals
@@ -233,7 +229,7 @@ bool charm_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_al
  * @param dam 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool charm_animals(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_CONTROL_ANIMAL, dam)); }
+bool charm_animals(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_CONTROL_ANIMAL, dam)); }
 
 /*!
  * @brief モンスター朦朧効果(プレイヤー視界範囲内) / Stun monsters
@@ -241,7 +237,7 @@ bool charm_animals(player_type *caster_ptr, HIT_POINT dam) { return (project_all
  * @param dam 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool stun_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_STUN, dam)); }
+bool stun_monsters(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_STUN, dam)); }
 
 /*!
  * @brief モンスター停止効果(プレイヤー視界範囲内) / Stasis monsters
@@ -249,7 +245,7 @@ bool stun_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_all
  * @param dam 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool stasis_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_STASIS, dam)); }
+bool stasis_monsters(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_STASIS, dam)); }
 
 /*!
  * @brief モンスター精神攻撃効果(プレイヤー視界範囲内) / Mindblast monsters
@@ -257,7 +253,7 @@ bool stasis_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_a
  * @param dam 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool mindblast_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_PSI, dam)); }
+bool mindblast_monsters(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_PSI, dam)); }
 
 /*!
  * @brief モンスター追放効果(プレイヤー視界範囲内) / Banish all monsters
@@ -265,7 +261,7 @@ bool mindblast_monsters(player_type *caster_ptr, HIT_POINT dam) { return (projec
  * @param dist 効力（距離）
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool banish_monsters(player_type *caster_ptr, int dist) { return (project_all_los(caster_ptr, GF_AWAY_ALL, dist)); }
+bool banish_monsters(player_type* caster_ptr, int dist) { return (project_all_los(caster_ptr, GF_AWAY_ALL, dist)); }
 
 /*!
  * @brief 邪悪退散効果(プレイヤー視界範囲内) / Turn evil
@@ -273,7 +269,7 @@ bool banish_monsters(player_type *caster_ptr, int dist) { return (project_all_lo
  * @param dam 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool turn_evil(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_TURN_EVIL, dam)); }
+bool turn_evil(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_TURN_EVIL, dam)); }
 
 /*!
  * @brief 全モンスター退散効果(プレイヤー視界範囲内) / Turn everyone
@@ -281,21 +277,20 @@ bool turn_evil(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los
  * @param dam 効力
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool turn_monsters(player_type *caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_TURN_ALL, dam)); }
+bool turn_monsters(player_type* caster_ptr, HIT_POINT dam) { return (project_all_los(caster_ptr, GF_TURN_ALL, dam)); }
 
 /*!
  * @brief 死の光線(プレイヤー視界範囲内) / Death-ray all monsters (note: OBSCENELY powerful)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool deathray_monsters(player_type *caster_ptr) { return (project_all_los(caster_ptr, GF_DEATH_RAY, caster_ptr->lev * 200)); }
+bool deathray_monsters(player_type* caster_ptr) { return (project_all_los(caster_ptr, GF_DEATH_RAY, caster_ptr->lev * 200)); }
 
 /*!
  * @brief 周辺モンスターを調査する / Probe nearby monsters
  * @return 効力があった場合TRUEを返す
  */
-bool probing(player_type *caster_ptr)
-{
+bool probing(player_type* caster_ptr) {
     bool cu = Term->scr->cu;
     bool cv = Term->scr->cv;
     Term->scr->cu = 0;
@@ -306,8 +301,8 @@ bool probing(player_type *caster_ptr)
     char buf[256];
     concptr align;
     for (int i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (!monster_is_valid(m_ptr))
             continue;
         if (!player_has_los_bold(caster_ptr, m_ptr->fy, m_ptr->fx))
@@ -357,7 +352,8 @@ bool probing(player_type *caster_ptr)
 
         if (r_ptr->next_r_idx) {
             strcat(buf, format("%d/%d ", m_ptr->exp, r_ptr->next_exp));
-        } else {
+        }
+        else {
             strcat(buf, "xxx ");
         }
 

@@ -49,13 +49,13 @@
  * @return 常に0を返す。
  * @details 生成の制約はグローバルのget_obj_num_hook関数ポインタで加える
  */
-static errr get_obj_num_prep(void)
-{
-    alloc_entry *table = alloc_kind_table;
+static errr get_obj_num_prep(void) {
+    alloc_entry* table = alloc_kind_table;
     for (OBJECT_IDX i = 0; i < alloc_kind_size; i++) {
         if (!get_obj_num_hook || (*get_obj_num_hook)(table[i].index)) {
             table[i].prob2 = table[i].prob1;
-        } else {
+        }
+        else {
             table[i].prob2 = 0;
         }
     }
@@ -69,8 +69,7 @@ static errr get_obj_num_prep(void)
  * @param o_ptr デバッグ出力するオブジェクトの構造体参照ポインタ
  * @return なし
  */
-static void object_mention(player_type *owner_ptr, object_type *o_ptr)
-{
+static void object_mention(player_type* owner_ptr, object_type* o_ptr) {
     object_aware(owner_ptr, o_ptr);
     object_known(o_ptr);
 
@@ -92,9 +91,8 @@ static void object_mention(player_type *owner_ptr, object_type *o_ptr)
  * This routine uses "floor_ptr->object_level" for the "generation level".\n
  * We assume that the given object has been "wiped".\n
  */
-bool make_object(player_type *owner_ptr, object_type *j_ptr, BIT_FLAGS mode)
-{
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
+bool make_object(player_type* owner_ptr, object_type* j_ptr, BIT_FLAGS mode) {
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
     PERCENTAGE prob = ((mode & AM_GOOD) ? 10 : 1000);
     DEPTH base = ((mode & AM_GOOD) ? (floor_ptr->object_level + 10) : floor_ptr->object_level);
     if (!one_in_(prob) || !make_artifact_special(owner_ptr, j_ptr)) {
@@ -144,9 +142,8 @@ bool make_object(player_type *owner_ptr, object_type *j_ptr, BIT_FLAGS mode)
  * @details
  * The location must be a legal, clean, floor grid.
  */
-bool make_gold(player_type *player_ptr, object_type *j_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+bool make_gold(player_type* player_ptr, object_type* j_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     int i = ((randint1(floor_ptr->object_level + 2) + 2) / 2) - 1;
     if (one_in_(GREAT_OBJ)) {
         i += randint1(floor_ptr->object_level + 1);
@@ -172,17 +169,16 @@ bool make_gold(player_type *player_ptr, object_type *j_ptr)
  * @param x 削除したフロアマスのX座標
  * @return なし
  */
-void delete_all_items_from_floor(player_type *player_ptr, POSITION y, POSITION x)
-{
-    grid_type *g_ptr;
+void delete_all_items_from_floor(player_type* player_ptr, POSITION y, POSITION x) {
+    grid_type* g_ptr;
     OBJECT_IDX this_o_idx, next_o_idx = 0;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!in_bounds(floor_ptr, y, x))
         return;
 
     g_ptr = &floor_ptr->grid_array[y][x];
     for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         object_wipe(o_ptr);
@@ -201,9 +197,8 @@ void delete_all_items_from_floor(player_type *player_ptr, POSITION y, POSITION x
  * @param num 増やしたいアイテムの数
  * @return なし
  */
-void floor_item_increase(floor_type *floor_ptr, INVENTORY_IDX item, ITEM_NUMBER num)
-{
-    object_type *o_ptr = &floor_ptr->o_list[item];
+void floor_item_increase(floor_type* floor_ptr, INVENTORY_IDX item, ITEM_NUMBER num) {
+    object_type* o_ptr = &floor_ptr->o_list[item];
     num += o_ptr->number;
     if (num > 255)
         num = 255;
@@ -221,9 +216,8 @@ void floor_item_increase(floor_type *floor_ptr, INVENTORY_IDX item, ITEM_NUMBER 
  * @param item 消去したいアイテムの所持スロット
  * @return なし
  */
-void floor_item_optimize(player_type *owner_ptr, INVENTORY_IDX item)
-{
-    object_type *o_ptr = &owner_ptr->current_floor_ptr->o_list[item];
+void floor_item_optimize(player_type* owner_ptr, INVENTORY_IDX item) {
+    object_type* o_ptr = &owner_ptr->current_floor_ptr->o_list[item];
     if (!o_ptr->k_idx)
         return;
     if (o_ptr->number)
@@ -241,10 +235,9 @@ void floor_item_optimize(player_type *owner_ptr, INVENTORY_IDX item)
  * @details
  * Handle "stacks" of objects correctly.
  */
-void delete_object_idx(player_type *player_ptr, OBJECT_IDX o_idx)
-{
-    object_type *j_ptr;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+void delete_object_idx(player_type* player_ptr, OBJECT_IDX o_idx) {
+    object_type* j_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     excise_object_idx(floor_ptr, o_idx);
     j_ptr = &floor_ptr->o_list[o_idx];
     if (!object_is_held_monster(j_ptr)) {
@@ -264,18 +257,17 @@ void delete_object_idx(player_type *player_ptr, OBJECT_IDX o_idx)
  * @param o_idx 削除対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void excise_object_idx(floor_type *floor_ptr, OBJECT_IDX o_idx)
-{
+void excise_object_idx(floor_type* floor_ptr, OBJECT_IDX o_idx) {
     OBJECT_IDX this_o_idx, next_o_idx = 0;
     OBJECT_IDX prev_o_idx = 0;
-    object_type *j_ptr;
+    object_type* j_ptr;
     j_ptr = &floor_ptr->o_list[o_idx];
 
     if (object_is_held_monster(j_ptr)) {
-        monster_type *m_ptr;
+        monster_type* m_ptr;
         m_ptr = &floor_ptr->m_list[j_ptr->held_m_idx];
         for (this_o_idx = m_ptr->hold_o_idx; this_o_idx; this_o_idx = next_o_idx) {
-            object_type *o_ptr;
+            object_type* o_ptr;
             o_ptr = &floor_ptr->o_list[this_o_idx];
             next_o_idx = o_ptr->next_o_idx;
             if (this_o_idx != o_idx) {
@@ -285,8 +277,9 @@ void excise_object_idx(floor_type *floor_ptr, OBJECT_IDX o_idx)
 
             if (prev_o_idx == 0) {
                 m_ptr->hold_o_idx = next_o_idx;
-            } else {
-                object_type *k_ptr;
+            }
+            else {
+                object_type* k_ptr;
                 k_ptr = &floor_ptr->o_list[prev_o_idx];
                 k_ptr->next_o_idx = next_o_idx;
             }
@@ -298,12 +291,12 @@ void excise_object_idx(floor_type *floor_ptr, OBJECT_IDX o_idx)
         return;
     }
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     POSITION y = j_ptr->iy;
     POSITION x = j_ptr->ix;
     g_ptr = &floor_ptr->grid_array[y][x];
     for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         if (this_o_idx != o_idx) {
@@ -313,8 +306,9 @@ void excise_object_idx(floor_type *floor_ptr, OBJECT_IDX o_idx)
 
         if (prev_o_idx == 0) {
             g_ptr->o_idx = next_o_idx;
-        } else {
-            object_type *k_ptr;
+        }
+        else {
+            object_type* k_ptr;
             k_ptr = &floor_ptr->o_list[prev_o_idx];
             k_ptr->next_o_idx = next_o_idx;
         }
@@ -347,14 +341,13 @@ void excise_object_idx(floor_type *floor_ptr, OBJECT_IDX o_idx)
  * the object can combine, stack, or be placed.  Artifacts will try very\n
  * hard to be placed, including "teleporting" to a useful grid if needed.\n
  */
-OBJECT_IDX drop_near(player_type *owner_ptr, object_type *j_ptr, PERCENTAGE chance, POSITION y, POSITION x)
-{
+OBJECT_IDX drop_near(player_type* owner_ptr, object_type* j_ptr, PERCENTAGE chance, POSITION y, POSITION x) {
     int i, k, d, s;
     POSITION dy, dx;
     POSITION ty, tx = 0;
     OBJECT_IDX o_idx = 0;
     OBJECT_IDX this_o_idx, next_o_idx = 0;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     GAME_TEXT o_name[MAX_NLEN];
     bool flag = FALSE;
     bool done = FALSE;
@@ -380,7 +373,7 @@ OBJECT_IDX drop_near(player_type *owner_ptr, object_type *j_ptr, PERCENTAGE chan
 
     POSITION by = y;
     POSITION bx = x;
-    floor_type *floor_ptr = owner_ptr->current_floor_ptr;
+    floor_type* floor_ptr = owner_ptr->current_floor_ptr;
     for (dy = -3; dy <= 3; dy++) {
         for (dx = -3; dx <= 3; dx++) {
             bool comb = FALSE;
@@ -401,7 +394,7 @@ OBJECT_IDX drop_near(player_type *owner_ptr, object_type *j_ptr, PERCENTAGE chan
 
             k = 0;
             for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-                object_type *o_ptr;
+                object_type* o_ptr;
                 o_ptr = &floor_ptr->o_list[this_o_idx];
                 next_o_idx = o_ptr->next_o_idx;
                 if (object_similar(o_ptr, j_ptr))
@@ -509,7 +502,7 @@ OBJECT_IDX drop_near(player_type *owner_ptr, object_type *j_ptr, PERCENTAGE chan
 
     g_ptr = &floor_ptr->grid_array[by][bx];
     for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         if (object_similar(o_ptr, j_ptr)) {
@@ -568,9 +561,8 @@ OBJECT_IDX drop_near(player_type *owner_ptr, object_type *j_ptr, PERCENTAGE chan
  * @param item メッセージの対象にしたいアイテム所持スロット
  * @return なし
  */
-void floor_item_charges(floor_type *floor_ptr, INVENTORY_IDX item)
-{
-    object_type *o_ptr = &floor_ptr->o_list[item];
+void floor_item_charges(floor_type* floor_ptr, INVENTORY_IDX item) {
+    object_type* o_ptr = &floor_ptr->o_list[item];
     if ((o_ptr->tval != TV_STAFF) && (o_ptr->tval != TV_WAND))
         return;
     if (!object_is_known(o_ptr))
@@ -579,13 +571,15 @@ void floor_item_charges(floor_type *floor_ptr, INVENTORY_IDX item)
 #ifdef JP
     if (o_ptr->pval <= 0) {
         msg_print("この床上のアイテムは、もう魔力が残っていない。");
-    } else {
+    }
+    else {
         msg_format("この床上のアイテムは、あと %d 回分の魔力が残っている。", o_ptr->pval);
     }
 #else
     if (o_ptr->pval != 1) {
         msg_format("There are %d charges remaining.", o_ptr->pval);
-    } else {
+    }
+    else {
         msg_format("There is %d charge remaining.", o_ptr->pval);
     }
 #endif
@@ -598,15 +592,15 @@ void floor_item_charges(floor_type *floor_ptr, INVENTORY_IDX item)
  * @param item メッセージの対象にしたいアイテム所持スロット
  * @return なし
  */
-void floor_item_describe(player_type *owner_ptr, INVENTORY_IDX item)
-{
-    object_type *o_ptr = &owner_ptr->current_floor_ptr->o_list[item];
+void floor_item_describe(player_type* owner_ptr, INVENTORY_IDX item) {
+    object_type* o_ptr = &owner_ptr->current_floor_ptr->o_list[item];
     GAME_TEXT o_name[MAX_NLEN];
     describe_flavor(owner_ptr, o_name, o_ptr, 0);
 #ifdef JP
     if (o_ptr->number <= 0) {
         msg_format("床上には、もう%sはない。", o_name);
-    } else {
+    }
+    else {
         msg_format("床上には、まだ %sがある。", o_name);
     }
 #else
@@ -617,8 +611,7 @@ void floor_item_describe(player_type *owner_ptr, INVENTORY_IDX item)
 /*
  * Choose an item and get auto-picker entry from it.
  */
-object_type *choose_object(player_type *owner_ptr, OBJECT_IDX *idx, concptr q, concptr s, BIT_FLAGS option, tval_type tval)
-{
+object_type* choose_object(player_type* owner_ptr, OBJECT_IDX* idx, concptr q, concptr s, BIT_FLAGS option, tval_type tval) {
     OBJECT_IDX item;
     if (!get_item(owner_ptr, &item, q, s, option, tval))
         return NULL;

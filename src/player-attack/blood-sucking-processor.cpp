@@ -22,8 +22,7 @@
  * @param pa_ptr 直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void decide_blood_sucking(player_type *attacker_ptr, player_attack_type *pa_ptr)
-{
+void decide_blood_sucking(player_type* attacker_ptr, player_attack_type* pa_ptr) {
     bool is_blood_sucker = has_flag(pa_ptr->flags, TR_VAMPIRIC);
     is_blood_sucker |= pa_ptr->chaos_effect == CE_VAMPIRIC;
     is_blood_sucker |= pa_ptr->mode == HISSATSU_DRAIN;
@@ -39,8 +38,7 @@ void decide_blood_sucking(player_type *attacker_ptr, player_attack_type *pa_ptr)
  * @param pa_ptr 直接攻撃構造体への参照ポインタ
  * @return なし
  */
-void calc_drain(player_attack_type *pa_ptr)
-{
+void calc_drain(player_attack_type* pa_ptr) {
     if (pa_ptr->attack_damage <= 0)
         pa_ptr->can_drain = FALSE;
 
@@ -55,12 +53,11 @@ void calc_drain(player_attack_type *pa_ptr)
  * @param is_human モンスターが人間かどうか
  * @return なし
  */
-static void drain_muramasa(player_type *attacker_ptr, player_attack_type *pa_ptr, const bool is_human)
-{
+static void drain_muramasa(player_type* attacker_ptr, player_attack_type* pa_ptr, const bool is_human) {
     if (!is_human)
         return;
 
-    object_type *o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
+    object_type* o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
     HIT_PROB to_h = o_ptr->to_h;
     HIT_POINT to_d = o_ptr->to_d;
     bool flag = TRUE;
@@ -95,8 +92,7 @@ static void drain_muramasa(player_type *attacker_ptr, player_attack_type *pa_ptr
  * @return なし
  * @details 1行目の5がマジックナンバーで良く分からなかったので、取り敢えず元々あったコメントをベースに定数宣言しておいた
  */
-static void drain_result(player_type *attacker_ptr, player_attack_type *pa_ptr, bool *drain_msg)
-{
+static void drain_result(player_type* attacker_ptr, player_attack_type* pa_ptr, bool* drain_msg) {
     const int real_drain = 5;
     if (pa_ptr->drain_result <= real_drain)
         return;
@@ -115,7 +111,8 @@ static void drain_result(player_type *attacker_ptr, player_attack_type *pa_ptr, 
 
     if (drain_heal < pa_ptr->drain_left) {
         pa_ptr->drain_left -= drain_heal;
-    } else {
+    }
+    else {
         drain_heal = pa_ptr->drain_left;
         pa_ptr->drain_left = 0;
     }
@@ -138,12 +135,11 @@ static void drain_result(player_type *attacker_ptr, player_attack_type *pa_ptr, 
  * @return なし
  * @details モンスターが死んだ場合、(ゲームのフレーバー的に)吸血しない
  */
-void process_drain(player_type *attacker_ptr, player_attack_type *pa_ptr, const bool is_human, bool *drain_msg)
-{
+void process_drain(player_type* attacker_ptr, player_attack_type* pa_ptr, const bool is_human, bool* drain_msg) {
     if (!pa_ptr->can_drain || (pa_ptr->drain_result <= 0))
         return;
 
-    object_type *o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
+    object_type* o_ptr = &attacker_ptr->inventory_list[INVEN_RARM + pa_ptr->hand];
     if (o_ptr->name1 == ART_MURAMASA)
         drain_muramasa(attacker_ptr, pa_ptr, is_human);
     else

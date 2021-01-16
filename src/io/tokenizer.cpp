@@ -18,37 +18,33 @@
  * Hack -- We will always extract at least one token
  * </pre>
  */
-s16b tokenize(char *buf, s16b num, char **tokens, BIT_FLAGS mode)
-{
-	s16b i = 0;
-	char *s = buf;
-	while (i < num - 1)
-	{
-		char *t;
-		for (t = s; *t; t++)
-		{
-			if ((*t == ':') || (*t == '/')) break;
+s16b tokenize(char* buf, s16b num, char** tokens, BIT_FLAGS mode) {
+    s16b i = 0;
+    char* s = buf;
+    while (i < num - 1) {
+        char* t;
+        for (t = s; *t; t++) {
+            if ((*t == ':') || (*t == '/')) break;
 
-			if ((mode & TOKENIZE_CHECKQUOTE) && (*t == '\''))
-			{
-				t++;
-				if (*t == '\\') t++;
-				if (!*t) break;
+            if ((mode & TOKENIZE_CHECKQUOTE) && (*t == '\'')) {
+                t++;
+                if (*t == '\\') t++;
+                if (!*t) break;
 
-				t++;
-				if (*t != '\'') *t = '\'';
-			}
+                t++;
+                if (*t != '\'') *t = '\'';
+            }
 
-			if (*t == '\\') t++;
-		}
+            if (*t == '\\') t++;
+        }
 
-		if (!*t) break;
+        if (!*t) break;
 
-		*t++ = '\0';
-		tokens[i++] = s;
-		s = t;
-	}
+        *t++ = '\0';
+        tokens[i++] = s;
+        s = t;
+    }
 
-	tokens[i++] = s;
-	return i;
+    tokens[i++] = s;
+    return i;
 }

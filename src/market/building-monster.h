@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool research_mon(player_type *player_ptr);
+bool research_mon(player_type* player_ptr);

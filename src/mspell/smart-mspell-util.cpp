@@ -4,9 +4,8 @@
 #include "system/floor-type-definition.h"
 #include "system/monster-type-definition.h"
 
-msr_type *initialize_msr_type(player_type *target_ptr, msr_type *msr_ptr, MONSTER_IDX m_idx, const u32b f4p, const u32b f5p, const u32b f6p)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+msr_type* initialize_msr_type(player_type* target_ptr, msr_type* msr_ptr, MONSTER_IDX m_idx, const u32b f4p, const u32b f5p, const u32b f6p) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
     msr_ptr->r_ptr = &r_info[m_ptr->r_idx];
     msr_ptr->f4 = f4p;
     msr_ptr->f5 = f5p;
@@ -22,8 +21,7 @@ msr_type *initialize_msr_type(player_type *target_ptr, msr_type *msr_ptr, MONSTE
  * @param prob 基本確率(%)
  * @return 適した選択を取るならばTRUEを返す。
  */
-bool int_outof(monster_race *r_ptr, PERCENTAGE prob)
-{
+bool int_outof(monster_race* r_ptr, PERCENTAGE prob) {
     if (!(r_ptr->flags2 & RF2_SMART))
         prob = prob / 2;
 

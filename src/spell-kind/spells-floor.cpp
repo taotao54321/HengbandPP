@@ -40,8 +40,8 @@
 #include "object-hook/hook-enchant.h"
 #include "object/object-mark-types.h"
 #include "perception/object-perception.h"
-#include "player/special-defense-types.h"
 #include "player/player-status-flags.h"
+#include "player/special-defense-types.h"
 #include "spell-kind/spells-teleport.h"
 #include "spell/spell-types.h"
 #include "status/bad-status-setter.h"
@@ -56,11 +56,10 @@
  * @param ninja 忍者かどうか
  * @return なし
  */
-void wiz_lite(player_type *caster_ptr, bool ninja)
-{
+void wiz_lite(player_type* caster_ptr, bool ninja) {
     /* Memorize objects */
     for (OBJECT_IDX i = 1; i < caster_ptr->current_floor_ptr->o_max; i++) {
-        object_type *o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
+        object_type* o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
         if (!object_is_valid(o_ptr))
             continue;
         if (object_is_held_monster(o_ptr))
@@ -72,14 +71,14 @@ void wiz_lite(player_type *caster_ptr, bool ninja)
     for (POSITION y = 1; y < caster_ptr->current_floor_ptr->height - 1; y++) {
         /* Scan all normal grids */
         for (POSITION x = 1; x < caster_ptr->current_floor_ptr->width - 1; x++) {
-            grid_type *g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
+            grid_type* g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
 
             /* Memorize terrain of the grid */
             g_ptr->info |= (CAVE_KNOWN);
 
             /* Feature code (applying "mimic" field) */
             FEAT_IDX feat = get_feat_mimic(g_ptr);
-            feature_type *f_ptr;
+            feature_type* f_ptr;
             f_ptr = &f_info[feat];
 
             /* Process all non-walls */
@@ -131,12 +130,11 @@ void wiz_lite(player_type *caster_ptr, bool ninja)
 /*
  * Forget the dungeon map (ala "Thinking of Maud...").
  */
-void wiz_dark(player_type *caster_ptr)
-{
+void wiz_dark(player_type* caster_ptr) {
     /* Forget every grid */
     for (POSITION y = 1; y < caster_ptr->current_floor_ptr->height - 1; y++) {
         for (POSITION x = 1; x < caster_ptr->current_floor_ptr->width - 1; x++) {
-            grid_type *g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
+            grid_type* g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
 
             /* Process the grid */
             g_ptr->info &= ~(CAVE_MARK | CAVE_IN_DETECT | CAVE_KNOWN);
@@ -158,7 +156,7 @@ void wiz_dark(player_type *caster_ptr)
 
     /* Forget all objects */
     for (OBJECT_IDX i = 1; i < caster_ptr->current_floor_ptr->o_max; i++) {
-        object_type *o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
+        object_type* o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
 
         if (!object_is_valid(o_ptr))
             continue;
@@ -182,8 +180,7 @@ void wiz_dark(player_type *caster_ptr)
 /*
  * Hack -- map the current panel (plus some) ala "magic mapping"
  */
-void map_area(player_type *caster_ptr, POSITION range)
-{
+void map_area(player_type* caster_ptr, POSITION range) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
@@ -193,7 +190,7 @@ void map_area(player_type *caster_ptr, POSITION range)
             if (distance(caster_ptr->y, caster_ptr->x, y, x) > range)
                 continue;
 
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &caster_ptr->current_floor_ptr->grid_array[y][x];
 
             /* Memorize terrain of the grid */
@@ -201,7 +198,7 @@ void map_area(player_type *caster_ptr, POSITION range)
 
             /* Feature code (applying "mimic" field) */
             FEAT_IDX feat = get_feat_mimic(g_ptr);
-            feature_type *f_ptr;
+            feature_type* f_ptr;
             f_ptr = &f_info[feat];
 
             /* All non-walls are "checked" */
@@ -250,10 +247,9 @@ void map_area(player_type *caster_ptr, POSITION range)
  * "earthquake" by using the "full" to select "destruction".
  * </pre>
  */
-bool destroy_area(player_type *caster_ptr, POSITION y1, POSITION x1, POSITION r, bool in_generate)
-{
+bool destroy_area(player_type* caster_ptr, POSITION y1, POSITION x1, POSITION r, bool in_generate) {
     /* Prevent destruction of quest levels and town */
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
     if ((floor_ptr->inside_quest && is_fixed_quest_idx(floor_ptr->inside_quest)) || !floor_ptr->dun_level) {
         return FALSE;
     }
@@ -275,7 +271,7 @@ bool destroy_area(player_type *caster_ptr, POSITION y1, POSITION x1, POSITION r,
             /* Stay in the circle of death */
             if (k > r)
                 continue;
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[y][x];
 
             /* Lose room and vault */
@@ -304,21 +300,23 @@ bool destroy_area(player_type *caster_ptr, POSITION y1, POSITION x1, POSITION r,
                 continue;
 
             if (g_ptr->m_idx) {
-                monster_type *m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
-                monster_race *r_ptr = &r_info[m_ptr->r_idx];
+                monster_type* m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
+                monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
                 if (in_generate) /* In generation */
                 {
                     /* Delete the monster (if any) */
                     delete_monster(caster_ptr, y, x);
-                } else if (r_ptr->flags1 & RF1_QUESTOR) {
+                }
+                else if (r_ptr->flags1 & RF1_QUESTOR) {
                     /* Heal the monster */
                     m_ptr->hp = m_ptr->maxhp;
 
                     /* Try to teleport away quest monsters */
                     if (!teleport_away(caster_ptr, g_ptr->m_idx, (r * 2) + 1, TELEPORT_DEC_VALOUR))
                         continue;
-                } else {
+                }
+                else {
                     if (record_named_pet && is_pet(m_ptr) && m_ptr->nickname) {
                         GAME_TEXT m_name[MAX_NLEN];
 
@@ -337,7 +335,7 @@ bool destroy_area(player_type *caster_ptr, POSITION y1, POSITION x1, POSITION r,
 
                 /* Scan all objects in the grid */
                 for (this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-                    object_type *o_ptr;
+                    object_type* o_ptr;
                     o_ptr = &floor_ptr->o_list[this_o_idx];
                     next_o_idx = o_ptr->next_o_idx;
 
@@ -351,7 +349,8 @@ bool destroy_area(player_type *caster_ptr, POSITION y1, POSITION x1, POSITION r,
                             describe_flavor(caster_ptr, o_name, o_ptr, (OD_NAME_ONLY | OD_STORE));
                             msg_format(_("伝説のアイテム (%s) は生成中に*破壊*された。", "Artifact (%s) was *destroyed* during generation."), o_name);
                         }
-                    } else if (in_generate && cheat_peek && o_ptr->art_name) {
+                    }
+                    else if (in_generate && cheat_peek && o_ptr->art_name) {
                         msg_print(
                             _("ランダム・アーティファクトの1つは生成中に*破壊*された。", "One of the random artifacts was *destroyed* during generation."));
                     }
@@ -372,13 +371,16 @@ bool destroy_area(player_type *caster_ptr, POSITION y1, POSITION x1, POSITION r,
                 if (t < 20) {
                     /* Create granite wall */
                     cave_set_feat(caster_ptr, y, x, feat_granite);
-                } else if (t < 70) {
+                }
+                else if (t < 70) {
                     /* Create quartz vein */
                     cave_set_feat(caster_ptr, y, x, feat_quartz_vein);
-                } else if (t < 100) {
+                }
+                else if (t < 100) {
                     /* Create magma vein */
                     cave_set_feat(caster_ptr, y, x, feat_magma_vein);
-                } else {
+                }
+                else {
                     /* Create floor */
                     cave_set_feat(caster_ptr, y, x, feat_ground_type[randint0(100)]);
                 }
@@ -389,13 +391,16 @@ bool destroy_area(player_type *caster_ptr, POSITION y1, POSITION x1, POSITION r,
             if (t < 20) {
                 /* Create granite wall */
                 place_grid(caster_ptr, g_ptr, GB_EXTRA);
-            } else if (t < 70) {
+            }
+            else if (t < 70) {
                 /* Create quartz vein */
                 g_ptr->feat = feat_quartz_vein;
-            } else if (t < 100) {
+            }
+            else if (t < 100) {
                 /* Create magma vein */
                 g_ptr->feat = feat_magma_vein;
-            } else {
+            }
+            else {
                 /* Create floor */
                 place_grid(caster_ptr, g_ptr, GB_FLOOR);
             }
@@ -420,7 +425,7 @@ bool destroy_area(player_type *caster_ptr, POSITION y1, POSITION x1, POSITION r,
             /* Stay in the circle of death */
             if (k > r)
                 continue;
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[y][x];
 
             if (is_mirror_grid(g_ptr)) {
@@ -433,7 +438,7 @@ bool destroy_area(player_type *caster_ptr, POSITION y1, POSITION x1, POSITION r,
 
             DIRECTION i;
             POSITION yy, xx;
-            grid_type *cc_ptr;
+            grid_type* cc_ptr;
 
             for (i = 0; i < 9; i++) {
                 yy = y + ddy_ddd[i];

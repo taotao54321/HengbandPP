@@ -8,8 +8,7 @@
 #include "monster/monster-info.h"
 #include "system/floor-type-definition.h"
 
-melee_spell_type *initialize_melee_spell_type(player_type *target_ptr, melee_spell_type *ms_ptr, MONSTER_IDX m_idx)
-{
+melee_spell_type* initialize_melee_spell_type(player_type* target_ptr, melee_spell_type* ms_ptr, MONSTER_IDX m_idx) {
     ms_ptr->m_idx = m_idx;
     ms_ptr->y = 0;
     ms_ptr->x = 0;
@@ -17,7 +16,7 @@ melee_spell_type *initialize_melee_spell_type(player_type *target_ptr, melee_spe
     ms_ptr->thrown_spell = 0;
     ms_ptr->dam = 0;
     ms_ptr->num = 0;
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
     ms_ptr->m_ptr = &floor_ptr->m_list[m_idx];
     ms_ptr->t_ptr = NULL;
     ms_ptr->r_ptr = &r_info[ms_ptr->m_ptr->r_idx];

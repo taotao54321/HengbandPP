@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool vampirism(player_type *caster_ptr);
+bool vampirism(player_type* caster_ptr);

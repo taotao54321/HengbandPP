@@ -17,9 +17,8 @@
  * @param flgs フラグ情報を受け取る配列
  * @return なし
  */
-void object_flags(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS flgs[TR_FLAG_SIZE])
-{
-    object_kind *k_ptr = &k_info[o_ptr->k_idx];
+void object_flags(player_type* player_ptr, object_type* o_ptr, BIT_FLAGS flgs[TR_FLAG_SIZE]) {
+    object_kind* k_ptr = &k_info[o_ptr->k_idx];
 
     /* Base object */
     for (int i = 0; i < TR_FLAG_SIZE; i++) {
@@ -27,23 +26,25 @@ void object_flags(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS flgs[TR
     }
 
     if (object_is_fixed_artifact(o_ptr)) {
-        artifact_type *a_ptr = &a_info[o_ptr->name1];
+        artifact_type* a_ptr = &a_info[o_ptr->name1];
         for (int i = 0; i < TR_FLAG_SIZE; i++) {
             flgs[i] = a_ptr->flags[i];
         }
     }
 
     if (object_is_ego(o_ptr)) {
-        ego_item_type *e_ptr = &e_info[o_ptr->name2];
+        ego_item_type* e_ptr = &e_info[o_ptr->name2];
         for (int i = 0; i < TR_FLAG_SIZE; i++) {
             flgs[i] |= e_ptr->flags[i];
         }
 
         if ((o_ptr->name2 == EGO_LITE_AURA_FIRE) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
             remove_flag(flgs, TR_SH_FIRE);
-        } else if ((o_ptr->name2 == EGO_LITE_INFRA) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
+        }
+        else if ((o_ptr->name2 == EGO_LITE_INFRA) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
             remove_flag(flgs, TR_INFRA);
-        } else if ((o_ptr->name2 == EGO_LITE_EYE) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
+        }
+        else if ((o_ptr->name2 == EGO_LITE_EYE) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
             remove_flag(flgs, TR_RES_BLIND);
             remove_flag(flgs, TR_SEE_INVIS);
         }
@@ -58,33 +59,42 @@ void object_flags(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS flgs[TR
         int add = o_ptr->xtra3 - 1;
         if (add < TR_FLAG_MAX) {
             add_flag(flgs, add);
-        } else if (add == ESSENCE_TMP_RES_ACID) {
+        }
+        else if (add == ESSENCE_TMP_RES_ACID) {
             add_flag(flgs, TR_RES_ACID);
             add_flag(flgs, TR_ACTIVATE);
-        } else if (add == ESSENCE_TMP_RES_ELEC) {
+        }
+        else if (add == ESSENCE_TMP_RES_ELEC) {
             add_flag(flgs, TR_RES_ELEC);
             add_flag(flgs, TR_ACTIVATE);
-        } else if (add == ESSENCE_TMP_RES_FIRE) {
+        }
+        else if (add == ESSENCE_TMP_RES_FIRE) {
             add_flag(flgs, TR_RES_FIRE);
             add_flag(flgs, TR_ACTIVATE);
-        } else if (add == ESSENCE_TMP_RES_COLD) {
+        }
+        else if (add == ESSENCE_TMP_RES_COLD) {
             add_flag(flgs, TR_RES_COLD);
             add_flag(flgs, TR_ACTIVATE);
-        } else if (add == ESSENCE_SH_FIRE) {
+        }
+        else if (add == ESSENCE_SH_FIRE) {
             add_flag(flgs, TR_RES_FIRE);
             add_flag(flgs, TR_SH_FIRE);
-        } else if (add == ESSENCE_SH_ELEC) {
+        }
+        else if (add == ESSENCE_SH_ELEC) {
             add_flag(flgs, TR_RES_ELEC);
             add_flag(flgs, TR_SH_ELEC);
-        } else if (add == ESSENCE_SH_COLD) {
+        }
+        else if (add == ESSENCE_SH_COLD) {
             add_flag(flgs, TR_RES_COLD);
             add_flag(flgs, TR_SH_COLD);
-        } else if (add == ESSENCE_RESISTANCE) {
+        }
+        else if (add == ESSENCE_RESISTANCE) {
             add_flag(flgs, TR_RES_ACID);
             add_flag(flgs, TR_RES_ELEC);
             add_flag(flgs, TR_RES_FIRE);
             add_flag(flgs, TR_RES_COLD);
-        } else if (add == TR_IMPACT) {
+        }
+        else if (add == TR_IMPACT) {
             add_flag(flgs, TR_ACTIVATE);
         }
     }
@@ -97,10 +107,9 @@ void object_flags(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS flgs[TR
  * @param flgs フラグ情報を受け取る配列
  * @return なし
  */
-void object_flags_known(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS flgs[TR_FLAG_SIZE])
-{
+void object_flags_known(player_type* player_ptr, object_type* o_ptr, BIT_FLAGS flgs[TR_FLAG_SIZE]) {
     bool spoil = FALSE;
-    object_kind *k_ptr = &k_info[o_ptr->k_idx];
+    object_kind* k_ptr = &k_info[o_ptr->k_idx];
     for (int i = 0; i < TR_FLAG_SIZE; i++) {
         flgs[i] = 0;
     }
@@ -117,16 +126,18 @@ void object_flags_known(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS f
         return;
 
     if (object_is_ego(o_ptr)) {
-        ego_item_type *e_ptr = &e_info[o_ptr->name2];
+        ego_item_type* e_ptr = &e_info[o_ptr->name2];
         for (int i = 0; i < TR_FLAG_SIZE; i++) {
             flgs[i] |= e_ptr->flags[i];
         }
 
         if ((o_ptr->name2 == EGO_LITE_AURA_FIRE) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
             remove_flag(flgs, TR_SH_FIRE);
-        } else if ((o_ptr->name2 == EGO_LITE_INFRA) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
+        }
+        else if ((o_ptr->name2 == EGO_LITE_INFRA) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
             remove_flag(flgs, TR_INFRA);
-        } else if ((o_ptr->name2 == EGO_LITE_EYE) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
+        }
+        else if ((o_ptr->name2 == EGO_LITE_EYE) && !o_ptr->xtra4 && (o_ptr->sval <= SV_LITE_LANTERN)) {
             remove_flag(flgs, TR_RES_BLIND);
             remove_flag(flgs, TR_SEE_INVIS);
         }
@@ -134,7 +145,7 @@ void object_flags_known(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS f
 
     if (spoil || object_is_fully_known(o_ptr)) {
         if (object_is_fixed_artifact(o_ptr)) {
-            artifact_type *a_ptr = &a_info[o_ptr->name1];
+            artifact_type* a_ptr = &a_info[o_ptr->name1];
 
             for (int i = 0; i < TR_FLAG_SIZE; i++) {
                 flgs[i] = a_ptr->flags[i];
@@ -153,24 +164,32 @@ void object_flags_known(player_type *player_ptr, object_type *o_ptr, BIT_FLAGS f
     int add = o_ptr->xtra3 - 1;
     if (add < TR_FLAG_MAX) {
         add_flag(flgs, add);
-    } else if (add == ESSENCE_TMP_RES_ACID) {
+    }
+    else if (add == ESSENCE_TMP_RES_ACID) {
         add_flag(flgs, TR_RES_ACID);
-    } else if (add == ESSENCE_TMP_RES_ELEC) {
+    }
+    else if (add == ESSENCE_TMP_RES_ELEC) {
         add_flag(flgs, TR_RES_ELEC);
-    } else if (add == ESSENCE_TMP_RES_FIRE) {
+    }
+    else if (add == ESSENCE_TMP_RES_FIRE) {
         add_flag(flgs, TR_RES_FIRE);
-    } else if (add == ESSENCE_TMP_RES_COLD) {
+    }
+    else if (add == ESSENCE_TMP_RES_COLD) {
         add_flag(flgs, TR_RES_COLD);
-    } else if (add == ESSENCE_SH_FIRE) {
+    }
+    else if (add == ESSENCE_SH_FIRE) {
         add_flag(flgs, TR_RES_FIRE);
         add_flag(flgs, TR_SH_FIRE);
-    } else if (add == ESSENCE_SH_ELEC) {
+    }
+    else if (add == ESSENCE_SH_ELEC) {
         add_flag(flgs, TR_RES_ELEC);
         add_flag(flgs, TR_SH_ELEC);
-    } else if (add == ESSENCE_SH_COLD) {
+    }
+    else if (add == ESSENCE_SH_COLD) {
         add_flag(flgs, TR_RES_COLD);
         add_flag(flgs, TR_SH_COLD);
-    } else if (add == ESSENCE_RESISTANCE) {
+    }
+    else if (add == ESSENCE_RESISTANCE) {
         add_flag(flgs, TR_RES_ACID);
         add_flag(flgs, TR_RES_ELEC);
         add_flag(flgs, TR_RES_FIRE);

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum art_bow_type {
-	ART_CRIMSON = 16,
+    ART_CRIMSON = 16,
     ART_BELTHRONDING = 124,
     ART_BARD = 125,
     ART_BRAND = 126,

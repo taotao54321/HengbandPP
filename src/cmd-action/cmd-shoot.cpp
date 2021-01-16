@@ -21,8 +21,7 @@
  * @param snipe_type ？？？
  * @return なし
  */
-void do_cmd_fire(player_type *creature_ptr, SPELL_IDX snipe_type)
-{
+void do_cmd_fire(player_type* creature_ptr, SPELL_IDX snipe_type) {
     OBJECT_IDX item;
     object_type *j_ptr, *ammo_ptr;
     if (creature_ptr->wild_mode)

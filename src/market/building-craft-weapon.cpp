@@ -33,8 +33,7 @@
  * @param force 理力特別計算フラグ
  * @return ダメージ期待値
  */
-static HIT_POINT calc_slaydam(HIT_POINT dam, int mult, int div, bool force)
-{
+static HIT_POINT calc_slaydam(HIT_POINT dam, int mult, int div, bool force) {
     int tmp;
     if (force) {
         tmp = dam * 60;
@@ -68,8 +67,7 @@ static HIT_POINT calc_slaydam(HIT_POINT dam, int mult, int div, bool force)
  * @return ダメージ期待値
  */
 static u32b calc_expect_dice(
-    player_type *owner_ptr, u32b dam, int mult, int div, bool force, WEIGHT weight, int plus, s16b meichuu, bool dokubari, int vorpal_mult, int vorpal_div)
-{
+    player_type* owner_ptr, u32b dam, int mult, int div, bool force, WEIGHT weight, int plus, s16b meichuu, bool dokubari, int vorpal_mult, int vorpal_div) {
     dam = calc_slaydam(dam, mult, div, force);
     dam = calc_expect_crit(owner_ptr, weight, plus, dam, meichuu, dokubari);
     dam = calc_slaydam(dam, vorpal_mult, vorpal_div, FALSE);
@@ -94,8 +92,7 @@ static u32b calc_expect_dice(
  * the current +dam of the player.\n
  * @return なし
  */
-static void show_weapon_dmg(int r, int c, int mindice, int maxdice, int blows, int dam_bonus, concptr attr, byte color)
-{
+static void show_weapon_dmg(int r, int c, int mindice, int maxdice, int blows, int dam_bonus, concptr attr, byte color) {
     c_put_str(color, attr, r, c);
     GAME_TEXT tmp_str[80];
     int mindam = blows * (mindice + dam_bonus);
@@ -116,8 +113,7 @@ static void show_weapon_dmg(int r, int c, int mindice, int maxdice, int blows, i
  * the current number of blows for the player.\n
  * @return なし
  */
-static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int col, int r)
-{
+static void compare_weapon_aux(player_type* owner_ptr, object_type* o_ptr, int col, int r) {
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     int blow = owner_ptr->num_blow[0];
     bool force = FALSE;
@@ -145,7 +141,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         if ((o_ptr->name1 == ART_VORPAL_BLADE) || (o_ptr->name1 == ART_CHAINSWORD)) {
             vorpal_mult = 5;
             vorpal_div = 3;
-        } else {
+        }
+        else {
             vorpal_mult = 11;
             vorpal_div = 9;
         }
@@ -167,7 +164,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         mindam = calc_expect_dice(owner_ptr, mindice, 4, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 4, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("動物:", "Animals:"), TERM_YELLOW);
-    } else if (has_flag(flgs, TR_SLAY_ANIMAL)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_ANIMAL)) {
         mindam = calc_expect_dice(owner_ptr, mindice, 5, 2, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 5, 2, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("動物:", "Animals:"), TERM_YELLOW);
@@ -177,7 +175,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         mindam = calc_expect_dice(owner_ptr, mindice, 7, 2, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 7, 2, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("邪悪:", "Evil:"), TERM_YELLOW);
-    } else if (has_flag(flgs, TR_SLAY_EVIL)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_EVIL)) {
         mindam = calc_expect_dice(owner_ptr, mindice, 2, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 2, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("邪悪:", "Evil:"), TERM_YELLOW);
@@ -187,7 +186,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         mindam = calc_expect_dice(owner_ptr, mindice, 4, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 4, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("人間:", "Human:"), TERM_YELLOW);
-    } else if (has_flag(flgs, TR_SLAY_HUMAN)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_HUMAN)) {
         mindam = calc_expect_dice(owner_ptr, mindice, 5, 2, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 5, 2, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("人間:", "Human:"), TERM_YELLOW);
@@ -197,7 +197,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         mindam = calc_expect_dice(owner_ptr, mindice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("不死:", "Undead:"), TERM_YELLOW);
-    } else if (has_flag(flgs, TR_SLAY_UNDEAD)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_UNDEAD)) {
         mindam = calc_expect_dice(owner_ptr, mindice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("不死:", "Undead:"), TERM_YELLOW);
@@ -207,7 +208,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         mindam = calc_expect_dice(owner_ptr, mindice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("悪魔:", "Demons:"), TERM_YELLOW);
-    } else if (has_flag(flgs, TR_SLAY_DEMON)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_DEMON)) {
         mindam = calc_expect_dice(owner_ptr, mindice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("悪魔:", "Demons:"), TERM_YELLOW);
@@ -217,7 +219,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         mindam = calc_expect_dice(owner_ptr, mindice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("オーク:", "Orcs:"), TERM_YELLOW);
-    } else if (has_flag(flgs, TR_SLAY_ORC)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_ORC)) {
         mindam = calc_expect_dice(owner_ptr, mindice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("オーク:", "Orcs:"), TERM_YELLOW);
@@ -227,7 +230,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         mindam = calc_expect_dice(owner_ptr, mindice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("トロル:", "Trolls:"), TERM_YELLOW);
-    } else if (has_flag(flgs, TR_SLAY_TROLL)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_TROLL)) {
         mindam = calc_expect_dice(owner_ptr, mindice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("トロル:", "Trolls:"), TERM_YELLOW);
@@ -237,7 +241,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         mindam = calc_expect_dice(owner_ptr, mindice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("巨人:", "Giants:"), TERM_YELLOW);
-    } else if (has_flag(flgs, TR_SLAY_GIANT)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_GIANT)) {
         mindam = calc_expect_dice(owner_ptr, mindice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("巨人:", "Giants:"), TERM_YELLOW);
@@ -247,7 +252,8 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
         mindam = calc_expect_dice(owner_ptr, mindice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 5, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("竜:", "Dragons:"), TERM_YELLOW);
-    } else if (has_flag(flgs, TR_SLAY_DRAGON)) {
+    }
+    else if (has_flag(flgs, TR_SLAY_DRAGON)) {
         mindam = calc_expect_dice(owner_ptr, mindice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         maxdam = calc_expect_dice(owner_ptr, maxdice, 3, 1, force, o_ptr->weight, o_ptr->to_h, owner_ptr->to_h[0], dokubari, vorpal_mult, vorpal_div);
         show_weapon_dmg(r++, col, mindam, maxdam, blow, dmg_bonus, _("竜:", "Dragons:"), TERM_YELLOW);
@@ -297,8 +303,7 @@ static void compare_weapon_aux(player_type *owner_ptr, object_type *o_ptr, int c
  * various info about the player's +to_dam and number of blows.
  * @return なし
  */
-static void list_weapon(player_type *player_ptr, object_type *o_ptr, TERM_LEN row, TERM_LEN col)
-{
+static void list_weapon(player_type* player_ptr, object_type* o_ptr, TERM_LEN row, TERM_LEN col) {
     GAME_TEXT o_name[MAX_NLEN];
     GAME_TEXT tmp_str[80];
 
@@ -336,11 +341,10 @@ static void list_weapon(player_type *player_ptr, object_type *o_ptr, TERM_LEN ro
  * @param bcost 基本鑑定費用
  * @return 最終的にかかった費用
  */
-PRICE compare_weapons(player_type *customer_ptr, PRICE bcost)
-{
-    object_type *o_ptr[2];
+PRICE compare_weapons(player_type* customer_ptr, PRICE bcost) {
+    object_type* o_ptr[2];
     object_type orig_weapon;
-    object_type *i_ptr;
+    object_type* i_ptr;
     TERM_LEN row = 2;
     TERM_LEN wid = 38, mgn = 2;
     bool old_character_xtra = current_world_ptr->character_xtra;
@@ -412,7 +416,7 @@ PRICE compare_weapons(player_type *customer_ptr, PRICE bcost)
         q = _("第二の武器は？", "What is your second weapon? ");
         s = _("比べるものがありません。", "You have nothing to compare.");
         OBJECT_IDX item2;
-        object_type *i2_ptr = choose_object(customer_ptr, &item2, q, s, (USE_EQUIP | USE_INVEN | IGNORE_BOTHHAND_SLOT), TV_NONE);
+        object_type* i2_ptr = choose_object(customer_ptr, &item2, q, s, (USE_EQUIP | USE_INVEN | IGNORE_BOTHHAND_SLOT), TV_NONE);
         if (!i2_ptr)
             continue;
 

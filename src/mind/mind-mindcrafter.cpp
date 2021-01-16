@@ -1,4 +1,5 @@
 ﻿#include "mind/mind-mindcrafter.h"
+#include "mind/mind-mindcrafter.h"
 #include "autopick/autopick.h"
 #include "core/hp-mp-processor.h"
 #include "core/player-update-types.h"
@@ -10,7 +11,6 @@
 #include "flavor/object-flavor-types.h"
 #include "floor/floor-object.h"
 #include "game-option/auto-destruction-options.h"
-#include "mind/mind-mindcrafter.h"
 #include "mind/mind-numbers.h"
 #include "object-enchant/item-feeling.h"
 #include "object-enchant/special-object-flags.h"
@@ -49,11 +49,10 @@
  * good (Cure Light Wounds, Restore Strength, etc) or
  * bad (Poison, Weakness etc) or 'useless' (Slime Mold Juice, etc).
  */
-bool psychometry(player_type *caster_ptr)
-{
+bool psychometry(player_type* caster_ptr) {
     concptr q = _("どのアイテムを調べますか？", "Meditate on which item? ");
     concptr s = _("調べるアイテムがありません。", "You have nothing appropriate.");
-    object_type *o_ptr;
+    object_type* o_ptr;
     OBJECT_IDX item;
     o_ptr = choose_object(caster_ptr, &item, q, s, (USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT), TV_NONE);
     if (!o_ptr)
@@ -124,8 +123,7 @@ bool psychometry(player_type *caster_ptr)
  * @param spell 発動する特殊技能のID
  * @return 処理を実行したらTRUE、キャンセルした場合FALSEを返す。
  */
-bool cast_mindcrafter_spell(player_type *caster_ptr, mind_mindcrafter_type spell)
-{
+bool cast_mindcrafter_spell(player_type* caster_ptr, mind_mindcrafter_type spell) {
     int b = 0;
     DIRECTION dir;
     TIME_EFFECT t;
@@ -136,7 +134,8 @@ bool cast_mindcrafter_spell(player_type *caster_ptr, mind_mindcrafter_type spell
             chg_virtue(caster_ptr, V_KNOWLEDGE, 1);
             chg_virtue(caster_ptr, V_ENLIGHTEN, 1);
             wiz_lite(caster_ptr, FALSE);
-        } else if (plev > 19)
+        }
+        else if (plev > 19)
             map_area(caster_ptr, DETECT_RAD_MAP);
 
         if (plev < 30) {
@@ -147,7 +146,8 @@ bool cast_mindcrafter_spell(player_type *caster_ptr, mind_mindcrafter_type spell
                 b |= detect_traps(caster_ptr, DETECT_RAD_DEFAULT, TRUE);
                 b |= detect_doors(caster_ptr, DETECT_RAD_DEFAULT);
             }
-        } else {
+        }
+        else {
             b = detect_all(caster_ptr, DETECT_RAD_DEFAULT);
         }
 
@@ -179,7 +179,8 @@ bool cast_mindcrafter_spell(player_type *caster_ptr, mind_mindcrafter_type spell
                 return FALSE;
 
             fire_ball(caster_ptr, GF_DOMINATION, dir, plev, 0);
-        } else {
+        }
+        else {
             charm_monsters(caster_ptr, plev * 2);
         }
 

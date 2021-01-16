@@ -23,11 +23,11 @@
 #include "monster/monster-status-setter.h"
 #include "monster/monster-update.h"
 #include "monster/smart-learn-types.h"
-#include "status/bad-status-setter.h"
 #include "player/player-damage.h"
 #include "player/player-move.h"
-#include "player/special-defense-types.h"
 #include "player/player-status-flags.h"
+#include "player/special-defense-types.h"
+#include "status/bad-status-setter.h"
 #include "system/floor-type-definition.h"
 #include "util/bit-flags-calculator.h"
 #include "view/display-messages.h"
@@ -42,9 +42,8 @@
  * @param m_idx 地震を起こしたモンスターID(0ならばプレイヤー)
  * @return 効力があった場合TRUEを返す
  */
-bool earthquake(player_type *caster_ptr, POSITION cy, POSITION cx, POSITION r, MONSTER_IDX m_idx)
-{
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
+bool earthquake(player_type* caster_ptr, POSITION cy, POSITION cx, POSITION r, MONSTER_IDX m_idx) {
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
     if ((floor_ptr->inside_quest && is_fixed_quest_idx(floor_ptr->inside_quest)) || !floor_ptr->dun_level) {
         return FALSE;
     }
@@ -72,7 +71,7 @@ bool earthquake(player_type *caster_ptr, POSITION cy, POSITION cx, POSITION r, M
             if (distance(cy, cx, yy, xx) > r)
                 continue;
 
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[yy][xx];
             g_ptr->info &= ~(CAVE_ROOM | CAVE_ICKY | CAVE_UNSAFE);
             g_ptr->info &= ~(CAVE_GLOW | CAVE_MARK | CAVE_KNOWN);
@@ -160,10 +159,11 @@ bool earthquake(player_type *caster_ptr, POSITION cy, POSITION cx, POSITION r, M
 
             if (m_idx) {
                 GAME_TEXT m_name[MAX_NLEN];
-                monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+                monster_type* m_ptr = &floor_ptr->m_list[m_idx];
                 monster_desc(caster_ptr, m_name, m_ptr, MD_WRONGDOER_NAME);
                 killer = format(_("%sの起こした地震", "an earthquake caused by %s"), m_name);
-            } else {
+            }
+            else {
                 killer = _("地震", "an earthquake");
             }
 
@@ -178,7 +178,7 @@ bool earthquake(player_type *caster_ptr, POSITION cy, POSITION cx, POSITION r, M
             if (!map[16 + yy - cy][16 + xx - cx])
                 continue;
 
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[yy][xx];
             if (g_ptr->m_idx == caster_ptr->riding)
                 continue;
@@ -186,8 +186,8 @@ bool earthquake(player_type *caster_ptr, POSITION cy, POSITION cx, POSITION r, M
             if (!g_ptr->m_idx)
                 continue;
 
-            monster_type *m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
-            monster_race *r_ptr = &r_info[m_ptr->r_idx];
+            monster_type* m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
+            monster_race* r_ptr = &r_info[m_ptr->r_idx];
             if (r_ptr->flags1 & RF1_QUESTOR) {
                 map[16 + yy - cy][16 + xx - cx] = FALSE;
                 continue;
@@ -313,7 +313,7 @@ bool earthquake(player_type *caster_ptr, POSITION cy, POSITION cx, POSITION r, M
             if (distance(cy, cx, yy, xx) > r)
                 continue;
 
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             g_ptr = &floor_ptr->grid_array[yy][xx];
             if (is_mirror_grid(g_ptr)) {
                 g_ptr->info |= CAVE_GLOW;
@@ -323,7 +323,7 @@ bool earthquake(player_type *caster_ptr, POSITION cy, POSITION cx, POSITION r, M
             if ((d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS))
                 continue;
 
-            grid_type *cc_ptr;
+            grid_type* cc_ptr;
             for (DIRECTION ii = 0; ii < 9; ii++) {
                 POSITION yyy = yy + ddy_ddd[ii];
                 POSITION xxx = xx + ddx_ddd[ii];

@@ -42,10 +42,10 @@ extern const concptr exp_level_str[5];
  * Information about "skill"
  */
 typedef struct skill_table {
-	SUB_EXP w_start[5][64];	  /* start weapon exp */
-	SUB_EXP w_max[5][64];        /* max weapon exp */
-	SUB_EXP s_start[10];	  /* start skill */
-	SUB_EXP s_max[10];           /* max skill */
+    SUB_EXP w_start[5][64]; /* start weapon exp */
+    SUB_EXP w_max[5][64]; /* max weapon exp */
+    SUB_EXP s_start[10]; /* start skill */
+    SUB_EXP s_max[10]; /* max skill */
 } skill_table;
 
-extern skill_table *s_info;
+extern skill_table* s_info;

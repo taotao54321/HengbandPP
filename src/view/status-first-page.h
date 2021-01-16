@@ -52,4 +52,4 @@
 #define ENTRY_EXP_ANDR 43
 #define ENTRY_EXP_TO_ADV_ANDR 44
 
-void display_player_various(player_type *creature_ptr);
+void display_player_various(player_type* creature_ptr);

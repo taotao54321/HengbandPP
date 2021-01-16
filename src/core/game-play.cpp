@@ -88,8 +88,7 @@
 #include "wizard/wizard-special-process.h"
 #include "world/world.h"
 
-static void restore_windows(player_type *player_ptr)
-{
+static void restore_windows(player_type* player_ptr) {
     player_ptr->hack_mutation = FALSE;
     current_world_ptr->character_icky = TRUE;
     term_activate(angband_term[0]);
@@ -101,8 +100,7 @@ static void restore_windows(player_type *player_ptr)
     (void)term_set_cursor(0);
 }
 
-static void send_waiting_record(player_type *player_ptr)
-{
+static void send_waiting_record(player_type* player_ptr) {
     if (!player_ptr->wait_report_score)
         return;
 
@@ -125,7 +123,8 @@ static void send_waiting_record(player_type *player_ptr)
     if (!success && !get_check_strict(player_ptr, _("スコア登録を諦めますか？", "Do you give up score registration? "), CHECK_NO_HISTORY)) {
         prt(_("引き続き待機します。", "standing by for future registration..."), 0, 0);
         (void)inkey();
-    } else {
+    }
+    else {
         player_ptr->wait_report_score = FALSE;
         top_twenty(player_ptr);
         if (!save_player(player_ptr))
@@ -138,15 +137,15 @@ static void send_waiting_record(player_type *player_ptr)
     quit(0);
 }
 
-static void init_random_seed(player_type *player_ptr, bool new_game)
-{
+static void init_random_seed(player_type* player_ptr, bool new_game) {
     bool init_random_seed = FALSE;
     if (!current_world_ptr->character_loaded) {
         new_game = TRUE;
         current_world_ptr->character_dungeon = FALSE;
         init_random_seed = TRUE;
         init_saved_floors(player_ptr, FALSE);
-    } else if (new_game)
+    }
+    else if (new_game)
         init_saved_floors(player_ptr, TRUE);
 
     if (!new_game)
@@ -156,10 +155,9 @@ static void init_random_seed(player_type *player_ptr, bool new_game)
         Rand_state_init();
 }
 
-static void init_world_floor_info(player_type *player_ptr)
-{
+static void init_world_floor_info(player_type* player_ptr) {
     current_world_ptr->character_dungeon = FALSE;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     floor_ptr->dun_level = 0;
     floor_ptr->inside_quest = 0;
     floor_ptr->inside_arena = FALSE;
@@ -176,8 +174,7 @@ static void init_world_floor_info(player_type *player_ptr)
     wipe_o_list(floor_ptr);
 }
 
-static void restore_world_floor_info(player_type *player_ptr)
-{
+static void restore_world_floor_info(player_type* player_ptr) {
     write_level = FALSE;
     exe_write_diary(player_ptr, DIARY_GAMESTART, 1, _("                            ----ゲーム再開----", "                            --- Restarted Game ---"));
 
@@ -188,7 +185,7 @@ static void restore_world_floor_info(player_type *player_ptr)
      */
     if (player_ptr->riding == -1) {
         player_ptr->riding = 0;
-        floor_type *floor_ptr = player_ptr->current_floor_ptr;
+        floor_type* floor_ptr = player_ptr->current_floor_ptr;
         for (MONSTER_IDX i = floor_ptr->m_max; i > 0; i--) {
             if (player_bold(player_ptr, floor_ptr->m_list[i].fy, floor_ptr->m_list[i].fx)) {
                 player_ptr->riding = i;
@@ -198,8 +195,7 @@ static void restore_world_floor_info(player_type *player_ptr)
     }
 }
 
-static void reset_world_info(player_type *player_ptr)
-{
+static void reset_world_info(player_type* player_ptr) {
     current_world_ptr->creating_savefile = FALSE;
     player_ptr->teleport_town = FALSE;
     player_ptr->sutemi = FALSE;
@@ -210,8 +206,7 @@ static void reset_world_info(player_type *player_ptr)
     record_o_name[0] = '\0';
 }
 
-static void set_wizard_mode_by_argument(player_type *player_ptr)
-{
+static void set_wizard_mode_by_argument(player_type* player_ptr) {
     if (!arg_wizard)
         return;
 
@@ -230,9 +225,8 @@ static void set_wizard_mode_by_argument(player_type *player_ptr)
         quit("Already dead.");
 }
 
-static void generate_wilderness(player_type *player_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void generate_wilderness(player_type* player_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if ((floor_ptr->dun_level == 0) && floor_ptr->inside_quest)
         return;
 
@@ -242,8 +236,7 @@ static void generate_wilderness(player_type *player_ptr)
     select_floor_music(player_ptr);
 }
 
-static void change_floor_if_error(player_type *player_ptr)
-{
+static void change_floor_if_error(player_type* player_ptr) {
     if (!current_world_ptr->character_dungeon) {
         change_floor(player_ptr);
         return;
@@ -263,10 +256,9 @@ static void change_floor_if_error(player_type *player_ptr)
     player_ptr->panic_save = 0;
 }
 
-static void generate_world(player_type *player_ptr, bool new_game)
-{
+static void generate_world(player_type* player_ptr, bool new_game) {
     reset_world_info(player_ptr);
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     panel_row_min = floor_ptr->height;
     panel_col_min = floor_ptr->width;
     if (player_ptr->pseikaku == PERSONALITY_SEXY)
@@ -289,8 +281,7 @@ static void generate_world(player_type *player_ptr, bool new_game)
     exe_write_diary(player_ptr, DIARY_DESCRIPTION, 0, buf);
 }
 
-static void init_io(player_type *player_ptr)
-{
+static void init_io(player_type* player_ptr) {
     term_xtra(TERM_XTRA_REACT, 0);
     player_ptr->window |= PW_INVEN | PW_EQUIP | PW_SPELL | PW_PLAYER | PW_MESSAGE | PW_OVERHEAD | PW_DUNGEON | PW_MONSTER | PW_OBJECT;
     handle_stuff(player_ptr);
@@ -301,15 +292,14 @@ static void init_io(player_type *player_ptr)
         rogue_like_commands = TRUE;
 }
 
-static void init_riding_pet(player_type *player_ptr, bool new_game)
-{
+static void init_riding_pet(player_type* player_ptr, bool new_game) {
     if (!new_game || ((player_ptr->pclass != CLASS_CAVALRY) && (player_ptr->pclass != CLASS_BEASTMASTER)))
         return;
 
     MONRACE_IDX pet_r_idx = ((player_ptr->pclass == CLASS_CAVALRY) ? MON_HORSE : MON_YASE_HORSE);
-    monster_race *r_ptr = &r_info[pet_r_idx];
+    monster_race* r_ptr = &r_info[pet_r_idx];
     place_monster_aux(player_ptr, 0, player_ptr->y, player_ptr->x - 1, pet_r_idx, (PM_FORCE_PET | PM_NO_KAGE));
-    monster_type *m_ptr = &player_ptr->current_floor_ptr->m_list[hack_m_idx_ii];
+    monster_type* m_ptr = &player_ptr->current_floor_ptr->m_list[hack_m_idx_ii];
     m_ptr->mspeed = r_ptr->speed;
     m_ptr->maxhp = r_ptr->hdice * (r_ptr->hside + 1) / 2;
     m_ptr->max_maxhp = m_ptr->maxhp;
@@ -318,12 +308,11 @@ static void init_riding_pet(player_type *player_ptr, bool new_game)
     m_ptr->energy_need = ENERGY_NEED() + ENERGY_NEED();
 }
 
-static void decide_arena_death(player_type *player_ptr)
-{
+static void decide_arena_death(player_type* player_ptr) {
     if (!player_ptr->playing || !player_ptr->is_dead)
         return;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!floor_ptr->inside_arena) {
         if ((current_world_ptr->wizard || cheat_live) && !get_check(_("死にますか? ", "Die? ")))
             cheat_death(player_ptr);
@@ -346,10 +335,9 @@ static void decide_arena_death(player_type *player_ptr)
     leave_floor(player_ptr);
 }
 
-static void process_game_turn(player_type *player_ptr)
-{
+static void process_game_turn(player_type* player_ptr) {
     bool load_game = TRUE;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     while (TRUE) {
         process_dungeon(player_ptr, load_game);
         current_world_ptr->character_xtra = TRUE;
@@ -388,8 +376,7 @@ static void process_game_turn(player_type *player_ptr)
  * savefile, we will commit suicide, if necessary, to allow the
  * player to start a new game.
  */
-void play_game(player_type *player_ptr, bool new_game, bool browsing_movie)
-{
+void play_game(player_type* player_ptr, bool new_game, bool browsing_movie) {
     if (browsing_movie) {
         reset_visuals(player_ptr, process_autopick_file_command);
         browse_movie();

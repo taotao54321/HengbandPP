@@ -4,4 +4,4 @@
 TOWN_IDX max_towns;
 
 /* The towns [max_towns] */
-town_type *town_info;
+town_type* town_info;

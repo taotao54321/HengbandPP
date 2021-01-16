@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum pet_command {
-	PET_DISMISS = 1, /*!< ペットに関するコマンド: ペットを離す */
+    PET_DISMISS = 1, /*!< ペットに関するコマンド: ペットを離す */
     PET_TARGET = 2, /*!< ペットに関するコマンド: ペットのターゲットを指定 */
     PET_STAY_CLOSE = 3, /*!< ペットに関するコマンド: 近くにいろ */
     PET_FOLLOW_ME = 4, /*!< ペットに関するコマンド: ついて来い */
@@ -38,7 +38,7 @@ typedef enum pet_permission {
     PF_TWO_HANDS = 0x0040, /*!< プレイヤーの騎乗フラグ…武器を片手で持つ */
 } pet_permission;
 
-#include "system/angband.h"
 #include "grid/grid.h"
+#include "system/angband.h"
 
-bool can_player_ride_pet(player_type *creature_ptr, grid_type *g_ptr, bool now_riding);
+bool can_player_ride_pet(player_type* creature_ptr, grid_type* g_ptr, bool now_riding);

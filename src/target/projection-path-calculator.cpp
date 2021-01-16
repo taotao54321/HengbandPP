@@ -7,7 +7,7 @@
 #include "system/floor-type-definition.h"
 
 typedef struct projection_path_type {
-    u16b *gp;
+    u16b* gp;
     POSITION range;
     BIT_FLAGS flag;
     POSITION y1;
@@ -36,9 +36,8 @@ typedef struct projection_path_type {
  */
 static u16b location_to_grid(POSITION y, POSITION x) { return 256 * y + x; }
 
-static projection_path_type *initialize_projection_path_type(
-    projection_path_type *pp_ptr, u16b *gp, POSITION range, BIT_FLAGS flag, POSITION y1, POSITION x1, POSITION y2, POSITION x2)
-{
+static projection_path_type* initialize_projection_path_type(
+    projection_path_type* pp_ptr, u16b* gp, POSITION range, BIT_FLAGS flag, POSITION y1, POSITION x1, POSITION y2, POSITION x2) {
     pp_ptr->gp = gp;
     pp_ptr->range = range;
     pp_ptr->flag = flag;
@@ -49,12 +48,12 @@ static projection_path_type *initialize_projection_path_type(
     return pp_ptr;
 }
 
-static void set_asxy(projection_path_type *pp_ptr)
-{
+static void set_asxy(projection_path_type* pp_ptr) {
     if (pp_ptr->y2 < pp_ptr->y1) {
         pp_ptr->ay = pp_ptr->y1 - pp_ptr->y2;
         pp_ptr->sy = -1;
-    } else {
+    }
+    else {
         pp_ptr->ay = pp_ptr->y2 - pp_ptr->y1;
         pp_ptr->sy = 1;
     }
@@ -62,14 +61,14 @@ static void set_asxy(projection_path_type *pp_ptr)
     if (pp_ptr->x2 < pp_ptr->x1) {
         pp_ptr->ax = pp_ptr->x1 - pp_ptr->x2;
         pp_ptr->sx = -1;
-    } else {
+    }
+    else {
         pp_ptr->ax = pp_ptr->x2 - pp_ptr->x1;
         pp_ptr->sx = 1;
     }
 }
 
-static void calc_frac(projection_path_type *pp_ptr, bool is_vertical)
-{
+static void calc_frac(projection_path_type* pp_ptr, bool is_vertical) {
     if (pp_ptr->m == 0)
         return;
 
@@ -86,9 +85,8 @@ static void calc_frac(projection_path_type *pp_ptr, bool is_vertical)
     pp_ptr->k++;
 }
 
-static void calc_projection_to_target(player_type *player_ptr, projection_path_type *pp_ptr, bool is_vertical)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void calc_projection_to_target(player_type* player_ptr, projection_path_type* pp_ptr, bool is_vertical) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     while (TRUE) {
         pp_ptr->gp[pp_ptr->n++] = location_to_grid(pp_ptr->y, pp_ptr->x);
         if ((pp_ptr->n + (pp_ptr->k >> 1)) >= pp_ptr->range)
@@ -102,10 +100,12 @@ static void calc_projection_to_target(player_type *player_ptr, projection_path_t
         if (pp_ptr->flag & PROJECT_DISI) {
             if ((pp_ptr->n > 0) && cave_stop_disintegration(floor_ptr, pp_ptr->y, pp_ptr->x))
                 break;
-        } else if (pp_ptr->flag & PROJECT_LOS) {
+        }
+        else if (pp_ptr->flag & PROJECT_LOS) {
             if ((pp_ptr->n > 0) && !cave_los_bold(floor_ptr, pp_ptr->y, pp_ptr->x))
                 break;
-        } else if (!(pp_ptr->flag & PROJECT_PATH)) {
+        }
+        else if (!(pp_ptr->flag & PROJECT_PATH)) {
             if ((pp_ptr->n > 0) && !cave_has_flag_bold(floor_ptr, pp_ptr->y, pp_ptr->x, FF_PROJECT))
                 break;
         }
@@ -126,8 +126,7 @@ static void calc_projection_to_target(player_type *player_ptr, projection_path_t
     }
 }
 
-static bool calc_vertical_projection(player_type *player_ptr, projection_path_type *pp_ptr)
-{
+static bool calc_vertical_projection(player_type* player_ptr, projection_path_type* pp_ptr) {
     if (pp_ptr->ay <= pp_ptr->ax)
         return FALSE;
 
@@ -145,8 +144,7 @@ static bool calc_vertical_projection(player_type *player_ptr, projection_path_ty
     return TRUE;
 }
 
-static bool calc_horizontal_projection(player_type *player_ptr, projection_path_type *pp_ptr)
-{
+static bool calc_horizontal_projection(player_type* player_ptr, projection_path_type* pp_ptr) {
     if (pp_ptr->ax <= pp_ptr->ay)
         return FALSE;
 
@@ -164,9 +162,8 @@ static bool calc_horizontal_projection(player_type *player_ptr, projection_path_
     return TRUE;
 }
 
-static void calc_projection_others(player_type *player_ptr, projection_path_type *pp_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void calc_projection_others(player_type* player_ptr, projection_path_type* pp_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     while (TRUE) {
         pp_ptr->gp[pp_ptr->n++] = location_to_grid(pp_ptr->y, pp_ptr->x);
         if ((pp_ptr->n + (pp_ptr->n >> 1)) >= pp_ptr->range)
@@ -178,10 +175,12 @@ static void calc_projection_others(player_type *player_ptr, projection_path_type
         if (pp_ptr->flag & PROJECT_DISI) {
             if ((pp_ptr->n > 0) && cave_stop_disintegration(floor_ptr, pp_ptr->y, pp_ptr->x))
                 break;
-        } else if (pp_ptr->flag & PROJECT_LOS) {
+        }
+        else if (pp_ptr->flag & PROJECT_LOS) {
             if ((pp_ptr->n > 0) && !cave_los_bold(floor_ptr, pp_ptr->y, pp_ptr->x))
                 break;
-        } else if (!(pp_ptr->flag & PROJECT_PATH)) {
+        }
+        else if (!(pp_ptr->flag & PROJECT_PATH)) {
             if ((pp_ptr->n > 0) && !cave_has_flag_bold(floor_ptr, pp_ptr->y, pp_ptr->x, FF_PROJECT))
                 break;
         }
@@ -211,13 +210,12 @@ static void calc_projection_others(player_type *player_ptr, projection_path_type
  * @param flag フラグID
  * @return リストの長さ
  */
-int projection_path(player_type *player_ptr, u16b *gp, POSITION range, POSITION y1, POSITION x1, POSITION y2, POSITION x2, BIT_FLAGS flag)
-{
+int projection_path(player_type* player_ptr, u16b* gp, POSITION range, POSITION y1, POSITION x1, POSITION y2, POSITION x2, BIT_FLAGS flag) {
     if ((x1 == x2) && (y1 == y2))
         return 0;
 
     projection_path_type tmp_projection_path;
-    projection_path_type *pp_ptr = initialize_projection_path_type(&tmp_projection_path, gp, range, flag, y1, x1, y2, x2);
+    projection_path_type* pp_ptr = initialize_projection_path_type(&tmp_projection_path, gp, range, flag, y1, x1, y2, x2);
     set_asxy(pp_ptr);
     pp_ptr->half = pp_ptr->ay * pp_ptr->ax;
     pp_ptr->full = pp_ptr->half << 1;
@@ -242,8 +240,7 @@ int projection_path(player_type *player_ptr, u16b *gp, POSITION range, POSITION 
  *
  * This is slightly (but significantly) different from "los(y1,x1,y2,x2)".
  */
-bool projectable(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2)
-{
+bool projectable(player_type* player_ptr, POSITION y1, POSITION x1, POSITION y2, POSITION x2) {
     u16b grid_g[512];
     int grid_n = projection_path(player_ptr, grid_g, (project_length ? project_length : get_max_range(player_ptr)), y1, x1, y2, x2, 0);
     if (!grid_n)
@@ -262,7 +259,7 @@ bool projectable(player_type *player_ptr, POSITION y1, POSITION x1, POSITION y2,
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return 射程
  */
-int get_max_range(player_type *creature_ptr) { return creature_ptr->phase_out ? 36 : 18; }
+int get_max_range(player_type* creature_ptr) { return creature_ptr->phase_out ? 36 : 18; }
 
 /*
  * Convert a "grid" (G) into a "location" (Y)

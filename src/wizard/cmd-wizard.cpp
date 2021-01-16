@@ -99,8 +99,7 @@
  * "：スポイラーのダンプ / Dump spoiler
  * ?：ヘルプ表示 (通常の？と同じ) / Show help (same as normal help)
  */
-void do_cmd_debug(player_type *creature_ptr)
-{
+void do_cmd_debug(player_type* creature_ptr) {
     char cmd;
     get_com("Debug Command: ", &cmd, FALSE);
     switch (cmd) {

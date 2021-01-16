@@ -45,12 +45,11 @@
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_pet(player_type *master_ptr, FILE *fff)
-{
+static void dump_aux_pet(player_type* master_ptr, FILE* fff) {
     bool pet = FALSE;
     bool pet_settings = FALSE;
     for (int i = master_ptr->current_floor_ptr->m_max - 1; i >= 1; i--) {
-        monster_type *m_ptr = &master_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &master_ptr->current_floor_ptr->m_list[i];
 
         if (!monster_is_valid(m_ptr))
             continue;
@@ -101,10 +100,9 @@ static void dump_aux_pet(player_type *master_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_quest(player_type *creature_ptr, FILE *fff)
-{
+static void dump_aux_quest(player_type* creature_ptr, FILE* fff) {
     fprintf(fff, _("\n\n  [クエスト情報]\n", "\n\n  [Quest Information]\n"));
-    QUEST_IDX *quest_num;
+    QUEST_IDX* quest_num;
     C_MAKE(quest_num, max_q_idx, QUEST_IDX);
 
     for (QUEST_IDX i = 1; i < max_q_idx; i++)
@@ -127,8 +125,7 @@ static void dump_aux_quest(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_last_message(player_type *creature_ptr, FILE *fff)
-{
+static void dump_aux_last_message(player_type* creature_ptr, FILE* fff) {
     if (!creature_ptr->is_dead)
         return;
 
@@ -154,8 +151,7 @@ static void dump_aux_last_message(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_recall(FILE *fff)
-{
+static void dump_aux_recall(FILE* fff) {
     fprintf(fff, _("\n  [帰還場所]\n\n", "\n  [Recall Depth]\n\n"));
     for (int y = 1; y < current_world_ptr->max_d_idx; y++) {
         bool seiha = FALSE;
@@ -167,7 +163,8 @@ static void dump_aux_recall(FILE *fff)
         if (d_info[y].final_guardian) {
             if (!r_info[d_info[y].final_guardian].max_num)
                 seiha = TRUE;
-        } else if (max_dlv[y] == d_info[y].maxdepth)
+        }
+        else if (max_dlv[y] == d_info[y].maxdepth)
             seiha = TRUE;
 
         fprintf(fff, _("   %c%-12s: %3d 階\n", "   %c%-16s: level %3d\n"), seiha ? '!' : ' ', d_name + d_info[y].name, (int)max_dlv[y]);
@@ -179,8 +176,7 @@ static void dump_aux_recall(FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_options(FILE *fff)
-{
+static void dump_aux_options(FILE* fff) {
     fprintf(fff, _("\n  [オプション設定]\n", "\n  [Option Settings]\n"));
     if (preserve_mode)
         fprintf(fff, _("\n 保存モード:         ON", "\n Preserve Mode:      ON"));
@@ -234,15 +230,15 @@ static void dump_aux_options(FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_arena(player_type *creature_ptr, FILE *fff)
-{
+static void dump_aux_arena(player_type* creature_ptr, FILE* fff) {
     if (lite_town || vanilla_town)
         return;
 
     if (creature_ptr->arena_number < 0) {
         if (creature_ptr->arena_number <= ARENA_DEFEATED_OLD_VER) {
             fprintf(fff, _("\n 闘技場: 敗北\n", "\n Arena: Defeated\n"));
-        } else {
+        }
+        else {
 #ifdef JP
             fprintf(
                 fff, "\n 闘技場: %d回戦で%sの前に敗北\n", -creature_ptr->arena_number, r_name + r_info[arena_info[-1 - creature_ptr->arena_number].r_idx].name);
@@ -282,12 +278,11 @@ static void dump_aux_arena(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_monsters(player_type *creature_ptr, FILE *fff)
-{
+static void dump_aux_monsters(player_type* creature_ptr, FILE* fff) {
     fprintf(fff, _("\n  [倒したモンスター]\n\n", "\n  [Defeated Monsters]\n\n"));
 
     /* Allocate the "who" array */
-    MONRACE_IDX *who;
+    MONRACE_IDX* who;
     u16b why = 2;
     C_MAKE(who, max_r_idx, MONRACE_IDX);
 
@@ -296,7 +291,7 @@ static void dump_aux_monsters(player_type *creature_ptr, FILE *fff)
     long norm_total = 0;
     for (MONRACE_IDX k = 1; k < max_r_idx; k++) {
         /* Ignore unused index */
-        monster_race *r_ptr = &r_info[k];
+        monster_race* r_ptr = &r_info[k];
         if (!r_ptr->name)
             continue;
 
@@ -348,7 +343,7 @@ static void dump_aux_monsters(player_type *creature_ptr, FILE *fff)
     fprintf(fff, _("\n《上位%ld体のユニーク・モンスター》\n", "\n< Unique monsters top %ld >\n"), MIN(uniq_total, 10));
 
     for (MONRACE_IDX k = uniq_total - 1; k >= 0 && k >= uniq_total - 10; k--) {
-        monster_race *r_ptr = &r_info[who[k]];
+        monster_race* r_ptr = &r_info[who[k]];
         fprintf(fff, _("  %-40s (レベル%3d)\n", "  %-40s (level %3d)\n"), (r_name + r_ptr->name), (int)r_ptr->level);
     }
 
@@ -361,8 +356,7 @@ static void dump_aux_monsters(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_race_history(player_type *creature_ptr, FILE *fff)
-{
+static void dump_aux_race_history(player_type* creature_ptr, FILE* fff) {
     if (!creature_ptr->old_race1 && !creature_ptr->old_race2)
         return;
 
@@ -373,7 +367,8 @@ static void dump_aux_race_history(player_type *creature_ptr, FILE *fff)
         if (i < 32) {
             if (!(creature_ptr->old_race1 & 1L << i))
                 continue;
-        } else {
+        }
+        else {
             if (!(creature_ptr->old_race2 & 1L << (i - 32)))
                 continue;
         }
@@ -390,8 +385,7 @@ static void dump_aux_race_history(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_realm_history(player_type *creature_ptr, FILE *fff)
-{
+static void dump_aux_realm_history(player_type* creature_ptr, FILE* fff) {
     if (creature_ptr->old_realm)
         return;
 
@@ -411,8 +405,7 @@ static void dump_aux_realm_history(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_virtues(player_type *creature_ptr, FILE *fff)
-{
+static void dump_aux_virtues(player_type* creature_ptr, FILE* fff) {
     fprintf(fff, _("\n\n  [自分に関する情報]\n\n", "\n\n  [HP-rate & Max stat & Virtues]\n\n"));
 
     int percent
@@ -449,8 +442,7 @@ static void dump_aux_virtues(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_mutations(player_type *creature_ptr, FILE *fff)
-{
+static void dump_aux_mutations(player_type* creature_ptr, FILE* fff) {
     if (creature_ptr->muta1 || creature_ptr->muta2 || creature_ptr->muta3) {
         fprintf(fff, _("\n\n  [突然変異]\n\n", "\n\n  [Mutations]\n\n"));
         dump_mutations(creature_ptr, fff);
@@ -463,8 +455,7 @@ static void dump_aux_mutations(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_equipment_inventory(player_type *creature_ptr, FILE *fff)
-{
+static void dump_aux_equipment_inventory(player_type* creature_ptr, FILE* fff) {
     GAME_TEXT o_name[MAX_NLEN];
     if (creature_ptr->equip_cnt) {
         fprintf(fff, _("  [キャラクタの装備]\n\n", "  [Character Equipment]\n\n"));
@@ -497,9 +488,8 @@ static void dump_aux_equipment_inventory(player_type *creature_ptr, FILE *fff)
  * @param fff ファイルポインタ
  * @return なし
  */
-static void dump_aux_home_museum(player_type *creature_ptr, FILE *fff)
-{
-    store_type *store_ptr;
+static void dump_aux_home_museum(player_type* creature_ptr, FILE* fff) {
+    store_type* store_ptr;
     store_ptr = &town_info[1].store[STORE_HOME];
 
     GAME_TEXT o_name[MAX_NLEN];
@@ -546,8 +536,7 @@ static void dump_aux_home_museum(player_type *creature_ptr, FILE *fff)
  * @brief チェックサム情報を出力 / Get check sum in string form
  * @return チェックサム情報の文字列
  */
-static concptr get_check_sum(void)
-{
+static concptr get_check_sum(void) {
     return format("%02x%02x%02x%02x%02x%02x%02x%02x%02x", f_head.v_extra, k_head.v_extra, a_head.v_extra, e_head.v_extra, r_head.v_extra, d_head.v_extra,
         m_head.v_extra, s_head.v_extra, v_head.v_extra);
 }
@@ -559,8 +548,7 @@ static concptr get_check_sum(void)
  * @param fff ファイルポインタ
  * @return エラーコード
  */
-void make_character_dump(player_type *creature_ptr, FILE *fff, void (*update_playtime)(void), display_player_pf display_player)
-{
+void make_character_dump(player_type* creature_ptr, FILE* fff, void (*update_playtime)(void), display_player_pf display_player) {
     fprintf(
         fff, _("  [変愚蛮怒 %d.%d.%d キャラクタ情報]\n\n", "  [Hengband %d.%d.%d Character Dump]\n\n"), FAKE_VER_MAJOR - 10, FAKE_VER_MINOR, FAKE_VER_PATCH);
     (*update_playtime)();

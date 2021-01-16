@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "system/angband.h"
+
 /*
  * An entry for the object/monster allocation functions
  *

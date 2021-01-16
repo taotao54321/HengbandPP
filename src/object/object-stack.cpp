@@ -28,8 +28,7 @@
  * are being dropped, it makes for a neater message to leave the original\n
  * stack's pval alone. -LM-\n
  */
-void distribute_charges(object_type *o_ptr, object_type *q_ptr, int amt)
-{
+void distribute_charges(object_type* o_ptr, object_type* q_ptr, int amt) {
     if ((o_ptr->tval != TV_WAND) && (o_ptr->tval != TV_ROD))
         return;
 
@@ -59,8 +58,7 @@ void distribute_charges(object_type *o_ptr, object_type *q_ptr, int amt)
  * charges of the stack needs to be reduced, unless all the items are\n
  * being destroyed. -LM-\n
  */
-void reduce_charges(object_type *o_ptr, int amt)
-{
+void reduce_charges(object_type* o_ptr, int amt) {
     if (((o_ptr->tval == TV_WAND) || (o_ptr->tval == TV_ROD)) && (amt < o_ptr->number)) {
         o_ptr->pval -= o_ptr->pval * amt / o_ptr->number;
     }
@@ -73,8 +71,7 @@ void reduce_charges(object_type *o_ptr, int amt)
  * @param j_ptr 検証したいオブジェクトの構造体参照ポインタ2
  * @return 重ね合わせ可能なアイテム数
  */
-int object_similar_part(object_type *o_ptr, object_type *j_ptr)
-{
+int object_similar_part(object_type* o_ptr, object_type* j_ptr) {
     const int max_stack_size = 99;
     int max_num = max_stack_size;
     if (o_ptr->k_idx != j_ptr->k_idx)
@@ -216,8 +213,7 @@ int object_similar_part(object_type *o_ptr, object_type *j_ptr)
  * @param j_ptr 検証したいオブジェクトの構造体参照ポインタ2
  * @return 重ね合わせ可能ならばTRUEを返す。
  */
-bool object_similar(object_type *o_ptr, object_type *j_ptr)
-{
+bool object_similar(object_type* o_ptr, object_type* j_ptr) {
     int total = o_ptr->number + j_ptr->number;
     int max_num = object_similar_part(o_ptr, j_ptr);
     if (!max_num)
@@ -235,8 +231,7 @@ bool object_similar(object_type *o_ptr, object_type *j_ptr)
  * @param j_ptr 重ね合わせ元のオブジェクトの構造体参照ポインタ
  * @return なし
  */
-void object_absorb(object_type *o_ptr, object_type *j_ptr)
-{
+void object_absorb(object_type* o_ptr, object_type* j_ptr) {
     int max_num = object_similar_part(o_ptr, j_ptr);
     int total = o_ptr->number + j_ptr->number;
     int diff = (total > max_num) ? total - max_num : 0;

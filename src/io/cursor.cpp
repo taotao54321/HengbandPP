@@ -20,8 +20,7 @@
 /*
  * Moves the cursor to a given MAP (y,x) location
  */
-void move_cursor_relative(int row, int col)
-{
+void move_cursor_relative(int row, int col) {
     row -= panel_row_prt;
     term_gotoxy(panel_col_of(col), row);
 }
@@ -33,15 +32,14 @@ void move_cursor_relative(int row, int col)
  * @param x 目標地点のX座標
  * @return なし
  */
-void print_path(player_type *player_ptr, POSITION y, POSITION x)
-{
+void print_path(player_type* player_ptr, POSITION y, POSITION x) {
     u16b path_g[512];
     byte default_color = TERM_SLATE;
 
     if (!display_path || (project_length == -1))
         return;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     int path_n = projection_path(
         player_ptr, path_g, (project_length ? project_length : get_max_range(player_ptr)), player_ptr->y, player_ptr->x, y, x, PROJECT_PATH | PROJECT_THRU);
     player_ptr->redraw |= (PR_MAP);
@@ -49,7 +47,7 @@ void print_path(player_type *player_ptr, POSITION y, POSITION x)
     for (int i = 0; i < path_n; i++) {
         POSITION ny = get_grid_y(path_g[i]);
         POSITION nx = get_grid_x(path_g[i]);
-        grid_type *g_ptr = &floor_ptr->grid_array[ny][nx];
+        grid_type* g_ptr = &floor_ptr->grid_array[ny][nx];
         if (panel_contains(ny, nx)) {
             TERM_COLOR a = default_color;
             SYMBOL_CODE c;
@@ -99,15 +97,14 @@ void print_path(player_type *player_ptr, POSITION y, POSITION x)
  * Also used in do_cmd_locate
  * @return 実際に再描画が必要だった場合TRUEを返す
  */
-bool change_panel(player_type *player_ptr, POSITION dy, POSITION dx)
-{
+bool change_panel(player_type* player_ptr, POSITION dy, POSITION dx) {
     TERM_LEN wid, hgt;
     get_screen_size(&wid, &hgt);
 
     POSITION y = panel_row_min + dy * hgt / 2;
     POSITION x = panel_col_min + dx * wid / 2;
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (y > floor_ptr->height - hgt)
         y = floor_ptr->height - hgt;
     if (y < 0)
@@ -136,8 +133,7 @@ bool change_panel(player_type *player_ptr, POSITION dy, POSITION dx)
  * Calculates current boundaries Called below and from "do_cmd_locate()".
  * @return なし
  */
-void panel_bounds_center(void)
-{
+void panel_bounds_center(void) {
     TERM_LEN wid, hgt;
     get_screen_size(&wid, &hgt);
     panel_row_max = panel_row_min + hgt - 1;

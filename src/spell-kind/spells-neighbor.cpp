@@ -16,8 +16,7 @@
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool door_creation(player_type *caster_ptr, POSITION y, POSITION x)
-{
+bool door_creation(player_type* caster_ptr, POSITION y, POSITION x) {
     BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_HIDE;
     return (project(caster_ptr, 0, 1, y, x, 0, GF_MAKE_DOOR, flg, -1));
 }
@@ -29,8 +28,7 @@ bool door_creation(player_type *caster_ptr, POSITION y, POSITION x)
  * @param x 起点X座標
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool trap_creation(player_type *caster_ptr, POSITION y, POSITION x)
-{
+bool trap_creation(player_type* caster_ptr, POSITION y, POSITION x) {
     BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_HIDE;
     return (project(caster_ptr, 0, 1, y, x, 0, GF_MAKE_TRAP, flg, -1));
 }
@@ -40,8 +38,7 @@ bool trap_creation(player_type *caster_ptr, POSITION y, POSITION x)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool tree_creation(player_type *caster_ptr, POSITION y, POSITION x)
-{
+bool tree_creation(player_type* caster_ptr, POSITION y, POSITION x) {
     BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_HIDE;
     return (project(caster_ptr, 0, 1, y, x, 0, GF_MAKE_TREE, flg, -1));
 }
@@ -51,8 +48,7 @@ bool tree_creation(player_type *caster_ptr, POSITION y, POSITION x)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool glyph_creation(player_type *caster_ptr, POSITION y, POSITION x)
-{
+bool glyph_creation(player_type* caster_ptr, POSITION y, POSITION x) {
     BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM;
     return (project(caster_ptr, 0, 1, y, x, 0, GF_MAKE_GLYPH, flg, -1));
 }
@@ -62,8 +58,7 @@ bool glyph_creation(player_type *caster_ptr, POSITION y, POSITION x)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool wall_stone(player_type *caster_ptr)
-{
+bool wall_stone(player_type* caster_ptr) {
     BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_HIDE;
     bool dummy = (project(caster_ptr, 0, 1, caster_ptr->y, caster_ptr->x, 0, GF_STONE_WALL, flg, -1));
     caster_ptr->update |= (PU_FLOW);
@@ -76,8 +71,7 @@ bool wall_stone(player_type *caster_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool destroy_doors_touch(player_type *caster_ptr)
-{
+bool destroy_doors_touch(player_type* caster_ptr) {
     BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_HIDE;
     return (project(caster_ptr, 0, 1, caster_ptr->y, caster_ptr->x, 0, GF_KILL_DOOR, flg, -1));
 }
@@ -87,8 +81,7 @@ bool destroy_doors_touch(player_type *caster_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool disarm_traps_touch(player_type *caster_ptr)
-{
+bool disarm_traps_touch(player_type* caster_ptr) {
     BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_HIDE;
     return (project(caster_ptr, 0, 1, caster_ptr->y, caster_ptr->x, 0, GF_KILL_TRAP, flg, -1));
 }
@@ -98,8 +91,7 @@ bool disarm_traps_touch(player_type *caster_ptr)
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool sleep_monsters_touch(player_type *caster_ptr)
-{
+bool sleep_monsters_touch(player_type* caster_ptr) {
     BIT_FLAGS flg = PROJECT_KILL | PROJECT_HIDE;
     return (project(caster_ptr, 0, 1, caster_ptr->y, caster_ptr->x, caster_ptr->lev, GF_OLD_SLEEP, flg, -1));
 }
@@ -112,8 +104,7 @@ bool sleep_monsters_touch(player_type *caster_ptr)
  * @param x 起点X座標
  * @return 作用が実際にあった場合TRUEを返す
  */
-bool animate_dead(player_type *caster_ptr, MONSTER_IDX who, POSITION y, POSITION x)
-{
+bool animate_dead(player_type* caster_ptr, MONSTER_IDX who, POSITION y, POSITION x) {
     BIT_FLAGS flg = PROJECT_ITEM | PROJECT_HIDE;
     return (project(caster_ptr, who, 5, y, x, 0, GF_ANIM_DEAD, flg, -1));
 }
@@ -123,8 +114,7 @@ bool animate_dead(player_type *caster_ptr, MONSTER_IDX who, POSITION y, POSITION
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 作用が実際にあった場合TRUEを返す
  */
-void wall_breaker(player_type *caster_ptr)
-{
+void wall_breaker(player_type* caster_ptr) {
     POSITION y = 0, x = 0;
     int attempts = 1000;
     if (randint1(80 + caster_ptr->lev) < 70) {

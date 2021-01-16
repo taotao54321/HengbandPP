@@ -6,10 +6,10 @@
 #include "floor/floor-save-util.h"
 #include "grid/grid.h"
 #include "grid/trap.h"
+#include "monster-race/monster-race-hook.h"
 #include "monster-race/monster-race.h"
 #include "monster-race/race-flags2.h"
 #include "monster-race/race-flags3.h"
-#include "monster-race/monster-race-hook.h"
 #include "monster/monster-flag-types.h"
 #include "monster/monster-info.h"
 #include "monster/monster-status.h"
@@ -33,12 +33,11 @@
  * @param known 地形から危険フラグを外すならTRUE
  * @return 効力があった場合TRUEを返す
  */
-static bool detect_feat_flag(player_type *caster_ptr, POSITION range, int flag, bool known)
-{
+static bool detect_feat_flag(player_type* caster_ptr, POSITION range, int flag, bool known) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     bool detect = FALSE;
     for (POSITION y = 1; y < caster_ptr->current_floor_ptr->height - 1; y++) {
         for (POSITION x = 1; x <= caster_ptr->current_floor_ptr->width - 1; x++) {
@@ -77,8 +76,7 @@ static bool detect_feat_flag(player_type *caster_ptr, POSITION range, int flag, 
  * @param known 感知外範囲を超える警告フラグを立てる場合TRUEを返す
  * @return 効力があった場合TRUEを返す
  */
-bool detect_traps(player_type *caster_ptr, POSITION range, bool known)
-{
+bool detect_traps(player_type* caster_ptr, POSITION range, bool known) {
     bool detect = detect_feat_flag(caster_ptr, range, FF_TRAP, known);
 
     if (known)
@@ -99,8 +97,7 @@ bool detect_traps(player_type *caster_ptr, POSITION range, bool known)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_doors(player_type *caster_ptr, POSITION range)
-{
+bool detect_doors(player_type* caster_ptr, POSITION range) {
     bool detect = detect_feat_flag(caster_ptr, range, FF_DOOR, TRUE);
 
     if (music_singing(caster_ptr, MUSIC_DETECT) && SINGING_COUNT(caster_ptr) > 0)
@@ -118,8 +115,7 @@ bool detect_doors(player_type *caster_ptr, POSITION range)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_stairs(player_type *caster_ptr, POSITION range)
-{
+bool detect_stairs(player_type* caster_ptr, POSITION range) {
     bool detect = detect_feat_flag(caster_ptr, range, FF_STAIRS, TRUE);
 
     if (music_singing(caster_ptr, MUSIC_DETECT) && SINGING_COUNT(caster_ptr) > 0)
@@ -137,8 +133,7 @@ bool detect_stairs(player_type *caster_ptr, POSITION range)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_treasure(player_type *caster_ptr, POSITION range)
-{
+bool detect_treasure(player_type* caster_ptr, POSITION range) {
     bool detect = detect_feat_flag(caster_ptr, range, FF_HAS_GOLD, TRUE);
 
     if (music_singing(caster_ptr, MUSIC_DETECT) && SINGING_COUNT(caster_ptr) > 6)
@@ -155,8 +150,7 @@ bool detect_treasure(player_type *caster_ptr, POSITION range)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_objects_gold(player_type *caster_ptr, POSITION range)
-{
+bool detect_objects_gold(player_type* caster_ptr, POSITION range) {
     POSITION range2 = range;
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range2 /= 3;
@@ -165,7 +159,7 @@ bool detect_objects_gold(player_type *caster_ptr, POSITION range)
     bool detect = FALSE;
     POSITION y, x;
     for (OBJECT_IDX i = 1; i < caster_ptr->current_floor_ptr->o_max; i++) {
-        object_type *o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
+        object_type* o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
 
         if (!object_is_valid(o_ptr))
             continue;
@@ -203,15 +197,14 @@ bool detect_objects_gold(player_type *caster_ptr, POSITION range)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_objects_normal(player_type *caster_ptr, POSITION range)
-{
+bool detect_objects_normal(player_type* caster_ptr, POSITION range) {
     POSITION range2 = range;
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range2 /= 3;
 
     bool detect = FALSE;
     for (OBJECT_IDX i = 1; i < caster_ptr->current_floor_ptr->o_max; i++) {
-        object_type *o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
+        object_type* o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
 
         if (!object_is_valid(o_ptr))
             continue;
@@ -258,15 +251,14 @@ bool detect_objects_normal(player_type *caster_ptr, POSITION range)
  * It can probably be argued that this function is now too powerful.
  * </pre>
  */
-bool detect_objects_magic(player_type *caster_ptr, POSITION range)
-{
+bool detect_objects_magic(player_type* caster_ptr, POSITION range) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
     tval_type tv;
     bool detect = FALSE;
     for (OBJECT_IDX i = 1; i < caster_ptr->current_floor_ptr->o_max; i++) {
-        object_type *o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
+        object_type* o_ptr = &caster_ptr->current_floor_ptr->o_list[i];
 
         if (!object_is_valid(o_ptr))
             continue;
@@ -304,15 +296,14 @@ bool detect_objects_magic(player_type *caster_ptr, POSITION range)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_monsters_normal(player_type *caster_ptr, POSITION range)
-{
+bool detect_monsters_normal(player_type* caster_ptr, POSITION range) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
     bool flag = FALSE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -344,15 +335,14 @@ bool detect_monsters_normal(player_type *caster_ptr, POSITION range)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_monsters_invis(player_type *caster_ptr, POSITION range)
-{
+bool detect_monsters_invis(player_type* caster_ptr, POSITION range) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
     bool flag = FALSE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
         if (!monster_is_valid(m_ptr))
             continue;
@@ -390,15 +380,14 @@ bool detect_monsters_invis(player_type *caster_ptr, POSITION range)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_monsters_evil(player_type *caster_ptr, POSITION range)
-{
+bool detect_monsters_evil(player_type* caster_ptr, POSITION range) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
     bool flag = FALSE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -436,14 +425,13 @@ bool detect_monsters_evil(player_type *caster_ptr, POSITION range)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_monsters_nonliving(player_type *caster_ptr, POSITION range)
-{
+bool detect_monsters_nonliving(player_type* caster_ptr, POSITION range) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
     bool flag = FALSE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -477,15 +465,14 @@ bool detect_monsters_nonliving(player_type *caster_ptr, POSITION range)
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_monsters_mind(player_type *caster_ptr, POSITION range)
-{
+bool detect_monsters_mind(player_type* caster_ptr, POSITION range) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
     bool flag = FALSE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -521,15 +508,14 @@ bool detect_monsters_mind(player_type *caster_ptr, POSITION range)
  * @param Match 対応シンボルの混じったモンスター文字列(複数指定化)
  * @return 効力があった場合TRUEを返す
  */
-bool detect_monsters_string(player_type *caster_ptr, POSITION range, concptr Match)
-{
+bool detect_monsters_string(player_type* caster_ptr, POSITION range, concptr Match) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
     bool flag = FALSE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -567,15 +553,14 @@ bool detect_monsters_string(player_type *caster_ptr, POSITION range, concptr Mat
  * @param match_flag 感知フラグ
  * @return 効力があった場合TRUEを返す
  */
-bool detect_monsters_xxx(player_type *caster_ptr, POSITION range, u32b match_flag)
-{
+bool detect_monsters_xxx(player_type* caster_ptr, POSITION range, u32b match_flag) {
     if (d_info[caster_ptr->dungeon_idx].flags1 & DF1_DARKNESS)
         range /= 3;
 
     bool flag = FALSE;
     for (MONSTER_IDX i = 1; i < caster_ptr->current_floor_ptr->m_max; i++) {
-        monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[i];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (!monster_is_valid(m_ptr))
             continue;
 
@@ -624,8 +609,7 @@ bool detect_monsters_xxx(player_type *caster_ptr, POSITION range, u32b match_fla
  * @param range 効果範囲
  * @return 効力があった場合TRUEを返す
  */
-bool detect_all(player_type *caster_ptr, POSITION range)
-{
+bool detect_all(player_type* caster_ptr, POSITION range) {
     bool detect = FALSE;
     if (detect_traps(caster_ptr, range, TRUE))
         detect = TRUE;

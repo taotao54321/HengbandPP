@@ -43,8 +43,7 @@
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF4_SHRIEK(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+void spell_RF4_SHRIEK(MONSTER_IDX m_idx, player_type* target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE) {
     simple_monspell_message(target_ptr, m_idx, t_idx, _("%^sがかん高い金切り声をあげた。", "%^s makes a high pitched shriek."),
         _("%^sが%sに向かって叫んだ。", "%^s shrieks at %s."), TARGET_TYPE);
 
@@ -63,9 +62,8 @@ void spell_RF4_SHRIEK(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_
  * @param target_ptr プレーヤーへの参照ポインタ
  * @param m_idx 呪文を唱えるモンスターID
  */
-HIT_POINT spell_RF6_WORLD(player_type *target_ptr, MONSTER_IDX m_idx)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+HIT_POINT spell_RF6_WORLD(player_type* target_ptr, MONSTER_IDX m_idx) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
     MONSTER_IDX who = 0;
     GAME_TEXT m_name[MAX_NLEN];
     monster_name(target_ptr, m_idx, m_name);
@@ -87,8 +85,7 @@ HIT_POINT spell_RF6_WORLD(player_type *target_ptr, MONSTER_IDX m_idx)
  * @param is_quantum_effect 量子的効果によるショート・テレポートの場合時TRUE
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF6_BLINK(player_type *target_ptr, MONSTER_IDX m_idx, int TARGET_TYPE, bool is_quantum_effect)
-{
+void spell_RF6_BLINK(player_type* target_ptr, MONSTER_IDX m_idx, int TARGET_TYPE, bool is_quantum_effect) {
     GAME_TEXT m_name[MAX_NLEN];
     monster_name(target_ptr, m_idx, m_name);
 
@@ -116,8 +113,7 @@ void spell_RF6_BLINK(player_type *target_ptr, MONSTER_IDX m_idx, int TARGET_TYPE
  * @param m_idx 呪文を唱えるモンスターID
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF6_TPORT(player_type *target_ptr, MONSTER_IDX m_idx, int TARGET_TYPE)
-{
+void spell_RF6_TPORT(player_type* target_ptr, MONSTER_IDX m_idx, int TARGET_TYPE) {
     GAME_TEXT m_name[MAX_NLEN];
     monster_name(target_ptr, m_idx, m_name);
 
@@ -143,12 +139,11 @@ void spell_RF6_TPORT(player_type *target_ptr, MONSTER_IDX m_idx, int TARGET_TYPE
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-void spell_RF6_TELE_TO(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
-    monster_type *t_ptr = &floor_ptr->m_list[t_idx];
-    monster_race *tr_ptr = &r_info[t_ptr->r_idx];
+void spell_RF6_TELE_TO(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
+    monster_type* t_ptr = &floor_ptr->m_list[t_idx];
+    monster_race* tr_ptr = &r_info[t_ptr->r_idx];
 
     simple_monspell_message(target_ptr, m_idx, t_idx, _("%^sがあなたを引き戻した。", "%^s commands you to return."),
         _("%^sが%sを引き戻した。", "%^s commands %s to return."), TARGET_TYPE);
@@ -174,7 +169,8 @@ void spell_RF6_TELE_TO(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t
                 msg_format(_("%^sには効果がなかった。", "%^s is unaffected!"), t_name);
             }
             resists_tele = TRUE;
-        } else if (tr_ptr->level > randint1(100)) {
+        }
+        else if (tr_ptr->level > randint1(100)) {
             if (is_original_ap_and_seen(target_ptr, t_ptr))
                 tr_ptr->r_flagsr |= RFR_RES_TELE;
             if (see_monster(target_ptr, t_idx)) {
@@ -204,11 +200,10 @@ void spell_RF6_TELE_TO(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-void spell_RF6_TELE_AWAY(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *t_ptr = &floor_ptr->m_list[t_idx];
-    monster_race *tr_ptr = &r_info[t_ptr->r_idx];
+void spell_RF6_TELE_AWAY(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* t_ptr = &floor_ptr->m_list[t_idx];
+    monster_race* tr_ptr = &r_info[t_ptr->r_idx];
 
     simple_monspell_message(target_ptr, m_idx, t_idx, _("%^sにテレポートさせられた。", "%^s teleports you away."),
         _("%^sは%sをテレポートさせた。", "%^s teleports %s away."), TARGET_TYPE);
@@ -243,7 +238,8 @@ void spell_RF6_TELE_AWAY(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX
                 msg_format(_("%^sには効果がなかった。", "%^s is unaffected!"), t_name);
             }
             resists_tele = TRUE;
-        } else if (tr_ptr->level > randint1(100)) {
+        }
+        else if (tr_ptr->level > randint1(100)) {
             if (is_original_ap_and_seen(target_ptr, t_ptr))
                 tr_ptr->r_flagsr |= RFR_RES_TELE;
             if (see_monster(target_ptr, t_idx)) {
@@ -273,11 +269,10 @@ void spell_RF6_TELE_AWAY(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  * @return ダメージ量を返す。
  */
-void spell_RF6_TELE_LEVEL(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *t_ptr = &floor_ptr->m_list[t_idx];
-    monster_race *tr_ptr = &r_info[t_ptr->r_idx];
+void spell_RF6_TELE_LEVEL(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* t_ptr = &floor_ptr->m_list[t_idx];
+    monster_race* tr_ptr = &r_info[t_ptr->r_idx];
     DEPTH rlev = monster_level_idx(floor_ptr, m_idx);
     bool resist, saving_throw;
 
@@ -320,12 +315,11 @@ void spell_RF6_TELE_LEVEL(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_ID
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF6_DARKNESS(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    floor_type *floor_ptr = target_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
-    monster_type *t_ptr = &floor_ptr->m_list[t_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+void spell_RF6_DARKNESS(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    floor_type* floor_ptr = target_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
+    monster_type* t_ptr = &floor_ptr->m_list[t_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     bool can_use_lite_area = FALSE;
     bool monster_to_monster = TARGET_TYPE == MONSTER_TO_MONSTER;
     bool monster_to_player = TARGET_TYPE == MONSTER_TO_PLAYER;
@@ -345,7 +339,8 @@ void spell_RF6_DARKNESS(player_type *target_ptr, POSITION y, POSITION x, MONSTER
         if (see_monster(target_ptr, t_idx) && monster_to_monster) {
             msg_format(_("%^sは白い光に包まれた。", "%^s is surrounded by a white light."), t_name);
         }
-    } else {
+    }
+    else {
         monspell_message(target_ptr, m_idx, t_idx, _("%^sが何かをつぶやいた。", "%^s mumbles."), _("%^sが暗闇の中で手を振った。", "%^s gestures in shadow."),
             _("%^sが暗闇の中で手を振った。", "%^s gestures in shadow."), TARGET_TYPE);
 
@@ -357,7 +352,8 @@ void spell_RF6_DARKNESS(player_type *target_ptr, POSITION y, POSITION x, MONSTER
     if (monster_to_player) {
         if (can_use_lite_area) {
             (void)lite_area(target_ptr, 0, 3);
-        } else {
+        }
+        else {
             learn_spell(target_ptr, MS_DARKNESS);
             (void)unlite_area(target_ptr, 0, 3);
         }
@@ -381,8 +377,7 @@ void spell_RF6_DARKNESS(player_type *target_ptr, POSITION y, POSITION x, MONSTER
  * @param m_idx 呪文を唱えるモンスターID
  * @param なし
  */
-void spell_RF6_TRAPS(player_type *target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx)
-{
+void spell_RF6_TRAPS(player_type* target_ptr, POSITION y, POSITION x, MONSTER_IDX m_idx) {
     GAME_TEXT m_name[MAX_NLEN];
     monster_name(target_ptr, m_idx, m_name);
     disturb(target_ptr, TRUE, TRUE);
@@ -403,9 +398,8 @@ void spell_RF6_TRAPS(player_type *target_ptr, POSITION y, POSITION x, MONSTER_ID
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF6_RAISE_DEAD(player_type *target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+void spell_RF6_RAISE_DEAD(player_type* target_ptr, MONSTER_IDX m_idx, MONSTER_IDX t_idx, int TARGET_TYPE) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
 
     monspell_message(target_ptr, m_idx, t_idx, _("%^sが何かをつぶやいた。", "%^s mumbles."),
         _("%^sが死者復活の呪文を唱えた。", "%^s casts a spell to revive corpses."), _("%^sが死者復活の呪文を唱えた。", "%^s casts a spell to revive corpses."),

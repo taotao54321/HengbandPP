@@ -16,8 +16,7 @@
  * @todo
  * xtra1.c周りと多重実装になっているのを何とかする
  */
-void player_immunity(player_type *creature_ptr, BIT_FLAGS *flags)
-{
+void player_immunity(player_type* creature_ptr, BIT_FLAGS* flags) {
     for (int i = 0; i < TR_FLAG_SIZE; i++)
         flags[i] = 0L;
 
@@ -39,8 +38,7 @@ void player_immunity(player_type *creature_ptr, BIT_FLAGS *flags)
  * @todo
  * xtra1.c周りと多重実装になっているのを何とかする
  */
-void tim_player_immunity(player_type *creature_ptr, BIT_FLAGS *flags)
-{
+void tim_player_immunity(player_type* creature_ptr, BIT_FLAGS* flags) {
     for (int i = 0; i < TR_FLAG_SIZE; i++)
         flags[i] = 0L;
 
@@ -64,14 +62,13 @@ void tim_player_immunity(player_type *creature_ptr, BIT_FLAGS *flags)
  * @todo
  * xtra1.c周りと多重実装になっているのを何とかする
  */
-void known_obj_immunity(player_type *creature_ptr, BIT_FLAGS *flags)
-{
+void known_obj_immunity(player_type* creature_ptr, BIT_FLAGS* flags) {
     for (int i = 0; i < TR_FLAG_SIZE; i++)
         flags[i] = 0L;
 
     for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i = inventory_slot_type(i + 1)) {
         u32b o_flags[TR_FLAG_SIZE];
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[i];
         if (!o_ptr->k_idx)
             continue;
@@ -96,8 +93,7 @@ void known_obj_immunity(player_type *creature_ptr, BIT_FLAGS *flags)
  * @todo
  * xtra1.c周りと多重実装になっているのを何とかする
  */
-void player_vulnerability_flags(player_type *creature_ptr, BIT_FLAGS *flags)
-{
+void player_vulnerability_flags(player_type* creature_ptr, BIT_FLAGS* flags) {
     for (int i = 0; i < TR_FLAG_SIZE; i++)
         flags[i] = 0L;
 

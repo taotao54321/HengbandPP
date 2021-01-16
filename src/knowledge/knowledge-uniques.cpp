@@ -16,7 +16,7 @@
 typedef struct unique_list_type {
     bool is_alive;
     u16b why;
-    IDX *who;
+    IDX* who;
     int num_uniques[10];
     int num_uniques_surface;
     int num_uniques_over100;
@@ -25,8 +25,7 @@ typedef struct unique_list_type {
     int n;
 } unique_list_type;
 
-unique_list_type *initialize_unique_lsit_type(unique_list_type *unique_list_ptr, bool is_alive)
-{
+unique_list_type* initialize_unique_lsit_type(unique_list_type* unique_list_ptr, bool is_alive) {
     unique_list_ptr->is_alive = is_alive;
     unique_list_ptr->why = 2;
     unique_list_ptr->num_uniques_surface = 0;
@@ -47,8 +46,7 @@ unique_list_type *initialize_unique_lsit_type(unique_list_type *unique_list_ptr,
  * @return is_aliveの条件に見合うユニークがいたらTRUE、それ以外はFALSE
  * @details 闘技場のモンスターとは再戦できないので、生きているなら表示から外す
  */
-static bool sweep_uniques(monster_race *r_ptr, bool is_alive)
-{
+static bool sweep_uniques(monster_race* r_ptr, bool is_alive) {
     if (!r_ptr->name)
         return FALSE;
 
@@ -66,7 +64,8 @@ static bool sweep_uniques(monster_race *r_ptr, bool is_alive)
     if (is_alive) {
         if (r_ptr->max_num == 0)
             return FALSE;
-    } else {
+    }
+    else {
         if (r_ptr->max_num > 0)
             return FALSE;
     }
@@ -74,8 +73,7 @@ static bool sweep_uniques(monster_race *r_ptr, bool is_alive)
     return TRUE;
 }
 
-static void display_uniques(unique_list_type *unique_list_ptr, FILE *fff)
-{
+static void display_uniques(unique_list_type* unique_list_ptr, FILE* fff) {
     if (unique_list_ptr->num_uniques_surface) {
         concptr surface_desc = unique_list_ptr->is_alive ? _("     地上  生存: %3d体\n", "      Surface  alive: %3d\n")
                                                          : _("     地上  撃破: %3d体\n", "      Surface  dead: %3d\n");
@@ -102,14 +100,15 @@ static void display_uniques(unique_list_type *unique_list_ptr, FILE *fff)
         concptr total_desc = unique_list_ptr->is_alive ? _("     合計  生存: %3d体\n\n", "        Total  alive: %3d\n\n")
                                                        : _("     合計  撃破: %3d体\n\n", "        Total  dead: %3d\n\n");
         fprintf(fff, total_desc, unique_list_ptr->num_uniques_total);
-    } else {
+    }
+    else {
         concptr no_unique_desc = unique_list_ptr->is_alive ? _("現在は既知の生存ユニークはいません。\n", "No known uniques alive.\n")
                                                            : _("現在は既知の撃破ユニークはいません。\n", "No known uniques dead.\n");
         fputs(no_unique_desc, fff);
     }
 
     for (int k = 0; k < unique_list_ptr->n; k++) {
-        monster_race *r_ptr = &r_info[unique_list_ptr->who[k]];
+        monster_race* r_ptr = &r_info[unique_list_ptr->who[k]];
         fprintf(fff, _("     %s (レベル%d)\n", "     %s (level %d)\n"), r_name + r_ptr->name, (int)r_ptr->level);
     }
 }
@@ -120,18 +119,17 @@ static void display_uniques(unique_list_type *unique_list_ptr, FILE *fff)
  * @param is_alive 生きているユニークのリストならばTRUE、撃破したユニークのリストならばFALSE
  * @return なし
  */
-void do_cmd_knowledge_uniques(player_type *creature_ptr, bool is_alive)
-{
+void do_cmd_knowledge_uniques(player_type* creature_ptr, bool is_alive) {
     unique_list_type tmp_list;
-    unique_list_type *unique_list_ptr = initialize_unique_lsit_type(&tmp_list, is_alive);
-    FILE *fff = NULL;
+    unique_list_type* unique_list_ptr = initialize_unique_lsit_type(&tmp_list, is_alive);
+    FILE* fff = NULL;
     GAME_TEXT file_name[FILE_NAME_SIZE];
     if (!open_temporary_file(&fff, file_name))
         return;
 
     C_MAKE(unique_list_ptr->who, max_r_idx, MONRACE_IDX);
     for (IDX i = 1; i < max_r_idx; i++) {
-        monster_race *r_ptr = &r_info[i];
+        monster_race* r_ptr = &r_info[i];
         if (!sweep_uniques(r_ptr, unique_list_ptr->is_alive))
             continue;
 
@@ -141,9 +139,11 @@ void do_cmd_knowledge_uniques(player_type *creature_ptr, bool is_alive)
                 unique_list_ptr->num_uniques[lev]++;
                 if (unique_list_ptr->max_lev < lev)
                     unique_list_ptr->max_lev = lev;
-            } else
+            }
+            else
                 unique_list_ptr->num_uniques_over100++;
-        } else
+        }
+        else
             unique_list_ptr->num_uniques_surface++;
 
         unique_list_ptr->who[unique_list_ptr->n++] = i;

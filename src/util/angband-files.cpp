@@ -13,13 +13,12 @@
  *
  * Fake "usleep()" function grabbed from the inl netrek server -cba
  */
-int usleep(huge usecs)
-{
+int usleep(huge usecs) {
     struct timeval timer;
 
     int nfds = 0;
 
-    fd_set *no_fds = NULL;
+    fd_set* no_fds = NULL;
     if (usecs > 4000000L)
         core(_("不当な usleep() 呼び出し", "Illegal usleep() call"));
 
@@ -38,16 +37,15 @@ int usleep(huge usecs)
  * Hack -- External functions
  */
 #ifdef SET_UID
-extern struct passwd *getpwuid(uid_t uid);
-extern struct passwd *getpwnam(concptr name);
+extern struct passwd* getpwuid(uid_t uid);
+extern struct passwd* getpwnam(concptr name);
 #endif
 
 /*
  * Find a default user name from the system.
  */
-void user_name(char *buf, int id)
-{
-    struct passwd *pw;
+void user_name(char* buf, int id) {
+    struct passwd* pw;
     if ((pw = getpwuid(id))) {
         (void)strcpy(buf, pw->pw_name);
         buf[16] = '\0';
@@ -74,8 +72,7 @@ void user_name(char *buf, int id)
  * Replace "~user/" by the home directory of the user named "user"
  * Replace "~/" by the home directory of the current user
  */
-errr path_parse(char *buf, int max, concptr file)
-{
+errr path_parse(char* buf, int max, concptr file) {
     buf[0] = '\0';
     if (!file)
         return -1;
@@ -102,7 +99,7 @@ errr path_parse(char *buf, int max, concptr file)
     if (u[0] == '\0')
         u = getlogin();
 
-    struct passwd *pw;
+    struct passwd* pw;
     if (u)
         pw = getpwnam(u);
     else
@@ -125,8 +122,7 @@ errr path_parse(char *buf, int max, concptr file)
  * This requires no special processing on simple machines,
  * except for verifying the size of the filename.
  */
-errr path_parse(char *buf, int max, concptr file)
-{
+errr path_parse(char* buf, int max, concptr file) {
     (void)strnfmt(buf, max, "%s", file);
     return 0;
 }
@@ -139,8 +135,7 @@ errr path_parse(char *buf, int max, concptr file)
  *
  * This filename is always in "system-specific" form.
  */
-static errr path_temp(char *buf, int max)
-{
+static errr path_temp(char* buf, int max) {
     concptr s = tmpnam(NULL);
     if (!s)
         return -1;
@@ -173,15 +168,17 @@ static errr path_temp(char *buf, int max)
  * Note that this function yields a path which must be "parsed"
  * using the "parse" function above.
  */
-errr path_build(char *buf, int max, concptr path, concptr file)
-{
+errr path_build(char* buf, int max, concptr path, concptr file) {
     if (file[0] == '~') {
         (void)strnfmt(buf, max, "%s", file);
-    } else if (prefix(file, PATH_SEP) && !streq(PATH_SEP, "")) {
+    }
+    else if (prefix(file, PATH_SEP) && !streq(PATH_SEP, "")) {
         (void)strnfmt(buf, max, "%s", file);
-    } else if (!path[0]) {
+    }
+    else if (!path[0]) {
         (void)strnfmt(buf, max, "%s", file);
-    } else {
+    }
+    else {
         (void)strnfmt(buf, max, "%s%s%s", path, PATH_SEP, file);
     }
 
@@ -191,8 +188,7 @@ errr path_build(char *buf, int max, concptr path, concptr file)
 /*
  * Hack -- replacement for "fopen()"
  */
-FILE *angband_fopen(concptr file, concptr mode)
-{
+FILE* angband_fopen(concptr file, concptr mode) {
     char buf[1024];
     if (path_parse(buf, 1024, file))
         return (NULL);
@@ -203,8 +199,7 @@ FILE *angband_fopen(concptr file, concptr mode)
 /*
  * Hack -- replacement for "fclose()"
  */
-errr angband_fclose(FILE *fff)
-{
+errr angband_fclose(FILE* fff) {
     if (!fff)
         return -1;
     if (fclose(fff) == EOF)
@@ -213,8 +208,7 @@ errr angband_fclose(FILE *fff)
 }
 
 #ifdef HAVE_MKSTEMP
-FILE *angband_fopen_temp(char *buf, int max)
-{
+FILE* angband_fopen_temp(char* buf, int max) {
     strncpy(buf, "/tmp/anXXXXXX", max);
     int fd = mkstemp(buf);
     if (fd < 0)
@@ -223,8 +217,7 @@ FILE *angband_fopen_temp(char *buf, int max)
     return (fdopen(fd, "w"));
 }
 #else /* HAVE_MKSTEMP */
-FILE *angband_fopen_temp(char *buf, int max)
-{
+FILE* angband_fopen_temp(char* buf, int max) {
     if (path_temp(buf, max))
         return (NULL);
     return (angband_fopen(buf, "w"));
@@ -238,10 +231,9 @@ FILE *angband_fopen_temp(char *buf, int max)
  *
  * Process tabs, strip internal non-printables
  */
-errr angband_fgets(FILE *fff, char *buf, huge n)
-{
+errr angband_fgets(FILE* fff, char* buf, huge n) {
     huge i = 0;
-    char *s;
+    char* s;
     char tmp[1024];
 
     if (fgets(tmp, 1024, fff)) {
@@ -252,7 +244,8 @@ errr angband_fgets(FILE *fff, char *buf, huge n)
             if (*s == '\n') {
                 buf[i] = '\0';
                 return 0;
-            } else if (*s == '\t') {
+            }
+            else if (*s == '\t') {
                 if (i + 8 >= n)
                     break;
 
@@ -266,7 +259,8 @@ errr angband_fgets(FILE *fff, char *buf, huge n)
                     break;
                 buf[i++] = *s++;
                 buf[i++] = *s;
-            } else if (iskana(*s)) {
+            }
+            else if (iskana(*s)) {
                 /* 半角かなに対応 */
                 buf[i++] = *s;
                 if (i >= n)
@@ -293,8 +287,7 @@ errr angband_fgets(FILE *fff, char *buf, huge n)
  * Dump a string, plus a newline, to a file
  * Process internal weirdness?
  */
-errr angband_fputs(FILE *fff, concptr buf, huge n)
-{
+errr angband_fputs(FILE* fff, concptr buf, huge n) {
     n = n ? n : 0;
     (void)fprintf(fff, "%s\n", buf);
     return 0;
@@ -310,8 +303,7 @@ errr angband_fputs(FILE *fff, concptr buf, huge n)
 /*
  * Hack -- attempt to delete a file
  */
-errr fd_kill(concptr file)
-{
+errr fd_kill(concptr file) {
     char buf[1024];
     if (path_parse(buf, 1024, file))
         return -1;
@@ -323,8 +315,7 @@ errr fd_kill(concptr file)
 /*
  * Hack -- attempt to move a file
  */
-errr fd_move(concptr file, concptr what)
-{
+errr fd_move(concptr file, concptr what) {
     char buf[1024];
     char aux[1024];
     if (path_parse(buf, 1024, file))
@@ -339,8 +330,7 @@ errr fd_move(concptr file, concptr what)
 /*
  * Hack -- attempt to copy a file
  */
-errr fd_copy(concptr file, concptr what)
-{
+errr fd_copy(concptr file, concptr what) {
     char buf[1024];
     char aux[1024];
     int read_num;
@@ -384,8 +374,7 @@ errr fd_copy(concptr file, concptr what)
  * This function should fail if the file already exists
  * Note that we assume that the file should be "binary"
  */
-int fd_make(concptr file, BIT_FLAGS mode)
-{
+int fd_make(concptr file, BIT_FLAGS mode) {
     char buf[1024];
     if (path_parse(buf, 1024, file))
         return -1;
@@ -398,8 +387,7 @@ int fd_make(concptr file, BIT_FLAGS mode)
  *
  * Note that we assume that the file should be "binary"
  */
-int fd_open(concptr file, int flags)
-{
+int fd_open(concptr file, int flags) {
     char buf[1024];
     if (path_parse(buf, 1024, file))
         return -1;
@@ -412,8 +400,7 @@ int fd_open(concptr file, int flags)
  *
  * Legal lock types -- F_UNLCK, F_RDLCK, F_WRLCK
  */
-errr fd_lock(int fd, int what)
-{
+errr fd_lock(int fd, int what) {
     what = what ? what : 0;
     if (fd < 0)
         return -1;
@@ -421,7 +408,8 @@ errr fd_lock(int fd, int what)
 #if defined(SET_UID) && defined(LOCK_UN) && defined(LOCK_EX)
     if (what == F_UNLCK) {
         (void)flock(fd, LOCK_UN);
-    } else {
+    }
+    else {
         if (flock(fd, LOCK_EX) != 0)
             return 1;
     }
@@ -433,8 +421,7 @@ errr fd_lock(int fd, int what)
 /*
  * Hack -- attempt to seek on a file descriptor
  */
-errr fd_seek(int fd, huge n)
-{
+errr fd_seek(int fd, huge n) {
     if (fd < 0)
         return -1;
 
@@ -448,8 +435,7 @@ errr fd_seek(int fd, huge n)
 /*
  * Hack -- attempt to truncate a file descriptor
  */
-errr fd_chop(int fd, huge n)
-{
+errr fd_chop(int fd, huge n) {
     n = n ? n : 0;
     return fd >= 0 ? 0 : -1;
 }
@@ -457,8 +443,7 @@ errr fd_chop(int fd, huge n)
 /*
  * Hack -- attempt to read data from a file descriptor
  */
-errr fd_read(int fd, char *buf, huge n)
-{
+errr fd_read(int fd, char* buf, huge n) {
     if (fd < 0)
         return -1;
 #ifndef SET_UID
@@ -480,8 +465,7 @@ errr fd_read(int fd, char *buf, huge n)
 /*
  * Hack -- Attempt to write data to a file descriptor
  */
-errr fd_write(int fd, concptr buf, huge n)
-{
+errr fd_write(int fd, concptr buf, huge n) {
     if (fd < 0)
         return -1;
 
@@ -504,8 +488,7 @@ errr fd_write(int fd, concptr buf, huge n)
 /*
  * Hack -- attempt to close a file descriptor
  */
-errr fd_close(int fd)
-{
+errr fd_close(int fd) {
     if (fd < 0)
         return -1;
 

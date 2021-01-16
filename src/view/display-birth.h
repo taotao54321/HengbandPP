@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void birth_put_stats(player_type *creature_ptr);
+void birth_put_stats(player_type* creature_ptr);

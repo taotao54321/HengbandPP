@@ -42,8 +42,7 @@
  * @return アイテムを拾えるならばTRUEを返す。
  * @details assuming mode = (USE_EQUIP | USE_INVEN | USE_FLOOR).
  */
-bool can_get_item(player_type *owner_ptr, tval_type tval)
-{
+bool can_get_item(player_type* owner_ptr, tval_type tval) {
     for (int j = 0; j < INVEN_TOTAL; j++)
         if (item_tester_okay(owner_ptr, &owner_ptr->inventory_list[j], tval))
             return TRUE;
@@ -57,8 +56,7 @@ bool can_get_item(player_type *owner_ptr, tval_type tval)
  * @brief 床上のアイテムを拾う選択用サブルーチン
  * @return プレイヤーによりアイテムが選択されたならTRUEを返す。
  */
-static bool py_pickup_floor_aux(player_type *owner_ptr)
-{
+static bool py_pickup_floor_aux(player_type* owner_ptr) {
     OBJECT_IDX this_o_idx;
     OBJECT_IDX item;
     item_tester_hook = check_store_item_to_inventory;
@@ -80,11 +78,10 @@ static bool py_pickup_floor_aux(player_type *owner_ptr)
  * @details
  * This is called by py_pickup() when easy_floor is TRUE.
  */
-void py_pickup_floor(player_type *owner_ptr, bool pickup)
-{
+void py_pickup_floor(player_type* owner_ptr, bool pickup) {
     OBJECT_IDX this_o_idx, next_o_idx = 0;
     GAME_TEXT o_name[MAX_NLEN];
-    object_type *o_ptr;
+    object_type* o_ptr;
     int floor_num = 0;
     OBJECT_IDX floor_o_idx = 0;
     int can_pickup = 0;
@@ -100,7 +97,8 @@ void py_pickup_floor(player_type *owner_ptr, bool pickup)
             owner_ptr->window |= (PW_PLAYER);
             delete_object_idx(owner_ptr, this_o_idx);
             continue;
-        } else if (o_ptr->marked & OM_NOMSG) {
+        }
+        else if (o_ptr->marked & OM_NOMSG) {
             o_ptr->marked &= ~(OM_NOMSG);
             continue;
         }
@@ -120,7 +118,8 @@ void py_pickup_floor(player_type *owner_ptr, bool pickup)
             o_ptr = &owner_ptr->current_floor_ptr->o_list[floor_o_idx];
             describe_flavor(owner_ptr, o_name, o_ptr, 0);
             msg_format(_("%sがある。", "You see %s."), o_name);
-        } else
+        }
+        else
             msg_format(_("%d 個のアイテムの山がある。", "You see a pile of %d items."), floor_num);
 
         return;
@@ -131,7 +130,8 @@ void py_pickup_floor(player_type *owner_ptr, bool pickup)
             o_ptr = &owner_ptr->current_floor_ptr->o_list[floor_o_idx];
             describe_flavor(owner_ptr, o_name, o_ptr, 0);
             msg_format(_("ザックには%sを入れる隙間がない。", "You have no room for %s."), o_name);
-        } else
+        }
+        else
             msg_print(_("ザックには床にあるどのアイテムも入らない。", "You have no room for any of the objects on the floor."));
 
         return;
@@ -172,8 +172,7 @@ void py_pickup_floor(player_type *owner_ptr, bool pickup)
  * Add the given dungeon object to the character's inventory.\n
  * Delete the object afterwards.\n
  */
-void describe_pickup_item(player_type *owner_ptr, OBJECT_IDX o_idx)
-{
+void describe_pickup_item(player_type* owner_ptr, OBJECT_IDX o_idx) {
 #ifdef JP
     GAME_TEXT o_name[MAX_NLEN];
     GAME_TEXT old_name[MAX_NLEN];
@@ -183,7 +182,7 @@ void describe_pickup_item(player_type *owner_ptr, OBJECT_IDX o_idx)
     GAME_TEXT o_name[MAX_NLEN];
 #endif
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &owner_ptr->current_floor_ptr->o_list[o_idx];
 
 #ifdef JP
@@ -209,13 +208,16 @@ void describe_pickup_item(player_type *owner_ptr, OBJECT_IDX o_idx)
         msg_format("こうして、%sは『クリムゾン』を手に入れた。", owner_ptr->name);
         msg_print("しかし今、『混沌のサーペント』の放ったモンスターが、");
         msg_format("%sに襲いかかる．．．", owner_ptr->name);
-    } else {
+    }
+    else {
         if (plain_pickup) {
             msg_format("%s(%c)を持っている。", o_name, index_to_label(slot));
-        } else {
+        }
+        else {
             if (o_ptr->number > hirottakazu) {
                 msg_format("%s拾って、%s(%c)を持っている。", kazu_str, o_name, index_to_label(slot));
-            } else {
+            }
+            else {
                 msg_format("%s(%c)を拾った。", o_name, index_to_label(slot));
             }
         }
@@ -236,14 +238,13 @@ void describe_pickup_item(player_type *owner_ptr, OBJECT_IDX o_idx)
  * @param pickup 自動拾い処理を行うならばTRUEとする
  * @return なし
  */
-void carry(player_type *creature_ptr, bool pickup)
-{
+void carry(player_type* creature_ptr, bool pickup) {
     verify_panel(creature_ptr);
     creature_ptr->update |= PU_MONSTERS;
     creature_ptr->redraw |= PR_MAP;
     creature_ptr->window |= PW_OVERHEAD;
     handle_stuff(creature_ptr);
-    grid_type *g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
+    grid_type* g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
     autopick_pickup_items(creature_ptr, g_ptr);
     if (easy_floor) {
         py_pickup_floor(creature_ptr, pickup);
@@ -252,7 +253,7 @@ void carry(player_type *creature_ptr, bool pickup)
 
     OBJECT_IDX next_o_idx = 0;
     for (OBJECT_IDX this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->current_floor_ptr->o_list[this_o_idx];
         GAME_TEXT o_name[MAX_NLEN];
         describe_flavor(creature_ptr, o_name, o_ptr, 0);

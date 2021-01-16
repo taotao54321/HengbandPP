@@ -10,8 +10,7 @@
 /*!
  * @brief ファイルのドロップパーミッションチェック / Hack -- drop permissions
  */
-void safe_setuid_drop(void)
-{
+void safe_setuid_drop(void) {
 #ifdef SET_UID
 #ifdef SAFE_SETUID
 #ifdef SAFE_SETUID_POSIX
@@ -37,8 +36,7 @@ void safe_setuid_drop(void)
 /*!
  * @brief ファイルのグラブパーミッションチェック / Hack -- grab permissions
  */
-void safe_setuid_grab(player_type *player_ptr)
-{
+void safe_setuid_grab(player_type* player_ptr) {
 #ifdef SET_UID
 #ifdef SAFE_SETUID
 #ifdef SAFE_SETUID_POSIX

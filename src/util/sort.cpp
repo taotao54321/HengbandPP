@@ -18,9 +18,8 @@
  * @param ang_sort_swap スワップ用の関数ポインタ
  * @return なし
  */
-static void exe_ang_sort(player_type *player_ptr, vptr u, vptr v, int p, int q, bool (*ang_sort_comp)(player_type *, vptr, vptr, int, int),
-    void (*ang_sort_swap)(player_type *, vptr, vptr, int, int))
-{
+static void exe_ang_sort(player_type* player_ptr, vptr u, vptr v, int p, int q, bool (*ang_sort_comp)(player_type*, vptr, vptr, int, int),
+    void (*ang_sort_swap)(player_type*, vptr, vptr, int, int)) {
     if (p >= q)
         return;
 
@@ -61,9 +60,8 @@ static void exe_ang_sort(player_type *player_ptr, vptr u, vptr v, int p, int q, 
  * @param ang_sort_swap スワップ用の関数ポインタ
  * @return なし
  */
-void ang_sort(player_type *player_ptr, vptr u, vptr v, int n, bool (*ang_sort_comp)(player_type *, vptr, vptr, int, int),
-    void (*ang_sort_swap)(player_type *, vptr, vptr, int, int))
-{
+void ang_sort(player_type* player_ptr, vptr u, vptr v, int n, bool (*ang_sort_comp)(player_type*, vptr, vptr, int, int),
+    void (*ang_sort_swap)(player_type*, vptr, vptr, int, int)) {
     exe_ang_sort(player_ptr, u, v, 0, n - 1, ang_sort_comp, ang_sort_swap);
 }
 
@@ -73,10 +71,9 @@ void ang_sort(player_type *player_ptr, vptr u, vptr v, int n, bool (*ang_sort_co
  * We use "u" and "v" to point to arrays of "x" and "y" positions,
  * and sort the arrays by double-distance to the player.
  */
-bool ang_sort_comp_distance(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
-    POSITION *x = (POSITION *)(u);
-    POSITION *y = (POSITION *)(v);
+bool ang_sort_comp_distance(player_type* player_ptr, vptr u, vptr v, int a, int b) {
+    POSITION* x = (POSITION*)(u);
+    POSITION* y = (POSITION*)(v);
 
     /* Absolute distance components */
     POSITION kx = x[a];
@@ -110,14 +107,13 @@ bool ang_sort_comp_distance(player_type *player_ptr, vptr u, vptr v, int a, int 
  * We use "u" and "v" to point to arrays of "x" and "y" positions,
  * and sort the arrays by level of monster
  */
-bool ang_sort_comp_importance(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
-    POSITION *x = (POSITION *)(u);
-    POSITION *y = (POSITION *)(v);
-    grid_type *ca_ptr = &player_ptr->current_floor_ptr->grid_array[y[a]][x[a]];
-    grid_type *cb_ptr = &player_ptr->current_floor_ptr->grid_array[y[b]][x[b]];
-    monster_type *ma_ptr = &player_ptr->current_floor_ptr->m_list[ca_ptr->m_idx];
-    monster_type *mb_ptr = &player_ptr->current_floor_ptr->m_list[cb_ptr->m_idx];
+bool ang_sort_comp_importance(player_type* player_ptr, vptr u, vptr v, int a, int b) {
+    POSITION* x = (POSITION*)(u);
+    POSITION* y = (POSITION*)(v);
+    grid_type* ca_ptr = &player_ptr->current_floor_ptr->grid_array[y[a]][x[a]];
+    grid_type* cb_ptr = &player_ptr->current_floor_ptr->grid_array[y[b]][x[b]];
+    monster_type* ma_ptr = &player_ptr->current_floor_ptr->m_list[ca_ptr->m_idx];
+    monster_type* mb_ptr = &player_ptr->current_floor_ptr->m_list[cb_ptr->m_idx];
     monster_race *ap_ra_ptr, *ap_rb_ptr;
 
     /* The player grid */
@@ -203,13 +199,12 @@ bool ang_sort_comp_importance(player_type *player_ptr, vptr u, vptr v, int a, in
  * We use "u" and "v" to point to arrays of "x" and "y" positions,
  * and sort the arrays by distance to the player.
  */
-void ang_sort_swap_distance(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+void ang_sort_swap_distance(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
 
-    POSITION *x = (POSITION *)(u);
-    POSITION *y = (POSITION *)(v);
+    POSITION* x = (POSITION*)(u);
+    POSITION* y = (POSITION*)(v);
 
     POSITION temp = x[a];
     x[a] = x[b];
@@ -226,13 +221,12 @@ void ang_sort_swap_distance(player_type *player_ptr, vptr u, vptr v, int a, int 
  * We use "u" to point to array of monster indexes,
  * and "v" to select the type of sorting to perform on "u".
  */
-bool ang_sort_art_comp(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+bool ang_sort_art_comp(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
 
-    u16b *who = (u16b *)(u);
-    u16b *why = (u16b *)(v);
+    u16b* who = (u16b*)(u);
+    u16b* why = (u16b*)(v);
 
     int w1 = who[a];
     int w2 = who[b];
@@ -291,37 +285,34 @@ bool ang_sort_art_comp(player_type *player_ptr, vptr u, vptr v, int a, int b)
  * We use "u" to point to array of monster indexes,
  * and "v" to select the type of sorting to perform.
  */
-void ang_sort_art_swap(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+void ang_sort_art_swap(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
     (void)v;
 
-    u16b *who = (u16b *)(u);
+    u16b* who = (u16b*)(u);
     u16b holder = who[a];
     who[a] = who[b];
     who[b] = holder;
 }
 
-bool ang_sort_comp_quest_num(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+bool ang_sort_comp_quest_num(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
     (void)v;
 
-    QUEST_IDX *q_num = (QUEST_IDX *)u;
-    quest_type *qa = &quest[q_num[a]];
-    quest_type *qb = &quest[q_num[b]];
+    QUEST_IDX* q_num = (QUEST_IDX*)u;
+    quest_type* qa = &quest[q_num[a]];
+    quest_type* qb = &quest[q_num[b]];
     return (qa->comptime != qb->comptime) ? (qa->comptime < qb->comptime) : (qa->level <= qb->level);
 }
 
-void ang_sort_swap_quest_num(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+void ang_sort_swap_quest_num(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
     (void)v;
 
-    QUEST_IDX *q_num = (QUEST_IDX *)u;
+    QUEST_IDX* q_num = (QUEST_IDX*)u;
     QUEST_IDX tmp = q_num[a];
     q_num[a] = q_num[b];
     q_num[b] = tmp;
@@ -335,20 +326,19 @@ void ang_sort_swap_quest_num(player_type *player_ptr, vptr u, vptr v, int a, int
  * @param b 所持品ID2
  * @return 1の方が大であればTRUE
  */
-bool ang_sort_comp_pet(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+bool ang_sort_comp_pet(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)v;
 
-    u16b *who = (u16b *)(u);
+    u16b* who = (u16b*)(u);
 
     int w1 = who[a];
     int w2 = who[b];
 
-    monster_type *m_ptr1 = &player_ptr->current_floor_ptr->m_list[w1];
-    monster_type *m_ptr2 = &player_ptr->current_floor_ptr->m_list[w2];
-    monster_race *r_ptr1 = &r_info[m_ptr1->r_idx];
-    monster_race *r_ptr2 = &r_info[m_ptr2->r_idx];
+    monster_type* m_ptr1 = &player_ptr->current_floor_ptr->m_list[w1];
+    monster_type* m_ptr2 = &player_ptr->current_floor_ptr->m_list[w2];
+    monster_race* r_ptr1 = &r_info[m_ptr1->r_idx];
+    monster_race* r_ptr2 = &r_info[m_ptr2->r_idx];
 
     if (m_ptr1->nickname && !m_ptr2->nickname)
         return TRUE;
@@ -388,13 +378,12 @@ bool ang_sort_comp_pet(player_type *player_ptr, vptr u, vptr v, int a, int b)
  * We use "u" to point to array of monster indexes,
  * and "v" to select the type of sorting to perform on "u".
  */
-bool ang_sort_comp_hook(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+bool ang_sort_comp_hook(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
 
-    u16b *who = (u16b *)(u);
-    u16b *why = (u16b *)(v);
+    u16b* who = (u16b*)(u);
+    u16b* why = (u16b*)(v);
 
     int w1 = who[a];
     int w2 = who[b];
@@ -469,13 +458,12 @@ bool ang_sort_comp_hook(player_type *player_ptr, vptr u, vptr v, int a, int b)
  * We use "u" to point to array of monster indexes,
  * and "v" to select the type of sorting to perform.
  */
-void ang_sort_swap_hook(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+void ang_sort_swap_hook(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
     (void)v;
 
-    u16b *who = (u16b *)(u);
+    u16b* who = (u16b*)(u);
     u16b holder;
 
     holder = who[a];
@@ -486,19 +474,18 @@ void ang_sort_swap_hook(player_type *player_ptr, vptr u, vptr v, int a, int b)
 /*
  * hook function to sort monsters by level
  */
-bool ang_sort_comp_monster_level(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+bool ang_sort_comp_monster_level(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
     (void)v;
 
-    u16b *who = (u16b *)(u);
+    u16b* who = (u16b*)(u);
 
     int w1 = who[a];
     int w2 = who[b];
 
-    monster_race *r_ptr1 = &r_info[w1];
-    monster_race *r_ptr2 = &r_info[w2];
+    monster_race* r_ptr1 = &r_info[w1];
+    monster_race* r_ptr2 = &r_info[w2];
 
     if (r_ptr2->level > r_ptr1->level)
         return TRUE;
@@ -523,20 +510,19 @@ bool ang_sort_comp_monster_level(player_type *player_ptr, vptr u, vptr v, int a,
  * @param b 比較対象のモンスターID2
  * @return 2番目が大ならばTRUEを返す
  */
-bool ang_sort_comp_pet_dismiss(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+bool ang_sort_comp_pet_dismiss(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)v;
 
-    u16b *who = (u16b *)(u);
+    u16b* who = (u16b*)(u);
 
     int w1 = who[a];
     int w2 = who[b];
 
-    monster_type *m_ptr1 = &player_ptr->current_floor_ptr->m_list[w1];
-    monster_type *m_ptr2 = &player_ptr->current_floor_ptr->m_list[w2];
-    monster_race *r_ptr1 = &r_info[m_ptr1->r_idx];
-    monster_race *r_ptr2 = &r_info[m_ptr2->r_idx];
+    monster_type* m_ptr1 = &player_ptr->current_floor_ptr->m_list[w1];
+    monster_type* m_ptr2 = &player_ptr->current_floor_ptr->m_list[w2];
+    monster_race* r_ptr1 = &r_info[m_ptr1->r_idx];
+    monster_race* r_ptr2 = &r_info[m_ptr2->r_idx];
 
     if (w1 == player_ptr->riding)
         return TRUE;
@@ -585,13 +571,12 @@ bool ang_sort_comp_pet_dismiss(player_type *player_ptr, vptr u, vptr v, int a, i
  * @param b スワップするモンスター種族のID2
  * @return aの方が大きければtrue
  */
-bool ang_sort_comp_cave_temp(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+bool ang_sort_comp_cave_temp(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
     (void)v;
 
-    grid_template_type *who = (grid_template_type *)(u);
+    grid_template_type* who = (grid_template_type*)(u);
 
     u16b o1 = who[a].occurrence;
     u16b o2 = who[b].occurrence;
@@ -607,13 +592,12 @@ bool ang_sort_comp_cave_temp(player_type *player_ptr, vptr u, vptr v, int a, int
  * @param b スワップするモンスター種族のID2
  * @return なし
  */
-void ang_sort_swap_cave_temp(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+void ang_sort_swap_cave_temp(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
     (void)v;
 
-    grid_template_type *who = (grid_template_type *)(u);
+    grid_template_type* who = (grid_template_type*)(u);
     grid_template_type holder;
 
     holder = who[a];
@@ -630,18 +614,17 @@ void ang_sort_swap_cave_temp(player_type *player_ptr, vptr u, vptr v, int a, int
  * @param b 比較したいモンスター種族ID2
  * @return 2が大きければTRUEを返す
  */
-bool ang_sort_comp_evol_tree(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+bool ang_sort_comp_evol_tree(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
     (void)v;
 
-    int **evol_tree = (int **)u;
+    int** evol_tree = (int**)u;
 
     int w1 = evol_tree[a][0];
     int w2 = evol_tree[b][0];
-    monster_race *r1_ptr = &r_info[w1];
-    monster_race *r2_ptr = &r_info[w2];
+    monster_race* r1_ptr = &r_info[w1];
+    monster_race* r2_ptr = &r_info[w2];
 
     /* Used tree first */
     if (w1 && !w2)
@@ -677,14 +660,13 @@ bool ang_sort_comp_evol_tree(player_type *player_ptr, vptr u, vptr v, int a, int
  * @param b スワップしたい木構造2
  * @return 2が大きければTRUEを返す
  */
-void ang_sort_swap_evol_tree(player_type *player_ptr, vptr u, vptr v, int a, int b)
-{
+void ang_sort_swap_evol_tree(player_type* player_ptr, vptr u, vptr v, int a, int b) {
     /* Unused */
     (void)player_ptr;
     (void)v;
 
-    int **evol_tree = (int **)u;
-    int *holder;
+    int** evol_tree = (int**)u;
+    int* holder;
 
     holder = evol_tree[a];
     evol_tree[a] = evol_tree[b];

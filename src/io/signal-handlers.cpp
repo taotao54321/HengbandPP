@@ -27,8 +27,7 @@ s16b signal_count; /* Hack -- Count interupts */
  * @details
  * Actually suspend the game, and then resume cleanly
  */
-static void handle_signal_suspend(int sig)
-{
+static void handle_signal_suspend(int sig) {
     (void)signal(sig, SIG_IGN);
 #ifdef SIGSTOP
     term_fresh();
@@ -58,8 +57,7 @@ static void handle_signal_suspend(int sig)
  * whenever the user enters a keypress, or something like that.
  * </pre>
  */
-static void handle_signal_simple(int sig)
-{
+static void handle_signal_simple(int sig) {
     (void)signal(sig, SIG_IGN);
     if (!current_world_ptr->character_generated || current_world_ptr->character_saved)
         quit(NULL);
@@ -72,7 +70,8 @@ static void handle_signal_simple(int sig)
         clear_mon_lite(p_ptr->current_floor_ptr);
         close_game(p_ptr);
         quit(_("強制終了", "interrupt"));
-    } else if (signal_count >= 5) {
+    }
+    else if (signal_count >= 5) {
         (void)strcpy(p_ptr->died_from, _("強制終了中", "Interrupting"));
         forget_lite(p_ptr->current_floor_ptr);
         forget_view(p_ptr->current_floor_ptr);
@@ -82,12 +81,14 @@ static void handle_signal_simple(int sig)
         p_ptr->leaving = TRUE;
         close_game(p_ptr);
         quit(_("強制終了", "interrupt"));
-    } else if (signal_count >= 4) {
+    }
+    else if (signal_count >= 4) {
         term_xtra(TERM_XTRA_NOISE, 0);
         term_erase(0, 0, 255);
         term_putstr(0, 0, -1, TERM_WHITE, _("熟慮の上の自殺！", "Contemplating suicide!"));
         term_fresh();
-    } else if (signal_count >= 2) {
+    }
+    else if (signal_count >= 2) {
         term_xtra(TERM_XTRA_NOISE, 0);
     }
 
@@ -112,8 +113,7 @@ static void handle_signal_simple(int sig)
  * whenever the user enters a keypress, or something like that.
  * </pre>
  */
-static void handle_signal_abort(int sig)
-{
+static void handle_signal_abort(int sig) {
     int wid, hgt;
     term_get_size(&wid, &hgt);
 
@@ -140,7 +140,8 @@ static void handle_signal_abort(int sig)
 
     if (save_player(p_ptr)) {
         term_putstr(45, hgt - 1, -1, TERM_RED, _("緊急セーブ成功！", "Panic save succeeded!"));
-    } else {
+    }
+    else {
         term_putstr(45, hgt - 1, -1, TERM_RED, _("緊急セーブ失敗！", "Panic save failed!"));
     }
 
@@ -154,8 +155,7 @@ static void handle_signal_abort(int sig)
  * @return なし
  * @details
  */
-void signals_ignore_tstp(void)
-{
+void signals_ignore_tstp(void) {
 #ifdef SIGTSTP
     (void)signal(SIGTSTP, SIG_IGN);
 #endif
@@ -167,8 +167,7 @@ void signals_ignore_tstp(void)
  * @return なし
  * @details
  */
-void signals_handle_tstp(void)
-{
+void signals_handle_tstp(void) {
 #ifdef SIGTSTP
     (void)signal(SIGTSTP, handle_signal_suspend);
 #endif
@@ -180,8 +179,7 @@ void signals_handle_tstp(void)
  * @return なし
  * @details
  */
-void signals_init(void)
-{
+void signals_init(void) {
 #ifdef SIGHUP
     (void)signal(SIGHUP, SIG_IGN);
 #endif
@@ -254,4 +252,3 @@ void signals_init(void)
     (void)signal(SIGPWR, handle_signal_abort);
 #endif
 }
-

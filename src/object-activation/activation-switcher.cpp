@@ -38,8 +38,7 @@
 #include "system/floor-type-definition.h"
 #include "view/display-messages.h"
 
-bool switch_activation(player_type *user_ptr, object_type *o_ptr, const activation_type *const act_ptr, concptr name)
-{
+bool switch_activation(player_type* user_ptr, object_type* o_ptr, const activation_type* const act_ptr, concptr name) {
     switch (act_ptr->index) {
     case ACT_SUNLIGHT:
         return activate_sunlight(user_ptr);

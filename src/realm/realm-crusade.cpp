@@ -37,8 +37,7 @@
  * @param mode 処理内容 (SPELL_NAME / SPELL_DESC / SPELL_INFO / SPELL_CAST)
  * @return SPELL_NAME / SPELL_DESC / SPELL_INFO 時には文字列ポインタを返す。SPELL_CAST時はNULL文字列を返す。
  */
-concptr do_crusade_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mode)
-{
+concptr do_crusade_spell(player_type* caster_ptr, SPELL_IDX spell, spell_type mode) {
     bool name = (mode == SPELL_NAME) ? TRUE : FALSE;
     bool desc = (mode == SPELL_DESC) ? TRUE : FALSE;
     bool info = (mode == SPELL_INFO) ? TRUE : FALSE;
@@ -478,7 +477,8 @@ concptr do_crusade_spell(player_type *caster_ptr, SPELL_IDX spell, spell_type mo
                 if (summon_specific(caster_ptr, (pet ? -1 : 0), caster_ptr->y, caster_ptr->x, (plev * 3) / 2, SUMMON_ANGEL, flg)) {
                     if (pet) {
                         msg_print(_("「ご用でございますか、ご主人様」", "'What is thy bidding... Master?'"));
-                    } else {
+                    }
+                    else {
                         msg_print(_("「我は汝の下僕にあらず！ 悪行者よ、悔い改めよ！」", "Mortal! Repent of thy impiousness."));
                     }
                 }

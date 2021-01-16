@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void change_floor(player_type *creature_ptr);
+void change_floor(player_type* creature_ptr);

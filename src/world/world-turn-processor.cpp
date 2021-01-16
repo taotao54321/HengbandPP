@@ -44,8 +44,7 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void process_world(player_type *player_ptr)
-{
+void process_world(player_type* player_ptr) {
     const s32b A_DAY = TURNS_PER_TICK * TOWN_DAWN;
     s32b prev_turn_in_today = ((current_world_ptr->game_turn - TURNS_PER_TICK) % A_DAY + A_DAY / 4) % A_DAY;
     int prev_min = (1440 * prev_turn_in_today / A_DAY) % 60;
@@ -55,7 +54,7 @@ void process_world(player_type *player_ptr)
     update_dungeon_feeling(player_ptr);
 
     /* 帰還無しモード時のレベルテレポバグ対策 / Fix for level teleport bugs on ironman_downward.*/
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (ironman_downward && (player_ptr->dungeon_idx != DUNGEON_ANGBAND && player_ptr->dungeon_idx != 0)) {
         floor_ptr->dun_level = 0;
         player_ptr->dungeon_idx = 0;
@@ -70,7 +69,7 @@ void process_world(player_type *player_ptr)
         int number_mon = 0;
         for (int i2 = 0; i2 < floor_ptr->width; ++i2) {
             for (int j2 = 0; j2 < floor_ptr->height; j2++) {
-                grid_type *g_ptr = &floor_ptr->grid_array[j2][i2];
+                grid_type* g_ptr = &floor_ptr->grid_array[j2][i2];
                 if ((g_ptr->m_idx > 0) && (g_ptr->m_idx != player_ptr->riding)) {
                     number_mon++;
                     win_m_idx = g_ptr->m_idx;
@@ -83,9 +82,10 @@ void process_world(player_type *player_ptr)
             msg_print(NULL);
             player_ptr->energy_need = 0;
             update_gambling_monsters(player_ptr);
-        } else if ((number_mon - 1) == 0) {
+        }
+        else if ((number_mon - 1) == 0) {
             GAME_TEXT m_name[MAX_NLEN];
-            monster_type *wm_ptr;
+            monster_type* wm_ptr;
             wm_ptr = &floor_ptr->m_list[win_m_idx];
             monster_desc(player_ptr, m_name, wm_ptr, 0);
             msg_format(_("%sが勝利した！", "%s won!"), m_name);
@@ -95,14 +95,16 @@ void process_world(player_type *player_ptr)
                 msg_print(_("おめでとうございます。", "Congratulations."));
                 msg_format(_("%d＄を受け取った。", "You received %d gold."), battle_odds);
                 player_ptr->au += battle_odds;
-            } else {
+            }
+            else {
                 msg_print(_("残念でした。", "You lost gold."));
             }
 
             msg_print(NULL);
             player_ptr->energy_need = 0;
             update_gambling_monsters(player_ptr);
-        } else if (current_world_ptr->game_turn - floor_ptr->generated_turn == 150 * TURNS_PER_TICK) {
+        }
+        else if (current_world_ptr->game_turn - floor_ptr->generated_turn == 150 * TURNS_PER_TICK) {
             msg_print(_("申し訳ありませんが、この勝負は引き分けとさせていただきます。", "Sorry, but this battle ended in a draw."));
             player_ptr->au += kakekin;
             msg_print(NULL);
@@ -131,7 +133,8 @@ void process_world(player_type *player_ptr)
             else
                 night_falls(player_ptr);
         }
-    } else if ((vanilla_town || (lite_town && !floor_ptr->inside_quest && !player_ptr->phase_out && !floor_ptr->inside_arena)) && floor_ptr->dun_level) {
+    }
+    else if ((vanilla_town || (lite_town && !floor_ptr->inside_quest && !player_ptr->phase_out && !floor_ptr->inside_arena)) && floor_ptr->dun_level) {
         if (!(current_world_ptr->game_turn % (TURNS_PER_TICK * STORE_TICKS))) {
             if (one_in_(STORE_SHUFFLE)) {
                 int n;
@@ -140,7 +143,7 @@ void process_world(player_type *player_ptr)
                 } while ((n == STORE_HOME) || (n == STORE_MUSEUM));
 
                 for (FEAT_IDX i = 1; i < max_f_idx; i++) {
-                    feature_type *f_ptr = &f_info[i];
+                    feature_type* f_ptr = &f_info[i];
                     if (!f_ptr->name)
                         continue;
                     if (!has_flag(f_ptr->flags, FF_STORE))
@@ -239,8 +242,7 @@ void process_world(player_type *player_ptr)
  * Print time
  * @return なし
  */
-void print_time(player_type *player_ptr)
-{
+void print_time(player_type* player_ptr) {
     int day, hour, min;
     c_put_str(TERM_WHITE, "             ", ROW_DAY, COL_DAY);
     extract_day_hour_min(player_ptr, &day, &hour, &min);

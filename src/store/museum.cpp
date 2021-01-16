@@ -14,8 +14,7 @@
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void museum_remove_object(player_type *player_ptr)
-{
+void museum_remove_object(player_type* player_ptr) {
     if (st_ptr->stock_num <= 0) {
         msg_print(_("博物館には何も置いてありません。", "Museum is empty."));
         return;
@@ -33,7 +32,7 @@ void museum_remove_object(player_type *player_ptr)
         return;
 
     item = item + store_top;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &st_ptr->stock[item];
 
     GAME_TEXT o_name[MAX_NLEN];

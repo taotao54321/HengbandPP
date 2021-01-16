@@ -32,8 +32,7 @@
  * @param rad 効力の半径
  * @return ターゲットを指定し、実行したならばTRUEを返す。
  */
-bool cast_wrath_of_the_god(player_type *caster_ptr, HIT_POINT dam, POSITION rad)
-{
+bool cast_wrath_of_the_god(player_type* caster_ptr, HIT_POINT dam, POSITION rad) {
     DIRECTION dir;
     if (!get_aim_dir(caster_ptr, &dir))
         return FALSE;
@@ -106,10 +105,10 @@ bool cast_wrath_of_the_god(player_type *caster_ptr, HIT_POINT dam, POSITION rad)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_tim_sh_holy(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_tim_sh_holy(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -118,11 +117,13 @@ bool set_tim_sh_holy(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tim_sh_holy && !do_dec) {
             if (creature_ptr->tim_sh_holy > v)
                 return FALSE;
-        } else if (!creature_ptr->tim_sh_holy) {
+        }
+        else if (!creature_ptr->tim_sh_holy) {
             msg_print(_("体が聖なるオーラで覆われた。", "You are enveloped by a holy aura!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tim_sh_holy) {
             msg_print(_("聖なるオーラが消えた。", "The holy aura disappeared."));
             notice = TRUE;
@@ -149,10 +150,10 @@ bool set_tim_sh_holy(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す
  * @details 呪術領域でも使えるが、汎用性と行数の兼ね合いを考えて破邪側に入れた
  */
-bool set_tim_eyeeye(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_tim_eyeeye(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -161,11 +162,13 @@ bool set_tim_eyeeye(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->tim_eyeeye && !do_dec) {
             if (creature_ptr->tim_eyeeye > v)
                 return FALSE;
-        } else if (!creature_ptr->tim_eyeeye) {
+        }
+        else if (!creature_ptr->tim_eyeeye) {
             msg_print(_("法の守り手になった気がした！", "You feel like a keeper of commandments!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->tim_eyeeye) {
             msg_print(_("懲罰を執行することができなくなった。", "You no longer feel like a keeper."));
             notice = TRUE;

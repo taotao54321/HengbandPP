@@ -28,10 +28,9 @@
  * Future versions may restrict the ability to target "trappers"
  * and "mimics", but the semantics is a little bit weird.
  */
-bool target_able(player_type *creature_ptr, MONSTER_IDX m_idx)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
-    monster_type *m_ptr = &floor_ptr->m_list[m_idx];
+bool target_able(player_type* creature_ptr, MONSTER_IDX m_idx) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
+    monster_type* m_ptr = &floor_ptr->m_list[m_idx];
     if (!monster_is_valid(m_ptr))
         return FALSE;
 
@@ -53,9 +52,8 @@ bool target_able(player_type *creature_ptr, MONSTER_IDX m_idx)
 /*
  * Determine if a given location is "interesting"
  */
-static bool target_set_accept(player_type *creature_ptr, POSITION y, POSITION x)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+static bool target_set_accept(player_type* creature_ptr, POSITION y, POSITION x) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (!(in_bounds(floor_ptr, y, x)))
         return FALSE;
 
@@ -65,17 +63,17 @@ static bool target_set_accept(player_type *creature_ptr, POSITION y, POSITION x)
     if (creature_ptr->image)
         return FALSE;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &floor_ptr->grid_array[y][x];
     if (g_ptr->m_idx) {
-        monster_type *m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
+        monster_type* m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
         if (m_ptr->ml)
             return TRUE;
     }
 
     OBJECT_IDX next_o_idx = 0;
     for (OBJECT_IDX this_o_idx = g_ptr->o_idx; this_o_idx; this_o_idx = next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         if (o_ptr->marked & OM_FOUND)
@@ -98,15 +96,15 @@ static bool target_set_accept(player_type *creature_ptr, POSITION y, POSITION x)
  *
  * Return the number of target_able monsters in the set.
  */
-void target_set_prepare(player_type *creature_ptr, BIT_FLAGS mode)
-{
+void target_set_prepare(player_type* creature_ptr, BIT_FLAGS mode) {
     POSITION min_hgt, max_hgt, min_wid, max_wid;
     if (mode & TARGET_KILL) {
         min_hgt = MAX((creature_ptr->y - get_max_range(creature_ptr)), 0);
         max_hgt = MIN((creature_ptr->y + get_max_range(creature_ptr)), creature_ptr->current_floor_ptr->height - 1);
         min_wid = MAX((creature_ptr->x - get_max_range(creature_ptr)), 0);
         max_wid = MIN((creature_ptr->x + get_max_range(creature_ptr)), creature_ptr->current_floor_ptr->width - 1);
-    } else {
+    }
+    else {
         min_hgt = panel_row_min;
         max_hgt = panel_row_max;
         min_wid = panel_col_min;
@@ -116,7 +114,7 @@ void target_set_prepare(player_type *creature_ptr, BIT_FLAGS mode)
     tmp_pos.n = 0;
     for (POSITION y = min_hgt; y <= max_hgt; y++) {
         for (POSITION x = min_wid; x <= max_wid; x++) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             if (!target_set_accept(creature_ptr, y, x))
                 continue;
 
@@ -135,7 +133,8 @@ void target_set_prepare(player_type *creature_ptr, BIT_FLAGS mode)
 
     if (mode & (TARGET_KILL)) {
         ang_sort(creature_ptr, tmp_pos.x, tmp_pos.y, tmp_pos.n, ang_sort_comp_distance, ang_sort_swap_distance);
-    } else {
+    }
+    else {
         ang_sort(creature_ptr, tmp_pos.x, tmp_pos.y, tmp_pos.n, ang_sort_comp_importance, ang_sort_swap_distance);
     }
 

@@ -6,8 +6,7 @@
 #include "player/player-status-table.h"
 #include "term/screen-processor.h"
 
-void display_life_rating(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void display_life_rating(player_type* creature_ptr, self_info_type* self_ptr) {
     creature_ptr->knowledge |= KNOW_STAT | KNOW_HPRATE;
     strcpy(self_ptr->plev_buf, "");
     int percent
@@ -18,8 +17,7 @@ void display_life_rating(player_type *creature_ptr, self_info_type *self_ptr)
     self_ptr->info[self_ptr->line++] = "";
 }
 
-void display_max_base_status(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void display_max_base_status(player_type* creature_ptr, self_info_type* self_ptr) {
     self_ptr->info[self_ptr->line++] = _("能力の最大値", "Limits of maximum stats");
     for (int v_nr = 0; v_nr < A_MAX; v_nr++) {
         char stat_desc[80];
@@ -29,8 +27,7 @@ void display_max_base_status(player_type *creature_ptr, self_info_type *self_ptr
     }
 }
 
-void display_virtue(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void display_virtue(player_type* creature_ptr, self_info_type* self_ptr) {
     self_ptr->info[self_ptr->line++] = "";
     sprintf(self_ptr->plev_buf, _("現在の属性 : %s(%ld)", "Your alignment : %s(%ld)"), your_alignment(creature_ptr), (long int)creature_ptr->align);
     strcpy(self_ptr->buf[1], self_ptr->plev_buf);
@@ -73,8 +70,7 @@ void display_virtue(player_type *creature_ptr, self_info_type *self_ptr)
     }
 }
 
-void display_mimic_race_ability(player_type *creature_ptr, self_info_type *self_ptr)
-{
+void display_mimic_race_ability(player_type* creature_ptr, self_info_type* self_ptr) {
     switch (creature_ptr->mimic_form) {
     case MIMIC_DEMON:
     case MIMIC_DEMON_LORD:
@@ -95,8 +91,7 @@ void display_mimic_race_ability(player_type *creature_ptr, self_info_type *self_
     }
 }
 
-void display_self_info(self_info_type *self_ptr)
-{
+void display_self_info(self_info_type* self_ptr) {
     screen_save();
     for (int k = 1; k < 24; k++)
         prt("", k, 13);

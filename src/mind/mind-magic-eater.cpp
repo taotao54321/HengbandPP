@@ -15,13 +15,12 @@
  * @param user_ptr アイテムを取り込むクリーチャー
  * @return 取り込みを実行したらTRUE、キャンセルしたらFALSEを返す
  */
-bool import_magic_device(player_type *user_ptr)
-{
+bool import_magic_device(player_type* user_ptr) {
     item_tester_hook = item_tester_hook_recharge;
     concptr q = _("どのアイテムの魔力を取り込みますか? ", "Gain power of which item? ");
     concptr s = _("魔力を取り込めるアイテムがない。", "You have nothing to gain power.");
     OBJECT_IDX item;
-    object_type *o_ptr = choose_object(user_ptr, &item, q, s, USE_INVEN | USE_FLOOR, TV_NONE);
+    object_type* o_ptr = choose_object(user_ptr, &item, q, s, USE_INVEN | USE_FLOOR, TV_NONE);
     if (!o_ptr)
         return FALSE;
 
@@ -51,7 +50,8 @@ bool import_magic_device(player_type *user_ptr)
         user_ptr->magic_num2[o_ptr->sval + ext] += (MAGIC_NUM2)o_ptr->number;
         if (user_ptr->magic_num2[o_ptr->sval + ext] > 99)
             user_ptr->magic_num2[o_ptr->sval + ext] = 99;
-    } else {
+    }
+    else {
         int num;
         for (num = o_ptr->number; num; num--) {
             int gain_num = pval;

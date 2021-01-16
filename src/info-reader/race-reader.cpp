@@ -14,8 +14,7 @@
  * @param what 参照元の文字列ポインタ
  * @return エラーコード
  */
-static errr grab_one_basic_flag(monster_race *r_ptr, concptr what)
-{
+static errr grab_one_basic_flag(monster_race* r_ptr, concptr what) {
     if (grab_one_flag(&r_ptr->flags1, r_info_flags1, what) == 0)
         return PARSE_ERROR_NONE;
 
@@ -48,8 +47,7 @@ static errr grab_one_basic_flag(monster_race *r_ptr, concptr what)
  * @param what 参照元の文字列ポインタ
  * @return エラーコード
  */
-static errr grab_one_spell_flag(monster_race *r_ptr, concptr what)
-{
+static errr grab_one_spell_flag(monster_race* r_ptr, concptr what) {
     if (grab_one_flag(&r_ptr->flags4, r_info_flags4, what) == 0)
         return PARSE_ERROR_NONE;
 
@@ -70,9 +68,8 @@ static errr grab_one_spell_flag(monster_race *r_ptr, concptr what)
  * @param head ヘッダ構造体
  * @return エラーコード
  */
-errr parse_r_info(char *buf, angband_header *head)
-{
-    static monster_race *r_ptr = NULL;
+errr parse_r_info(char* buf, angband_header* head) {
+    static monster_race* r_ptr = NULL;
     char *s, *t;
     if (buf[0] == 'N') {
         s = angband_strchr(buf + 2, ':');
@@ -98,7 +95,8 @@ errr parse_r_info(char *buf, angband_header *head)
         if (!add_name(&r_ptr->name, head, s))
             return PARSE_ERROR_OUT_OF_MEMORY;
 #endif
-    } else if (!r_ptr) {
+    }
+    else if (!r_ptr) {
         return PARSE_ERROR_MISSING_RECORD_HEADER;
     }
 #ifdef JP
@@ -129,7 +127,8 @@ errr parse_r_info(char *buf, angband_header *head)
 #endif
         if (!add_text(&r_ptr->text, head, s, TRUE))
             return PARSE_ERROR_OUT_OF_MEMORY;
-    } else if (buf[0] == 'G') {
+    }
+    else if (buf[0] == 'G') {
         if ((buf[1] != ':') || !buf[2] || (buf[3] != ':') || !buf[4])
             return PARSE_ERROR_GENERIC;
 
@@ -140,7 +139,8 @@ errr parse_r_info(char *buf, angband_header *head)
 
         r_ptr->d_char = sym;
         r_ptr->d_attr = tmp;
-    } else if (buf[0] == 'I') {
+    }
+    else if (buf[0] == 'I') {
         int spd, hp1, hp2, aaf, ac, slp;
         if (sscanf(buf + 2, "%d:%dd%d:%d:%d:%d", &spd, &hp1, &hp2, &aaf, &ac, &slp) != 6)
             return PARSE_ERROR_GENERIC;
@@ -151,7 +151,8 @@ errr parse_r_info(char *buf, angband_header *head)
         r_ptr->aaf = (POSITION)aaf;
         r_ptr->ac = (ARMOUR_CLASS)ac;
         r_ptr->sleep = (SLEEP_DEGREE)slp;
-    } else if (buf[0] == 'W') {
+    }
+    else if (buf[0] == 'W') {
         int lev, rar, pad;
         long exp;
         long nextexp;
@@ -165,7 +166,8 @@ errr parse_r_info(char *buf, angband_header *head)
         r_ptr->mexp = (EXP)exp;
         r_ptr->next_exp = (EXP)nextexp;
         r_ptr->next_r_idx = (MONRACE_IDX)nextmon;
-    } else if (buf[0] == 'R') {
+    }
+    else if (buf[0] == 'R') {
         int id, ds, dd;
         int i = 0;
         for (; i < A_MAX; i++)
@@ -178,7 +180,8 @@ errr parse_r_info(char *buf, angband_header *head)
         r_ptr->reinforce_id[i] = (MONRACE_IDX)id;
         r_ptr->reinforce_dd[i] = (DICE_NUMBER)dd;
         r_ptr->reinforce_ds[i] = (DICE_SID)ds;
-    } else if (buf[0] == 'B') {
+    }
+    else if (buf[0] == 'B') {
         int n1, n2;
         int i = 0;
         for (i = 0; i < 4; i++)
@@ -229,7 +232,8 @@ errr parse_r_info(char *buf, angband_header *head)
         r_ptr->blow[i].effect = (rbe_type)n2;
         r_ptr->blow[i].d_dice = atoi(s);
         r_ptr->blow[i].d_side = atoi(t);
-    } else if (buf[0] == 'F') {
+    }
+    else if (buf[0] == 'F') {
         for (s = buf + 2; *s;) {
             /* loop */
             for (t = s; *t && (*t != ' ') && (*t != '|'); ++t)
@@ -246,7 +250,8 @@ errr parse_r_info(char *buf, angband_header *head)
 
             s = t;
         }
-    } else if (buf[0] == 'S') {
+    }
+    else if (buf[0] == 'S') {
         for (s = buf + 2; *s;) {
 
             /* loop */
@@ -271,7 +276,8 @@ errr parse_r_info(char *buf, angband_header *head)
 
             s = t;
         }
-    } else if (buf[0] == 'A') {
+    }
+    else if (buf[0] == 'A') {
         int id, per, rarity;
         int i = 0;
         for (i = 0; i < 4; i++)
@@ -284,13 +290,15 @@ errr parse_r_info(char *buf, angband_header *head)
         r_ptr->artifact_id[i] = (ARTIFACT_IDX)id;
         r_ptr->artifact_rarity[i] = (RARITY)rarity;
         r_ptr->artifact_percent[i] = (PERCENTAGE)per;
-    } else if (buf[0] == 'V') {
+    }
+    else if (buf[0] == 'V') {
         int val;
         if (sscanf(buf + 2, "%d", &val) != 3)
             return 1;
 
         r_ptr->arena_ratio = (PERCENTAGE)val;
-    } else {
+    }
+    else {
         return PARSE_ERROR_UNDEFINED_DIRECTIVE;
     }
 

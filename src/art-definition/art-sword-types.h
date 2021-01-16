@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum artifact_sword_type {
-	ART_MAEDHROS = 64,
+    ART_MAEDHROS = 64,
     ART_CAINE = 65,
     ART_NARTHANC = 66,
     ART_NIMTHANC = 67,

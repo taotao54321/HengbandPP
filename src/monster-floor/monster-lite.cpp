@@ -21,9 +21,8 @@
  * @param y Y座標
  * @param x X座標
  */
-static void update_monster_lite(player_type *subject_ptr, const POSITION y, const POSITION x, monster_lite_type *ml_ptr)
-{
-    grid_type *g_ptr;
+static void update_monster_lite(player_type* subject_ptr, const POSITION y, const POSITION x, monster_lite_type* ml_ptr) {
+    grid_type* g_ptr;
     int dpf, d;
     POSITION midpoint;
     g_ptr = &subject_ptr->current_floor_ptr->grid_array[y][x];
@@ -38,10 +37,12 @@ static void update_monster_lite(player_type *subject_ptr, const POSITION y, cons
             if (x < midpoint) {
                 if (!cave_los_bold(subject_ptr->current_floor_ptr, y, x + 1))
                     return;
-            } else if (x > midpoint) {
+            }
+            else if (x > midpoint) {
                 if (!cave_los_bold(subject_ptr->current_floor_ptr, y, x - 1))
                     return;
-            } else if (ml_ptr->mon_invis)
+            }
+            else if (ml_ptr->mon_invis)
                 return;
         }
 
@@ -52,10 +53,12 @@ static void update_monster_lite(player_type *subject_ptr, const POSITION y, cons
             if (y < midpoint) {
                 if (!cave_los_bold(subject_ptr->current_floor_ptr, y + 1, x))
                     return;
-            } else if (y > midpoint) {
+            }
+            else if (y > midpoint) {
                 if (!cave_los_bold(subject_ptr->current_floor_ptr, y - 1, x))
                     return;
-            } else if (ml_ptr->mon_invis)
+            }
+            else if (ml_ptr->mon_invis)
                 return;
         }
     }
@@ -64,7 +67,8 @@ static void update_monster_lite(player_type *subject_ptr, const POSITION y, cons
         tmp_pos.x[tmp_pos.n] = x;
         tmp_pos.y[tmp_pos.n] = y;
         tmp_pos.n++;
-    } else {
+    }
+    else {
         g_ptr->info &= ~(CAVE_MNDK);
     }
 
@@ -74,9 +78,8 @@ static void update_monster_lite(player_type *subject_ptr, const POSITION y, cons
 /*
  * Add a square to the changes array
  */
-static void update_monster_dark(player_type *subject_ptr, const POSITION y, const POSITION x, monster_lite_type *ml_ptr)
-{
-    grid_type *g_ptr;
+static void update_monster_dark(player_type* subject_ptr, const POSITION y, const POSITION x, monster_lite_type* ml_ptr) {
+    grid_type* g_ptr;
     int midpoint, dpf, d;
     g_ptr = &subject_ptr->current_floor_ptr->grid_array[y][x];
     if ((g_ptr->info & (CAVE_LITE | CAVE_MNLT | CAVE_MNDK | CAVE_VIEW)) != CAVE_VIEW)
@@ -90,10 +93,12 @@ static void update_monster_dark(player_type *subject_ptr, const POSITION y, cons
             if (x < midpoint) {
                 if (!cave_los_bold(subject_ptr->current_floor_ptr, y, x + 1) && !cave_has_flag_bold(subject_ptr->current_floor_ptr, y, x + 1, FF_PROJECT))
                     return;
-            } else if (x > midpoint) {
+            }
+            else if (x > midpoint) {
                 if (!cave_los_bold(subject_ptr->current_floor_ptr, y, x - 1) && !cave_has_flag_bold(subject_ptr->current_floor_ptr, y, x - 1, FF_PROJECT))
                     return;
-            } else if (ml_ptr->mon_invis)
+            }
+            else if (ml_ptr->mon_invis)
                 return;
         }
 
@@ -104,10 +109,12 @@ static void update_monster_dark(player_type *subject_ptr, const POSITION y, cons
             if (y < midpoint) {
                 if (!cave_los_bold(subject_ptr->current_floor_ptr, y + 1, x) && !cave_has_flag_bold(subject_ptr->current_floor_ptr, y + 1, x, FF_PROJECT))
                     return;
-            } else if (y > midpoint) {
+            }
+            else if (y > midpoint) {
                 if (!cave_los_bold(subject_ptr->current_floor_ptr, y - 1, x) && !cave_has_flag_bold(subject_ptr->current_floor_ptr, y - 1, x, FF_PROJECT))
                     return;
-            } else if (ml_ptr->mon_invis)
+            }
+            else if (ml_ptr->mon_invis)
                 return;
         }
     }
@@ -125,13 +132,12 @@ static void update_monster_dark(player_type *subject_ptr, const POSITION y, cons
  * updating.  Only squares in view of the player, whos state
  * changes are drawn via lite_spot().
  */
-void update_mon_lite(player_type *subject_ptr)
-{
-    void (*add_mon_lite)(player_type *, const POSITION, const POSITION, monster_lite_type *);
+void update_mon_lite(player_type* subject_ptr) {
+    void (*add_mon_lite)(player_type*, const POSITION, const POSITION, monster_lite_type*);
     int dis_lim = ((d_info[subject_ptr->dungeon_idx].flags1 & DF1_DARKNESS) && !subject_ptr->see_nocto) ? (MAX_SIGHT / 2 + 1) : (MAX_SIGHT + 3);
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
     for (int i = 0; i < floor_ptr->mon_lite_n; i++) {
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[floor_ptr->mon_lite_y[i]][floor_ptr->mon_lite_x[i]];
         g_ptr->info |= (g_ptr->info & CAVE_MNLT) ? CAVE_TEMP : CAVE_XTRA;
         g_ptr->info &= ~(CAVE_MNLT | CAVE_MNDK);
@@ -139,8 +145,8 @@ void update_mon_lite(player_type *subject_ptr)
 
     tmp_pos.n = 0;
     if (!current_world_ptr->timewalk_m_idx) {
-        monster_type *m_ptr;
-        monster_race *r_ptr;
+        monster_type* m_ptr;
+        monster_race* r_ptr;
         for (int i = 1; i < floor_ptr->m_max; i++) {
             m_ptr = &floor_ptr->m_list[i];
             r_ptr = &r_info[m_ptr->r_idx];
@@ -174,7 +180,8 @@ void update_mon_lite(player_type *subject_ptr)
 
                 add_mon_lite = update_monster_lite;
                 f_flag = FF_LOS;
-            } else {
+            }
+            else {
                 if (!(r_ptr->flags7 & (RF7_SELF_DARK_1 | RF7_SELF_DARK_2)) && (monster_csleep_remaining(m_ptr) || (!floor_ptr->dun_level && !is_daytime())))
                     continue;
 
@@ -184,7 +191,7 @@ void update_mon_lite(player_type *subject_ptr)
             }
 
             monster_lite_type tmp_ml;
-            monster_lite_type *ml_ptr = initialize_monster_lite_type(floor_ptr, &tmp_ml, m_ptr);
+            monster_lite_type* ml_ptr = initialize_monster_lite_type(floor_ptr, &tmp_ml, m_ptr);
             add_mon_lite(subject_ptr, ml_ptr->mon_fy, ml_ptr->mon_fx, ml_ptr);
             add_mon_lite(subject_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx, ml_ptr);
             add_mon_lite(subject_ptr, ml_ptr->mon_fy - 1, ml_ptr->mon_fx, ml_ptr);
@@ -197,7 +204,7 @@ void update_mon_lite(player_type *subject_ptr)
             if (rad < 2)
                 continue;
 
-            grid_type *g_ptr;
+            grid_type* g_ptr;
             if (cave_has_flag_bold(subject_ptr->current_floor_ptr, ml_ptr->mon_fy + 1, ml_ptr->mon_fx, feature_flag_type(f_flag))) {
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy + 2, ml_ptr->mon_fx + 1, ml_ptr);
                 add_mon_lite(subject_ptr, ml_ptr->mon_fy + 2, ml_ptr->mon_fx, ml_ptr);
@@ -267,12 +274,13 @@ void update_mon_lite(player_type *subject_ptr)
     for (int i = 0; i < floor_ptr->mon_lite_n; i++) {
         POSITION fx = floor_ptr->mon_lite_x[i];
         POSITION fy = floor_ptr->mon_lite_y[i];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[fy][fx];
         if (g_ptr->info & CAVE_TEMP) {
             if ((g_ptr->info & (CAVE_VIEW | CAVE_MNLT)) == CAVE_VIEW)
                 cave_note_and_redraw_later(floor_ptr, g_ptr, fy, fx);
-        } else if ((g_ptr->info & (CAVE_VIEW | CAVE_MNDK)) == CAVE_VIEW)
+        }
+        else if ((g_ptr->info & (CAVE_VIEW | CAVE_MNDK)) == CAVE_VIEW)
             cave_note_and_redraw_later(floor_ptr, g_ptr, fy, fx);
 
         tmp_pos.x[tmp_pos.n] = fx;
@@ -284,12 +292,13 @@ void update_mon_lite(player_type *subject_ptr)
     for (int i = 0; i < end_temp; i++) {
         POSITION fx = tmp_pos.x[i];
         POSITION fy = tmp_pos.y[i];
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[fy][fx];
         if (g_ptr->info & CAVE_MNLT) {
             if ((g_ptr->info & (CAVE_VIEW | CAVE_TEMP)) == CAVE_VIEW)
                 cave_note_and_redraw_later(floor_ptr, g_ptr, fy, fx);
-        } else if ((g_ptr->info & (CAVE_VIEW | CAVE_XTRA)) == CAVE_VIEW)
+        }
+        else if ((g_ptr->info & (CAVE_VIEW | CAVE_XTRA)) == CAVE_VIEW)
             cave_note_and_redraw_later(floor_ptr, g_ptr, fy, fx);
 
         floor_ptr->mon_lite_x[floor_ptr->mon_lite_n] = fx;
@@ -326,10 +335,9 @@ void update_mon_lite(player_type *subject_ptr)
  * @param floor_ptr 現在フロアへの参照ポインタ
  * @return なし
  */
-void clear_mon_lite(floor_type *floor_ptr)
-{
+void clear_mon_lite(floor_type* floor_ptr) {
     for (int i = 0; i < floor_ptr->mon_lite_n; i++) {
-        grid_type *g_ptr;
+        grid_type* g_ptr;
         g_ptr = &floor_ptr->grid_array[floor_ptr->mon_lite_y[i]][floor_ptr->mon_lite_x[i]];
         g_ptr->info &= ~(CAVE_MNLT | CAVE_MNDK);
     }

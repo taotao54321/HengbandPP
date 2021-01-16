@@ -21,8 +21,7 @@
  * The monsters/objects must be loaded in the same order
  * that they were stored, since the actual indexes matter.
  */
-static errr rd_dungeon(player_type *player_ptr)
-{
+static errr rd_dungeon(player_type* player_ptr) {
     init_saved_floors(player_ptr, FALSE);
     errr err = 0;
     if (h_older_than(1, 5, 0, 0)) {
@@ -43,9 +42,10 @@ static errr rd_dungeon(player_type *player_ptr)
     rd_byte(&num);
     if (num == 0) {
         err = rd_saved_floor(player_ptr, NULL);
-    } else {
+    }
+    else {
         for (int i = 0; i < num; i++) {
-            saved_floor_type *sf_ptr = &saved_floors[i];
+            saved_floor_type* sf_ptr = &saved_floors[i];
 
             rd_s16b(&sf_ptr->floor_id);
             rd_byte(&tmp8u);
@@ -62,7 +62,7 @@ static errr rd_dungeon(player_type *player_ptr)
         }
 
         for (int i = 0; i < num; i++) {
-            saved_floor_type *sf_ptr = &saved_floors[i];
+            saved_floor_type* sf_ptr = &saved_floors[i];
             if (!sf_ptr->floor_id)
                 continue;
             rd_byte(&tmp8u);
@@ -120,8 +120,7 @@ static errr rd_dungeon(player_type *player_ptr)
     return err;
 }
 
-errr restore_dungeon(player_type *creature_ptr)
-{
+errr restore_dungeon(player_type* creature_ptr) {
     if (creature_ptr->is_dead) {
         for (int i = MIN_RANDOM_QUEST; i < MAX_RANDOM_QUEST + 1; i++)
             r_info[quest[i].r_idx].flags1 &= ~RF1_QUESTOR;

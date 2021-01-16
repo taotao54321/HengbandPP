@@ -6,8 +6,8 @@
 #include "core/window-redrawer.h"
 #include "game-option/disturbance-options.h"
 #include "mind/mind-sniper.h"
-#include "player/attack-defense-types.h"
 #include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
 #include "player/player-race.h"
 #include "player/player-status-flags.h"
 #include "player/special-defense-types.h"
@@ -26,10 +26,10 @@
  * Note that blindness is currently the only thing which can affect\n
  * "player_can_see_bold()".\n
  */
-bool set_blind(player_type *creature_ptr, TIME_EFFECT v)
-{
+bool set_blind(player_type* creature_ptr, TIME_EFFECT v) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -38,7 +38,8 @@ bool set_blind(player_type *creature_ptr, TIME_EFFECT v)
         if (!creature_ptr->blind) {
             if (creature_ptr->prace == RACE_ANDROID) {
                 msg_print(_("センサーをやられた！", "You are blind!"));
-            } else {
+            }
+            else {
                 msg_print(_("目が見えなくなってしまった！", "You are blind!"));
             }
 
@@ -51,7 +52,8 @@ bool set_blind(player_type *creature_ptr, TIME_EFFECT v)
         if (creature_ptr->blind) {
             if (creature_ptr->prace == RACE_ANDROID) {
                 msg_print(_("センサーが復旧した。", "You can see again."));
-            } else {
+            }
+            else {
                 msg_print(_("やっと目が見えるようになった。", "You can see again."));
             }
 
@@ -78,10 +80,10 @@ bool set_blind(player_type *creature_ptr, TIME_EFFECT v)
  * @param v 継続時間
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_confused(player_type *creature_ptr, TIME_EFFECT v)
-{
+bool set_confused(player_type* creature_ptr, TIME_EFFECT v) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -103,7 +105,8 @@ bool set_confused(player_type *creature_ptr, TIME_EFFECT v)
                 creature_ptr->update |= (PU_BONUS);
                 creature_ptr->redraw |= (PR_STATE);
                 creature_ptr->action = ACTION_NONE;
-            } else if (creature_ptr->action == ACTION_KATA) {
+            }
+            else if (creature_ptr->action == ACTION_KATA) {
                 msg_print(_("型が崩れた。", "You lose your stance."));
                 creature_ptr->special_defense &= ~(KATA_MASK);
                 creature_ptr->update |= (PU_BONUS);
@@ -124,7 +127,8 @@ bool set_confused(player_type *creature_ptr, TIME_EFFECT v)
             creature_ptr->counter = FALSE;
             chg_virtue(creature_ptr, V_HARMONY, -1);
         }
-    } else {
+    }
+    else {
         if (creature_ptr->confused) {
             msg_print(_("やっと混乱がおさまった。", "You feel less confused now."));
             creature_ptr->special_attack &= ~(ATTACK_SUIKEN);
@@ -149,10 +153,10 @@ bool set_confused(player_type *creature_ptr, TIME_EFFECT v)
  * @param v 継続時間
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_poisoned(player_type *creature_ptr, TIME_EFFECT v)
-{
+bool set_poisoned(player_type* creature_ptr, TIME_EFFECT v) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -162,7 +166,8 @@ bool set_poisoned(player_type *creature_ptr, TIME_EFFECT v)
             msg_print(_("毒に侵されてしまった！", "You are poisoned!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->poisoned) {
             msg_print(_("やっと毒の痛みがなくなった。", "You are no longer poisoned."));
             notice = TRUE;
@@ -186,10 +191,10 @@ bool set_poisoned(player_type *creature_ptr, TIME_EFFECT v)
  * @param v 継続時間
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_afraid(player_type *creature_ptr, TIME_EFFECT v)
-{
+bool set_afraid(player_type* creature_ptr, TIME_EFFECT v) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -212,7 +217,8 @@ bool set_afraid(player_type *creature_ptr, TIME_EFFECT v)
             creature_ptr->counter = FALSE;
             chg_virtue(creature_ptr, V_VALOUR, -1);
         }
-    } else {
+    }
+    else {
         if (creature_ptr->afraid) {
             msg_print(_("やっと恐怖を振り払った。", "You feel bolder now."));
             notice = TRUE;
@@ -236,10 +242,10 @@ bool set_afraid(player_type *creature_ptr, TIME_EFFECT v)
  * @param v 継続時間
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_paralyzed(player_type *creature_ptr, TIME_EFFECT v)
-{
+bool set_paralyzed(player_type* creature_ptr, TIME_EFFECT v) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -255,7 +261,8 @@ bool set_paralyzed(player_type *creature_ptr, TIME_EFFECT v)
             creature_ptr->counter = FALSE;
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->paralyzed) {
             msg_print(_("やっと動けるようになった。", "You can move again."));
             notice = TRUE;
@@ -281,10 +288,10 @@ bool set_paralyzed(player_type *creature_ptr, TIME_EFFECT v)
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  * @details Note that we must redraw the map when hallucination changes.
  */
-bool set_image(player_type *creature_ptr, TIME_EFFECT v)
-{
+bool set_image(player_type* creature_ptr, TIME_EFFECT v) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -303,7 +310,8 @@ bool set_image(player_type *creature_ptr, TIME_EFFECT v)
             creature_ptr->counter = FALSE;
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->image) {
             msg_print(_("やっとはっきりと物が見えるようになった。", "You can see clearly again."));
             notice = TRUE;
@@ -332,10 +340,10 @@ bool set_image(player_type *creature_ptr, TIME_EFFECT v)
  * @param do_dec 現在の継続時間より長い値のみ上書きする
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_slow(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
-{
+bool set_slow(player_type* creature_ptr, TIME_EFFECT v, bool do_dec) {
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if (creature_ptr->is_dead)
         return FALSE;
@@ -344,11 +352,13 @@ bool set_slow(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
         if (creature_ptr->slow && !do_dec) {
             if (creature_ptr->slow > v)
                 return FALSE;
-        } else if (!creature_ptr->slow) {
+        }
+        else if (!creature_ptr->slow) {
             msg_print(_("体の動きが遅くなってしまった！", "You feel yourself moving slower!"));
             notice = TRUE;
         }
-    } else {
+    }
+    else {
         if (creature_ptr->slow) {
             msg_print(_("動きの遅さがなくなったようだ。", "You feel yourself speed up."));
             notice = TRUE;
@@ -373,11 +383,11 @@ bool set_slow(player_type *creature_ptr, TIME_EFFECT v, bool do_dec)
  * @details
  * Note the special code to only notice "range" changes.
  */
-bool set_stun(player_type *creature_ptr, TIME_EFFECT v)
-{
+bool set_stun(player_type* creature_ptr, TIME_EFFECT v) {
     int old_aux, new_aux;
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
     if (creature_ptr->is_dead)
         return FALSE;
     if (is_specific_player_race(creature_ptr, RACE_GOLEM) || ((creature_ptr->pclass == CLASS_BERSERKER) && (creature_ptr->lev > 34)))
@@ -385,21 +395,27 @@ bool set_stun(player_type *creature_ptr, TIME_EFFECT v)
 
     if (creature_ptr->stun > 100) {
         old_aux = 3;
-    } else if (creature_ptr->stun > 50) {
+    }
+    else if (creature_ptr->stun > 50) {
         old_aux = 2;
-    } else if (creature_ptr->stun > 0) {
+    }
+    else if (creature_ptr->stun > 0) {
         old_aux = 1;
-    } else {
+    }
+    else {
         old_aux = 0;
     }
 
     if (v > 100) {
         new_aux = 3;
-    } else if (v > 50) {
+    }
+    else if (v > 50) {
         new_aux = 2;
-    } else if (v > 0) {
+    }
+    else if (v > 0) {
         new_aux = 1;
-    } else {
+    }
+    else {
         new_aux = 0;
     }
 
@@ -424,10 +440,12 @@ bool set_stun(player_type *creature_ptr, TIME_EFFECT v)
                     (void)do_dec_stat(creature_ptr, A_INT);
                 if (!has_sustain_wis(creature_ptr))
                     (void)do_dec_stat(creature_ptr, A_WIS);
-            } else if (one_in_(2)) {
+            }
+            else if (one_in_(2)) {
                 if (!has_sustain_int(creature_ptr))
                     (void)do_dec_stat(creature_ptr, A_INT);
-            } else {
+            }
+            else {
                 if (!has_sustain_wis(creature_ptr))
                     (void)do_dec_stat(creature_ptr, A_WIS);
             }
@@ -449,7 +467,8 @@ bool set_stun(player_type *creature_ptr, TIME_EFFECT v)
             stop_hex_spell_all(creature_ptr);
 
         notice = TRUE;
-    } else if (new_aux < old_aux) {
+    }
+    else if (new_aux < old_aux) {
         if (new_aux == 0) {
             msg_print(_("やっと朦朧状態から回復した。", "You are no longer stunned."));
             if (disturb_state)
@@ -479,11 +498,11 @@ bool set_stun(player_type *creature_ptr, TIME_EFFECT v)
  * @details
  * Note the special code to only notice "range" changes.
  */
-bool set_cut(player_type *creature_ptr, TIME_EFFECT v)
-{
+bool set_cut(player_type* creature_ptr, TIME_EFFECT v) {
     int old_aux, new_aux;
     bool notice = FALSE;
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
     if (creature_ptr->is_dead)
         return FALSE;
 
@@ -494,37 +513,51 @@ bool set_cut(player_type *creature_ptr, TIME_EFFECT v)
 
     if (creature_ptr->cut > 1000) {
         old_aux = 7;
-    } else if (creature_ptr->cut > 200) {
+    }
+    else if (creature_ptr->cut > 200) {
         old_aux = 6;
-    } else if (creature_ptr->cut > 100) {
+    }
+    else if (creature_ptr->cut > 100) {
         old_aux = 5;
-    } else if (creature_ptr->cut > 50) {
+    }
+    else if (creature_ptr->cut > 50) {
         old_aux = 4;
-    } else if (creature_ptr->cut > 25) {
+    }
+    else if (creature_ptr->cut > 25) {
         old_aux = 3;
-    } else if (creature_ptr->cut > 10) {
+    }
+    else if (creature_ptr->cut > 10) {
         old_aux = 2;
-    } else if (creature_ptr->cut > 0) {
+    }
+    else if (creature_ptr->cut > 0) {
         old_aux = 1;
-    } else {
+    }
+    else {
         old_aux = 0;
     }
 
     if (v > 1000) {
         new_aux = 7;
-    } else if (v > 200) {
+    }
+    else if (v > 200) {
         new_aux = 6;
-    } else if (v > 100) {
+    }
+    else if (v > 100) {
         new_aux = 5;
-    } else if (v > 50) {
+    }
+    else if (v > 50) {
         new_aux = 4;
-    } else if (v > 25) {
+    }
+    else if (v > 25) {
         new_aux = 3;
-    } else if (v > 10) {
+    }
+    else if (v > 10) {
         new_aux = 2;
-    } else if (v > 0) {
+    }
+    else if (v > 0) {
         new_aux = 1;
-    } else {
+    }
+    else {
         new_aux = 0;
     }
 
@@ -560,7 +593,8 @@ bool set_cut(player_type *creature_ptr, TIME_EFFECT v)
                 do_dec_stat(creature_ptr, A_CHR);
             }
         }
-    } else if (new_aux < old_aux) {
+    }
+    else if (new_aux < old_aux) {
         if (new_aux == 0) {
             msg_format(_("やっと%s。", "You are no longer bleeding."), creature_ptr->prace == RACE_ANDROID ? "怪我が直った" : "出血が止まった");
             if (disturb_state)

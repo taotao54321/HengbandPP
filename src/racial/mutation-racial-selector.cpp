@@ -2,8 +2,7 @@
 #include "mutation/mutation-flag-types.h"
 #include "racial/racial-util.h"
 
-void select_mutation_racial(player_type *creature_ptr, rc_type *rc_ptr)
-{
+void select_mutation_racial(player_type* creature_ptr, rc_type* rc_ptr) {
     if (creature_ptr->muta1 == 0)
         return;
 

@@ -71,11 +71,10 @@
  * @param m_ptr 目標モンスターの構造体参照ポインタ
  * @return スレイ倍率をかけたダメージ量
  */
-static MULTIPLY calc_shot_damage_with_slay(player_type *sniper_ptr, object_type *o_ptr, HIT_POINT tdam, monster_type *m_ptr, SPELL_IDX snipe_type)
-{
+static MULTIPLY calc_shot_damage_with_slay(player_type* sniper_ptr, object_type* o_ptr, HIT_POINT tdam, monster_type* m_ptr, SPELL_IDX snipe_type) {
     MULTIPLY mult = 10;
 
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     BIT_FLAGS flgs[TR_FLAG_SIZE];
     object_flags(sniper_ptr, o_ptr, flgs);
@@ -238,7 +237,8 @@ static MULTIPLY calc_shot_damage_with_slay(player_type *sniper_ptr, object_type 
                 if (is_original_ap_and_seen(sniper_ptr, m_ptr)) {
                     r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_ACID_MASK);
                 }
-            } else {
+            }
+            else {
                 if (mult < 17)
                     mult = 17;
             }
@@ -250,7 +250,8 @@ static MULTIPLY calc_shot_damage_with_slay(player_type *sniper_ptr, object_type 
                 if (is_original_ap_and_seen(sniper_ptr, m_ptr)) {
                     r_ptr->r_flagsr |= (r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK);
                 }
-            } else {
+            }
+            else {
                 if (mult < 17)
                     mult = 17;
             }
@@ -271,7 +272,8 @@ static MULTIPLY calc_shot_damage_with_slay(player_type *sniper_ptr, object_type 
                     if (is_original_ap_and_seen(sniper_ptr, m_ptr)) {
                         r_ptr->r_flags3 |= RF3_HURT_FIRE;
                     }
-                } else if (mult < 17)
+                }
+                else if (mult < 17)
                     mult = 17;
             }
         }
@@ -291,7 +293,8 @@ static MULTIPLY calc_shot_damage_with_slay(player_type *sniper_ptr, object_type 
                     if (is_original_ap_and_seen(sniper_ptr, m_ptr)) {
                         r_ptr->r_flags3 |= RF3_HURT_COLD;
                     }
-                } else if (mult < 17)
+                }
+                else if (mult < 17)
                     mult = 17;
             }
         }
@@ -351,8 +354,7 @@ static MULTIPLY calc_shot_damage_with_slay(player_type *sniper_ptr, object_type 
  * Note that Bows of "Extra Shots" give an extra shot.
  * </pre>
  */
-void exe_fire(player_type *shooter_ptr, INVENTORY_IDX item, object_type *j_ptr, SPELL_IDX snipe_type)
-{
+void exe_fire(player_type* shooter_ptr, INVENTORY_IDX item, object_type* j_ptr, SPELL_IDX snipe_type) {
     DIRECTION dir;
     int i;
     POSITION y, x, ny, nx, ty, tx, prev_y, prev_x;
@@ -362,9 +364,9 @@ void exe_fire(player_type *shooter_ptr, INVENTORY_IDX item, object_type *j_ptr, 
     PERCENTAGE j;
 
     object_type forge;
-    object_type *q_ptr;
+    object_type* q_ptr;
 
-    object_type *o_ptr;
+    object_type* o_ptr;
 
     bool hit_body = FALSE;
 
@@ -380,7 +382,8 @@ void exe_fire(player_type *shooter_ptr, INVENTORY_IDX item, object_type *j_ptr, 
     /* Access the item (if in the pack) */
     if (item >= 0) {
         o_ptr = &shooter_ptr->inventory_list[item];
-    } else {
+    }
+    else {
         o_ptr = &shooter_ptr->current_floor_ptr->o_list[0 - item];
     }
 
@@ -499,7 +502,7 @@ void exe_fire(player_type *shooter_ptr, INVENTORY_IDX item, object_type *j_ptr, 
 
         /* Travel until stopped */
         for (cur_dis = 0; cur_dis <= tdis;) {
-            grid_type *g_ptr;
+            grid_type* g_ptr;
 
             /* Hack -- Stop at the target */
             if ((y == ty) && (x == tx))
@@ -584,10 +587,10 @@ void exe_fire(player_type *shooter_ptr, INVENTORY_IDX item, object_type *j_ptr, 
 
             /* Monster here, Try to hit it */
             if (shooter_ptr->current_floor_ptr->grid_array[y][x].m_idx) {
-                grid_type *c_mon_ptr = &shooter_ptr->current_floor_ptr->grid_array[y][x];
+                grid_type* c_mon_ptr = &shooter_ptr->current_floor_ptr->grid_array[y][x];
 
-                monster_type *m_ptr = &shooter_ptr->current_floor_ptr->m_list[c_mon_ptr->m_idx];
-                monster_race *r_ptr = &r_info[m_ptr->r_idx];
+                monster_type* m_ptr = &shooter_ptr->current_floor_ptr->m_list[c_mon_ptr->m_idx];
+                monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
                 /* Check the visibility */
                 visible = m_ptr->ml;
@@ -670,9 +673,11 @@ void exe_fire(player_type *shooter_ptr, INVENTORY_IDX item, object_type *j_ptr, 
 
                             tdam = m_ptr->hp + 1;
                             msg_format(_("%sの急所に突き刺さった！", "Your shot hit a fatal spot of %s!"), m_name);
-                        } else
+                        }
+                        else
                             tdam = 1;
-                    } else {
+                    }
+                    else {
                         /* Apply special damage */
                         tdam = calc_shot_damage_with_slay(shooter_ptr, q_ptr, tdam, m_ptr, snipe_type);
                         tdam = critical_shot(shooter_ptr, q_ptr->weight, q_ptr->to_h, j_ptr->to_h, tdam);
@@ -804,7 +809,7 @@ void exe_fire(player_type *shooter_ptr, INVENTORY_IDX item, object_type *j_ptr, 
 
         if (stick_to) {
             MONSTER_IDX m_idx = shooter_ptr->current_floor_ptr->grid_array[y][x].m_idx;
-            monster_type *m_ptr = &shooter_ptr->current_floor_ptr->m_list[m_idx];
+            monster_type* m_ptr = &shooter_ptr->current_floor_ptr->m_list[m_idx];
             OBJECT_IDX o_idx = o_pop(shooter_ptr->current_floor_ptr);
 
             if (!o_idx) {
@@ -832,10 +837,12 @@ void exe_fire(player_type *shooter_ptr, INVENTORY_IDX item, object_type *j_ptr, 
 
             /* Carry object */
             m_ptr->hold_o_idx = o_idx;
-        } else if (cave_has_flag_bold(shooter_ptr->current_floor_ptr, y, x, FF_PROJECT)) {
+        }
+        else if (cave_has_flag_bold(shooter_ptr->current_floor_ptr, y, x, FF_PROJECT)) {
             /* Drop (or break) near that location */
             (void)drop_near(shooter_ptr, q_ptr, j, y, x);
-        } else {
+        }
+        else {
             /* Drop (or break) near that location */
             (void)drop_near(shooter_ptr, q_ptr, j, prev_y, prev_x);
         }
@@ -858,11 +865,10 @@ void exe_fire(player_type *shooter_ptr, INVENTORY_IDX item, object_type *j_ptr, 
  * @return 命中と判定された場合TRUEを返す
  * @note Always miss 5%, always hit 5%, otherwise random.
  */
-bool test_hit_fire(player_type *shooter_ptr, int chance, monster_type *m_ptr, int vis, char *o_name)
-{
+bool test_hit_fire(player_type* shooter_ptr, int chance, monster_type* m_ptr, int vis, char* o_name) {
     int k;
     ARMOUR_CLASS ac;
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
 
     /* Percentile dice */
     k = randint1(100);
@@ -920,10 +926,9 @@ bool test_hit_fire(player_type *shooter_ptr, int chance, monster_type *m_ptr, in
  * @param dam 現在算出中のダメージ値
  * @return クリティカル修正が入ったダメージ値
  */
-HIT_POINT critical_shot(player_type *shooter_ptr, WEIGHT weight, int plus_ammo, int plus_bow, HIT_POINT dam)
-{
+HIT_POINT critical_shot(player_type* shooter_ptr, WEIGHT weight, int plus_ammo, int plus_bow, HIT_POINT dam) {
     int i, k;
-    object_type *j_ptr = &shooter_ptr->inventory_list[INVEN_BOW];
+    object_type* j_ptr = &shooter_ptr->inventory_list[INVEN_BOW];
 
     /* Extract "shot" power */
     i = shooter_ptr->to_h_b + plus_ammo;
@@ -949,10 +954,12 @@ HIT_POINT critical_shot(player_type *shooter_ptr, WEIGHT weight, int plus_ammo, 
         if (k < 900) {
             msg_print(_("手ごたえがあった！", "It was a good hit!"));
             dam += (dam / 2);
-        } else if (k < 1350) {
+        }
+        else if (k < 1350) {
             msg_print(_("かなりの手ごたえがあった！", "It was a great hit!"));
             dam *= 2;
-        } else {
+        }
+        else {
             msg_print(_("会心の一撃だ！", "It was a superb hit!"));
             dam *= 3;
         }
@@ -966,8 +973,7 @@ HIT_POINT critical_shot(player_type *shooter_ptr, WEIGHT weight, int plus_ammo, 
  * @param sval 射撃武器のアイテム副分類ID
  * @return 消費する基本エネルギー
  */
-ENERGY bow_energy(OBJECT_SUBTYPE_VALUE sval)
-{
+ENERGY bow_energy(OBJECT_SUBTYPE_VALUE sval) {
     ENERGY energy = 10000;
 
     /* Analyze the launcher */
@@ -1015,8 +1021,7 @@ ENERGY bow_energy(OBJECT_SUBTYPE_VALUE sval)
 /*
  * Return bow tmul
  */
-int bow_tmul(OBJECT_SUBTYPE_VALUE sval)
-{
+int bow_tmul(OBJECT_SUBTYPE_VALUE sval) {
     int tmul = 0;
 
     /* Analyze the launcher */
@@ -1069,10 +1074,9 @@ int bow_tmul(OBJECT_SUBTYPE_VALUE sval)
  * @return ダメージ期待値
  * @note 基本ダメージ量と重量はこの部位では計算に加わらない。
  */
-HIT_POINT calc_crit_ratio_shot(player_type *shooter_ptr, HIT_POINT plus_ammo, HIT_POINT plus_bow)
-{
+HIT_POINT calc_crit_ratio_shot(player_type* shooter_ptr, HIT_POINT plus_ammo, HIT_POINT plus_bow) {
     HIT_POINT i;
-    object_type *j_ptr = &shooter_ptr->inventory_list[INVEN_BOW];
+    object_type* j_ptr = &shooter_ptr->inventory_list[INVEN_BOW];
 
     /* Extract "shot" power */
     i = shooter_ptr->to_h_b + plus_ammo;
@@ -1105,8 +1109,7 @@ HIT_POINT calc_crit_ratio_shot(player_type *shooter_ptr, HIT_POINT plus_ammo, HI
  * @param dam 基本ダメージ量
  * @return ダメージ期待値
  */
-HIT_POINT calc_expect_crit_shot(player_type *shooter_ptr, WEIGHT weight, int plus_ammo, int plus_bow, HIT_POINT dam)
-{
+HIT_POINT calc_expect_crit_shot(player_type* shooter_ptr, WEIGHT weight, int plus_ammo, int plus_bow, HIT_POINT dam) {
     u32b num;
     int i, k, crit;
     i = calc_crit_ratio_shot(shooter_ptr, plus_ammo, plus_bow);
@@ -1147,8 +1150,7 @@ HIT_POINT calc_expect_crit_shot(player_type *shooter_ptr, WEIGHT weight, int plu
  * @param dokubari 毒針処理か否か
  * @return ダメージ期待値
  */
-HIT_POINT calc_expect_crit(player_type *shooter_ptr, WEIGHT weight, int plus, HIT_POINT dam, s16b meichuu, bool dokubari)
-{
+HIT_POINT calc_expect_crit(player_type* shooter_ptr, WEIGHT weight, int plus, HIT_POINT dam, s16b meichuu, bool dokubari) {
     u32b k, num;
     if (dokubari)
         return dam;
@@ -1176,7 +1178,8 @@ HIT_POINT calc_expect_crit(player_type *shooter_ptr, WEIGHT weight, int plus, HI
         num *= i;
         num += (4444 - i) * dam;
         num /= 4444;
-    } else {
+    }
+    else {
         num *= i;
         num += (5000 - i) * dam;
         num /= 5000;

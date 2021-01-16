@@ -23,11 +23,10 @@
  *
  * This function now returns "TRUE" if vision is "blocked" by grid (y,x).
  */
-static bool update_view_aux(player_type *subject_ptr, POSITION y, POSITION x, POSITION y1, POSITION x1, POSITION y2, POSITION x2)
-{
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
-    grid_type *g1_c_ptr;
-    grid_type *g2_c_ptr;
+static bool update_view_aux(player_type* subject_ptr, POSITION y, POSITION x, POSITION y1, POSITION x1, POSITION y2, POSITION x2) {
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
+    grid_type* g1_c_ptr;
+    grid_type* g2_c_ptr;
     g1_c_ptr = &floor_ptr->grid_array[y1][x1];
     g2_c_ptr = &floor_ptr->grid_array[y2][x2];
     bool f1 = (cave_los_grid(g1_c_ptr));
@@ -40,7 +39,7 @@ static bool update_view_aux(player_type *subject_ptr, POSITION y, POSITION x, PO
     if (!v1 && !v2)
         return TRUE;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     g_ptr = &floor_ptr->grid_array[y][x];
     bool wall = (!cave_los_grid(g_ptr));
     bool z1 = (v1 && (g1_c_ptr->info & CAVE_XTRA));
@@ -92,8 +91,7 @@ static bool update_view_aux(player_type *subject_ptr, POSITION y, POSITION x, PO
  *  4c1: Each side aborts as soon as possible
  *  4c2: Each side tells the next strip how far it has to check
  */
-void update_view(player_type *subject_ptr)
-{
+void update_view(player_type* subject_ptr) {
     int n, m, d, k, z;
     POSITION y, x;
 
@@ -101,15 +99,16 @@ void update_view(player_type *subject_ptr)
 
     int full, over;
 
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
     POSITION y_max = floor_ptr->height - 1;
     POSITION x_max = floor_ptr->width - 1;
 
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     if (view_reduce_view && !floor_ptr->dun_level) {
         full = MAX_SIGHT / 2;
         over = MAX_SIGHT * 3 / 4;
-    } else {
+    }
+    else {
         full = MAX_SIGHT;
         over = MAX_SIGHT * 3 / 2;
     }
@@ -221,7 +220,8 @@ void update_view(player_type *subject_ptr)
                     if (update_view_aux(subject_ptr, ypn + d, xpn, ypn + d - 1, xpn - 1, ypn + d - 1, xpn)) {
                         if (n + d >= se)
                             break;
-                    } else
+                    }
+                    else
                         k = n + d;
                 }
 
@@ -233,7 +233,8 @@ void update_view(player_type *subject_ptr)
                     if (update_view_aux(subject_ptr, ypn + d, xmn, ypn + d - 1, xmn + 1, ypn + d - 1, xmn)) {
                         if (n + d >= sw)
                             break;
-                    } else
+                    }
+                    else
                         k = n + d;
                 }
 
@@ -248,7 +249,8 @@ void update_view(player_type *subject_ptr)
                     if (update_view_aux(subject_ptr, ymn - d, xpn, ymn - d + 1, xpn - 1, ymn - d + 1, xpn)) {
                         if (n + d >= ne)
                             break;
-                    } else
+                    }
+                    else
                         k = n + d;
                 }
 
@@ -260,7 +262,8 @@ void update_view(player_type *subject_ptr)
                     if (update_view_aux(subject_ptr, ymn - d, xmn, ymn - d + 1, xmn + 1, ymn - d + 1, xmn)) {
                         if (n + d >= nw)
                             break;
-                    } else
+                    }
+                    else
                         k = n + d;
                 }
 
@@ -275,7 +278,8 @@ void update_view(player_type *subject_ptr)
                     if (update_view_aux(subject_ptr, ypn, xpn + d, ypn - 1, xpn + d - 1, ypn, xpn + d - 1)) {
                         if (n + d >= es)
                             break;
-                    } else
+                    }
+                    else
                         k = n + d;
                 }
 
@@ -287,7 +291,8 @@ void update_view(player_type *subject_ptr)
                     if (update_view_aux(subject_ptr, ymn, xpn + d, ymn + 1, xpn + d - 1, ymn, xpn + d - 1)) {
                         if (n + d >= en)
                             break;
-                    } else
+                    }
+                    else
                         k = n + d;
                 }
 
@@ -302,7 +307,8 @@ void update_view(player_type *subject_ptr)
                     if (update_view_aux(subject_ptr, ypn, xmn - d, ypn - 1, xmn - d + 1, ypn, xmn - d + 1)) {
                         if (n + d >= ws)
                             break;
-                    } else
+                    }
+                    else
                         k = n + d;
                 }
 
@@ -314,7 +320,8 @@ void update_view(player_type *subject_ptr)
                     if (update_view_aux(subject_ptr, ymn, xmn - d, ymn + 1, xmn - d + 1, ymn, xmn - d + 1)) {
                         if (n + d >= wn)
                             break;
-                    } else
+                    }
+                    else
                         k = n + d;
                 }
 

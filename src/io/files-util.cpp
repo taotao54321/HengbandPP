@@ -53,8 +53,7 @@ char savefile_base[40];
  * Allow the "full" flag to dump additional info,
  * and trigger its usage from various places in the code.
  */
-errr file_character(player_type *creature_ptr, concptr name, update_playtime_pf update_playtime, display_player_pf display_player)
-{
+errr file_character(player_type* creature_ptr, concptr name, update_playtime_pf update_playtime, display_player_pf display_player) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_USER, name);
     int fd = fd_open(buf, O_RDONLY);
@@ -66,7 +65,7 @@ errr file_character(player_type *creature_ptr, concptr name, update_playtime_pf 
             fd = -1;
     }
 
-    FILE *fff = NULL;
+    FILE* fff = NULL;
     if (fd < 0)
         fff = angband_fopen(buf, "w");
 
@@ -95,11 +94,10 @@ errr file_character(player_type *creature_ptr, concptr name, update_playtime_pf 
  * Based on the monster speech patch by Matt Graham,
  * </pre>
  */
-errr get_rnd_line(concptr file_name, int entry, char *output)
-{
+errr get_rnd_line(concptr file_name, int entry, char* output) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_FILE, file_name);
-    FILE *fp;
+    FILE* fp;
     fp = angband_fopen(buf, "r");
     if (!fp)
         return -1;
@@ -118,16 +116,20 @@ errr get_rnd_line(concptr file_name, int entry, char *output)
 
         if (buf[2] == '*') {
             break;
-        } else if (buf[2] == 'M') {
+        }
+        else if (buf[2] == 'M') {
             if (r_info[entry].flags1 & RF1_MALE)
                 break;
-        } else if (buf[2] == 'F') {
+        }
+        else if (buf[2] == 'F') {
             if (r_info[entry].flags1 & RF1_FEMALE)
                 break;
-        } else if (sscanf(&(buf[2]), "%d", &test) != EOF) {
+        }
+        else if (sscanf(&(buf[2]), "%d", &test) != EOF) {
             if (test == entry)
                 break;
-        } else {
+        }
+        else {
             msg_format("Error in line %d of %s!", line_num, file_name);
             angband_fclose(fp);
             return -1;
@@ -145,7 +147,8 @@ errr get_rnd_line(concptr file_name, int entry, char *output)
 
                 if (buf[0] != '#')
                     break;
-            } else
+            }
+            else
                 break;
         }
 
@@ -170,8 +173,7 @@ errr get_rnd_line(concptr file_name, int entry, char *output)
  * @return エラーコード
  * @details
  */
-errr get_rnd_line_jonly(concptr file_name, int entry, char *output, int count)
-{
+errr get_rnd_line_jonly(concptr file_name, int entry, char* output, int count) {
     errr result = 1;
     for (int i = 0; i < count; i++) {
         result = get_rnd_line(file_name, entry, output);
@@ -197,8 +199,7 @@ errr get_rnd_line_jonly(concptr file_name, int entry, char *output, int count)
  * @return エラーコード
  * @details
  */
-static errr counts_seek(player_type *creature_ptr, int fd, u32b where, bool flag)
-{
+static errr counts_seek(player_type* creature_ptr, int fd, u32b where, bool flag) {
     char temp1[128], temp2[128];
 #ifdef SAVEFILE_USE_UID
     (void)sprintf(temp1, "%d.%s.%d%d%d", creature_ptr->player_uid, savefile_base, creature_ptr->pclass, creature_ptr->pseikaku, creature_ptr->age);
@@ -213,13 +214,13 @@ static errr counts_seek(player_type *creature_ptr, int fd, u32b where, bool flag
     while (TRUE) {
         if (fd_seek(fd, seekpoint + 3 * sizeof(u32b)))
             return 1;
-        if (fd_read(fd, (char *)(temp2), sizeof(temp2))) {
+        if (fd_read(fd, (char*)(temp2), sizeof(temp2))) {
             if (!flag)
                 return 1;
             /* add new name */
             fd_seek(fd, seekpoint);
-            fd_write(fd, (char *)zero_header, 3 * sizeof(u32b));
-            fd_write(fd, (char *)(temp1), sizeof(temp1));
+            fd_write(fd, (char*)zero_header, 3 * sizeof(u32b));
+            fd_write(fd, (char*)(temp1), sizeof(temp1));
             break;
         }
 
@@ -239,14 +240,13 @@ static errr counts_seek(player_type *creature_ptr, int fd, u32b where, bool flag
  * @return エラーコード
  * @details
  */
-u32b counts_read(player_type *creature_ptr, int where)
-{
+u32b counts_read(player_type* creature_ptr, int where) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_DATA, _("z_info_j.raw", "z_info.raw"));
     int fd = fd_open(buf, O_RDONLY);
 
     u32b count = 0;
-    if (counts_seek(creature_ptr, fd, where, FALSE) || fd_read(fd, (char *)(&count), sizeof(u32b)))
+    if (counts_seek(creature_ptr, fd, where, FALSE) || fd_read(fd, (char*)(&count), sizeof(u32b)))
         count = 0;
 
     (void)fd_close(fd);
@@ -262,8 +262,7 @@ u32b counts_read(player_type *creature_ptr, int where)
  * @return エラーコード
  * @details
  */
-errr counts_write(player_type *creature_ptr, int where, u32b count)
-{
+errr counts_write(player_type* creature_ptr, int where, u32b count) {
     char buf[1024];
     path_build(buf, sizeof(buf), ANGBAND_DIR_DATA, _("z_info_j.raw", "z_info.raw"));
 
@@ -283,7 +282,7 @@ errr counts_write(player_type *creature_ptr, int where, u32b count)
         return 1;
 
     counts_seek(creature_ptr, fd, where, TRUE);
-    fd_write(fd, (char *)(&count), sizeof(u32b));
+    fd_write(fd, (char*)(&count), sizeof(u32b));
     safe_setuid_grab(creature_ptr);
     err = fd_lock(fd, F_UNLCK);
     safe_setuid_drop();
@@ -301,11 +300,10 @@ errr counts_write(player_type *creature_ptr, int where, u32b count)
  * @param buf_size バッファの長さ
  * @return なし
  */
-void read_dead_file(char *buf, size_t buf_size)
-{
+void read_dead_file(char* buf, size_t buf_size) {
     path_build(buf, buf_size, ANGBAND_DIR_FILE, _("dead_j.txt", "dead.txt"));
 
-    FILE *fp;
+    FILE* fp;
     fp = angband_fopen(buf, "r");
     if (!fp)
         return;

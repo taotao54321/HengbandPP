@@ -27,8 +27,7 @@
  * @param power 基本効力
  * @return ターンを消費した場合TRUEを返す
  */
-bool eat_magic(player_type *caster_ptr, int power)
-{
+bool eat_magic(player_type* caster_ptr, int power) {
     byte fail_type = 1;
     GAME_TEXT o_name[MAX_NLEN];
 
@@ -37,13 +36,13 @@ bool eat_magic(player_type *caster_ptr, int power)
     concptr q = _("どのアイテムから魔力を吸収しますか？", "Drain which item? ");
     concptr s = _("魔力を吸収できるアイテムがありません。", "You have nothing to drain.");
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     OBJECT_IDX item;
     o_ptr = choose_object(caster_ptr, &item, q, s, (USE_INVEN | USE_FLOOR), TV_NONE);
     if (!o_ptr)
         return FALSE;
 
-    object_kind *k_ptr;
+    object_kind* k_ptr;
     k_ptr = &k_info[o_ptr->k_idx];
     DEPTH lev = k_info[o_ptr->k_idx].level;
 
@@ -53,29 +52,33 @@ bool eat_magic(player_type *caster_ptr, int power)
         recharge_strength = ((power > lev / 2) ? (power - lev / 2) : 0) / 5;
         if (one_in_(recharge_strength)) {
             is_eating_successful = FALSE;
-        } else {
+        }
+        else {
             if (o_ptr->timeout > (o_ptr->number - 1) * k_ptr->pval) {
                 msg_print(_("充填中のロッドから魔力を吸収することはできません。", "You can't absorb energy from a discharged rod."));
-            } else {
+            }
+            else {
                 caster_ptr->csp += lev;
                 o_ptr->timeout += k_ptr->pval;
             }
         }
-    } else {
+    }
+    else {
         recharge_strength = (100 + power - lev) / 15;
         if (recharge_strength < 0)
             recharge_strength = 0;
 
         if (one_in_(recharge_strength)) {
             is_eating_successful = FALSE;
-        } else {
+        }
+        else {
             if (o_ptr->pval > 0) {
                 caster_ptr->csp += lev / 2;
                 o_ptr->pval--;
 
                 if ((o_ptr->tval == TV_STAFF) && (item >= 0) && (o_ptr->number > 1)) {
                     object_type forge;
-                    object_type *q_ptr;
+                    object_type* q_ptr;
                     q_ptr = &forge;
                     object_copy(q_ptr, o_ptr);
 
@@ -86,7 +89,8 @@ bool eat_magic(player_type *caster_ptr, int power)
 
                     msg_print(_("杖をまとめなおした。", "You unstack your staff."));
                 }
-            } else {
+            }
+            else {
                 msg_print(_("吸収できる魔力がありません！", "There's no energy there to absorb!"));
             }
 
@@ -163,7 +167,8 @@ bool eat_magic(player_type *caster_ptr, int power)
         if (o_ptr->tval == TV_ROD) {
             msg_format(_("ロッドは破損を免れたが、魔力は全て失なわれた。", "You save your rod from destruction, but all charges are lost."), o_name);
             o_ptr->timeout = k_ptr->pval * o_ptr->number;
-        } else if (o_ptr->tval == TV_WAND) {
+        }
+        else if (o_ptr->tval == TV_WAND) {
             msg_format(_("%sは破損を免れたが、魔力が全て失われた。", "You save your %s from destruction, but all charges are lost."), o_name);
             o_ptr->pval = 0;
         }
@@ -177,7 +182,8 @@ bool eat_magic(player_type *caster_ptr, int power)
                 o_ptr->timeout = MIN(o_ptr->timeout, k_ptr->pval * (o_ptr->number - 1));
             else if (o_ptr->tval == TV_WAND)
                 o_ptr->pval = o_ptr->pval * (o_ptr->number - 1) / o_ptr->number;
-        } else {
+        }
+        else {
             msg_format(_("乱暴な魔法のために%sが何本か壊れた！", "Wild magic consumes your %s!"), o_name);
         }
 

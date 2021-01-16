@@ -7,8 +7,7 @@
 #include "core/output-updater.h"
 #include "core/window-redrawer.h"
 
-void update_output(player_type* player_ptr)
-{
+void update_output(player_type* player_ptr) {
     if (player_ptr->redraw)
         redraw_stuff(player_ptr);
     if (player_ptr->window)

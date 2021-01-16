@@ -19,8 +19,7 @@
  * @param caster_ptr プレーヤーへの参照ポインタ
  * @return 処理が実際に行われたらTRUEを返す
  */
-bool alchemy(player_type *caster_ptr)
-{
+bool alchemy(player_type* caster_ptr) {
     bool force = FALSE;
     if (command_arg > 0)
         force = TRUE;
@@ -28,7 +27,7 @@ bool alchemy(player_type *caster_ptr)
     concptr q = _("どのアイテムを金に変えますか？", "Turn which item to gold? ");
     concptr s = _("金に変えられる物がありません。", "You have nothing to turn to gold.");
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(caster_ptr, &item, q, s, (USE_INVEN | USE_FLOOR), TV_NONE);
     if (!o_ptr)
         return FALSE;

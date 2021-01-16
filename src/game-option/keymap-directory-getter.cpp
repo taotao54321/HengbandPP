@@ -12,17 +12,18 @@
  * generally only apply to single keys, which makes it no more
  * than 128, so a char should suffice... but keymap_act is 256...
  */
-int get_keymap_dir(char ch)
-{
+int get_keymap_dir(char ch) {
     int d = 0;
 
     if (isdigit(ch)) {
         d = D2I(ch);
-    } else {
+    }
+    else {
         BIT_FLAGS mode;
         if (rogue_like_commands) {
             mode = KEYMAP_MODE_ROGUE;
-        } else {
+        }
+        else {
             mode = KEYMAP_MODE_ORIG;
         }
 

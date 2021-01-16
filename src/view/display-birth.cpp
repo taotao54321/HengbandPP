@@ -13,8 +13,7 @@
  * @details See 'display_player(p_ptr, )' for screen layout constraints.
  * @return なし
  */
-void birth_put_stats(player_type *creature_ptr)
-{
+void birth_put_stats(player_type* creature_ptr) {
     if (!autoroller)
         return;
 

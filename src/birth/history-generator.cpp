@@ -3,8 +3,7 @@
 #include "player/player-race-types.h"
 #include "util/buffer-shaper.h"
 
-static int get_history_chart(player_type *creature_ptr)
-{
+static int get_history_chart(player_type* creature_ptr) {
     switch (creature_ptr->prace) {
     case RACE_AMBERITE:
         return 67;
@@ -91,8 +90,7 @@ static int get_history_chart(player_type *creature_ptr)
  * @return なし
  * @details 画面表示と社会的地位の決定が密結合していて分離できない
  */
-static void decide_social_class(player_type *creature_ptr, char *buf)
-{
+static void decide_social_class(player_type* creature_ptr, char* buf) {
     int social_class = randint1(4);
     int chart = get_history_chart(creature_ptr);
     while (chart != 0) {
@@ -119,8 +117,7 @@ static void decide_social_class(player_type *creature_ptr, char *buf)
  * @brief プレイヤーの生い立ちの自動生成を行う。 / Get the racial history, and social class, using the "history charts".
  * @return なし
  */
-void get_history(player_type *creature_ptr)
-{
+void get_history(player_type* creature_ptr) {
     for (int i = 0; i < 4; i++)
         creature_ptr->history[i][0] = '\0';
 
@@ -129,7 +126,7 @@ void get_history(player_type *creature_ptr)
     decide_social_class(creature_ptr, buf);
 
     /* loop */
-    char *s;
+    char* s;
     for (s = buf; *s == ' '; s++)
         ;
 
@@ -140,7 +137,7 @@ void get_history(player_type *creature_ptr)
     {
         char temp[64 * 4];
         shape_buffer(s, 60, temp, sizeof(temp));
-        char *t;
+        char* t;
         t = temp;
         for (int i = 0; i < 4; i++) {
             if (t[0] == 0)

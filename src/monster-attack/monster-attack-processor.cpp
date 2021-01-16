@@ -29,10 +29,9 @@
  * @details
  * 反攻撃の洞窟など、直接攻撃ができない場所では処理をスキップする
  */
-void exe_monster_attack_to_player(player_type *target_ptr, turn_flags *turn_flags_ptr, MONSTER_IDX m_idx, POSITION ny, POSITION nx)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+void exe_monster_attack_to_player(player_type* target_ptr, turn_flags* turn_flags_ptr, MONSTER_IDX m_idx, POSITION ny, POSITION nx) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     if (!turn_flags_ptr->do_move || !player_bold(target_ptr, ny, nx))
         return;
 
@@ -66,11 +65,10 @@ void exe_monster_attack_to_player(player_type *target_ptr, turn_flags *turn_flag
  * @param m_idx モンスターID
  * @param g_ptr グリッドへの参照ポインタ
  */
-static bool exe_monster_attack_to_monster(player_type *target_ptr, MONSTER_IDX m_idx, grid_type *g_ptr)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
-    monster_type *y_ptr;
+static bool exe_monster_attack_to_monster(player_type* target_ptr, MONSTER_IDX m_idx, grid_type* g_ptr) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
+    monster_type* y_ptr;
     y_ptr = &target_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
     if ((r_ptr->flags1 & RF1_NEVER_BLOW) != 0)
         return FALSE;
@@ -104,16 +102,15 @@ static bool exe_monster_attack_to_monster(player_type *target_ptr, MONSTER_IDX m
  * @param can_cross モンスターが地形を踏破できるならばTRUE
  * @return ターン消費が発生したらTRUE
  */
-bool process_monster_attack_to_monster(player_type *target_ptr, turn_flags *turn_flags_ptr, MONSTER_IDX m_idx, grid_type *g_ptr, bool can_cross)
-{
-    monster_type *m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
-    monster_type *y_ptr;
+bool process_monster_attack_to_monster(player_type* target_ptr, turn_flags* turn_flags_ptr, MONSTER_IDX m_idx, grid_type* g_ptr, bool can_cross) {
+    monster_type* m_ptr = &target_ptr->current_floor_ptr->m_list[m_idx];
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
+    monster_type* y_ptr;
     y_ptr = &target_ptr->current_floor_ptr->m_list[g_ptr->m_idx];
     if (!turn_flags_ptr->do_move || (g_ptr->m_idx == 0))
         return FALSE;
 
-    monster_race *z_ptr = &r_info[y_ptr->r_idx];
+    monster_race* z_ptr = &r_info[y_ptr->r_idx];
     turn_flags_ptr->do_move = FALSE;
     if ((((r_ptr->flags2 & RF2_KILL_BODY) != 0) && ((r_ptr->flags1 & RF1_NEVER_BLOW) == 0) && (r_ptr->mexp * r_ptr->level > z_ptr->mexp * z_ptr->level)
             && can_cross && (g_ptr->m_idx != target_ptr->riding))

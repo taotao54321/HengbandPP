@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool place_quest_monsters(player_type *creature_ptr);
+bool place_quest_monsters(player_type* creature_ptr);

@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-void museum_remove_object(player_type *player_ptr);
+void museum_remove_object(player_type* player_ptr);

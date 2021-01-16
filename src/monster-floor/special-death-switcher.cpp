@@ -5,8 +5,8 @@
  */
 
 #include "monster-floor/special-death-switcher.h"
-#include "artifact/fixed-art-types.h"
 #include "artifact/fixed-art-generator.h"
+#include "artifact/fixed-art-types.h"
 #include "effect/effect-characteristics.h"
 #include "effect/effect-processor.h"
 #include "floor/cave.h"
@@ -49,9 +49,8 @@
  * @param message 召喚時のメッセージ
  * @return なし
  */
-static void summon_self(player_type *player_ptr, monster_death_type *md_ptr, summon_type type, int probability, POSITION radius, concptr message)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void summon_self(player_type* player_ptr, monster_death_type* md_ptr, summon_type type, int probability, POSITION radius, concptr message) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (floor_ptr->inside_arena || player_ptr->phase_out || one_in_(probability))
         return;
 
@@ -71,8 +70,7 @@ static void summon_self(player_type *player_ptr, monster_death_type *md_ptr, sum
         msg_print(message);
 }
 
-static void on_dead_pink_horror(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_pink_horror(player_type* player_ptr, monster_death_type* md_ptr) {
     if (player_ptr->current_floor_ptr->inside_arena || player_ptr->phase_out)
         return;
 
@@ -91,26 +89,24 @@ static void on_dead_pink_horror(player_type *player_ptr, monster_death_type *md_
         msg_print(_("ピンク・ホラーは分裂した！", "The Pink horror divides!"));
 }
 
-static void on_dead_bloodletter(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_bloodletter(player_type* player_ptr, monster_death_type* md_ptr) {
     if (!md_ptr->drop_chosen_item || (randint1(100) >= 15))
         return;
 
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     object_prep(player_ptr, q_ptr, lookup_kind(TV_SWORD, SV_BLADE_OF_CHAOS));
     apply_magic(player_ptr, q_ptr, player_ptr->current_floor_ptr->object_level, AM_NO_FIXED_ART | md_ptr->mo_mode);
     (void)drop_near(player_ptr, q_ptr, -1, md_ptr->md_y, md_ptr->md_x);
 }
 
-static void on_dead_raal(player_type *player_ptr, monster_death_type *md_ptr)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+static void on_dead_raal(player_type* player_ptr, monster_death_type* md_ptr) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (!md_ptr->drop_chosen_item || (floor_ptr->dun_level <= 9))
         return;
 
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     object_wipe(q_ptr);
     if ((floor_ptr->dun_level > 49) && one_in_(5))
         get_obj_num_hook = kind_is_good_book;
@@ -127,13 +123,11 @@ static void on_dead_raal(player_type *player_ptr, monster_death_type *md_ptr)
  * @param md_ptr モンスター撃破構造体への参照ポインタ
  * @return なし
  */
-static void on_dead_dawn(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_dawn(player_type* player_ptr, monster_death_type* md_ptr) {
     summon_self(player_ptr, md_ptr, SUMMON_DAWN, 7, 20, _("新たな戦士が現れた！", "A new warrior steps forth!"));
 }
 
-static void on_dead_unmaker(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_unmaker(player_type* player_ptr, monster_death_type* md_ptr) {
     if (is_seen(player_ptr, md_ptr->m_ptr)) {
         GAME_TEXT m_name[MAX_NLEN];
         monster_desc(player_ptr, m_name, md_ptr->m_ptr, MD_NONE);
@@ -143,13 +137,12 @@ static void on_dead_unmaker(player_type *player_ptr, monster_death_type *md_ptr)
     (void)project(player_ptr, md_ptr->m_idx, 6, md_ptr->md_y, md_ptr->md_x, 100, GF_CHAOS, PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL, -1);
 }
 
-static void on_dead_sacred_treasures(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_sacred_treasures(player_type* player_ptr, monster_death_type* md_ptr) {
     if ((player_ptr->pseikaku != PERSONALITY_LAZY) || !md_ptr->drop_chosen_item)
         return;
 
     ARTIFACT_IDX a_idx = 0;
-    artifact_type *a_ptr = NULL;
+    artifact_type* a_ptr = NULL;
     do {
         switch (randint0(3)) {
         case 0:
@@ -178,13 +171,12 @@ static void on_dead_sacred_treasures(player_type *player_ptr, monster_death_type
         a_ptr->cur_num = 1;
 }
 
-static void on_dead_serpent(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_serpent(player_type* player_ptr, monster_death_type* md_ptr) {
     if (!md_ptr->drop_chosen_item)
         return;
 
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     object_prep(player_ptr, q_ptr, lookup_kind(TV_HAFTED, SV_GROND));
     q_ptr->name1 = ART_GROND;
     apply_magic(player_ptr, q_ptr, -1, AM_GOOD | AM_GREAT);
@@ -196,19 +188,17 @@ static void on_dead_serpent(player_type *player_ptr, monster_death_type *md_ptr)
     (void)drop_near(player_ptr, q_ptr, -1, md_ptr->md_y, md_ptr->md_x);
 }
 
-static void on_dead_death_sword(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_death_sword(player_type* player_ptr, monster_death_type* md_ptr) {
     if (!md_ptr->drop_chosen_item)
         return;
 
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     object_prep(player_ptr, q_ptr, lookup_kind(TV_SWORD, randint1(2)));
     (void)drop_near(player_ptr, q_ptr, -1, md_ptr->md_y, md_ptr->md_x);
 }
 
-static void on_dead_can_angel(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_can_angel(player_type* player_ptr, monster_death_type* md_ptr) {
     bool is_drop_can = md_ptr->drop_chosen_item;
     bool is_silver = md_ptr->m_ptr->r_idx == MON_A_SILVER;
     is_silver &= md_ptr->r_ptr->r_akills % 5 == 0;
@@ -217,14 +207,13 @@ static void on_dead_can_angel(player_type *player_ptr, monster_death_type *md_pt
         return;
 
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     object_prep(player_ptr, q_ptr, lookup_kind(TV_CHEST, SV_CHEST_KANDUME));
     apply_magic(player_ptr, q_ptr, player_ptr->current_floor_ptr->object_level, AM_NO_FIXED_ART);
     (void)drop_near(player_ptr, q_ptr, -1, md_ptr->md_y, md_ptr->md_x);
 }
 
-static void on_dead_rolento(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_rolento(player_type* player_ptr, monster_death_type* md_ptr) {
     if (is_seen(player_ptr, md_ptr->m_ptr)) {
         GAME_TEXT m_name[MAX_NLEN];
         monster_desc(player_ptr, m_name, md_ptr->m_ptr, MD_NONE);
@@ -234,8 +223,7 @@ static void on_dead_rolento(player_type *player_ptr, monster_death_type *md_ptr)
     (void)project(player_ptr, md_ptr->m_idx, 3, md_ptr->md_y, md_ptr->md_x, damroll(20, 10), GF_FIRE, PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL, -1);
 }
 
-static void on_dead_aqua_illusion(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_aqua_illusion(player_type* player_ptr, monster_death_type* md_ptr) {
     if (player_ptr->current_floor_ptr->inside_arena || player_ptr->phase_out)
         return;
 
@@ -261,13 +249,11 @@ static void on_dead_aqua_illusion(player_type *player_ptr, monster_death_type *m
  * @param md_ptr モンスター撃破構造体への参照ポインタ
  * @return なし
  */
-static void on_dead_totem_moai(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_totem_moai(player_type* player_ptr, monster_death_type* md_ptr) {
     summon_self(player_ptr, md_ptr, SUMMON_TOTEM_MOAI, 8, 5, _("新たなモアイが現れた！", "A new moai steps forth!"));
 }
 
-static void on_dead_dragon_centipede(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_dragon_centipede(player_type* player_ptr, monster_death_type* md_ptr) {
     if (player_ptr->current_floor_ptr->inside_arena || player_ptr->phase_out)
         return;
 
@@ -290,8 +276,7 @@ static void on_dead_dragon_centipede(player_type *player_ptr, monster_death_type
 }
 
 /* todo 死亡時の特殊メッセージを表示するだけの処理を複数作るなら、switch/case文に分けられるように汎用化すること */
-static void on_dead_big_raven(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_big_raven(player_type* player_ptr, monster_death_type* md_ptr) {
     if (!is_seen(player_ptr, md_ptr->m_ptr))
         return;
 
@@ -300,18 +285,16 @@ static void on_dead_big_raven(player_type *player_ptr, monster_death_type *md_pt
     msg_format(_("%sはお星さまになった！", "%^s became a constellation!"), m_name);
 }
 
-static void drop_specific_item_on_dead(player_type *player_ptr, monster_death_type *md_ptr, bool (*object_hook_pf)(KIND_OBJECT_IDX k_idx))
-{
+static void drop_specific_item_on_dead(player_type* player_ptr, monster_death_type* md_ptr, bool (*object_hook_pf)(KIND_OBJECT_IDX k_idx)) {
     object_type forge;
-    object_type *q_ptr = &forge;
+    object_type* q_ptr = &forge;
     object_wipe(q_ptr);
     get_obj_num_hook = object_hook_pf;
     (void)make_object(player_ptr, q_ptr, md_ptr->mo_mode);
     (void)drop_near(player_ptr, q_ptr, -1, md_ptr->md_y, md_ptr->md_x);
 }
 
-static void on_dead_mimics(player_type *player_ptr, monster_death_type *md_ptr)
-{
+static void on_dead_mimics(player_type* player_ptr, monster_death_type* md_ptr) {
     if (!md_ptr->drop_chosen_item)
         return;
 
@@ -357,8 +340,7 @@ static void on_dead_mimics(player_type *player_ptr, monster_death_type *md_ptr)
     }
 }
 
-void switch_special_death(player_type *player_ptr, monster_death_type *md_ptr)
-{
+void switch_special_death(player_type* player_ptr, monster_death_type* md_ptr) {
     switch (md_ptr->m_ptr->r_idx) {
     case MON_PINK_HORROR:
         on_dead_pink_horror(player_ptr, md_ptr);

@@ -48,11 +48,10 @@ summon_type summon_specific_type = SUMMON_NONE;
  * @param r_idx チェックするモンスター種族ID
  * @return 召喚条件が一致するならtrue / Return TRUE is the monster is OK and FALSE otherwise
  */
-static bool restrict_monster_to_dungeon(player_type *player_ptr, MONRACE_IDX r_idx)
-{
+static bool restrict_monster_to_dungeon(player_type* player_ptr, MONRACE_IDX r_idx) {
     DUNGEON_IDX d_idx = player_ptr->dungeon_idx;
-    dungeon_type *d_ptr = &d_info[d_idx];
-    monster_race *r_ptr = &r_info[r_idx];
+    dungeon_type* d_ptr = &d_info[d_idx];
+    monster_race* r_ptr = &r_info[r_idx];
 
     if (d_ptr->flags1 & DF1_CHAMELEON) {
         if (chameleon_change_m_idx)
@@ -75,7 +74,7 @@ static bool restrict_monster_to_dungeon(player_type *player_ptr, MONRACE_IDX r_i
             return FALSE;
     }
 
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (d_ptr->flags1 & DF1_BEGINNER) {
         if (r_ptr->level > floor_ptr->dun_level)
             return FALSE;
@@ -266,8 +265,7 @@ static bool restrict_monster_to_dungeon(player_type *player_ptr, MONRACE_IDX r_i
  * @param player_ptr プレーヤーへの参照ポインタ
  * @return 地勢にあったモンスターの生成条件関数
  */
-monsterrace_hook_type get_monster_hook(player_type *player_ptr)
-{
+monsterrace_hook_type get_monster_hook(player_type* player_ptr) {
     if ((player_ptr->current_floor_ptr->dun_level > 0) || (player_ptr->current_floor_ptr->inside_quest > 0))
         return (monsterrace_hook_type)mon_hook_dungeon;
 
@@ -300,9 +298,8 @@ monsterrace_hook_type get_monster_hook(player_type *player_ptr)
  * @brief 指定された広域マップ座標の地勢を元にモンスターの生成条件関数を返す
  * @return 地勢にあったモンスターの生成条件関数
  */
-monsterrace_hook_type get_monster_hook2(player_type *player_ptr, POSITION y, POSITION x)
-{
-    feature_type *f_ptr = &f_info[player_ptr->current_floor_ptr->grid_array[y][x].feat];
+monsterrace_hook_type get_monster_hook2(player_type* player_ptr, POSITION y, POSITION x) {
+    feature_type* f_ptr = &f_info[player_ptr->current_floor_ptr->grid_array[y][x].feat];
     if (has_flag(f_ptr->flags, FF_WATER))
         return has_flag(f_ptr->flags, FF_DEEP) ? (monsterrace_hook_type)mon_hook_deep_water : (monsterrace_hook_type)mon_hook_shallow_water;
 
@@ -319,13 +316,12 @@ monsterrace_hook_type get_monster_hook2(player_type *player_ptr, POSITION y, POS
  * @param monster_hook2 制限関数2
  * @return エラーコード
  */
-errr get_mon_num_prep(player_type *player_ptr, monsterrace_hook_type monster_hook, monsterrace_hook_type monster_hook2)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+errr get_mon_num_prep(player_type* player_ptr, monsterrace_hook_type monster_hook, monsterrace_hook_type monster_hook2) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     for (int i = 0; i < alloc_race_size; i++) {
-        alloc_entry *entry = &alloc_race_table[i];
+        alloc_entry* entry = &alloc_race_table[i];
         entry->prob2 = 0;
-        monster_race *r_ptr = &r_info[entry->index];
+        monster_race* r_ptr = &r_info[entry->index];
         if (((monster_hook != NULL) && !((*monster_hook)(player_ptr, entry->index)))
             || ((monster_hook2 != NULL) && !((*monster_hook2)(player_ptr, entry->index))))
             continue;

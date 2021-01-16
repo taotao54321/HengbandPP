@@ -13,8 +13,7 @@
  * @param out_file 出力先ファイルポインタ
  * @return なし
  */
-void dump_mutations(player_type *creature_ptr, FILE *out_file)
-{
+void dump_mutations(player_type* creature_ptr, FILE* out_file) {
     if (!out_file)
         return;
 

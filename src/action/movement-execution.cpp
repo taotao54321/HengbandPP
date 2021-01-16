@@ -44,8 +44,7 @@
  * @param feature_type  *mimic_f_ptr
  * @return 移動不能であればTRUE
  */
-static bool boundary_floor(grid_type *g_ptr, feature_type *f_ptr, feature_type *mimic_f_ptr)
-{
+static bool boundary_floor(grid_type* g_ptr, feature_type* f_ptr, feature_type* mimic_f_ptr) {
     bool is_boundary_floor = g_ptr->mimic > 0;
     is_boundary_floor &= permanent_wall(f_ptr);
     is_boundary_floor &= has_flag((mimic_f_ptr)->flags, FF_MOVE) || has_flag((mimic_f_ptr)->flags, FF_CAN_FLY);
@@ -69,12 +68,11 @@ static bool boundary_floor(grid_type *g_ptr, feature_type *f_ptr, feature_type *
  * any monster which might be in the destination grid.  Previously,\n
  * moving into walls was "free" and did NOT hit invisible monsters.\n
  */
-void exe_movement(player_type *creature_ptr, DIRECTION dir, bool do_pickup, bool break_trap)
-{
+void exe_movement(player_type* creature_ptr, DIRECTION dir, bool do_pickup, bool break_trap) {
     POSITION y = creature_ptr->y + ddy[dir];
     POSITION x = creature_ptr->x + ddx[dir];
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
     bool p_can_enter = player_can_enter(creature_ptr, g_ptr->feat, CEM_P_CAN_ENTER_PATTERN);
     bool stormbringer = FALSE;
     if (!floor_ptr->dun_level && !creature_ptr->wild_mode && ((x == 0) || (x == MAX_WID - 1) || (y == 0) || (y == MAX_HGT - 1))) {
@@ -85,40 +83,47 @@ void exe_movement(player_type *creature_ptr, DIRECTION dir, bool do_pickup, bool
                 creature_ptr->oldpy = floor_ptr->height - 2;
                 creature_ptr->oldpx = floor_ptr->width - 2;
                 creature_ptr->ambush_flag = FALSE;
-            } else if ((y == 0) && (x == MAX_WID - 1)) {
+            }
+            else if ((y == 0) && (x == MAX_WID - 1)) {
                 creature_ptr->wilderness_y--;
                 creature_ptr->wilderness_x++;
                 creature_ptr->oldpy = floor_ptr->height - 2;
                 creature_ptr->oldpx = 1;
                 creature_ptr->ambush_flag = FALSE;
-            } else if ((y == MAX_HGT - 1) && (x == 0)) {
+            }
+            else if ((y == MAX_HGT - 1) && (x == 0)) {
                 creature_ptr->wilderness_y++;
                 creature_ptr->wilderness_x--;
                 creature_ptr->oldpy = 1;
                 creature_ptr->oldpx = floor_ptr->width - 2;
                 creature_ptr->ambush_flag = FALSE;
-            } else if ((y == MAX_HGT - 1) && (x == MAX_WID - 1)) {
+            }
+            else if ((y == MAX_HGT - 1) && (x == MAX_WID - 1)) {
                 creature_ptr->wilderness_y++;
                 creature_ptr->wilderness_x++;
                 creature_ptr->oldpy = 1;
                 creature_ptr->oldpx = 1;
                 creature_ptr->ambush_flag = FALSE;
-            } else if (y == 0) {
+            }
+            else if (y == 0) {
                 creature_ptr->wilderness_y--;
                 creature_ptr->oldpy = floor_ptr->height - 2;
                 creature_ptr->oldpx = x;
                 creature_ptr->ambush_flag = FALSE;
-            } else if (y == MAX_HGT - 1) {
+            }
+            else if (y == MAX_HGT - 1) {
                 creature_ptr->wilderness_y++;
                 creature_ptr->oldpy = 1;
                 creature_ptr->oldpx = x;
                 creature_ptr->ambush_flag = FALSE;
-            } else if (x == 0) {
+            }
+            else if (x == 0) {
                 creature_ptr->wilderness_x--;
                 creature_ptr->oldpx = floor_ptr->width - 2;
                 creature_ptr->oldpy = y;
                 creature_ptr->ambush_flag = FALSE;
-            } else if (x == MAX_WID - 1) {
+            }
+            else if (x == MAX_WID - 1) {
                 creature_ptr->wilderness_x++;
                 creature_ptr->oldpx = 1;
                 creature_ptr->oldpy = y;
@@ -133,7 +138,7 @@ void exe_movement(player_type *creature_ptr, DIRECTION dir, bool do_pickup, bool
         p_can_enter = FALSE;
     }
 
-    monster_type *m_ptr;
+    monster_type* m_ptr;
     m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
     if (creature_ptr->inventory_list[INVEN_RARM].name1 == ART_STORMBRINGER)
         stormbringer = TRUE;
@@ -141,14 +146,14 @@ void exe_movement(player_type *creature_ptr, DIRECTION dir, bool do_pickup, bool
     if (creature_ptr->inventory_list[INVEN_LARM].name1 == ART_STORMBRINGER)
         stormbringer = TRUE;
 
-    feature_type *f_ptr = &f_info[g_ptr->feat];
+    feature_type* f_ptr = &f_info[g_ptr->feat];
     bool p_can_kill_walls = has_kill_wall(creature_ptr) && has_flag(f_ptr->flags, FF_HURT_DISI) && (!p_can_enter || !has_flag(f_ptr->flags, FF_LOS))
         && !has_flag(f_ptr->flags, FF_PERMANENT);
     GAME_TEXT m_name[MAX_NLEN];
     bool can_move = TRUE;
     bool do_past = FALSE;
     if (g_ptr->m_idx && (m_ptr->ml || p_can_enter || p_can_kill_walls)) {
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (!is_hostile(m_ptr)
             && !(creature_ptr->confused || creature_ptr->image || !m_ptr->ml || creature_ptr->stun
                 || ((creature_ptr->muta2 & MUT2_BERS_RAGE) && is_shero(creature_ptr)))
@@ -165,52 +170,62 @@ void exe_movement(player_type *creature_ptr, DIRECTION dir, bool do_pickup, bool
             if ((stormbringer && (randint1(1000) > 666)) || (creature_ptr->pclass == CLASS_BERSERKER)) {
                 do_cmd_attack(creature_ptr, y, x, HISSATSU_NONE);
                 can_move = FALSE;
-            } else if (monster_can_cross_terrain(creature_ptr, floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].feat, r_ptr, 0)) {
+            }
+            else if (monster_can_cross_terrain(creature_ptr, floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].feat, r_ptr, 0)) {
                 do_past = TRUE;
-            } else {
+            }
+            else {
                 msg_format(_("%^sが邪魔だ！", "%^s is in your way!"), m_name);
                 free_turn(creature_ptr);
                 can_move = FALSE;
             }
-        } else {
+        }
+        else {
             do_cmd_attack(creature_ptr, y, x, HISSATSU_NONE);
             can_move = FALSE;
         }
     }
 
-    monster_type *riding_m_ptr = &floor_ptr->m_list[creature_ptr->riding];
-    monster_race *riding_r_ptr = &r_info[creature_ptr->riding ? riding_m_ptr->r_idx : 0];
+    monster_type* riding_m_ptr = &floor_ptr->m_list[creature_ptr->riding];
+    monster_race* riding_r_ptr = &r_info[creature_ptr->riding ? riding_m_ptr->r_idx : 0];
     if (can_move && creature_ptr->riding) {
         if (riding_r_ptr->flags1 & RF1_NEVER_MOVE) {
             msg_print(_("動けない！", "Can't move!"));
             free_turn(creature_ptr);
             can_move = FALSE;
             disturb(creature_ptr, FALSE, TRUE);
-        } else if (monster_fear_remaining(riding_m_ptr)) {
+        }
+        else if (monster_fear_remaining(riding_m_ptr)) {
             GAME_TEXT steed_name[MAX_NLEN];
             monster_desc(creature_ptr, steed_name, riding_m_ptr, 0);
             msg_format(_("%sが恐怖していて制御できない。", "%^s is too scared to control."), steed_name);
             can_move = FALSE;
             disturb(creature_ptr, FALSE, TRUE);
-        } else if (creature_ptr->riding_ryoute) {
+        }
+        else if (creature_ptr->riding_ryoute) {
             can_move = FALSE;
             disturb(creature_ptr, FALSE, TRUE);
-        } else if (has_flag(f_ptr->flags, FF_CAN_FLY) && (riding_r_ptr->flags7 & RF7_CAN_FLY)) {
+        }
+        else if (has_flag(f_ptr->flags, FF_CAN_FLY) && (riding_r_ptr->flags7 & RF7_CAN_FLY)) {
             /* Allow moving */
-        } else if (has_flag(f_ptr->flags, FF_CAN_SWIM) && (riding_r_ptr->flags7 & RF7_CAN_SWIM)) {
+        }
+        else if (has_flag(f_ptr->flags, FF_CAN_SWIM) && (riding_r_ptr->flags7 & RF7_CAN_SWIM)) {
             /* Allow moving */
-        } else if (has_flag(f_ptr->flags, FF_WATER) && !(riding_r_ptr->flags7 & RF7_AQUATIC)
+        }
+        else if (has_flag(f_ptr->flags, FF_WATER) && !(riding_r_ptr->flags7 & RF7_AQUATIC)
             && (has_flag(f_ptr->flags, FF_DEEP) || (riding_r_ptr->flags2 & RF2_AURA_FIRE))) {
             msg_format(_("%sの上に行けない。", "Can't swim."), f_name + f_info[get_feat_mimic(g_ptr)].name);
             free_turn(creature_ptr);
             can_move = FALSE;
             disturb(creature_ptr, FALSE, TRUE);
-        } else if (!has_flag(f_ptr->flags, FF_WATER) && (riding_r_ptr->flags7 & RF7_AQUATIC)) {
+        }
+        else if (!has_flag(f_ptr->flags, FF_WATER) && (riding_r_ptr->flags7 & RF7_AQUATIC)) {
             msg_format(_("%sから上がれない。", "Can't land."), f_name + f_info[get_feat_mimic(&floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name);
             free_turn(creature_ptr);
             can_move = FALSE;
             disturb(creature_ptr, FALSE, TRUE);
-        } else if (has_flag(f_ptr->flags, FF_LAVA) && !(riding_r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)) {
+        }
+        else if (has_flag(f_ptr->flags, FF_LAVA) && !(riding_r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK)) {
             msg_format(_("%sの上に行けない。", "Too hot to go through."), f_name + f_info[get_feat_mimic(g_ptr)].name);
             free_turn(creature_ptr);
             can_move = FALSE;
@@ -227,22 +242,26 @@ void exe_movement(player_type *creature_ptr, DIRECTION dir, bool do_pickup, bool
     }
 
     if (!can_move) {
-    } else if (!has_flag(f_ptr->flags, FF_MOVE) && has_flag(f_ptr->flags, FF_CAN_FLY) && !creature_ptr->levitation) {
+    }
+    else if (!has_flag(f_ptr->flags, FF_MOVE) && has_flag(f_ptr->flags, FF_CAN_FLY) && !creature_ptr->levitation) {
         msg_format(_("空を飛ばないと%sの上には行けない。", "You need to fly to go through the %s."), f_name + f_info[get_feat_mimic(g_ptr)].name);
         free_turn(creature_ptr);
         creature_ptr->running = 0;
         can_move = FALSE;
-    } else if (has_flag(f_ptr->flags, FF_TREE) && !p_can_kill_walls) {
+    }
+    else if (has_flag(f_ptr->flags, FF_TREE) && !p_can_kill_walls) {
         if ((creature_ptr->pclass != CLASS_RANGER) && !creature_ptr->levitation && (!creature_ptr->riding || !(riding_r_ptr->flags8 & RF8_WILD_WOOD)))
             creature_ptr->energy_use *= 2;
-    } else if ((do_pickup != easy_disarm) && has_flag(f_ptr->flags, FF_DISARM) && !g_ptr->mimic) {
+    }
+    else if ((do_pickup != easy_disarm) && has_flag(f_ptr->flags, FF_DISARM) && !g_ptr->mimic) {
         if (!trap_can_be_ignored(creature_ptr, g_ptr->feat)) {
             (void)exe_disarm(creature_ptr, y, x, dir);
             return;
         }
-    } else if (!p_can_enter && !p_can_kill_walls) {
+    }
+    else if (!p_can_enter && !p_can_kill_walls) {
         FEAT_IDX feat = get_feat_mimic(g_ptr);
-        feature_type *mimic_f_ptr = &f_info[feat];
+        feature_type* mimic_f_ptr = &f_info[feat];
         concptr name = f_name + mimic_f_ptr->name;
         can_move = FALSE;
         if (!(g_ptr->info & CAVE_MARK) && !player_can_see_bold(creature_ptr, y, x)) {
@@ -257,12 +276,14 @@ void exe_movement(player_type *creature_ptr, DIRECTION dir, bool do_pickup, bool
                 g_ptr->info |= (CAVE_MARK);
                 lite_spot(creature_ptr, y, x);
             }
-        } else {
+        }
+        else {
             if (boundary_floor(g_ptr, f_ptr, mimic_f_ptr)) {
                 msg_print(_("それ以上先には進めない。", "You cannot go any more."));
                 if (!(creature_ptr->confused || creature_ptr->stun || creature_ptr->image))
                     free_turn(creature_ptr);
-            } else {
+            }
+            else {
                 if (easy_open && is_closed_door(creature_ptr, feat) && easy_open_door(creature_ptr, y, x))
                     return;
 

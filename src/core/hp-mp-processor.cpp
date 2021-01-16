@@ -13,34 +13,31 @@
 #include "monster-race/race-flags2.h"
 #include "monster-race/race-flags3.h"
 #include "object-enchant/object-ego.h"
+#include "object-enchant/tr-types.h"
 #include "object-enchant/trc-types.h"
-#include "player/attack-defense-types.h"
+#include "object/object-flags.h"
 #include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
 #include "player/player-damage.h"
 #include "player/player-race-types.h"
 #include "player/player-race.h"
-#include "player/special-defense-types.h"
 #include "player/player-status-flags.h"
+#include "player/player-status-resist.h"
+#include "player/special-defense-types.h"
 #include "status/bad-status-setter.h"
 #include "status/element-resistance.h"
 #include "system/floor-type-definition.h"
 #include "util/bit-flags-calculator.h"
 #include "view/display-messages.h"
 #include "world/world.h"
-#include "player/player-status-resist.h"
-#include "util/bit-flags-calculator.h"
-#include "object/object-flags.h"
-#include "object-enchant/tr-types.h"
-
 
 /*!
  * @brief 10ゲームターンが進行するごとにプレイヤーのHPとMPの増減処理を行う。
  *  / Handle timed damage and regeneration every 10 game turns
  * @return なし
  */
-void process_player_hp_mp(player_type *creature_ptr)
-{
-    feature_type *f_ptr = &f_info[creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].feat];
+void process_player_hp_mp(player_type* creature_ptr) {
+    feature_type* f_ptr = &f_info[creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].feat];
     bool cave_no_regen = FALSE;
     int upkeep_factor = 0;
     int regen_amount = PY_REGEN_NORMAL;
@@ -52,17 +49,23 @@ void process_player_hp_mp(player_type *creature_ptr)
         HIT_POINT dam;
         if (creature_ptr->cut > 1000) {
             dam = 200;
-        } else if (creature_ptr->cut > 200) {
+        }
+        else if (creature_ptr->cut > 200) {
             dam = 80;
-        } else if (creature_ptr->cut > 100) {
+        }
+        else if (creature_ptr->cut > 100) {
             dam = 32;
-        } else if (creature_ptr->cut > 50) {
+        }
+        else if (creature_ptr->cut > 50) {
             dam = 16;
-        } else if (creature_ptr->cut > 25) {
+        }
+        else if (creature_ptr->cut > 25) {
             dam = 7;
-        } else if (creature_ptr->cut > 10) {
+        }
+        else if (creature_ptr->cut > 10) {
             dam = 3;
-        } else {
+        }
+        else {
             dam = 1;
         }
 
@@ -78,7 +81,7 @@ void process_player_hp_mp(player_type *creature_ptr)
             }
         }
 
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[INVEN_LITE];
         BIT_FLAGS flgs[TR_FLAG_SIZE];
         object_flags(creature_ptr, o_ptr, flgs);
@@ -103,7 +106,8 @@ void process_player_hp_mp(player_type *creature_ptr)
 
         if (has_flag(f_ptr->flags, FF_DEEP)) {
             damage = 6000 + randint0(4000);
-        } else if (!creature_ptr->levitation) {
+        }
+        else if (!creature_ptr->levitation) {
             damage = 3000 + randint0(2000);
         }
 
@@ -114,7 +118,6 @@ void process_player_hp_mp(player_type *creature_ptr)
                 damage = damage / 3;
             if (is_oppose_fire(creature_ptr))
                 damage = damage / 3;
-
 
             if (creature_ptr->levitation)
                 damage = damage / 5;
@@ -127,7 +130,8 @@ void process_player_hp_mp(player_type *creature_ptr)
                     format(_("%sの上に浮遊したダメージ", "flying over %s"),
                         f_name + f_info[get_feat_mimic(&creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name),
                     -1);
-            } else {
+            }
+            else {
                 concptr name = f_name + f_info[get_feat_mimic(&creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name;
                 msg_format(_("%sで火傷した！", "The %s burns you!"), name);
                 take_hit(creature_ptr, DAMAGE_NOESCAPE, damage, name, -1);
@@ -142,7 +146,8 @@ void process_player_hp_mp(player_type *creature_ptr)
 
         if (has_flag(f_ptr->flags, FF_DEEP)) {
             damage = 6000 + randint0(4000);
-        } else if (!creature_ptr->levitation) {
+        }
+        else if (!creature_ptr->levitation) {
             damage = 3000 + randint0(2000);
         }
 
@@ -162,7 +167,8 @@ void process_player_hp_mp(player_type *creature_ptr)
                     format(_("%sの上に浮遊したダメージ", "flying over %s"),
                         f_name + f_info[get_feat_mimic(&creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name),
                     -1);
-            } else {
+            }
+            else {
                 concptr name = f_name + f_info[get_feat_mimic(&creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name;
                 msg_format(_("%sに凍えた！", "The %s frostbites you!"), name);
                 take_hit(creature_ptr, DAMAGE_NOESCAPE, damage, name, -1);
@@ -177,7 +183,8 @@ void process_player_hp_mp(player_type *creature_ptr)
 
         if (has_flag(f_ptr->flags, FF_DEEP)) {
             damage = 6000 + randint0(4000);
-        } else if (!creature_ptr->levitation) {
+        }
+        else if (!creature_ptr->levitation) {
             damage = 3000 + randint0(2000);
         }
 
@@ -197,7 +204,8 @@ void process_player_hp_mp(player_type *creature_ptr)
                     format(_("%sの上に浮遊したダメージ", "flying over %s"),
                         f_name + f_info[get_feat_mimic(&creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name),
                     -1);
-            } else {
+            }
+            else {
                 concptr name = f_name + f_info[get_feat_mimic(&creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name;
                 msg_format(_("%sに感電した！", "The %s shocks you!"), name);
                 take_hit(creature_ptr, DAMAGE_NOESCAPE, damage, name, -1);
@@ -212,7 +220,8 @@ void process_player_hp_mp(player_type *creature_ptr)
 
         if (has_flag(f_ptr->flags, FF_DEEP)) {
             damage = 6000 + randint0(4000);
-        } else if (!creature_ptr->levitation) {
+        }
+        else if (!creature_ptr->levitation) {
             damage = 3000 + randint0(2000);
         }
 
@@ -232,7 +241,8 @@ void process_player_hp_mp(player_type *creature_ptr)
                     format(_("%sの上に浮遊したダメージ", "flying over %s"),
                         f_name + f_info[get_feat_mimic(&creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name),
                     -1);
-            } else {
+            }
+            else {
                 concptr name = f_name + f_info[get_feat_mimic(&creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name;
                 msg_format(_("%sに溶かされた！", "The %s melts you!"), name);
                 take_hit(creature_ptr, DAMAGE_NOESCAPE, damage, name, -1);
@@ -247,7 +257,8 @@ void process_player_hp_mp(player_type *creature_ptr)
 
         if (has_flag(f_ptr->flags, FF_DEEP)) {
             damage = 6000 + randint0(4000);
-        } else if (!creature_ptr->levitation) {
+        }
+        else if (!creature_ptr->levitation) {
             damage = 3000 + randint0(2000);
         }
 
@@ -266,7 +277,8 @@ void process_player_hp_mp(player_type *creature_ptr)
                     -1);
                 if (has_resist_pois(creature_ptr))
                     (void)set_poisoned(creature_ptr, creature_ptr->poisoned + 1);
-            } else {
+            }
+            else {
                 concptr name = f_name + f_info[get_feat_mimic(&creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x])].name;
                 msg_format(_("%sに毒された！", "The %s poisons you!"), name);
                 take_hit(creature_ptr, DAMAGE_NOESCAPE, damage, name, -1);
@@ -338,7 +350,8 @@ void process_player_hp_mp(player_type *creature_ptr)
             if (has_pass_wall(creature_ptr)) {
                 msg_print(_("体の分子が分解した気がする！", "Your molecules feel disrupted!"));
                 dam_desc = _("密度", "density");
-            } else {
+            }
+            else {
                 msg_print(_("崩れた岩に押し潰された！", "You are being crushed!"));
                 dam_desc = _("硬い岩", "solid rock");
             }
@@ -350,16 +363,19 @@ void process_player_hp_mp(player_type *creature_ptr)
     if (creature_ptr->food < PY_FOOD_WEAK) {
         if (creature_ptr->food < PY_FOOD_STARVE) {
             regen_amount = 0;
-        } else if (creature_ptr->food < PY_FOOD_FAINT) {
+        }
+        else if (creature_ptr->food < PY_FOOD_FAINT) {
             regen_amount = PY_REGEN_FAINT;
-        } else {
+        }
+        else {
             regen_amount = PY_REGEN_WEAK;
         }
     }
 
     if (pattern_effect(creature_ptr)) {
         cave_no_regen = TRUE;
-    } else {
+    }
+    else {
         if (creature_ptr->regenerate) {
             regen_amount = regen_amount * 2;
         }
@@ -414,8 +430,7 @@ void process_player_hp_mp(player_type *creature_ptr)
 /*
  * Increase players hit points, notice effects
  */
-bool hp_player(player_type *creature_ptr, int num)
-{
+bool hp_player(player_type* creature_ptr, int num) {
     int vir;
     vir = virtue_number(creature_ptr, V_VITALITY);
 
@@ -440,11 +455,14 @@ bool hp_player(player_type *creature_ptr, int num)
         creature_ptr->window |= (PW_PLAYER);
         if (num < 5) {
             msg_print(_("少し気分が良くなった。", "You feel a little better."));
-        } else if (num < 15) {
+        }
+        else if (num < 15) {
             msg_print(_("気分が良くなった。", "You feel better."));
-        } else if (num < 35) {
+        }
+        else if (num < 35) {
             msg_print(_("とても気分が良くなった。", "You feel much better."));
-        } else {
+        }
+        else {
             msg_print(_("ひじょうに気分が良くなった。", "You feel very good."));
         }
 

@@ -30,8 +30,7 @@
  * @param max ビジュアルIDの最大数
  * @return 指定が実際に行われた場合TRUE、キャンセルされた場合FALSE
  */
-static bool cmd_visuals_aux(int i, IDX *num, IDX max)
-{
+static bool cmd_visuals_aux(int i, IDX* num, IDX max) {
     if (iscntrl(i)) {
         char str[10] = "";
         sprintf(str, "%d", *num);
@@ -41,7 +40,8 @@ static bool cmd_visuals_aux(int i, IDX *num, IDX max)
         IDX tmp = (IDX)strtol(str, NULL, 0);
         if (tmp >= 0 && tmp < max)
             *num = tmp;
-    } else if (isupper(i))
+    }
+    else if (isupper(i))
         *num = (*num + max - 1) % max;
     else
         *num = (*num + 1) % max;
@@ -54,8 +54,7 @@ static bool cmd_visuals_aux(int i, IDX *num, IDX max)
  * @param choice_msg 選択メッセージ
  * @return なし
  */
-static void print_visuals_menu(concptr choice_msg)
-{
+static void print_visuals_menu(concptr choice_msg) {
     prt(_("[ 画面表示の設定 ]", "Interact with Visuals"), 1, 0);
     prt(_("(0) ユーザー設定ファイルのロード", "(0) Load a user pref file"), 3, 5);
     prt(_("(1) モンスターの 色/文字 をファイルに書き出す", "(1) Dump monster attr/chars"), 4, 5);
@@ -74,9 +73,8 @@ static void print_visuals_menu(concptr choice_msg)
 /*
  * Interact with "visuals"
  */
-void do_cmd_visuals(player_type *creature_ptr, void (*process_autopick_file_command)(char *))
-{
-    FILE *auto_dump_stream;
+void do_cmd_visuals(player_type* creature_ptr, void (*process_autopick_file_command)(char*)) {
+    FILE* auto_dump_stream;
     char tmp[160];
     char buf[1024];
     bool need_redraw = FALSE;
@@ -118,7 +116,7 @@ void do_cmd_visuals(player_type *creature_ptr, void (*process_autopick_file_comm
 
             auto_dump_printf(auto_dump_stream, _("\n# モンスターの[色/文字]の設定\n\n", "\n# Monster attr/char definitions\n\n"));
             for (i = 0; i < max_r_idx; i++) {
-                monster_race *r_ptr = &r_info[i];
+                monster_race* r_ptr = &r_info[i];
                 if (!r_ptr->name)
                     continue;
 
@@ -145,13 +143,14 @@ void do_cmd_visuals(player_type *creature_ptr, void (*process_autopick_file_comm
             auto_dump_printf(auto_dump_stream, _("\n# アイテムの[色/文字]の設定\n\n", "\n# Object attr/char definitions\n\n"));
             for (KIND_OBJECT_IDX k_idx = 0; k_idx < max_k_idx; k_idx++) {
                 GAME_TEXT o_name[MAX_NLEN];
-                object_kind *k_ptr = &k_info[k_idx];
+                object_kind* k_ptr = &k_info[k_idx];
                 if (!k_ptr->name)
                     continue;
 
                 if (!k_ptr->flavor) {
                     strip_name(o_name, k_idx);
-                } else {
+                }
+                else {
                     object_type forge;
                     object_prep(creature_ptr, &forge, k_idx);
                     describe_flavor(creature_ptr, o_name, &forge, OD_FORCE_FLAVOR);
@@ -179,7 +178,7 @@ void do_cmd_visuals(player_type *creature_ptr, void (*process_autopick_file_comm
 
             auto_dump_printf(auto_dump_stream, _("\n# 地形の[色/文字]の設定\n\n", "\n# Feature attr/char definitions\n\n"));
             for (i = 0; i < max_f_idx; i++) {
-                feature_type *f_ptr = &f_info[i];
+                feature_type* f_ptr = &f_info[i];
                 if (!f_ptr->name)
                     continue;
                 if (f_ptr->mimic != i)
@@ -200,7 +199,7 @@ void do_cmd_visuals(player_type *creature_ptr, void (*process_autopick_file_comm
             static MONRACE_IDX r = 0;
             prt(format(_("コマンド: %s", "Command: %s"), choice_msg), 15, 0);
             while (TRUE) {
-                monster_race *r_ptr = &r_info[r];
+                monster_race* r_ptr = &r_info[r];
                 int c;
                 IDX t;
 
@@ -267,7 +266,7 @@ void do_cmd_visuals(player_type *creature_ptr, void (*process_autopick_file_comm
             static IDX k = 0;
             prt(format(_("コマンド: %s", "Command: %s"), choice_msg), 15, 0);
             while (TRUE) {
-                object_kind *k_ptr = &k_info[k];
+                object_kind* k_ptr = &k_info[k];
                 int c;
                 IDX t;
 
@@ -338,7 +337,7 @@ void do_cmd_visuals(player_type *creature_ptr, void (*process_autopick_file_comm
             static IDX lighting_level = F_LIT_STANDARD;
             prt(format(_("コマンド: %s", "Command: %s"), choice_msg), 15, 0);
             while (TRUE) {
-                feature_type *f_ptr = &f_info[f];
+                feature_type* f_ptr = &f_info[f];
                 int c;
                 IDX t;
 

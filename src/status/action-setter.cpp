@@ -26,8 +26,7 @@
  * から選択。
  * @return なし
  */
-void set_action(player_type *creature_ptr, ACTION_IDX typ)
-{
+void set_action(player_type* creature_ptr, ACTION_IDX typ) {
     int prev_typ = creature_ptr->action;
     if (typ == prev_typ) {
         return;

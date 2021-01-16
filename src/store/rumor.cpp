@@ -19,15 +19,13 @@
  * Display a rumor and apply its effects
  */
 
-IDX rumor_num(char *zz, IDX max_idx)
-{
+IDX rumor_num(char* zz, IDX max_idx) {
     if (strcmp(zz, "*") == 0)
         return randint1(max_idx - 1);
     return (IDX)atoi(zz);
 }
 
-concptr rumor_bind_name(char *base, concptr fullname)
-{
+concptr rumor_bind_name(char* base, concptr fullname) {
     char *s, *v;
     s = strstr(base, "{Name}");
     if (s) {
@@ -40,8 +38,7 @@ concptr rumor_bind_name(char *base, concptr fullname)
     return v;
 }
 
-void display_rumor(player_type *player_ptr, bool ex)
-{
+void display_rumor(player_type* player_ptr, bool ex) {
     char rumor[1024];
     int section = (ex && (randint0(3) == 0)) ? 1 : 0;
     errr err = _(get_rnd_line_jonly("rumors_j.txt", section, rumor, 10), get_rnd_line("rumors.txt", section, rumor));
@@ -53,7 +50,7 @@ void display_rumor(player_type *player_ptr, bool ex)
         return;
     }
 
-    char *zz[4];
+    char* zz[4];
     if (tokenize(rumor + 2, 3, zz, TOKENIZE_CHECKQUOTE) != 3) {
         msg_print(_("この情報は間違っている。", "This information is wrong."));
         return;
@@ -63,7 +60,7 @@ void display_rumor(player_type *player_ptr, bool ex)
     char fullname[1024] = "";
     if (strcmp(zz[0], "ARTIFACT") == 0) {
         ARTIFACT_IDX a_idx;
-        artifact_type *a_ptr;
+        artifact_type* a_ptr;
         while (TRUE) {
             a_idx = rumor_num(zz[1], max_a_idx);
 
@@ -74,13 +71,14 @@ void display_rumor(player_type *player_ptr, bool ex)
 
         KIND_OBJECT_IDX k_idx = lookup_kind(a_ptr->tval, a_ptr->sval);
         object_type forge;
-        object_type *q_ptr = &forge;
+        object_type* q_ptr = &forge;
         object_prep(player_ptr, q_ptr, k_idx);
         q_ptr->name1 = a_idx;
         q_ptr->ident = IDENT_STORE;
         describe_flavor(player_ptr, fullname, q_ptr, OD_NAME_ONLY);
-    } else if (strcmp(zz[0], "MONSTER") == 0) {
-        monster_race *r_ptr;
+    }
+    else if (strcmp(zz[0], "MONSTER") == 0) {
+        monster_race* r_ptr;
         while (TRUE) {
             MONRACE_IDX r_idx = rumor_num(zz[1], max_r_idx);
             r_ptr = &r_info[r_idx];
@@ -93,9 +91,10 @@ void display_rumor(player_type *player_ptr, bool ex)
         if (!r_ptr->r_sights) {
             r_ptr->r_sights++;
         }
-    } else if (strcmp(zz[0], "DUNGEON") == 0) {
+    }
+    else if (strcmp(zz[0], "DUNGEON") == 0) {
         DUNGEON_IDX d_idx;
-        dungeon_type *d_ptr;
+        dungeon_type* d_ptr;
         while (TRUE) {
             d_idx = rumor_num(zz[1], current_world_ptr->max_d_idx);
             d_ptr = &d_info[d_idx];
@@ -109,7 +108,8 @@ void display_rumor(player_type *player_ptr, bool ex)
             max_dlv[d_idx] = d_ptr->mindepth;
             rumor_eff_format = _("%sに帰還できるようになった。", "You can recall to %s.");
         }
-    } else if (strcmp(zz[0], "TOWN") == 0) {
+    }
+    else if (strcmp(zz[0], "TOWN") == 0) {
         IDX t_idx;
         while (TRUE) {
             t_idx = rumor_num(zz[1], NO_TOWN);

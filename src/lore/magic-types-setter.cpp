@@ -8,8 +8,7 @@
 #include "mspell/mspell-type.h"
 #include "term/term-color-types.h"
 
-void set_breath_types(player_type *player_ptr, lore_type *lore_ptr)
-{
+void set_breath_types(player_type* player_ptr, lore_type* lore_ptr) {
     lore_ptr->vn = 0;
     if (lore_ptr->flags4 & (RF4_BR_ACID)) {
         set_damage(player_ptr, lore_ptr->r_idx, (MS_BR_ACID), _("酸%s", "acid%s"), lore_ptr->tmp_msg[lore_ptr->vn]);
@@ -144,8 +143,7 @@ void set_breath_types(player_type *player_ptr, lore_type *lore_ptr)
     }
 }
 
-void set_ball_types(player_type *player_ptr, lore_type *lore_ptr)
-{
+void set_ball_types(player_type* player_ptr, lore_type* lore_ptr) {
     if (lore_ptr->a_ability_flags1 & (RF5_BA_ACID)) {
         set_damage(player_ptr, lore_ptr->r_idx, (MS_BALL_ACID), _("アシッド・ボール%s", "produce acid balls%s"), lore_ptr->tmp_msg[lore_ptr->vn]);
         lore_ptr->vp[lore_ptr->vn] = lore_ptr->tmp_msg[lore_ptr->vn];
@@ -219,8 +217,7 @@ void set_ball_types(player_type *player_ptr, lore_type *lore_ptr)
     }
 }
 
-void set_particular_types(player_type *player_ptr, lore_type *lore_ptr)
-{
+void set_particular_types(player_type* player_ptr, lore_type* lore_ptr) {
     if (lore_ptr->a_ability_flags2 & (RF6_HAND_DOOM)) {
         lore_ptr->vp[lore_ptr->vn] = _("破滅の手(40%-60%)", "invoke the Hand of Doom(40%-60%)");
         lore_ptr->color[lore_ptr->vn++] = TERM_VIOLET;
@@ -275,8 +272,7 @@ void set_particular_types(player_type *player_ptr, lore_type *lore_ptr)
     }
 }
 
-void set_bolt_types(player_type *player_ptr, lore_type *lore_ptr)
-{
+void set_bolt_types(player_type* player_ptr, lore_type* lore_ptr) {
     if (lore_ptr->a_ability_flags1 & (RF5_BO_ACID)) {
         set_damage(player_ptr, lore_ptr->r_idx, (MS_BOLT_ACID), _("アシッド・ボルト%s", "produce acid bolts%s"), lore_ptr->tmp_msg[lore_ptr->vn]);
         lore_ptr->vp[lore_ptr->vn] = lore_ptr->tmp_msg[lore_ptr->vn];
@@ -338,8 +334,7 @@ void set_bolt_types(player_type *player_ptr, lore_type *lore_ptr)
     }
 }
 
-void set_status_types(lore_type *lore_ptr)
-{
+void set_status_types(lore_type* lore_ptr) {
     if (lore_ptr->a_ability_flags1 & (RF5_SCARE)) {
         lore_ptr->vp[lore_ptr->vn] = _("恐怖", "terrify");
         lore_ptr->color[lore_ptr->vn++] = TERM_SLATE;
@@ -389,8 +384,7 @@ void set_status_types(lore_type *lore_ptr)
 /*!
  * @details 間にザ・ワールドが入っているが、元々こうなので敢えて修正はしない
  */
-void set_teleport_types(lore_type *lore_ptr)
-{
+void set_teleport_types(lore_type* lore_ptr) {
     if (lore_ptr->a_ability_flags2 & (RF6_BLINK)) {
         lore_ptr->vp[lore_ptr->vn] = _("ショートテレポート", "blink-self");
         lore_ptr->color[lore_ptr->vn++] = TERM_UMBER;
@@ -422,13 +416,13 @@ void set_teleport_types(lore_type *lore_ptr)
     }
 }
 
-void set_floor_types(player_type *player_ptr, lore_type *lore_ptr)
-{
+void set_floor_types(player_type* player_ptr, lore_type* lore_ptr) {
     if (lore_ptr->a_ability_flags2 & (RF6_DARKNESS)) {
         if ((player_ptr->pclass != CLASS_NINJA) || (lore_ptr->r_ptr->flags3 & (RF3_UNDEAD | RF3_HURT_LITE)) || (lore_ptr->r_ptr->flags7 & RF7_DARK_MASK)) {
             lore_ptr->vp[lore_ptr->vn] = _("暗闇", "create darkness");
             lore_ptr->color[lore_ptr->vn++] = TERM_L_DARK;
-        } else {
+        }
+        else {
             lore_ptr->vp[lore_ptr->vn] = _("閃光", "create light");
             lore_ptr->color[lore_ptr->vn++] = TERM_YELLOW;
         }
@@ -450,8 +444,7 @@ void set_floor_types(player_type *player_ptr, lore_type *lore_ptr)
     }
 }
 
-void set_summon_types(lore_type *lore_ptr)
-{
+void set_summon_types(lore_type* lore_ptr) {
     if (lore_ptr->a_ability_flags2 & (RF6_S_MONSTER)) {
         lore_ptr->vp[lore_ptr->vn] = _("モンスター一体召喚", "summon a monster");
         lore_ptr->color[lore_ptr->vn++] = TERM_SLATE;

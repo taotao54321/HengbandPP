@@ -37,8 +37,7 @@
  * @param cury 現在の鏡のy座標
  * @param curx 現在の鏡のx座標
  */
-static void next_mirror(player_type *creature_ptr, POSITION *next_y, POSITION *next_x, POSITION cury, POSITION curx)
-{
+static void next_mirror(player_type* creature_ptr, POSITION* next_y, POSITION* next_x, POSITION cury, POSITION curx) {
     POSITION mirror_x[10], mirror_y[10]; /* 鏡はもっと少ない */
     int mirror_num = 0; /* 鏡の数 */
     for (POSITION x = 0; x < creature_ptr->current_floor_ptr->width; x++) {
@@ -81,9 +80,8 @@ static void next_mirror(player_type *creature_ptr, POSITION *next_y, POSITION *n
  * @return 何か一つでも効力があればTRUEを返す / TRUE if any "effects" of the
  * projection were observed, else FALSE
  */
-bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSITION y, POSITION x, const HIT_POINT dam, const EFFECT_ID typ, BIT_FLAGS flag,
-    const int monspell)
-{
+bool project(player_type* caster_ptr, const MONSTER_IDX who, POSITION rad, POSITION y, POSITION x, const HIT_POINT dam, const EFFECT_ID typ, BIT_FLAGS flag,
+    const int monspell) {
     int dist;
     POSITION y1;
     POSITION x1;
@@ -119,14 +117,17 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
         y1 = y;
         flag &= ~(PROJECT_JUMP);
         jump = TRUE;
-    } else if (who <= 0) {
+    }
+    else if (who <= 0) {
         x1 = caster_ptr->x;
         y1 = caster_ptr->y;
-    } else if (who > 0) {
+    }
+    else if (who > 0) {
         x1 = caster_ptr->current_floor_ptr->m_list[who].fx;
         y1 = caster_ptr->current_floor_ptr->m_list[who].fy;
         monster_desc(caster_ptr, who_name, &caster_ptr->current_floor_ptr->m_list[who], MD_WRONGDOER_NAME);
-    } else {
+    }
+    else {
         x1 = x;
         y1 = y;
     }
@@ -215,7 +216,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                     }
 
                     visual = TRUE;
-                } else if (visual) {
+                }
+                else if (visual) {
                     term_xtra(TERM_XTRA_DELAY, msec);
                 }
             }
@@ -236,7 +238,7 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                 if (affect_monster(caster_ptr, 0, 0, y, x, dam, GF_SEEKER, flag, TRUE))
                     notice = TRUE;
                 if (!who && (project_m_n == 1) && !jump && (caster_ptr->current_floor_ptr->grid_array[project_m_y][project_m_x].m_idx > 0)) {
-                    monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[project_m_y][project_m_x].m_idx];
+                    monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[project_m_y][project_m_x].m_idx];
                     if (m_ptr->ml) {
                         if (!caster_ptr->image)
                             monster_race_track(caster_ptr, m_ptr->ap_r_idx);
@@ -258,7 +260,7 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                 notice = TRUE;
             if (!who && (project_m_n == 1) && !jump) {
                 if (caster_ptr->current_floor_ptr->grid_array[project_m_y][project_m_x].m_idx > 0) {
-                    monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[project_m_y][project_m_x].m_idx];
+                    monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[project_m_y][project_m_x].m_idx];
 
                     if (m_ptr->ml) {
                         if (!caster_ptr->image)
@@ -272,7 +274,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
         }
 
         return notice;
-    } else if (typ == GF_SUPER_RAY) {
+    }
+    else if (typ == GF_SUPER_RAY) {
         int j;
         int second_step = 0;
         project_m_n = 0;
@@ -310,7 +313,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                     }
 
                     visual = TRUE;
-                } else if (visual) {
+                }
+                else if (visual) {
                     term_xtra(TERM_XTRA_DELAY, msec);
                 }
             }
@@ -356,7 +360,7 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
             (void)affect_monster(caster_ptr, 0, 0, py, px, dam, GF_SUPER_RAY, flag, TRUE);
             if (!who && (project_m_n == 1) && !jump) {
                 if (caster_ptr->current_floor_ptr->grid_array[project_m_y][project_m_x].m_idx > 0) {
-                    monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[project_m_y][project_m_x].m_idx];
+                    monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[project_m_y][project_m_x].m_idx];
 
                     if (m_ptr->ml) {
                         if (!caster_ptr->image)
@@ -381,10 +385,12 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
         if (flag & PROJECT_DISI) {
             if (cave_stop_disintegration(caster_ptr->current_floor_ptr, ny, nx) && (rad > 0))
                 break;
-        } else if (flag & PROJECT_LOS) {
+        }
+        else if (flag & PROJECT_LOS) {
             if (!cave_los_bold(caster_ptr->current_floor_ptr, ny, nx) && (rad > 0))
                 break;
-        } else {
+        }
+        else {
             if (!cave_has_flag_bold(caster_ptr->current_floor_ptr, ny, nx, FF_PROJECT) && (rad > 0))
                 break;
         }
@@ -419,7 +425,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                 }
 
                 visual = TRUE;
-            } else if (visual) {
+            }
+            else if (visual) {
                 term_xtra(TERM_XTRA_DELAY, msec);
             }
         }
@@ -459,7 +466,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
         if (breath) {
             flag &= ~(PROJECT_HIDE);
             breath_shape(caster_ptr, path_g, dist, &grids, gx, gy, gm, &gm_rad, rad, y1, x1, by, bx, typ);
-        } else {
+        }
+        else {
             for (dist = 0; dist <= rad; dist++) {
                 for (y = by - dist; y <= by + dist; y++) {
                     for (x = bx - dist; x <= bx + dist; x++) {
@@ -554,7 +562,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                 int d = dist_to_line(y, x, y1, x1, by, bx);
                 if (affect_feature(caster_ptr, who, d, y, x, dam, typ))
                     notice = TRUE;
-            } else {
+            }
+            else {
                 if (affect_feature(caster_ptr, who, dist, y, x, dam, typ))
                     notice = TRUE;
             }
@@ -574,7 +583,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                 int d = dist_to_line(y, x, y1, x1, by, bx);
                 if (affect_item(caster_ptr, who, d, y, x, dam, typ))
                     notice = TRUE;
-            } else {
+            }
+            else {
                 if (affect_item(caster_ptr, who, dist, y, x, dam, typ))
                     notice = TRUE;
             }
@@ -594,8 +604,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
             y = gy[i];
             x = gx[i];
             if (grids <= 1) {
-                monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[y][x].m_idx];
-                monster_race *ref_ptr = &r_info[m_ptr->r_idx];
+                monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[y][x].m_idx];
+                monster_race* ref_ptr = &r_info[m_ptr->r_idx];
                 if ((flag & PROJECT_REFLECTABLE) && caster_ptr->current_floor_ptr->grid_array[y][x].m_idx && (ref_ptr->flags2 & RF2_REFLECTING)
                     && ((caster_ptr->current_floor_ptr->grid_array[y][x].m_idx != caster_ptr->riding) || !(flag & PROJECT_PLAYER)) && (!who || dist_hack > 1)
                     && !one_in_(10)) {
@@ -638,7 +648,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
             /* Find the closest point in the blast */
             if (breath) {
                 effective_dist = dist_to_line(y, x, y1, x1, by, bx);
-            } else {
+            }
+            else {
                 effective_dist = dist;
             }
 
@@ -651,7 +662,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                          * So don't affects the mount.
                          */
                         continue;
-                    } else {
+                    }
+                    else {
                         /*
                          * The spell is not well aimed,
                          * So partly affect the mount too.
@@ -681,7 +693,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                 else if (flag & (PROJECT_BEAM | PROJECT_REFLECTABLE)) {
                     if (one_in_(2)) {
                         /* Hit the mount with full damage */
-                    } else {
+                    }
+                    else {
                         flag |= PROJECT_PLAYER;
                         continue;
                     }
@@ -706,7 +719,7 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
             x = project_m_x;
             y = project_m_y;
             if (caster_ptr->current_floor_ptr->grid_array[y][x].m_idx > 0) {
-                monster_type *m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[y][x].m_idx];
+                monster_type* m_ptr = &caster_ptr->current_floor_ptr->m_list[caster_ptr->current_floor_ptr->grid_array[y][x].m_idx];
 
                 if (m_ptr->ml) {
                     if (!caster_ptr->image)
@@ -732,7 +745,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
             /* Find the closest point in the blast */
             if (breath) {
                 effective_dist = dist_to_line(y, x, y1, x1, by, bx);
-            } else {
+            }
+            else {
                 effective_dist = dist;
             }
 
@@ -759,7 +773,8 @@ bool project(player_type *caster_ptr, const MONSTER_IDX who, POSITION rad, POSIT
                      * So don't affects the player.
                      */
                     continue;
-                } else {
+                }
+                else {
                     /*
                      * The spell is not well aimed,
                      * So partly affect the player too.

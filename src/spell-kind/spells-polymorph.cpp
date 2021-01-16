@@ -25,9 +25,8 @@
  * @details
  * Note that this function is one of the more "dangerous" ones...
  */
-static MONRACE_IDX poly_r_idx(player_type *caster_ptr, MONRACE_IDX r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
+static MONRACE_IDX poly_r_idx(player_type* caster_ptr, MONRACE_IDX r_idx) {
+    monster_race* r_ptr = &r_info[r_idx];
     if ((r_ptr->flags1 & RF1_UNIQUE) || (r_ptr->flags1 & RF1_QUESTOR))
         return (r_idx);
 
@@ -60,11 +59,10 @@ static MONRACE_IDX poly_r_idx(player_type *caster_ptr, MONRACE_IDX r_idx)
  * @param x 指定のX座標
  * @return 実際に変身したらTRUEを返す
  */
-bool polymorph_monster(player_type *caster_ptr, POSITION y, POSITION x)
-{
-    floor_type *floor_ptr = caster_ptr->current_floor_ptr;
-    grid_type *g_ptr = &floor_ptr->grid_array[y][x];
-    monster_type *m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
+bool polymorph_monster(player_type* caster_ptr, POSITION y, POSITION x) {
+    floor_type* floor_ptr = caster_ptr->current_floor_ptr;
+    grid_type* g_ptr = &floor_ptr->grid_array[y][x];
+    monster_type* m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
     MONRACE_IDX new_r_idx;
     MONRACE_IDX old_r_idx = m_ptr->r_idx;
     bool targeted = (target_who == g_ptr->m_idx) ? TRUE : FALSE;
@@ -99,21 +97,24 @@ bool polymorph_monster(player_type *caster_ptr, POSITION y, POSITION x)
         floor_ptr->m_list[hack_m_idx_ii].parent_m_idx = back_m.parent_m_idx;
         floor_ptr->m_list[hack_m_idx_ii].hold_o_idx = back_m.hold_o_idx;
         polymorphed = TRUE;
-    } else {
+    }
+    else {
         if (place_monster_aux(caster_ptr, 0, y, x, old_r_idx, (mode | PM_NO_KAGE | PM_IGNORE_TERRAIN))) {
             floor_ptr->m_list[hack_m_idx_ii] = back_m;
             mproc_init(floor_ptr);
-        } else
+        }
+        else
             preserve_hold_objects = FALSE;
     }
 
     if (preserve_hold_objects) {
         for (this_o_idx = back_m.hold_o_idx; this_o_idx; this_o_idx = next_o_idx) {
-            object_type *o_ptr = &floor_ptr->o_list[this_o_idx];
+            object_type* o_ptr = &floor_ptr->o_list[this_o_idx];
             next_o_idx = o_ptr->next_o_idx;
             o_ptr->held_m_idx = hack_m_idx_ii;
         }
-    } else if (back_m.hold_o_idx) {
+    }
+    else if (back_m.hold_o_idx) {
         for (this_o_idx = back_m.hold_o_idx; this_o_idx; this_o_idx = next_o_idx) {
             next_o_idx = floor_ptr->o_list[this_o_idx].next_o_idx;
             delete_object_idx(caster_ptr, this_o_idx);

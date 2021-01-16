@@ -7,8 +7,8 @@
 #include "object-enchant/item-feeling.h"
 #include "object-enchant/special-object-flags.h"
 #include "perception/object-perception.h"
-#include "player/player-status-flags.h"
 #include "player-info/avatar.h"
+#include "player/player-status-flags.h"
 #include "spell-kind/spells-floor.h"
 #include "system/object-type-definition.h"
 #include "view/display-messages.h"
@@ -29,8 +29,7 @@ static concptr desc_stat_neg[]
  * Note that this function (used by stat potions) now restores\n
  * the stat BEFORE increasing it.\n
  */
-bool inc_stat(player_type *creature_ptr, int stat)
-{
+bool inc_stat(player_type* creature_ptr, int stat) {
     BASE_STATUS gain;
     BASE_STATUS value = creature_ptr->stat_cur[stat];
     if (value >= creature_ptr->stat_max_max[stat])
@@ -39,7 +38,8 @@ bool inc_stat(player_type *creature_ptr, int stat)
     if (value < 18) {
         gain = ((randint0(100) < 75) ? 1 : 2);
         value += gain;
-    } else if (value < (creature_ptr->stat_max_max[stat] - 2)) {
+    }
+    else if (value < (creature_ptr->stat_max_max[stat] - 2)) {
         gain = (((creature_ptr->stat_max_max[stat]) - value) / 2 + 3) / 2;
         if (gain < 1)
             gain = 1;
@@ -47,7 +47,8 @@ bool inc_stat(player_type *creature_ptr, int stat)
         value += randint1(gain) + gain / 2;
         if (value > (creature_ptr->stat_max_max[stat] - 1))
             value = creature_ptr->stat_max_max[stat] - 1;
-    } else {
+    }
+    else {
         value++;
     }
 
@@ -77,8 +78,7 @@ bool inc_stat(player_type *creature_ptr, int stat)
  * if your stat is already drained, the "max" value will not drop all\n
  * the way down to the "cur" value.\n
  */
-bool dec_stat(player_type *creature_ptr, int stat, int amount, int permanent)
-{
+bool dec_stat(player_type* creature_ptr, int stat, int amount, int permanent) {
     bool res = FALSE;
     BASE_STATUS cur = creature_ptr->stat_cur[stat];
     BASE_STATUS max = creature_ptr->stat_max[stat];
@@ -92,7 +92,8 @@ bool dec_stat(player_type *creature_ptr, int stat, int amount, int permanent)
             if (amount > 20)
                 cur--;
             cur--;
-        } else {
+        }
+        else {
             int loss = (((cur - 18) / 2 + 1) / 2 + 1);
             if (loss < 1)
                 loss = 1;
@@ -126,7 +127,8 @@ bool dec_stat(player_type *creature_ptr, int stat, int amount, int permanent)
             if (amount > 20)
                 max--;
             max--;
-        } else {
+        }
+        else {
             int loss = (((max - 18) / 2 + 1) / 2 + 1);
             loss = ((randint1(loss) + loss) * amount) / 100;
             if (loss < amount / 2)
@@ -159,8 +161,7 @@ bool dec_stat(player_type *creature_ptr, int stat, int amount, int permanent)
  * @param stat 回復ステータスID
  * @return 実際に回復した場合TRUEを返す。
  */
-bool res_stat(player_type *creature_ptr, int stat)
-{
+bool res_stat(player_type* creature_ptr, int stat) {
     if (creature_ptr->stat_cur[stat] != creature_ptr->stat_max[stat]) {
         creature_ptr->stat_cur[stat] = creature_ptr->stat_max[stat];
         creature_ptr->update |= (PU_BONUS);
@@ -174,8 +175,7 @@ bool res_stat(player_type *creature_ptr, int stat)
 /*
  * Lose a "point"
  */
-bool do_dec_stat(player_type *creature_ptr, int stat)
-{
+bool do_dec_stat(player_type* creature_ptr, int stat) {
     bool sust = FALSE;
     switch (stat) {
     case A_STR:
@@ -220,8 +220,7 @@ bool do_dec_stat(player_type *creature_ptr, int stat)
 /*
  * Restore lost "points" in a stat
  */
-bool do_res_stat(player_type *creature_ptr, int stat)
-{
+bool do_res_stat(player_type* creature_ptr, int stat) {
     if (res_stat(creature_ptr, stat)) {
         msg_format(_("元通りに%sなった気がする。", "You feel %s."), desc_stat_pos[stat]);
         return TRUE;
@@ -233,17 +232,18 @@ bool do_res_stat(player_type *creature_ptr, int stat)
 /*
  * Gain a "point" in a stat
  */
-bool do_inc_stat(player_type *creature_ptr, int stat)
-{
+bool do_inc_stat(player_type* creature_ptr, int stat) {
     bool res = res_stat(creature_ptr, stat);
     if (inc_stat(creature_ptr, stat)) {
         if (stat == A_WIS) {
             chg_virtue(creature_ptr, V_ENLIGHTEN, 1);
             chg_virtue(creature_ptr, V_FAITH, 1);
-        } else if (stat == A_INT) {
+        }
+        else if (stat == A_INT) {
             chg_virtue(creature_ptr, V_KNOWLEDGE, 1);
             chg_virtue(creature_ptr, V_ENLIGHTEN, 1);
-        } else if (stat == A_CON)
+        }
+        else if (stat == A_CON)
             chg_virtue(creature_ptr, V_VITALITY, 1);
 
         msg_format(_("ワーオ！とても%sなった！", "Wow! You feel %s!"), desc_stat_pos[stat]);
@@ -261,12 +261,11 @@ bool do_inc_stat(player_type *creature_ptr, int stat)
 /*
  * Forget everything
  */
-bool lose_all_info(player_type *creature_ptr)
-{
+bool lose_all_info(player_type* creature_ptr) {
     chg_virtue(creature_ptr, V_KNOWLEDGE, -5);
     chg_virtue(creature_ptr, V_ENLIGHTEN, -5);
     for (int i = 0; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
         if ((o_ptr->k_idx == 0) || object_is_fully_known(o_ptr))
             continue;
 

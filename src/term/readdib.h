@@ -14,16 +14,16 @@
  * @brief ビットマップファイル情報構造体 / Information about a bitmap
  */
 typedef struct {
-	HANDLE hDIB;
-	HANDLE hBitmap;
-	HANDLE hPalette;
-	BYTE   CellWidth;
-	BYTE   CellHeight;
-	BYTE   TileWidth;
-	BYTE   TileHeight;
-	INT    OffsetX;
-	INT    OffsetY;
+    HANDLE hDIB;
+    HANDLE hBitmap;
+    HANDLE hPalette;
+    BYTE CellWidth;
+    BYTE CellHeight;
+    BYTE TileWidth;
+    BYTE TileHeight;
+    INT OffsetX;
+    INT OffsetY;
 } DIBINIT;
 
 /* Read a DIB from a file */
-BOOL ReadDIB(HWND, LPSTR, DIBINIT *);
+BOOL ReadDIB(HWND, LPSTR, DIBINIT*);

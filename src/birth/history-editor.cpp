@@ -5,7 +5,7 @@
 #include "term/term-color-types.h"
 #include "util/int-char-converter.h"
 #include "view/display-player.h" // 暫定。後で消す.
-#ifdef  JP
+#ifdef JP
 #include "locale/japanese.h"
 #endif
 
@@ -15,8 +15,7 @@
  * @param process_autopick_file_command 自動拾いファイルコマンドへの関数ポインタ
  * @return なし
  */
-void edit_history(player_type *creature_ptr, void (*process_autopick_file_command)(char *))
-{
+void edit_history(player_type* creature_ptr, void (*process_autopick_file_command)(char*)) {
     char old_history[4][60];
     for (int i = 0; i < 4; i++) {
         sprintf(old_history[i], "%s", creature_ptr->history[i]);
@@ -66,7 +65,8 @@ void edit_history(player_type *creature_ptr, void (*process_autopick_file_comman
             if ((x > 0) && (iskanji2(creature_ptr->history[y], x - 1)))
                 x--;
 #endif
-        } else if (skey == SKEY_DOWN || c == KTRL('n')) {
+        }
+        else if (skey == SKEY_DOWN || c == KTRL('n')) {
             y++;
             if (y > 3)
                 y = 0;
@@ -74,7 +74,8 @@ void edit_history(player_type *creature_ptr, void (*process_autopick_file_comman
             if ((x > 0) && (iskanji2(creature_ptr->history[y], x - 1)))
                 x--;
 #endif
-        } else if (skey == SKEY_RIGHT || c == KTRL('f')) {
+        }
+        else if (skey == SKEY_RIGHT || c == KTRL('f')) {
 #ifdef JP
             if (iskanji2(creature_ptr->history[y], x))
                 x++;
@@ -85,13 +86,15 @@ void edit_history(player_type *creature_ptr, void (*process_autopick_file_comman
                 if (y < 3)
                     y++;
             }
-        } else if (skey == SKEY_LEFT || c == KTRL('b')) {
+        }
+        else if (skey == SKEY_LEFT || c == KTRL('b')) {
             x--;
             if (x < 0) {
                 if (y) {
                     y--;
                     x = 58;
-                } else
+                }
+                else
                     x = 0;
             }
 
@@ -99,12 +102,14 @@ void edit_history(player_type *creature_ptr, void (*process_autopick_file_comman
             if ((x > 0) && (iskanji2(creature_ptr->history[y], x - 1)))
                 x--;
 #endif
-        } else if (c == '\r' || c == '\n') {
+        }
+        else if (c == '\r' || c == '\n') {
             term_erase(0, 11, 255);
             term_erase(0, 17, 255);
             put_str(_("(キャラクターの生い立ち - 編集済み)", "(Character Background - Edited)"), 11, 20);
             break;
-        } else if (c == ESCAPE) {
+        }
+        else if (c == ESCAPE) {
             clear_from(11);
             put_str(_("(キャラクターの生い立ち)", "(Character Background)"), 11, 25);
             for (int i = 0; i < 4; i++) {
@@ -113,20 +118,23 @@ void edit_history(player_type *creature_ptr, void (*process_autopick_file_comman
             }
 
             break;
-        } else if (c == KTRL('A')) {
+        }
+        else if (c == KTRL('A')) {
             if (read_histpref(creature_ptr, process_autopick_file_command)) {
 #ifdef JP
                 if ((x > 0) && (iskanji2(creature_ptr->history[y], x - 1)))
                     x--;
 #endif
             }
-        } else if (c == '\010') {
+        }
+        else if (c == '\010') {
             x--;
             if (x < 0) {
                 if (y) {
                     y--;
                     x = 58;
-                } else
+                }
+                else
                     x = 0;
             }
 

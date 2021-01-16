@@ -24,11 +24,10 @@
  * Destruction taken from "melee.c" code for "stealing".
  * New-style wands and rods handled correctly. -LM-
  */
-void inventory_damage(player_type *player_ptr, inven_func typ, int perc)
-{
+void inventory_damage(player_type* player_ptr, inven_func typ, int perc) {
     INVENTORY_IDX i;
     int j, amt;
-    object_type *o_ptr;
+    object_type* o_ptr;
     GAME_TEXT o_name[MAX_NLEN];
 
     if (check_multishadow(player_ptr) || player_ptr->current_floor_ptr->inside_arena)

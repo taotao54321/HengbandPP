@@ -18,13 +18,12 @@
 #include "util/quarks.h"
 #include "view/display-messages.h"
 
-static void inscribe_nickname(ae_type *ae_ptr)
-{
+static void inscribe_nickname(ae_type* ae_ptr) {
     if (!cap_nickname)
         return;
 
     concptr t;
-    char *s;
+    char* s;
     char buf[80] = "";
     if (ae_ptr->o_ptr->inscription)
         strcpy(buf, quark_str(ae_ptr->o_ptr->inscription));
@@ -57,8 +56,7 @@ static void inscribe_nickname(ae_type *ae_ptr)
     ae_ptr->o_ptr->inscription = quark_add(buf);
 }
 
-static bool set_activation_target(player_type *user_ptr, ae_type *ae_ptr)
-{
+static bool set_activation_target(player_type* user_ptr, ae_type* ae_ptr) {
     bool old_target_pet = target_pet;
     target_pet = TRUE;
     if (!get_aim_dir(user_ptr, &ae_ptr->dir)) {
@@ -78,12 +76,11 @@ static bool set_activation_target(player_type *user_ptr, ae_type *ae_ptr)
     return TRUE;
 }
 
-static void add_quark_to_inscription(player_type *user_ptr, ae_type *ae_ptr, concptr t, char *buf)
-{
+static void add_quark_to_inscription(player_type* user_ptr, ae_type* ae_ptr, concptr t, char* buf) {
     if (!*t)
         return;
 
-    char *s = buf;
+    char* s = buf;
     t++;
 #ifdef JP
 #else
@@ -120,8 +117,7 @@ static void add_quark_to_inscription(player_type *user_ptr, ae_type *ae_ptr, con
     ae_ptr->o_ptr->inscription = quark_add(buf);
 }
 
-static void check_inscription_value(player_type *user_ptr, ae_type *ae_ptr)
-{
+static void check_inscription_value(player_type* user_ptr, ae_type* ae_ptr) {
     if (ae_ptr->o_ptr->inscription == 0)
         return;
 
@@ -137,15 +133,14 @@ static void check_inscription_value(player_type *user_ptr, ae_type *ae_ptr)
     add_quark_to_inscription(user_ptr, ae_ptr, t, buf);
 }
 
-static void check_monster_ball_use(player_type *user_ptr, ae_type *ae_ptr)
-{
+static void check_monster_ball_use(player_type* user_ptr, ae_type* ae_ptr) {
     if (!monster_can_enter(user_ptr, user_ptr->y + ddy[ae_ptr->dir], user_ptr->x + ddx[ae_ptr->dir], &r_info[ae_ptr->o_ptr->pval], 0))
         return;
 
     if (!place_monster_aux(user_ptr, 0, user_ptr->y + ddy[ae_ptr->dir], user_ptr->x + ddx[ae_ptr->dir], ae_ptr->o_ptr->pval, PM_FORCE_PET | PM_NO_KAGE))
         return;
 
-    floor_type *floor_ptr = user_ptr->current_floor_ptr;
+    floor_type* floor_ptr = user_ptr->current_floor_ptr;
     if (ae_ptr->o_ptr->xtra3)
         floor_ptr->m_list[hack_m_idx_ii].mspeed = ae_ptr->o_ptr->xtra3;
 
@@ -164,8 +159,7 @@ static void check_monster_ball_use(player_type *user_ptr, ae_type *ae_ptr)
     ae_ptr->success = TRUE;
 }
 
-bool exe_monster_capture(player_type *user_ptr, ae_type *ae_ptr)
-{
+bool exe_monster_capture(player_type* user_ptr, ae_type* ae_ptr) {
     if (ae_ptr->o_ptr->tval != TV_CAPTURE)
         return FALSE;
 

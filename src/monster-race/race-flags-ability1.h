@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 typedef enum race_flags_ability {
-	RF5_BA_ACID = 0x00000001, /*!< モンスター能力: アシッド・ボール / Acid Ball */
+    RF5_BA_ACID = 0x00000001, /*!< モンスター能力: アシッド・ボール / Acid Ball */
     RF5_BA_ELEC = 0x00000002, /*!< モンスター能力: サンダー・ボール / Elec Ball */
     RF5_BA_FIRE = 0x00000004, /*!< モンスター能力: ファイア・ボール / Fire Ball */
     RF5_BA_COLD = 0x00000008, /*!< モンスター能力: アイス・ボール / Cold Ball */

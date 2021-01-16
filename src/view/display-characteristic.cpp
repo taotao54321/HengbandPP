@@ -36,8 +36,7 @@ typedef struct {
  * @param o_ptr 装備品への参照ポインタ
  * @return 与えられた装備が呪われていればTRUE
  */
-static bool decide_cursed_equipment_color(u16b mode, TERM_LEN row, TERM_LEN *col, BIT_FLAGS *flags, byte *header_color, object_type *o_ptr)
-{
+static bool decide_cursed_equipment_color(u16b mode, TERM_LEN row, TERM_LEN* col, BIT_FLAGS* flags, byte* header_color, object_type* o_ptr) {
     if ((mode & DP_CURSE) == 0)
         return FALSE;
 
@@ -69,15 +68,15 @@ static bool decide_cursed_equipment_color(u16b mode, TERM_LEN row, TERM_LEN *col
  * @param header_color 耐性等のパラメータ名 の色
  * @return 装備品が光源範囲に影響を及ぼすならばTRUE、そうでないならFALSE
  */
-static bool decide_light_equipment_color(TERM_LEN row, TERM_LEN *col, int flag1, BIT_FLAGS *flags, byte *header_color)
-{
+static bool decide_light_equipment_color(TERM_LEN row, TERM_LEN* col, int flag1, BIT_FLAGS* flags, byte* header_color) {
     if (flag1 != TR_LITE_1)
         return FALSE;
 
     if (has_dark_flag(flags)) {
         c_put_str(TERM_L_DARK, "+", row, *col);
         *header_color = TERM_WHITE;
-    } else if (has_lite_flag(flags)) {
+    }
+    else if (has_lite_flag(flags)) {
         c_put_str(TERM_WHITE, "+", row, *col);
         *header_color = TERM_WHITE;
     }
@@ -97,8 +96,7 @@ static bool decide_light_equipment_color(TERM_LEN row, TERM_LEN *col, int flag1,
  * @param vuln プレーヤーの弱点
  * @return なし
  */
-static void decide_vulnerability_color(u16b mode, TERM_LEN row, TERM_LEN *col, int flag1, BIT_FLAGS *flags, byte *header_color, bool vuln)
-{
+static void decide_vulnerability_color(u16b mode, TERM_LEN row, TERM_LEN* col, int flag1, BIT_FLAGS* flags, byte* header_color, bool vuln) {
     if (has_flag(flags, flag1)) {
         c_put_str((byte)(vuln ? TERM_L_RED : TERM_WHITE), (mode & DP_IMM) ? "*" : "+", row, *col);
         *header_color = TERM_WHITE;
@@ -120,12 +118,11 @@ static void decide_vulnerability_color(u16b mode, TERM_LEN row, TERM_LEN *col, i
  * @details
  * max_i changes only when weapon flags need only two column
  */
-static void decide_colors(player_type *creature_ptr, u16b mode, TERM_LEN row, TERM_LEN *col, int flag1, byte *header_color, bool vuln)
-{
+static void decide_colors(player_type* creature_ptr, u16b mode, TERM_LEN row, TERM_LEN* col, int flag1, byte* header_color, bool vuln) {
     int max_i = (mode & DP_WP) ? INVEN_LARM + 1 : INVEN_TOTAL;
     for (int i = INVEN_RARM; i < max_i; i++) {
         BIT_FLAGS flags[TR_FLAG_SIZE];
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &creature_ptr->inventory_list[i];
         object_flags_known(creature_ptr, o_ptr, flags);
         if (!(mode & DP_IMM))
@@ -152,8 +149,7 @@ static void decide_colors(player_type *creature_ptr, u16b mode, TERM_LEN row, TE
  * @param f プレイヤーの特性情報構造体
  * @return なし
  */
-static void display_one_characteristic(TERM_LEN row, TERM_LEN col, concptr header, byte header_color, int header_col, int flag1, bool vuln, all_player_flags *f)
-{
+static void display_one_characteristic(TERM_LEN row, TERM_LEN col, concptr header, byte header_color, int header_col, int flag1, bool vuln, all_player_flags* f) {
     c_put_str((byte)(vuln ? TERM_RED : TERM_SLATE), ".", row, col);
     if (has_flag(f->player_flags, flag1)) {
         c_put_str((byte)(vuln ? TERM_L_RED : TERM_WHITE), "+", row, col);
@@ -192,8 +188,7 @@ static void display_one_characteristic(TERM_LEN row, TERM_LEN col, concptr heade
  * @param mode 表示オプション
  * @return なし
  */
-static void process_one_characteristic(player_type *creature_ptr, TERM_LEN row, TERM_LEN col, concptr header, int flag1, all_player_flags *f, u16b mode)
-{
+static void process_one_characteristic(player_type* creature_ptr, TERM_LEN row, TERM_LEN col, concptr header, int flag1, all_player_flags* f, u16b mode) {
     byte header_color = TERM_L_DARK;
     int header_col = col;
     bool vuln = FALSE;
@@ -221,8 +216,7 @@ static void process_one_characteristic(player_type *creature_ptr, TERM_LEN row, 
  * @return なし
  */
 static void display_basic_resistance_info(
-    player_type *creature_ptr, void (*display_player_equippy)(player_type *, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags *f)
-{
+    player_type* creature_ptr, void (*display_player_equippy)(player_type*, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags* f) {
     TERM_LEN row = 12;
     TERM_LEN col = 1;
     (*display_player_equippy)(creature_ptr, row - 2, col + 8, 0);
@@ -252,8 +246,7 @@ static void display_basic_resistance_info(
  * @return なし
  */
 static void display_advanced_resistance_info(
-    player_type *creature_ptr, void (*display_player_equippy)(player_type *, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags *f)
-{
+    player_type* creature_ptr, void (*display_player_equippy)(player_type*, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags* f) {
     TERM_LEN row = 12;
     TERM_LEN col = 26;
     (*display_player_equippy)(creature_ptr, row - 2, col + 8, 0);
@@ -279,8 +272,7 @@ static void display_advanced_resistance_info(
  * @return なし
  */
 static void display_other_resistance_info(
-    player_type *creature_ptr, void (*display_player_equippy)(player_type *, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags *f)
-{
+    player_type* creature_ptr, void (*display_player_equippy)(player_type*, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags* f) {
     TERM_LEN row = 12;
     TERM_LEN col = 51;
     (*display_player_equippy)(creature_ptr, row - 2, col + 12, 0);
@@ -305,8 +297,7 @@ static void display_other_resistance_info(
  * Special display, part 1
  * @return なし
  */
-void display_player_flag_info_1(player_type *creature_ptr, void (*display_player_equippy)(player_type *, TERM_LEN, TERM_LEN, BIT_FLAGS16))
-{
+void display_player_flag_info_1(player_type* creature_ptr, void (*display_player_equippy)(player_type*, TERM_LEN, TERM_LEN, BIT_FLAGS16)) {
     all_player_flags f;
     player_flags(creature_ptr, f.player_flags);
     tim_player_flags(creature_ptr, f.tim_player_flags);
@@ -327,8 +318,7 @@ void display_player_flag_info_1(player_type *creature_ptr, void (*display_player
  * @param f 特性フラグへの参照ポインタ
  * @return なし
  */
-static void display_slay_info(player_type *creature_ptr, void (*display_player_equippy)(player_type *, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags *f)
-{
+static void display_slay_info(player_type* creature_ptr, void (*display_player_equippy)(player_type*, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags* f) {
     TERM_LEN row = 3;
     TERM_LEN col = 1;
     (*display_player_equippy)(creature_ptr, row - 2, col + 12, DP_WP);
@@ -372,8 +362,7 @@ static void display_slay_info(player_type *creature_ptr, void (*display_player_e
  * @return なし
  */
 static void display_esp_sustenance_info(
-    player_type *creature_ptr, void (*display_player_equippy)(player_type *, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags *f)
-{
+    player_type* creature_ptr, void (*display_player_equippy)(player_type*, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags* f) {
     TERM_LEN row = 3;
     TERM_LEN col = 1 + 12 + 7; // 20
     (*display_player_equippy)(creature_ptr, row - 2, col + 13, 0);
@@ -407,8 +396,7 @@ static void display_esp_sustenance_info(
  * @param f 特性フラグへの参照ポインタ
  * @return なし
  */
-static void display_other_info(player_type *creature_ptr, void (*display_player_equippy)(player_type *, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags *f)
-{
+static void display_other_info(player_type* creature_ptr, void (*display_player_equippy)(player_type*, TERM_LEN, TERM_LEN, BIT_FLAGS16), all_player_flags* f) {
     TERM_LEN row = 3;
     TERM_LEN col = 20 + 12 + 17;
     (*display_player_equippy)(creature_ptr, row - 2, col + 14, 0);
@@ -440,8 +428,7 @@ static void display_other_info(player_type *creature_ptr, void (*display_player_
  * Special display, part 2
  * @return なし
  */
-void display_player_flag_info_2(player_type *creature_ptr, void (*display_player_equippy)(player_type *, TERM_LEN, TERM_LEN, BIT_FLAGS16))
-{
+void display_player_flag_info_2(player_type* creature_ptr, void (*display_player_equippy)(player_type*, TERM_LEN, TERM_LEN, BIT_FLAGS16)) {
     /* Extract flags and store */
     all_player_flags f;
     player_flags(creature_ptr, f.player_flags);

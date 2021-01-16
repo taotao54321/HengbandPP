@@ -1,14 +1,14 @@
 ﻿#include "birth/birth-stat.h"
 #include "birth/auto-roller.h"
 #include "core/player-redraw-types.h"
-#include "sv-definition/sv-weapon-types.h"
 #include "player/player-class.h"
-#include "player/player-personality.h"
 #include "player/player-personalities-types.h"
+#include "player/player-personality.h"
+#include "player/player-race-types.h"
 #include "player/player-race.h"
 #include "player/player-skill.h"
 #include "spell/spells-status.h"
-#include "player/player-race-types.h"
+#include "sv-definition/sv-weapon-types.h"
 
 /*! オートロール能力値の乱数分布 / emulate 5 + 1d3 + 1d4 + 1d5 by randint0(60) */
 BASE_STATUS rand3_4_5[60] = {
@@ -26,23 +26,26 @@ BASE_STATUS rand3_4_5[60] = {
  * @param amount 加減算する値
  * @return 加減算の結果
  */
-int adjust_stat(int value, int amount)
-{
+int adjust_stat(int value, int amount) {
     if (amount < 0) {
         for (int i = 0; i < (0 - amount); i++) {
             if (value >= 18 + 10) {
                 value -= 10;
-            } else if (value > 18) {
+            }
+            else if (value > 18) {
                 value = 18;
-            } else if (value > 3) {
+            }
+            else if (value > 3) {
                 value--;
             }
         }
-    } else if (amount > 0) {
+    }
+    else if (amount > 0) {
         for (int i = 0; i < amount; i++) {
             if (value < 18) {
                 value++;
-            } else {
+            }
+            else {
                 value += 10;
             }
         }
@@ -59,8 +62,7 @@ int adjust_stat(int value, int amount)
  * calc_bonuses()による、独立ステータスからの副次ステータス算出も行っている。
  * For efficiency, we include a chunk of "calc_bonuses()".\n
  */
-void get_stats(player_type* creature_ptr)
-{
+void get_stats(player_type* creature_ptr) {
     while (TRUE) {
         int sum = 0;
         for (int i = 0; i < 2; i++) {
@@ -89,8 +91,7 @@ void get_stats(player_type* creature_ptr)
  * @brief その他「オートローラ中は算出の対象にしない」副次ステータスを処理する / Roll for some info that the auto-roller ignores
  * @return なし
  */
-void get_extra(player_type* creature_ptr, bool roll_hitdie)
-{
+void get_extra(player_type* creature_ptr, bool roll_hitdie) {
     if (creature_ptr->prace == RACE_ANDROID)
         creature_ptr->expfact = rp_ptr->r_exp;
     else
@@ -142,8 +143,7 @@ void get_extra(player_type* creature_ptr, bool roll_hitdie)
  * @return なし
  * @details 新生の薬やステータスシャッフルでもこの関数が呼ばれる
  */
-void get_max_stats(player_type* creature_ptr)
-{
+void get_max_stats(player_type* creature_ptr) {
     int dice[6];
     while (TRUE) {
         int j = 0;

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "system/angband.h"
 #include "object-enchant/tr-types.h"
+#include "system/angband.h"
 
 typedef struct {
     tr_type flag;

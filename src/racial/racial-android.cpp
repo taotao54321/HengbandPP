@@ -18,8 +18,7 @@
 #include "target/target-getter.h"
 #include "view/display-messages.h"
 
-bool android_inside_weapon(player_type *creature_ptr)
-{
+bool android_inside_weapon(player_type* creature_ptr) {
     DIRECTION dir;
     if (!get_aim_dir(creature_ptr, &dir))
         return FALSE;
@@ -53,16 +52,15 @@ bool android_inside_weapon(player_type *creature_ptr)
     return TRUE;
 }
 
-void calc_android_exp(player_type *creature_ptr)
-{
+void calc_android_exp(player_type* creature_ptr) {
     u32b total_exp = 0;
     if (creature_ptr->is_dead || (creature_ptr->prace != RACE_ANDROID))
         return;
 
     for (int i = INVEN_RARM; i < INVEN_TOTAL; i++) {
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
         object_type forge;
-        object_type *q_ptr = &forge;
+        object_type* q_ptr = &forge;
         u32b value, exp;
         DEPTH level = MAX(k_info[o_ptr->k_idx].level - 8, 1);
 
@@ -79,9 +77,11 @@ void calc_android_exp(player_type *creature_ptr)
         if (object_is_fixed_artifact(o_ptr)) {
             level = (level + MAX(a_info[o_ptr->name1].level - 8, 5)) / 2;
             level += MIN(20, a_info[o_ptr->name1].rarity / (a_info[o_ptr->name1].gen_flags & TRG_INSTA_ART ? 10 : 3));
-        } else if (object_is_ego(o_ptr)) {
+        }
+        else if (object_is_ego(o_ptr)) {
             level += MAX(3, (e_info[o_ptr->name2].rating - 5) / 2);
-        } else if (o_ptr->art_name) {
+        }
+        else if (o_ptr->art_name) {
             s32b total_flags = flag_cost(creature_ptr, o_ptr, o_ptr->pval);
             int fake_level;
 
@@ -92,7 +92,8 @@ void calc_android_exp(player_type *creature_ptr)
                     fake_level = 25;
                 else
                     fake_level = 40;
-            } else {
+            }
+            else {
                 if (total_flags < 20000)
                     fake_level = 10;
                 else if (total_flags < 45000)
@@ -126,7 +127,8 @@ void calc_android_exp(player_type *creature_ptr)
             exp = MIN(100000L, value) / 2 * level * level;
             if (value > 100000L)
                 exp += (value - 100000L) / 8 * level * level;
-        } else {
+        }
+        else {
             exp = MIN(100000L, value) * level;
             if (value > 100000L)
                 exp += (value - 100000L) / 4 * level;

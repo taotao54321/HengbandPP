@@ -31,8 +31,7 @@
  * @param item_selection_ptr アイテム選択への参照ポインタ
  * @return なし
  */
-static void check_item_selection_mode(item_selection_type *item_selection_ptr)
-{
+static void check_item_selection_mode(item_selection_type* item_selection_ptr) {
     if (item_selection_ptr->mode & USE_EQUIP)
         item_selection_ptr->equip = TRUE;
 
@@ -50,12 +49,11 @@ static void check_item_selection_mode(item_selection_type *item_selection_ptr)
  * @param item_selection_ptr アイテムへの参照ポインタ
  * @return プレイヤーによりアイテムが選択されたならTRUEを返す
  */
-static bool check_item_tag_aux(player_type *owner_ptr, item_selection_type *item_selection_ptr)
-{
+static bool check_item_tag_aux(player_type* owner_ptr, item_selection_type* item_selection_ptr) {
     if (!item_selection_ptr->floor || (*item_selection_ptr->cp >= 0))
         return FALSE;
 
-    object_type *o_ptr;
+    object_type* o_ptr;
     item_selection_ptr->k = 0 - (*item_selection_ptr->cp);
     o_ptr = &owner_ptr->current_floor_ptr->o_list[item_selection_ptr->k];
     if (!item_tester_okay(owner_ptr, o_ptr, item_selection_ptr->tval) && ((item_selection_ptr->mode & USE_FULL) == 0))
@@ -74,8 +72,7 @@ static bool check_item_tag_aux(player_type *owner_ptr, item_selection_type *item
  * @param prev_tag 前回選択したアイテムのタグ (のはず)
  * @return プレイヤーによりアイテムが選択されたならTRUEを返す
  */
-static bool check_item_tag_inventory(player_type *owner_ptr, item_selection_type *item_selection_ptr, char *prev_tag)
-{
+static bool check_item_tag_inventory(player_type* owner_ptr, item_selection_type* item_selection_ptr, char* prev_tag) {
     if ((!item_selection_ptr->inven || (*item_selection_ptr->cp < 0) || (*item_selection_ptr->cp >= INVEN_PACK))
         && (!item_selection_ptr->equip || (*item_selection_ptr->cp < INVEN_RARM) || (*item_selection_ptr->cp >= INVEN_TOTAL)))
         return FALSE;
@@ -112,8 +109,7 @@ static bool check_item_tag_inventory(player_type *owner_ptr, item_selection_type
  * @param prev_tag 前回選択したアイテムのタグ (のはず)
  * @return プレイヤーによりアイテムが選択されたならTRUEを返す
  */
-static bool check_item_tag(player_type *owner_ptr, item_selection_type *item_selection_ptr, char *prev_tag)
-{
+static bool check_item_tag(player_type* owner_ptr, item_selection_type* item_selection_ptr, char* prev_tag) {
     if (!repeat_pull(item_selection_ptr->cp))
         return FALSE;
 
@@ -136,8 +132,7 @@ static bool check_item_tag(player_type *owner_ptr, item_selection_type *item_sel
  * @param fis_ptr アイテム選択への参照ポインタ
  * @return なし
  */
-static void test_inventory(player_type *owner_ptr, item_selection_type *item_selection_ptr)
-{
+static void test_inventory(player_type* owner_ptr, item_selection_type* item_selection_ptr) {
     if (!item_selection_ptr->inven) {
         item_selection_ptr->i2 = -1;
         return;
@@ -157,8 +152,7 @@ static void test_inventory(player_type *owner_ptr, item_selection_type *item_sel
  * @param fis_ptr アイテム選択への参照ポインタ
  * @return なし
  */
-static void test_equipment(player_type *owner_ptr, item_selection_type *item_selection_ptr)
-{
+static void test_equipment(player_type* owner_ptr, item_selection_type* item_selection_ptr) {
     if (!item_selection_ptr->equip) {
         item_selection_ptr->e2 = -1;
         return;
@@ -188,14 +182,13 @@ static void test_equipment(player_type *owner_ptr, item_selection_type *item_sel
  * @return プレイヤーによりアイテムが選択されたならTRUEを返す
  * Return TRUE only if an acceptable item was chosen by the user
  */
-bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, BIT_FLAGS mode, tval_type tval)
-{
+bool get_item(player_type* owner_ptr, OBJECT_IDX* cp, concptr pmt, concptr str, BIT_FLAGS mode, tval_type tval) {
     static char prev_tag = '\0';
     if (easy_floor || use_menu)
         return get_item_floor(owner_ptr, cp, pmt, str, mode, tval);
 
     item_selection_type tmp_selection;
-    item_selection_type *item_selection_ptr = initialize_item_selection_type(&tmp_selection, cp, mode, tval);
+    item_selection_type* item_selection_ptr = initialize_item_selection_type(&tmp_selection, cp, mode, tval);
     check_item_selection_mode(item_selection_ptr);
     if (check_item_tag(owner_ptr, item_selection_ptr, &prev_tag))
         return TRUE;
@@ -225,14 +218,15 @@ bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, 
         if (has_right_hand_weapon(owner_ptr)) {
             if (item_selection_ptr->e2 < INVEN_LARM)
                 item_selection_ptr->e2 = INVEN_LARM;
-        } else if (has_left_hand_weapon(owner_ptr))
+        }
+        else if (has_left_hand_weapon(owner_ptr))
             item_selection_ptr->e1 = INVEN_RARM;
     }
 
     if (item_selection_ptr->floor) {
         for (item_selection_ptr->this_o_idx = owner_ptr->current_floor_ptr->grid_array[owner_ptr->y][owner_ptr->x].o_idx; item_selection_ptr->this_o_idx;
              item_selection_ptr->this_o_idx = item_selection_ptr->next_o_idx) {
-            object_type *o_ptr;
+            object_type* o_ptr;
             o_ptr = &owner_ptr->current_floor_ptr->o_list[item_selection_ptr->this_o_idx];
             item_selection_ptr->next_o_idx = o_ptr->next_o_idx;
             if ((item_tester_okay(owner_ptr, o_ptr, item_selection_ptr->tval) || (item_selection_ptr->mode & USE_FULL)) && (o_ptr->marked & OM_FOUND))
@@ -249,7 +243,8 @@ bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, 
             *item_selection_ptr->cp = INVEN_FORCE;
             item_selection_ptr->item = TRUE;
         }
-    } else {
+    }
+    else {
         if (command_see && command_wrk && item_selection_ptr->equip)
             command_wrk = TRUE;
         else if (item_selection_ptr->inven)
@@ -293,7 +288,8 @@ bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, 
         if (!command_wrk) {
             if (command_see)
                 get_item_label = show_inventory(owner_ptr, item_selection_ptr->menu_line, item_selection_ptr->mode, item_selection_ptr->tval);
-        } else {
+        }
+        else {
             if (command_see)
                 get_item_label = show_equipment(owner_ptr, item_selection_ptr->menu_line, item_selection_ptr->mode, item_selection_ptr->tval);
         }
@@ -311,7 +307,8 @@ bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, 
 
             if (item_selection_ptr->equip)
                 strcat(item_selection_ptr->out_val, format(_(" %s 装備品,", " %s for Equip,"), use_menu ? _("'4'or'6'", "4 or 6") : _("'/'", "/")));
-        } else {
+        }
+        else {
             sprintf(item_selection_ptr->out_val, _("装備品:", "Equip:"));
             if ((item_selection_ptr->e1 <= item_selection_ptr->e2) && !use_menu) {
                 sprintf(item_selection_ptr->tmp_val, _("%c-%c,'(',')',", " %c-%c,'(',')',"), index_to_label(item_selection_ptr->e1),
@@ -391,7 +388,8 @@ bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, 
             case '\n': {
                 if (command_wrk == USE_FLOOR) {
                     *item_selection_ptr->cp = -get_item_label;
-                } else {
+                }
+                else {
                     if (!get_item_okay(owner_ptr, get_item_label, item_selection_ptr->tval)) {
                         bell();
                         break;
@@ -436,7 +434,8 @@ bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, 
             if (command_see) {
                 command_see = FALSE;
                 screen_load();
-            } else {
+            }
+            else {
                 screen_save();
                 command_see = TRUE;
             }
@@ -461,7 +460,7 @@ bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, 
             if (item_selection_ptr->allow_floor) {
                 for (item_selection_ptr->this_o_idx = owner_ptr->current_floor_ptr->grid_array[owner_ptr->y][owner_ptr->x].o_idx;
                      item_selection_ptr->this_o_idx; item_selection_ptr->this_o_idx = item_selection_ptr->next_o_idx) {
-                    object_type *o_ptr;
+                    object_type* o_ptr;
                     o_ptr = &owner_ptr->current_floor_ptr->o_list[item_selection_ptr->this_o_idx];
                     item_selection_ptr->next_o_idx = o_ptr->next_o_idx;
                     if (!item_tester_okay(owner_ptr, o_ptr, item_selection_ptr->tval) && !(item_selection_ptr->mode & USE_FULL))
@@ -535,9 +534,11 @@ bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, 
             bool not_found = FALSE;
             if (!get_tag(owner_ptr, &item_selection_ptr->k, item_selection_ptr->which, command_wrk ? USE_EQUIP : USE_INVEN, item_selection_ptr->tval)) {
                 not_found = TRUE;
-            } else if ((item_selection_ptr->k < INVEN_RARM) ? !item_selection_ptr->inven : !item_selection_ptr->equip) {
+            }
+            else if ((item_selection_ptr->k < INVEN_RARM) ? !item_selection_ptr->inven : !item_selection_ptr->equip) {
                 not_found = TRUE;
-            } else if (!get_item_okay(owner_ptr, item_selection_ptr->k, item_selection_ptr->tval)) {
+            }
+            else if (!get_item_okay(owner_ptr, item_selection_ptr->k, item_selection_ptr->tval)) {
                 not_found = TRUE;
             }
 
@@ -558,7 +559,8 @@ bool get_item(player_type *owner_ptr, OBJECT_IDX *cp, concptr pmt, concptr str, 
                     item_selection_ptr->k = item_selection_ptr->i2;
                 else
                     item_selection_ptr->k = label_to_inventory(owner_ptr, item_selection_ptr->which);
-            } else {
+            }
+            else {
                 if (item_selection_ptr->which == '(')
                     item_selection_ptr->k = item_selection_ptr->e1;
                 else if (item_selection_ptr->which == ')')

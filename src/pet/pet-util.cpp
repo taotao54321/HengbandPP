@@ -10,8 +10,7 @@
  * @param now_riding TRUEなら下馬処理、FALSEならば騎乗処理
  * @return 可能ならばTRUEを返す
  */
-bool can_player_ride_pet(player_type *creature_ptr, grid_type *g_ptr, bool now_riding)
-{
+bool can_player_ride_pet(player_type* creature_ptr, grid_type* g_ptr, bool now_riding) {
     bool old_character_xtra = current_world_ptr->character_xtra;
     MONSTER_IDX old_riding = creature_ptr->riding;
     bool old_riding_two_hands = creature_ptr->riding_ryoute;

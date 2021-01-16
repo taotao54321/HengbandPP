@@ -14,8 +14,8 @@
 #include "object-hook/hook-enchant.h"
 #include "object/item-use-flags.h"
 #include "object/object-flags.h"
-#include "player/attack-defense-types.h"
 #include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
 #include "player/special-defense-types.h"
 #include "racial/racial-android.h"
 #include "spell/spells-object.h"
@@ -31,9 +31,9 @@
  * @param v 継続時間
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_ele_attack(player_type *creature_ptr, u32b attack_type, TIME_EFFECT v)
-{
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+bool set_ele_attack(player_type* creature_ptr, u32b attack_type, TIME_EFFECT v) {
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if ((creature_ptr->special_attack & (ATTACK_ACID)) && (attack_type != ATTACK_ACID)) {
         creature_ptr->special_attack &= ~(ATTACK_ACID);
@@ -99,9 +99,9 @@ bool set_ele_attack(player_type *creature_ptr, u32b attack_type, TIME_EFFECT v)
  * @param v 継続時間
  * @return ステータスに影響を及ぼす変化があった場合TRUEを返す。
  */
-bool set_ele_immune(player_type *creature_ptr, u32b immune_type, TIME_EFFECT v)
-{
-    v = (v > 10000) ? 10000 : (v < 0) ? 0 : v;
+bool set_ele_immune(player_type* creature_ptr, u32b immune_type, TIME_EFFECT v) {
+    v = (v > 10000) ? 10000 : (v < 0) ? 0
+                                      : v;
 
     if ((creature_ptr->special_defense & (DEFENSE_ACID)) && (immune_type != DEFENSE_ACID)) {
         creature_ptr->special_defense &= ~(DEFENSE_ACID);
@@ -155,8 +155,7 @@ bool set_ele_immune(player_type *creature_ptr, u32b immune_type, TIME_EFFECT v)
 /*
  * Choose a warrior-mage elemental attack. -LM-
  */
-bool choose_ele_attack(player_type *creature_ptr)
-{
+bool choose_ele_attack(player_type* creature_ptr) {
     if (!has_melee_weapon(creature_ptr, INVEN_RARM) && !has_melee_weapon(creature_ptr, INVEN_LARM)) {
         msg_format(_("武器を持たないと魔法剣は使えない。", "You cannot use temporary branding with no weapon."));
         return FALSE;
@@ -217,8 +216,7 @@ bool choose_ele_attack(player_type *creature_ptr)
 /*
  * Choose a elemental immune. -LM-
  */
-bool choose_ele_immune(player_type *creature_ptr, TIME_EFFECT immune_turn)
-{
+bool choose_ele_immune(player_type* creature_ptr, TIME_EFFECT immune_turn) {
     screen_save();
 
     c_prt(TERM_RED, _("        a) 火炎", "        a) Immunity to fire"), 2, 14);
@@ -259,13 +257,12 @@ bool choose_ele_immune(player_type *creature_ptr, TIME_EFFECT immune_turn)
  * pulish shield
  * @return ターン消費を要する処理を行ったならばTRUEを返す
  */
-bool pulish_shield(player_type *caster_ptr)
-{
+bool pulish_shield(player_type* caster_ptr) {
     concptr q = _("どの盾を磨きますか？", "Pulish which weapon? ");
     concptr s = _("磨く盾がありません。", "You have weapon to pulish.");
 
     OBJECT_IDX item;
-    object_type *o_ptr = choose_object(caster_ptr, &item, q, s, USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT, TV_SHIELD);
+    object_type* o_ptr = choose_object(caster_ptr, &item, q, s, USE_EQUIP | USE_INVEN | USE_FLOOR | IGNORE_BOTHHAND_SLOT, TV_SHIELD);
     if (o_ptr == NULL)
         return FALSE;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 typedef enum base_status_type {
-	A_STR = 0,
+    A_STR = 0,
     A_INT = 1,
     A_WIS = 2,
     A_DEX = 3,

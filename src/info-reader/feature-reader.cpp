@@ -22,8 +22,7 @@ static bool feat_tag_is_not_found = FALSE;
  * @param what 参照元の文字列ポインタ
  * @return エラーコード
  */
-static errr grab_one_feat_flag(feature_type *f_ptr, concptr what)
-{
+static errr grab_one_feat_flag(feature_type* f_ptr, concptr what) {
     for (int i = 0; i < FF_FLAG_MAX; i++) {
         if (streq(what, f_info_flags[i])) {
             add_flag(f_ptr->flags, i);
@@ -43,8 +42,7 @@ static errr grab_one_feat_flag(feature_type *f_ptr, concptr what)
  * @param count ステートの保存先ID
  * @return エラーコード
  */
-static errr grab_one_feat_action(feature_type *f_ptr, concptr what, int count)
-{
+static errr grab_one_feat_action(feature_type* f_ptr, concptr what, int count) {
     for (FF_FLAGS_IDX i = 0; i < FF_FLAG_MAX; i++) {
         if (streq(what, f_info_flags[i])) {
             f_ptr->state[count].action = i;
@@ -63,9 +61,8 @@ static errr grab_one_feat_action(feature_type *f_ptr, concptr what, int count)
  * @param head ヘッダ構造体
  * @return エラーコード
  */
-errr parse_f_info(char *buf, angband_header *head)
-{
-    static feature_type *f_ptr = NULL;
+errr parse_f_info(char* buf, angband_header* head) {
+    static feature_type* f_ptr = NULL;
     int i;
     char *s, *t;
     if (buf[0] == 'N') {
@@ -92,18 +89,21 @@ errr parse_f_info(char *buf, angband_header *head)
         f_ptr->destroyed = (FEAT_IDX)i;
         for (i = 0; i < MAX_FEAT_STATES; i++)
             f_ptr->state[i].action = FF_FLAG_MAX;
-    } else if (!f_ptr) {
+    }
+    else if (!f_ptr) {
         return 3;
     }
 #ifdef JP
     else if (buf[0] == 'J') {
         if (!add_name(&f_ptr->name, head, buf + 2))
             return 7;
-    } else if (buf[0] == 'E') {
+    }
+    else if (buf[0] == 'E') {
     }
 #else
     else if (buf[0] == 'J') {
-    } else if (buf[0] == 'E') {
+    }
+    else if (buf[0] == 'E') {
         s = buf + 2;
         if (!add_name(&f_ptr->name, head, s))
             return 7;
@@ -115,7 +115,8 @@ errr parse_f_info(char *buf, angband_header *head)
             return PARSE_ERROR_OUT_OF_MEMORY;
 
         f_ptr->mimic_tag = offset;
-    } else if (buf[0] == 'G') {
+    }
+    else if (buf[0] == 'G') {
         int j;
         byte s_attr;
         char char_tmp[F_LIT_MAX];
@@ -166,14 +167,17 @@ errr parse_f_info(char *buf, angband_header *head)
                     f_ptr->d_char[j] = char_tmp[j];
                 }
             }
-        } else if (!buf[5]) {
+        }
+        else if (!buf[5]) {
             for (j = F_LIT_NS_BEGIN; j < F_LIT_MAX; j++) {
                 f_ptr->d_attr[j] = s_attr;
                 f_ptr->d_char[j] = char_tmp[F_LIT_STANDARD];
             }
-        } else
+        }
+        else
             return 1;
-    } else if (buf[0] == 'F') {
+    }
+    else if (buf[0] == 'F') {
         for (s = buf + 2; *s;) {
             /* loop */
             for (t = s; *t && (*t != ' ') && (*t != '|'); ++t)
@@ -203,12 +207,14 @@ errr parse_f_info(char *buf, angband_header *head)
 
             s = t;
         }
-    } else if (buf[0] == 'W') {
+    }
+    else if (buf[0] == 'W') {
         int priority;
         if (1 != sscanf(buf + 2, "%d", &priority))
             return (PARSE_ERROR_GENERIC);
         f_ptr->priority = (FEAT_PRIORITY)priority;
-    } else if (buf[0] == 'K') {
+    }
+    else if (buf[0] == 'K') {
         STR_OFFSET offset;
         for (i = 0; i < MAX_FEAT_STATES; i++)
             if (f_ptr->state[i].action == FF_FLAG_MAX)
@@ -229,7 +235,8 @@ errr parse_f_info(char *buf, angband_header *head)
                 return PARSE_ERROR_OUT_OF_MEMORY;
 
             f_ptr->destroyed_tag = offset;
-        } else {
+        }
+        else {
             f_ptr->state[i].action = 0;
             if (0 != grab_one_feat_action(f_ptr, s, i))
                 return PARSE_ERROR_INVALID_FLAG;
@@ -238,7 +245,8 @@ errr parse_f_info(char *buf, angband_header *head)
 
             f_ptr->state[i].result_tag = offset;
         }
-    } else {
+    }
+    else {
         return 6;
     }
 
@@ -250,8 +258,7 @@ errr parse_f_info(char *buf, angband_header *head)
  * Initialize feature variables
  * @return エラーコード
  */
-errr init_feat_variables(void)
-{
+errr init_feat_variables(void) {
     feat_none = f_tag_to_index_in_init("NONE");
 
     feat_floor = f_tag_to_index_in_init("FLOOR");
@@ -405,8 +412,7 @@ errr init_feat_variables(void)
  * @param str タグ文字列
  * @return 地形ID
  */
-s16b f_tag_to_index(concptr str)
-{
+s16b f_tag_to_index(concptr str) {
     for (u16b i = 0; i < f_head.info_num; i++) {
         if (streq(f_tag + f_info[i].tag, str)) {
             return (s16b)i;
@@ -421,8 +427,7 @@ s16b f_tag_to_index(concptr str)
  * Initialize quest array
  * @return 地形ID
  */
-s16b f_tag_to_index_in_init(concptr str)
-{
+s16b f_tag_to_index_in_init(concptr str) {
     FEAT_IDX feat = f_tag_to_index(str);
 
     if (feat < 0)
@@ -437,8 +442,7 @@ s16b f_tag_to_index_in_init(concptr str)
  * @param feat タグ文字列のオフセット
  * @return 地形ID。該当がないなら-1
  */
-static FEAT_IDX search_real_feat(STR_OFFSET feat)
-{
+static FEAT_IDX search_real_feat(STR_OFFSET feat) {
     if (feat <= 0) {
         return -1;
     }
@@ -459,10 +463,9 @@ static FEAT_IDX search_real_feat(STR_OFFSET feat)
  * @param head ヘッダ構造体
  * @return なし
  */
-void retouch_f_info(angband_header *head)
-{
+void retouch_f_info(angband_header* head) {
     for (int i = 0; i < head->info_num; i++) {
-        feature_type *f_ptr = &f_info[i];
+        feature_type* f_ptr = &f_info[i];
         FEAT_IDX k = search_real_feat(f_ptr->mimic_tag);
         f_ptr->mimic = k < 0 ? f_ptr->mimic : k;
         k = search_real_feat(f_ptr->destroyed_tag);

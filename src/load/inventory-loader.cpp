@@ -19,8 +19,7 @@
  *
  * Note that the inventory is "re-sorted" later by "dungeon()".
  */
-static errr rd_inventory(player_type *player_ptr)
-{
+static errr rd_inventory(player_type* player_ptr) {
     player_ptr->inven_cnt = 0;
     player_ptr->equip_cnt = 0;
 
@@ -36,7 +35,7 @@ static errr rd_inventory(player_type *player_ptr)
         if (n == 0xFFFF)
             break;
         object_type forge;
-        object_type *q_ptr;
+        object_type* q_ptr;
         q_ptr = &forge;
         object_wipe(q_ptr);
 
@@ -65,8 +64,7 @@ static errr rd_inventory(player_type *player_ptr)
     return 0;
 }
 
-errr load_inventory(player_type *creature_ptr)
-{
+errr load_inventory(player_type* creature_ptr) {
     byte tmp8u;
     for (int i = 0; i < 64; i++) {
         rd_byte(&tmp8u);

@@ -58,16 +58,15 @@ typedef struct eg_type {
     char out_val[MAX_NLEN + 80];
     OBJECT_IDX floor_list[23];
     ITEM_NUMBER floor_num;
-    grid_type *g_ptr;
-    monster_type *m_ptr;
+    grid_type* g_ptr;
+    monster_type* m_ptr;
     OBJECT_IDX next_o_idx;
     FEAT_IDX feat;
-    feature_type *f_ptr;
+    feature_type* f_ptr;
     concptr name;
 } eg_type;
 
-static eg_type *initialize_eg_type(player_type *subject_ptr, eg_type *eg_ptr, POSITION y, POSITION x, target_type mode, concptr info)
-{
+static eg_type* initialize_eg_type(player_type* subject_ptr, eg_type* eg_ptr, POSITION y, POSITION x, target_type mode, concptr info) {
     eg_ptr->y = y;
     eg_ptr->x = x;
     eg_ptr->boring = TRUE;
@@ -80,7 +79,7 @@ static eg_type *initialize_eg_type(player_type *subject_ptr, eg_type *eg_ptr, PO
     eg_ptr->query = '\001';
     eg_ptr->floor_num = 0;
 
-    floor_type *floor_ptr = subject_ptr->current_floor_ptr;
+    floor_type* floor_ptr = subject_ptr->current_floor_ptr;
     eg_ptr->g_ptr = &floor_ptr->grid_array[y][x];
     eg_ptr->m_ptr = &floor_ptr->m_list[eg_ptr->g_ptr->m_idx];
     eg_ptr->next_o_idx = 0;
@@ -90,9 +89,8 @@ static eg_type *initialize_eg_type(player_type *subject_ptr, eg_type *eg_ptr, PO
 /*
  * Evaluate number of kill needed to gain level
  */
-static void evaluate_monster_exp(player_type *creature_ptr, char *buf, monster_type *m_ptr)
-{
-    monster_race *ap_r_ptr = &r_info[m_ptr->ap_r_idx];
+static void evaluate_monster_exp(player_type* creature_ptr, char* buf, monster_type* m_ptr) {
+    monster_race* ap_r_ptr = &r_info[m_ptr->ap_r_idx];
     if ((creature_ptr->lev >= PY_MAX_LEVEL) || (creature_ptr->prace == RACE_ANDROID)) {
         sprintf(buf, "**");
         return;
@@ -124,8 +122,7 @@ static void evaluate_monster_exp(player_type *creature_ptr, char *buf, monster_t
     sprintf(buf, "%03ld", (long int)num);
 }
 
-static void describe_scan_result(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static void describe_scan_result(player_type* subject_ptr, eg_type* eg_ptr) {
     if (!easy_floor)
         return;
 
@@ -134,8 +131,7 @@ static void describe_scan_result(player_type *subject_ptr, eg_type *eg_ptr)
         eg_ptr->x_info = _("x物 ", "x,");
 }
 
-static void describe_target(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static void describe_target(player_type* subject_ptr, eg_type* eg_ptr) {
     if (!player_bold(subject_ptr, eg_ptr->y, eg_ptr->x)) {
         eg_ptr->s1 = _("ターゲット:", "Target:");
         return;
@@ -151,8 +147,7 @@ static void describe_target(player_type *subject_ptr, eg_type *eg_ptr)
 #endif
 }
 
-static process_result describe_hallucinated_target(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static process_result describe_hallucinated_target(player_type* subject_ptr, eg_type* eg_ptr) {
     if (!subject_ptr->image)
         return PROCESS_CONTINUE;
 
@@ -171,8 +166,7 @@ static process_result describe_hallucinated_target(player_type *subject_ptr, eg_
     return PROCESS_FALSE;
 }
 
-static bool describe_grid_lore(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static bool describe_grid_lore(player_type* subject_ptr, eg_type* eg_ptr) {
     screen_save();
     screen_roff(subject_ptr, eg_ptr->m_ptr->ap_r_idx, 0);
     term_addstr(-1, TERM_WHITE, format(_("  [r思 %s%s]", "  [r,%s%s]"), eg_ptr->x_info, eg_ptr->info));
@@ -181,8 +175,7 @@ static bool describe_grid_lore(player_type *subject_ptr, eg_type *eg_ptr)
     return eg_ptr->query != 'r';
 }
 
-static void describe_grid_monster(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static void describe_grid_monster(player_type* subject_ptr, eg_type* eg_ptr) {
     bool recall = FALSE;
     GAME_TEXT m_name[MAX_NLEN];
     monster_desc(subject_ptr, m_name, eg_ptr->m_ptr, MD_INDEF_VISIBLE);
@@ -214,9 +207,8 @@ static void describe_grid_monster(player_type *subject_ptr, eg_type *eg_ptr)
     }
 }
 
-static void describe_monster_person(eg_type *eg_ptr)
-{
-    monster_race *ap_r_ptr = &r_info[eg_ptr->m_ptr->ap_r_idx];
+static void describe_monster_person(eg_type* eg_ptr) {
+    monster_race* ap_r_ptr = &r_info[eg_ptr->m_ptr->ap_r_idx];
     eg_ptr->s1 = _("それは", "It is ");
     if (ap_r_ptr->flags1 & RF1_FEMALE)
         eg_ptr->s1 = _("彼女は", "She is ");
@@ -231,11 +223,10 @@ static void describe_monster_person(eg_type *eg_ptr)
 #endif
 }
 
-static u16b describe_monster_item(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static u16b describe_monster_item(player_type* subject_ptr, eg_type* eg_ptr) {
     for (OBJECT_IDX this_o_idx = eg_ptr->m_ptr->hold_o_idx; this_o_idx; this_o_idx = eg_ptr->next_o_idx) {
         GAME_TEXT o_name[MAX_NLEN];
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &subject_ptr->current_floor_ptr->o_list[this_o_idx];
         eg_ptr->next_o_idx = o_ptr->next_o_idx;
         describe_flavor(subject_ptr, o_name, o_ptr, 0);
@@ -261,8 +252,7 @@ static u16b describe_monster_item(player_type *subject_ptr, eg_type *eg_ptr)
 
 static bool within_char_util(s16b input) { return (input > -127) && (input < 128); }
 
-static s16b describe_grid(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static s16b describe_grid(player_type* subject_ptr, eg_type* eg_ptr) {
     if ((eg_ptr->g_ptr->m_idx == 0) || !subject_ptr->current_floor_ptr->m_list[eg_ptr->g_ptr->m_idx].ml)
         return CONTINUOUS_DESCRIPTION;
 
@@ -291,13 +281,12 @@ static s16b describe_grid(player_type *subject_ptr, eg_type *eg_ptr)
     return CONTINUOUS_DESCRIPTION;
 }
 
-static s16b describe_footing(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static s16b describe_footing(player_type* subject_ptr, eg_type* eg_ptr) {
     if (eg_ptr->floor_num != 1)
         return CONTINUOUS_DESCRIPTION;
 
     GAME_TEXT o_name[MAX_NLEN];
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = &subject_ptr->current_floor_ptr->o_list[eg_ptr->floor_list[0]];
     describe_flavor(subject_ptr, o_name, o_ptr, 0);
 #ifdef JP
@@ -311,8 +300,7 @@ static s16b describe_footing(player_type *subject_ptr, eg_type *eg_ptr)
     return eg_ptr->query;
 }
 
-static s16b describe_footing_items(eg_type *eg_ptr)
-{
+static s16b describe_footing_items(eg_type* eg_ptr) {
     if (!eg_ptr->boring)
         return CONTINUOUS_DESCRIPTION;
 
@@ -330,8 +318,7 @@ static s16b describe_footing_items(eg_type *eg_ptr)
     return CONTINUOUS_DESCRIPTION;
 }
 
-static char describe_footing_many_items(player_type *subject_ptr, eg_type *eg_ptr, int *min_width)
-{
+static char describe_footing_many_items(player_type* subject_ptr, eg_type* eg_ptr, int* min_width) {
     while (TRUE) {
         screen_save();
         show_gold_on_floor = TRUE;
@@ -361,8 +348,7 @@ static char describe_footing_many_items(player_type *subject_ptr, eg_type *eg_pt
     }
 }
 
-static s16b loop_describing_grid(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static s16b loop_describing_grid(player_type* subject_ptr, eg_type* eg_ptr) {
     if (eg_ptr->floor_num == 0)
         return CONTINUOUS_DESCRIPTION;
 
@@ -380,8 +366,7 @@ static s16b loop_describing_grid(player_type *subject_ptr, eg_type *eg_ptr)
     }
 }
 
-static s16b describe_footing_sight(player_type *subject_ptr, eg_type *eg_ptr, object_type *o_ptr)
-{
+static s16b describe_footing_sight(player_type* subject_ptr, eg_type* eg_ptr, object_type* o_ptr) {
     if ((o_ptr->marked & OM_FOUND) == 0)
         return CONTINUOUS_DESCRIPTION;
 
@@ -415,10 +400,9 @@ static s16b describe_footing_sight(player_type *subject_ptr, eg_type *eg_ptr, ob
     return CONTINUOUS_DESCRIPTION;
 }
 
-static s16b sweep_footing_items(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static s16b sweep_footing_items(player_type* subject_ptr, eg_type* eg_ptr) {
     for (OBJECT_IDX this_o_idx = eg_ptr->g_ptr->o_idx; this_o_idx; this_o_idx = eg_ptr->next_o_idx) {
-        object_type *o_ptr;
+        object_type* o_ptr;
         o_ptr = &subject_ptr->current_floor_ptr->o_list[this_o_idx];
         eg_ptr->next_o_idx = o_ptr->next_o_idx;
         s16b ret = describe_footing_sight(subject_ptr, eg_ptr, o_ptr);
@@ -429,8 +413,7 @@ static s16b sweep_footing_items(player_type *subject_ptr, eg_type *eg_ptr)
     return CONTINUOUS_DESCRIPTION;
 }
 
-static concptr decide_target_floor(player_type *subject_ptr, eg_type *eg_ptr)
-{
+static concptr decide_target_floor(player_type* subject_ptr, eg_type* eg_ptr) {
     if (has_flag(eg_ptr->f_ptr->flags, FF_QUEST_ENTER)) {
         QUEST_IDX old_quest = subject_ptr->current_floor_ptr->inside_quest;
         for (int j = 0; j < 10; j++)
@@ -460,8 +443,7 @@ static concptr decide_target_floor(player_type *subject_ptr, eg_type *eg_ptr)
     return f_name + eg_ptr->f_ptr->name;
 }
 
-static void describe_grid_monster_all(eg_type *eg_ptr)
-{
+static void describe_grid_monster_all(eg_type* eg_ptr) {
     if (!current_world_ptr->wizard) {
 #ifdef JP
         sprintf(eg_ptr->out_val, "%s%s%s%s[%s]", eg_ptr->s1, eg_ptr->name, eg_ptr->s2, eg_ptr->s3, eg_ptr->info);
@@ -497,10 +479,9 @@ static void describe_grid_monster_all(eg_type *eg_ptr)
  * @param info 記述用文字列
  * @return 入力キー
  */
-char examine_grid(player_type *subject_ptr, const POSITION y, const POSITION x, target_type mode, concptr info)
-{
+char examine_grid(player_type* subject_ptr, const POSITION y, const POSITION x, target_type mode, concptr info) {
     eg_type tmp_eg;
-    eg_type *eg_ptr = initialize_eg_type(subject_ptr, &tmp_eg, y, x, mode, info);
+    eg_type* eg_ptr = initialize_eg_type(subject_ptr, &tmp_eg, y, x, mode, info);
     describe_scan_result(subject_ptr, eg_ptr);
     describe_target(subject_ptr, eg_ptr);
     process_result next_target = describe_hallucinated_target(subject_ptr, eg_ptr);

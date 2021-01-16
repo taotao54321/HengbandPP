@@ -23,14 +23,13 @@
  *   result
  * </pre>
  */
-concptr process_pref_file_expr(player_type *creature_ptr, char **sp, char *fp)
-{
-    char *s;
+concptr process_pref_file_expr(player_type* creature_ptr, char** sp, char* fp) {
+    char* s;
     s = (*sp);
     while (iswspace(*s))
         s++;
 
-    char *b;
+    char* b;
     b = s;
 
     concptr v = "?o?o?";
@@ -50,28 +49,32 @@ concptr process_pref_file_expr(player_type *creature_ptr, char **sp, char *fp)
         t = process_pref_file_expr(creature_ptr, &s, &f);
 
         if (!*t) {
-        } else if (streq(t, "IOR")) {
+        }
+        else if (streq(t, "IOR")) {
             v = "0";
             while (*s && (f != b2)) {
                 t = process_pref_file_expr(creature_ptr, &s, &f);
                 if (*t && !streq(t, "0"))
                     v = "1";
             }
-        } else if (streq(t, "AND")) {
+        }
+        else if (streq(t, "AND")) {
             v = "1";
             while (*s && (f != b2)) {
                 t = process_pref_file_expr(creature_ptr, &s, &f);
                 if (*t && streq(t, "0"))
                     v = "0";
             }
-        } else if (streq(t, "NOT")) {
+        }
+        else if (streq(t, "NOT")) {
             v = "1";
             while (*s && (f != b2)) {
                 t = process_pref_file_expr(creature_ptr, &s, &f);
                 if (*t && streq(t, "1"))
                     v = "0";
             }
-        } else if (streq(t, "EQU")) {
+        }
+        else if (streq(t, "EQU")) {
             v = "0";
             if (*s && (f != b2)) {
                 t = process_pref_file_expr(creature_ptr, &s, &f);
@@ -81,7 +84,8 @@ concptr process_pref_file_expr(player_type *creature_ptr, char **sp, char *fp)
                 if (streq(t, p))
                     v = "1";
             }
-        } else if (streq(t, "LEQ")) {
+        }
+        else if (streq(t, "LEQ")) {
             v = "1";
             if (*s && (f != b2)) {
                 t = process_pref_file_expr(creature_ptr, &s, &f);
@@ -92,7 +96,8 @@ concptr process_pref_file_expr(player_type *creature_ptr, char **sp, char *fp)
                 if (*t && atoi(p) > atoi(t))
                     v = "0";
             }
-        } else if (streq(t, "GEQ")) {
+        }
+        else if (streq(t, "GEQ")) {
             v = "1";
             if (*s && (f != b2)) {
                 t = process_pref_file_expr(creature_ptr, &s, &f);
@@ -103,7 +108,8 @@ concptr process_pref_file_expr(player_type *creature_ptr, char **sp, char *fp)
                 if (*t && atoi(p) < atoi(t))
                     v = "0";
             }
-        } else {
+        }
+        else {
             while (*s && (f != b2)) {
                 t = process_pref_file_expr(creature_ptr, &s, &f);
             }
@@ -144,28 +150,34 @@ concptr process_pref_file_expr(player_type *creature_ptr, char **sp, char *fp)
 
     if (streq(b + 1, "SYS")) {
         v = ANGBAND_SYS;
-    } else if (streq(b + 1, "KEYBOARD")) {
+    }
+    else if (streq(b + 1, "KEYBOARD")) {
         v = ANGBAND_KEYBOARD;
-    } else if (streq(b + 1, "GRAF")) {
+    }
+    else if (streq(b + 1, "GRAF")) {
         v = ANGBAND_GRAF;
-    } else if (streq(b + 1, "MONOCHROME")) {
+    }
+    else if (streq(b + 1, "MONOCHROME")) {
         if (arg_monochrome)
             v = "ON";
         else
             v = "OFF";
-    } else if (streq(b + 1, "RACE")) {
+    }
+    else if (streq(b + 1, "RACE")) {
 #ifdef JP
         v = rp_ptr->E_title;
 #else
         v = rp_ptr->title;
 #endif
-    } else if (streq(b + 1, "CLASS")) {
+    }
+    else if (streq(b + 1, "CLASS")) {
 #ifdef JP
         v = cp_ptr->E_title;
 #else
         v = cp_ptr->title;
 #endif
-    } else if (streq(b + 1, "PLAYER")) {
+    }
+    else if (streq(b + 1, "PLAYER")) {
         static char tmp_player_name[32];
         char *pn, *tpn;
         for (pn = creature_ptr->name, tpn = tmp_player_name; *pn; pn++, tpn++) {
@@ -181,27 +193,32 @@ concptr process_pref_file_expr(player_type *creature_ptr, char **sp, char *fp)
 
         *tpn = '\0';
         v = tmp_player_name;
-    } else if (streq(b + 1, "REALM1")) {
+    }
+    else if (streq(b + 1, "REALM1")) {
 #ifdef JP
         v = E_realm_names[creature_ptr->realm1];
 #else
         v = realm_names[creature_ptr->realm1];
 #endif
-    } else if (streq(b + 1, "REALM2")) {
+    }
+    else if (streq(b + 1, "REALM2")) {
 #ifdef JP
         v = E_realm_names[creature_ptr->realm2];
 #else
         v = realm_names[creature_ptr->realm2];
 #endif
-    } else if (streq(b + 1, "LEVEL")) {
+    }
+    else if (streq(b + 1, "LEVEL")) {
         sprintf(tmp, "%02d", creature_ptr->lev);
         v = tmp;
-    } else if (streq(b + 1, "AUTOREGISTER")) {
+    }
+    else if (streq(b + 1, "AUTOREGISTER")) {
         if (creature_ptr->autopick_autoregister)
             v = "1";
         else
             v = "0";
-    } else if (streq(b + 1, "MONEY")) {
+    }
+    else if (streq(b + 1, "MONEY")) {
         sprintf(tmp, "%09ld", (long int)creature_ptr->au);
         v = tmp;
     }

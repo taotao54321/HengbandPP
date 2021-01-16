@@ -46,8 +46,7 @@
  */
 #define AUTOROLLER_STEP 54321L
 
-static void display_initial_birth_message(player_type *creature_ptr)
-{
+static void display_initial_birth_message(player_type* creature_ptr) {
     term_clear();
     put_str(_("名前  :", "Name  :"), 1, 26);
     put_str(_("性別        :", "Sex         :"), 3, 1);
@@ -65,15 +64,15 @@ static void display_initial_birth_message(player_type *creature_ptr)
  * @return なし
  * @details 他の関数名と被りそうだったので少し眺め
  */
-static void display_help_on_sex_select(player_type *creature_ptr, char c)
-{
+static void display_help_on_sex_select(player_type* creature_ptr, char c) {
     if (c == '?')
         do_cmd_help(creature_ptr);
     else if (c == '=') {
         screen_save();
         do_cmd_options_aux(creature_ptr, OPT_PAGE_BIRTH, _("初期オプション((*)はスコアに影響)", "Birth Option((*)s effect score)"));
         screen_load();
-    } else if (c != '4' && c != '6')
+    }
+    else if (c != '4' && c != '6')
         bell();
 }
 
@@ -83,8 +82,7 @@ static void display_help_on_sex_select(player_type *creature_ptr, char c)
  * @buf 表示用バッファ
  * @return やり直すならFALSE、それ以外はTRUE
  */
-static bool get_player_sex(player_type *creature_ptr, char *buf)
-{
+static bool get_player_sex(player_type* creature_ptr, char* buf) {
     const char p2 = ')';
     char cur[80];
     sprintf(cur, _("%c%c%s", "%c%c %s"), '*', p2, _("ランダム", "Random"));
@@ -142,7 +140,8 @@ static bool get_player_sex(player_type *creature_ptr, char *buf)
         if ((k >= 0) && (k < MAX_SEXES)) {
             cs = k;
             continue;
-        } else
+        }
+        else
             k = -1;
 
         display_help_on_sex_select(creature_ptr, c);
@@ -154,8 +153,7 @@ static bool get_player_sex(player_type *creature_ptr, char *buf)
     return TRUE;
 }
 
-static bool let_player_select_race(player_type *creature_ptr)
-{
+static bool let_player_select_race(player_type* creature_ptr) {
     clear_from(10);
     creature_ptr->prace = RACE_HUMAN;
     while (TRUE) {
@@ -184,8 +182,7 @@ static bool let_player_select_race(player_type *creature_ptr)
     return TRUE;
 }
 
-static bool let_player_select_class(player_type *creature_ptr)
-{
+static bool let_player_select_class(player_type* creature_ptr) {
     clear_from(10);
     creature_ptr->pclass = CLASS_WARRIOR;
     while (TRUE) {
@@ -214,8 +211,7 @@ static bool let_player_select_class(player_type *creature_ptr)
     return TRUE;
 }
 
-static bool let_player_select_personality(player_type *creature_ptr)
-{
+static bool let_player_select_personality(player_type* creature_ptr) {
     creature_ptr->pseikaku = player_personality_type(0);
     while (TRUE) {
         char temp[80 * 8];
@@ -244,8 +240,7 @@ static bool let_player_select_personality(player_type *creature_ptr)
     return TRUE;
 }
 
-static bool let_player_build_character(player_type *creature_ptr)
-{
+static bool let_player_build_character(player_type* creature_ptr) {
     char buf[80];
     if (!get_player_sex(creature_ptr, buf))
         return FALSE;
@@ -265,8 +260,7 @@ static bool let_player_build_character(player_type *creature_ptr)
     return TRUE;
 }
 
-static void display_initial_options(player_type *creature_ptr)
-{
+static void display_initial_options(player_type* creature_ptr) {
     clear_from(10);
     put_str("                                   ", 3, 40);
     put_str("                                   ", 4, 40);
@@ -276,8 +270,7 @@ static void display_initial_options(player_type *creature_ptr)
     screen_load();
 }
 
-static void display_auto_roller_success_rate(const int col)
-{
+static void display_auto_roller_success_rate(const int col) {
     if (!autoroller)
         return;
 
@@ -305,8 +298,7 @@ static void display_auto_roller_success_rate(const int col)
     }
 }
 
-static void auto_roller_count(void)
-{
+static void auto_roller_count(void) {
     if (auto_round < 1000000000L)
         return;
 
@@ -317,8 +309,7 @@ static void auto_roller_count(void)
     auto_upper_round++;
 }
 
-static bool decide_initial_stat(player_type *creature_ptr)
-{
+static bool decide_initial_stat(player_type* creature_ptr) {
     if (!autoroller)
         return TRUE;
 
@@ -333,8 +324,7 @@ static bool decide_initial_stat(player_type *creature_ptr)
     return accept;
 }
 
-static bool decide_body_spec(player_type *creature_ptr, chara_limit_type chara_limit, bool *accept)
-{
+static bool decide_body_spec(player_type* creature_ptr, chara_limit_type chara_limit, bool* accept) {
     if (!*accept)
         return FALSE;
 
@@ -355,8 +345,7 @@ static bool decide_body_spec(player_type *creature_ptr, chara_limit_type chara_l
     return *accept;
 }
 
-static bool display_auto_roller_count(player_type *creature_ptr, const int col)
-{
+static bool display_auto_roller_count(player_type* creature_ptr, const int col) {
     if ((auto_round % AUTOROLLER_STEP) != 0)
         return FALSE;
 
@@ -376,8 +365,7 @@ static bool display_auto_roller_count(player_type *creature_ptr, const int col)
     return FALSE;
 }
 
-static void exe_auto_roller(player_type *creature_ptr, chara_limit_type chara_limit, const int col)
-{
+static void exe_auto_roller(player_type* creature_ptr, chara_limit_type chara_limit, const int col) {
     while (autoroller || autochara) {
         get_stats(creature_ptr);
         auto_round++;
@@ -391,8 +379,7 @@ static void exe_auto_roller(player_type *creature_ptr, chara_limit_type chara_li
     }
 }
 
-static bool display_auto_roller_result(player_type *creature_ptr, bool prev, char *c)
-{
+static bool display_auto_roller_result(player_type* creature_ptr, bool prev, char* c) {
     BIT_FLAGS mode = 0;
     while (TRUE) {
         creature_ptr->update |= (PU_BONUS | PU_HP);
@@ -451,8 +438,7 @@ static bool display_auto_roller_result(player_type *creature_ptr, bool prev, cha
  * @param chara_limit 社会的地位の要求水準
  * @detail 2つめの結果以降は、'p'キーで1つ前のロール結果に戻せる。
  */
-static bool display_auto_roller(player_type *creature_ptr, chara_limit_type chara_limit)
-{
+static bool display_auto_roller(player_type* creature_ptr, chara_limit_type chara_limit) {
     bool prev = FALSE;
 
     while (TRUE) {
@@ -461,7 +447,8 @@ static bool display_auto_roller(player_type *creature_ptr, chara_limit_type char
             term_clear();
             put_str(_("回数 :", "Round:"), 10, col + 10);
             put_str(_("(ESCで停止)", "(Hit ESC to stop)"), 13, col + 13);
-        } else {
+        }
+        else {
             get_stats(creature_ptr);
             get_ahw(creature_ptr);
             get_history(creature_ptr);
@@ -500,8 +487,7 @@ static bool display_auto_roller(player_type *creature_ptr, chara_limit_type char
  * @return なし
  * @details ついでにステータス限界もここで決めている
  */
-static void set_name_history(player_type *creature_ptr, void (*process_autopick_file_command)(char *))
-{
+static void set_name_history(player_type* creature_ptr, void (*process_autopick_file_command)(char*)) {
     clear_from(23);
     get_name(creature_ptr);
     process_player_name(creature_ptr, current_world_ptr->creating_savefile);
@@ -519,8 +505,7 @@ static void set_name_history(player_type *creature_ptr, void (*process_autopick_
  * expensive CPU wise.  And it cuts down on player stupidity.
  * @return なし
  */
-bool player_birth_wizard(player_type *creature_ptr, void (*process_autopick_file_command)(char *))
-{
+bool player_birth_wizard(player_type* creature_ptr, void (*process_autopick_file_command)(char*)) {
     display_initial_birth_message(creature_ptr);
     const char p2 = ')';
     char buf[80];

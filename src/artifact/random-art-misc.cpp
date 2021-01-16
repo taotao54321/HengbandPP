@@ -5,8 +5,7 @@
 #include "system/object-type-definition.h"
 #include "util/bit-flags-calculator.h"
 
-static bool invest_misc_ranger(object_type *o_ptr)
-{
+static bool invest_misc_ranger(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_SUST_CON))
         return FALSE;
 
@@ -14,8 +13,7 @@ static bool invest_misc_ranger(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool invest_misc_strength(object_type *o_ptr)
-{
+static bool invest_misc_strength(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_SUST_STR))
         return FALSE;
 
@@ -23,8 +21,7 @@ static bool invest_misc_strength(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool invest_misc_wisdom(object_type *o_ptr)
-{
+static bool invest_misc_wisdom(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_SUST_WIS))
         return FALSE;
 
@@ -32,8 +29,7 @@ static bool invest_misc_wisdom(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool invest_misc_intelligence(object_type *o_ptr)
-{
+static bool invest_misc_intelligence(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_SUST_INT))
         return FALSE;
 
@@ -41,8 +37,7 @@ static bool invest_misc_intelligence(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool invest_misc_dexterity(object_type *o_ptr)
-{
+static bool invest_misc_dexterity(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_SUST_DEX))
         return FALSE;
 
@@ -50,8 +45,7 @@ static bool invest_misc_dexterity(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool invest_misc_constitution(object_type *o_ptr)
-{
+static bool invest_misc_constitution(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_SUST_CON))
         return FALSE;
 
@@ -59,8 +53,7 @@ static bool invest_misc_constitution(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool invest_misc_charisma(object_type *o_ptr)
-{
+static bool invest_misc_charisma(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_SUST_CHR))
         return FALSE;
 
@@ -68,8 +61,7 @@ static bool invest_misc_charisma(object_type *o_ptr)
     return one_in_(2);
 }
 
-static bool invest_misc_chaos(object_type *o_ptr)
-{
+static bool invest_misc_chaos(object_type* o_ptr) {
     if (has_flag(o_ptr->art_flags, TR_TELEPORT))
         return FALSE;
 
@@ -82,8 +74,7 @@ static bool invest_misc_chaos(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体への参照ポインタ
  * @return 処理続行ならFALSE、打ち切るならTRUE
  */
-static bool switch_misc_bias(object_type *o_ptr)
-{
+static bool switch_misc_bias(object_type* o_ptr) {
     switch (o_ptr->artifact_bias) {
     case BIAS_RANGER:
         return invest_misc_ranger(o_ptr);
@@ -111,8 +102,7 @@ static bool switch_misc_bias(object_type *o_ptr)
     }
 }
 
-static void invest_misc_hit_dice(object_type *o_ptr)
-{
+static void invest_misc_hit_dice(object_type* o_ptr) {
     add_flag(o_ptr->art_flags, TR_SHOW_MODS);
     HIT_PROB bonus_h = 4 + (HIT_PROB)randint1(11);
     HIT_POINT bonus_d = 4 + (HIT_POINT)randint1(11);
@@ -126,8 +116,7 @@ static void invest_misc_hit_dice(object_type *o_ptr)
     o_ptr->to_d += bonus_d;
 }
 
-static void invest_misc_string_esp(object_type *o_ptr)
-{
+static void invest_misc_string_esp(object_type* o_ptr) {
     switch (randint1(3)) {
     case 1:
         add_flag(o_ptr->art_flags, TR_ESP_EVIL);
@@ -150,8 +139,7 @@ static void invest_misc_string_esp(object_type *o_ptr)
     }
 }
 
-static void switch_investment_weak_esps(object_type *o_ptr, const int *idx, const int n)
-{
+static void switch_investment_weak_esps(object_type* o_ptr, const int* idx, const int n) {
     switch (idx[n]) {
     case 1:
         add_flag(o_ptr->art_flags, TR_ESP_ANIMAL);
@@ -203,8 +191,7 @@ static void switch_investment_weak_esps(object_type *o_ptr, const int *idx, cons
     }
 }
 
-static void invest_misc_weak_esps(object_type *o_ptr)
-{
+static void invest_misc_weak_esps(object_type* o_ptr) {
     int idx[3];
     idx[0] = randint1(10);
     idx[1] = randint1(9);
@@ -232,8 +219,7 @@ static void invest_misc_weak_esps(object_type *o_ptr)
  * @param o_ptr 対象のオブジェクト構造体ポインタ
  * @return なし
  */
-void random_misc(player_type *player_ptr, object_type *o_ptr)
-{
+void random_misc(player_type* player_ptr, object_type* o_ptr) {
     if (switch_misc_bias(o_ptr))
         return;
 

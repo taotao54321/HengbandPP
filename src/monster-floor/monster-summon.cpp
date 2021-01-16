@@ -36,17 +36,17 @@ bool summon_unique_okay = FALSE;
  * @param r_idx チェックするモンスター種族ID
  * @return 召喚対象にできるならばTRUE
  */
-static bool summon_specific_okay(player_type *player_ptr, MONRACE_IDX r_idx)
-{
-    monster_race *r_ptr = &r_info[r_idx];
-    monster_type *m_ptr = &player_ptr->current_floor_ptr->m_list[summon_specific_who];
+static bool summon_specific_okay(player_type* player_ptr, MONRACE_IDX r_idx) {
+    monster_race* r_ptr = &r_info[r_idx];
+    monster_type* m_ptr = &player_ptr->current_floor_ptr->m_list[summon_specific_who];
     if (!mon_hook_dungeon(player_ptr, r_idx))
         return FALSE;
 
     if (summon_specific_who > 0) {
         if (monster_has_hostile_align(player_ptr, m_ptr, 0, 0, r_ptr))
             return FALSE;
-    } else if (summon_specific_who < 0) {
+    }
+    else if (summon_specific_who < 0) {
         if (monster_has_hostile_align(player_ptr, NULL, 10, -10, r_ptr) && !one_in_(ABS(player_ptr->align) / 2 + 1))
             return FALSE;
     }
@@ -72,8 +72,7 @@ static bool summon_specific_okay(player_type *player_ptr, MONRACE_IDX r_idx)
  * @param type モンスター種族ID
  * @return 召喚されうるならばTRUE (あやしい影として生成されない)
  */
-static bool is_dead_summoning(summon_type type)
-{
+static bool is_dead_summoning(summon_type type) {
     bool summoning = type == SUMMON_BLUE_HORROR;
     summoning |= type == SUMMON_DAWN;
     summoning |= type == SUMMON_TOTEM_MOAI;
@@ -91,9 +90,8 @@ static bool is_dead_summoning(summon_type type)
  * @param mode 生成オプション
  * @return 召喚できたらtrueを返す
  */
-bool summon_specific(player_type *player_ptr, MONSTER_IDX who, POSITION y1, POSITION x1, DEPTH lev, summon_type type, BIT_FLAGS mode)
-{
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+bool summon_specific(player_type* player_ptr, MONSTER_IDX who, POSITION y1, POSITION x1, DEPTH lev, summon_type type, BIT_FLAGS mode) {
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (floor_ptr->inside_arena)
         return FALSE;
 
@@ -135,8 +133,7 @@ bool summon_specific(player_type *player_ptr, MONSTER_IDX who, POSITION y1, POSI
  * @param mode 生成オプション
  * @return 召喚できたらtrueを返す
  */
-bool summon_named_creature(player_type *player_ptr, MONSTER_IDX who, POSITION oy, POSITION ox, MONRACE_IDX r_idx, BIT_FLAGS mode)
-{
+bool summon_named_creature(player_type* player_ptr, MONSTER_IDX who, POSITION oy, POSITION ox, MONRACE_IDX r_idx, BIT_FLAGS mode) {
     if (r_idx >= max_r_idx)
         return FALSE;
 

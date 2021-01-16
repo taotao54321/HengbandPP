@@ -20,14 +20,13 @@ travel_type travel;
  * @param prev_dir 前回移動を行った元の方角ID
  * @return 次の方向
  */
-static DIRECTION travel_test(player_type *creature_ptr, DIRECTION prev_dir)
-{
+static DIRECTION travel_test(player_type* creature_ptr, DIRECTION prev_dir) {
     if (creature_ptr->blind || no_lite(creature_ptr)) {
         msg_print(_("目が見えない！", "You cannot see!"));
         return 0;
     }
 
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if ((disturb_trap_detect || alert_trap_detect) && creature_ptr->dtrap && !(floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].info & CAVE_IN_DETECT)) {
         creature_ptr->dtrap = FALSE;
         if (!(floor_ptr->grid_array[creature_ptr->y][creature_ptr->x].info & CAVE_UNSAFE)) {
@@ -40,14 +39,14 @@ static DIRECTION travel_test(player_type *creature_ptr, DIRECTION prev_dir)
     }
 
     int max = (prev_dir & 0x01) + 1;
-    const grid_type *g_ptr;
+    const grid_type* g_ptr;
     for (int i = -max; i <= max; i++) {
         DIRECTION dir = cycle[chome[prev_dir] + i];
         POSITION row = creature_ptr->y + ddy[dir];
         POSITION col = creature_ptr->x + ddx[dir];
         g_ptr = &floor_ptr->grid_array[row][col];
         if (g_ptr->m_idx) {
-            monster_type *m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
+            monster_type* m_ptr = &floor_ptr->m_list[g_ptr->m_idx];
             if (m_ptr->ml)
                 return 0;
         }
@@ -82,8 +81,7 @@ static DIRECTION travel_test(player_type *creature_ptr, DIRECTION prev_dir)
  * @param creature_ptr	プレーヤーへの参照ポインタ
  * @return なし
  */
-void travel_step(player_type *creature_ptr)
-{
+void travel_step(player_type* creature_ptr) {
     travel.dir = travel_test(creature_ptr, travel.dir);
     if (!travel.dir) {
         if (travel.run == 255) {
@@ -100,7 +98,8 @@ void travel_step(player_type *creature_ptr)
     if ((creature_ptr->y == travel.y) && (creature_ptr->x == travel.x)) {
         travel.run = 0;
         travel.y = travel.x = 0;
-    } else if (travel.run > 0)
+    }
+    else if (travel.run > 0)
         travel.run--;
 
     term_xtra(TERM_XTRA_DELAY, delay_factor);
@@ -111,8 +110,7 @@ void travel_step(player_type *creature_ptr)
  * @param creature_ptr	プレーヤーへの参照ポインタ
  * @return なし
  */
-void forget_travel_flow(floor_type *floor_ptr)
-{
+void forget_travel_flow(floor_type* floor_ptr) {
     for (POSITION y = 0; y < floor_ptr->height; y++)
         for (POSITION x = 0; x < floor_ptr->width; x++)
             travel.cost[y][x] = MAX_SHORT;

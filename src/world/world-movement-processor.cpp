@@ -26,8 +26,7 @@
  * Autosave BEFORE resetting the recall counter (rr9)
  * The player is yanked up/down as soon as he loads the autosaved game.
  */
-void execute_recall(player_type *creature_ptr)
-{
+void execute_recall(player_type* creature_ptr) {
     if (creature_ptr->word_recall == 0)
         return;
 
@@ -40,7 +39,7 @@ void execute_recall(player_type *creature_ptr)
         return;
 
     disturb(creature_ptr, FALSE, TRUE);
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (floor_ptr->dun_level || creature_ptr->current_floor_ptr->inside_quest || creature_ptr->enter_dungeon) {
         msg_print(_("上に引っ張りあげられる感じがする！", "You feel yourself yanked upwards!"));
         if (creature_ptr->dungeon_idx)
@@ -69,9 +68,11 @@ void execute_recall(player_type *creature_ptr)
     if (ironman_nightmare && !randint0(666) && (creature_ptr->dungeon_idx == DUNGEON_ANGBAND)) {
         if (floor_ptr->dun_level < 50) {
             floor_ptr->dun_level *= 2;
-        } else if (floor_ptr->dun_level < 99) {
+        }
+        else if (floor_ptr->dun_level < 99) {
             floor_ptr->dun_level = (floor_ptr->dun_level + 99) / 2;
-        } else if (floor_ptr->dun_level > 100) {
+        }
+        else if (floor_ptr->dun_level > 100) {
             floor_ptr->dun_level = d_info[creature_ptr->dungeon_idx].maxdepth - 1;
         }
     }
@@ -79,7 +80,8 @@ void execute_recall(player_type *creature_ptr)
     if (creature_ptr->wild_mode) {
         creature_ptr->wilderness_y = creature_ptr->y;
         creature_ptr->wilderness_x = creature_ptr->x;
-    } else {
+    }
+    else {
         creature_ptr->oldpx = creature_ptr->x;
         creature_ptr->oldpy = creature_ptr->y;
     }
@@ -99,7 +101,7 @@ void execute_recall(player_type *creature_ptr)
     }
 
     for (int i = MIN_RANDOM_QUEST; i < MAX_RANDOM_QUEST + 1; i++) {
-        quest_type *const q_ptr = &quest[i];
+        quest_type* const q_ptr = &quest[i];
         if ((q_ptr->type == QUEST_TYPE_RANDOM) && (q_ptr->status == QUEST_STATUS_TAKEN) && (q_ptr->level < floor_ptr->dun_level)) {
             q_ptr->status = QUEST_STATUS_FAILED;
             q_ptr->complev = (byte)creature_ptr->lev;
@@ -118,9 +120,8 @@ void execute_recall(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void execute_floor_reset(player_type *creature_ptr)
-{
-    floor_type *floor_ptr = creature_ptr->current_floor_ptr;
+void execute_floor_reset(player_type* creature_ptr) {
+    floor_type* floor_ptr = creature_ptr->current_floor_ptr;
     if (creature_ptr->alter_reality == 0)
         return;
 
@@ -142,7 +143,8 @@ void execute_floor_reset(player_type *creature_ptr)
          */
         prepare_change_floor_mode(creature_ptr, CFM_FIRST_FLOOR);
         creature_ptr->leaving = TRUE;
-    } else {
+    }
+    else {
         msg_print(_("世界が少しの間変化したようだ。", "The world seems to change for a moment!"));
     }
 

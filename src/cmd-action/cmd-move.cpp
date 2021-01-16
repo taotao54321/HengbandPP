@@ -22,8 +22,8 @@
 #include "io/input-key-requester.h"
 #include "io/write-diary.h"
 #include "mind/mind-ninja.h"
-#include "player/attack-defense-types.h"
 #include "player-info/avatar.h"
+#include "player/attack-defense-types.h"
 #include "player/player-move.h"
 #include "player/special-defense-types.h"
 #include "spell-realm/spells-hex.h"
@@ -39,9 +39,8 @@
  * @param down_stair TRUEならば階段を降りる処理、FALSEなら階段を昇る処理による内容
  * @return フロア移動を実際に行うならTRUE、キャンセルする場合はFALSE
  */
-static bool confirm_leave_level(player_type *creature_ptr, bool down_stair)
-{
-    quest_type *q_ptr = &quest[creature_ptr->current_floor_ptr->inside_quest];
+static bool confirm_leave_level(player_type* creature_ptr, bool down_stair) {
+    quest_type* q_ptr = &quest[creature_ptr->current_floor_ptr->inside_quest];
     if (confirm_quest && creature_ptr->current_floor_ptr->inside_quest
         && (q_ptr->type == QUEST_TYPE_RANDOM || (q_ptr->flags & QUEST_FLAG_ONCE && q_ptr->status != QUEST_STATUS_COMPLETED)
             || (q_ptr->flags & QUEST_FLAG_TOWER
@@ -57,11 +56,10 @@ static bool confirm_leave_level(player_type *creature_ptr, bool down_stair)
  * @brief 階段を使って階層を昇る処理 / Go up one level
  * @return なし
  */
-void do_cmd_go_up(player_type *creature_ptr)
-{
+void do_cmd_go_up(player_type* creature_ptr) {
     bool go_up = FALSE;
-    grid_type *g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
-    feature_type *f_ptr = &f_info[g_ptr->feat];
+    grid_type* g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
+    feature_type* f_ptr = &f_info[g_ptr->feat];
     int up_num = 0;
     if (creature_ptr->special_defense & KATA_MUSOU)
         set_action(creature_ptr, ACTION_NONE);
@@ -124,11 +122,13 @@ void do_cmd_go_up(player_type *creature_ptr)
         creature_ptr->current_floor_ptr->inside_quest = g_ptr->special;
         creature_ptr->current_floor_ptr->dun_level = 0;
         up_num = 0;
-    } else {
+    }
+    else {
         if (has_flag(f_ptr->flags, FF_SHAFT)) {
             prepare_change_floor_mode(creature_ptr, CFM_SAVE_FLOORS | CFM_UP | CFM_SHAFT);
             up_num = 2;
-        } else {
+        }
+        else {
             prepare_change_floor_mode(creature_ptr, CFM_SAVE_FLOORS | CFM_UP);
             up_num = 1;
         }
@@ -155,15 +155,14 @@ void do_cmd_go_up(player_type *creature_ptr)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_go_down(player_type *creature_ptr)
-{
+void do_cmd_go_down(player_type* creature_ptr) {
     bool fall_trap = FALSE;
     int down_num = 0;
     if (creature_ptr->special_defense & KATA_MUSOU)
         set_action(creature_ptr, ACTION_NONE);
 
-    grid_type *g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
-    feature_type *f_ptr = &f_info[g_ptr->feat];
+    grid_type* g_ptr = &creature_ptr->current_floor_ptr->grid_array[creature_ptr->y][creature_ptr->x];
+    feature_type* f_ptr = &f_info[g_ptr->feat];
     if (!has_flag(f_ptr->flags, FF_MORE)) {
         msg_print(_("ここには下り階段が見当たらない。", "I see no down staircase here."));
         return;
@@ -252,10 +251,12 @@ void do_cmd_go_down(player_type *creature_ptr)
 
     if (fall_trap) {
         msg_print(_("わざと落とし戸に落ちた。", "You deliberately jump through the trap door."));
-    } else {
+    }
+    else {
         if (target_dungeon) {
             msg_format(_("%sへ入った。", "You entered %s."), d_text + d_info[creature_ptr->dungeon_idx].text);
-        } else {
+        }
+        else {
             if (is_echizen(creature_ptr))
                 msg_print(_("なんだこの階段は！", "What's this STAIRWAY!"));
             else
@@ -283,8 +284,7 @@ void do_cmd_go_down(player_type *creature_ptr)
  * @param pickup アイテムの自動拾いを行うならTRUE
  * @return なし
  */
-void do_cmd_walk(player_type *creature_ptr, bool pickup)
-{
+void do_cmd_walk(player_type* creature_ptr, bool pickup) {
     if (command_arg) {
         command_rep = command_arg - 1;
         creature_ptr->redraw |= PR_STATE;
@@ -332,8 +332,7 @@ void do_cmd_walk(player_type *creature_ptr, bool pickup)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_run(player_type *creature_ptr)
-{
+void do_cmd_run(player_type* creature_ptr) {
     DIRECTION dir;
     if (cmd_limit_confused(creature_ptr))
         return;
@@ -355,8 +354,7 @@ void do_cmd_run(player_type *creature_ptr)
  * @param pickup アイテムの自動拾いを行うならTRUE
  * @return なし
  */
-void do_cmd_stay(player_type *creature_ptr, bool pickup)
-{
+void do_cmd_stay(player_type* creature_ptr, bool pickup) {
     u32b mpe_mode = MPE_STAYING | MPE_ENERGY_USE;
     if (command_arg) {
         command_rep = command_arg - 1;
@@ -377,8 +375,7 @@ void do_cmd_stay(player_type *creature_ptr, bool pickup)
  * @param creature_ptr プレーヤーへの参照ポインタ
  * @return なし
  */
-void do_cmd_rest(player_type *creature_ptr)
-{
+void do_cmd_rest(player_type* creature_ptr) {
     set_action(creature_ptr, ACTION_NONE);
     if ((creature_ptr->pclass == CLASS_BARD) && (SINGING_SONG_EFFECT(creature_ptr) || INTERUPTING_SONG_EFFECT(creature_ptr)))
         stop_singing(creature_ptr);
@@ -395,9 +392,11 @@ void do_cmd_rest(player_type *creature_ptr)
 
         if (out_val[0] == '&') {
             command_arg = COMMAND_ARG_REST_UNTIL_DONE;
-        } else if (out_val[0] == '*') {
+        }
+        else if (out_val[0] == '*') {
             command_arg = COMMAND_ARG_REST_FULL_HEALING;
-        } else {
+        }
+        else {
             command_arg = (COMMAND_ARG)atoi(out_val);
             if (command_arg <= 0)
                 return;

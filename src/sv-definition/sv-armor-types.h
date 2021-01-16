@@ -62,4 +62,3 @@ typedef enum sv_dragon_armor_type {
     SV_DRAGON_BALANCE = 20,
     SV_DRAGON_POWER = 30,
 } sv_dragon_armor_type;
-	

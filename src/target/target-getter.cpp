@@ -27,8 +27,7 @@
  *
  * Note that confusion over-rides any (explicit?) user choice.
  */
-bool get_aim_dir(player_type *creature_ptr, DIRECTION *dp)
-{
+bool get_aim_dir(player_type* creature_ptr, DIRECTION* dp) {
     DIRECTION dir = command_dir;
     if (use_old_target && target_okay(creature_ptr))
         dir = 5;
@@ -97,8 +96,7 @@ bool get_aim_dir(player_type *creature_ptr, DIRECTION *dp)
     return TRUE;
 }
 
-bool get_direction(player_type *creature_ptr, DIRECTION *dp, bool allow_under, bool with_steed)
-{
+bool get_direction(player_type* creature_ptr, DIRECTION* dp, bool allow_under, bool with_steed) {
     DIRECTION dir = command_dir;
     COMMAND_CODE code;
     if (repeat_pull(&code))
@@ -134,13 +132,15 @@ bool get_direction(player_type *creature_ptr, DIRECTION *dp, bool allow_under, b
         if (randint0(100) < 75) {
             dir = ddd[randint0(8)];
         }
-    } else if (creature_ptr->riding && with_steed) {
-        monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    }
+    else if (creature_ptr->riding && with_steed) {
+        monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (monster_confused_remaining(m_ptr)) {
             if (randint0(100) < 75)
                 dir = ddd[randint0(8)];
-        } else if ((r_ptr->flags1 & RF1_RAND_50) && (r_ptr->flags1 & RF1_RAND_25) && (randint0(100) < 50))
+        }
+        else if ((r_ptr->flags1 & RF1_RAND_50) && (r_ptr->flags1 & RF1_RAND_25) && (randint0(100) < 50))
             dir = ddd[randint0(8)];
         else if ((r_ptr->flags1 & RF1_RAND_50) && (randint0(100) < 25))
             dir = ddd[randint0(8)];
@@ -149,14 +149,16 @@ bool get_direction(player_type *creature_ptr, DIRECTION *dp, bool allow_under, b
     if (command_dir != dir) {
         if (creature_ptr->confused) {
             msg_print(_("あなたは混乱している。", "You are confused."));
-        } else {
+        }
+        else {
             GAME_TEXT m_name[MAX_NLEN];
-            monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+            monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
 
             monster_desc(creature_ptr, m_name, m_ptr, 0);
             if (monster_confused_remaining(m_ptr)) {
                 msg_format(_("%sは混乱している。", "%^s is confused."), m_name);
-            } else {
+            }
+            else {
                 msg_format(_("%sは思い通りに動いてくれない。", "You cannot control %s."), m_name);
             }
         }
@@ -183,8 +185,7 @@ bool get_direction(player_type *creature_ptr, DIRECTION *dp, bool allow_under, b
  * This function tracks and uses the "global direction", and uses
  * that as the "desired direction", to which "confusion" is applied.
  */
-bool get_rep_dir(player_type *creature_ptr, DIRECTION *dp, bool under)
-{
+bool get_rep_dir(player_type* creature_ptr, DIRECTION* dp, bool under) {
     DIRECTION dir = command_dir;
     COMMAND_CODE code;
     if (repeat_pull(&code))
@@ -218,13 +219,15 @@ bool get_rep_dir(player_type *creature_ptr, DIRECTION *dp, bool under)
     if (creature_ptr->confused) {
         if (randint0(100) < 75)
             dir = ddd[randint0(8)];
-    } else if (creature_ptr->riding) {
-        monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
-        monster_race *r_ptr = &r_info[m_ptr->r_idx];
+    }
+    else if (creature_ptr->riding) {
+        monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+        monster_race* r_ptr = &r_info[m_ptr->r_idx];
         if (monster_confused_remaining(m_ptr)) {
             if (randint0(100) < 75)
                 dir = ddd[randint0(8)];
-        } else if ((r_ptr->flags1 & RF1_RAND_50) && (r_ptr->flags1 & RF1_RAND_25) && (randint0(100) < 50))
+        }
+        else if ((r_ptr->flags1 & RF1_RAND_50) && (r_ptr->flags1 & RF1_RAND_25) && (randint0(100) < 50))
             dir = ddd[randint0(8)];
         else if ((r_ptr->flags1 & RF1_RAND_50) && (randint0(100) < 25))
             dir = ddd[randint0(8)];
@@ -233,9 +236,10 @@ bool get_rep_dir(player_type *creature_ptr, DIRECTION *dp, bool under)
     if (command_dir != dir) {
         if (creature_ptr->confused) {
             msg_print(_("あなたは混乱している。", "You are confused."));
-        } else {
+        }
+        else {
             GAME_TEXT m_name[MAX_NLEN];
-            monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
+            monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[creature_ptr->riding];
             monster_desc(creature_ptr, m_name, m_ptr, 0);
             if (monster_confused_remaining(m_ptr))
                 msg_format(_("%sは混乱している。", "%^s is confused."), m_name);

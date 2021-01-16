@@ -25,8 +25,7 @@
 #include "locale/english.h"
 #endif
 
-void do_poly_wounds(player_type *creature_ptr)
-{
+void do_poly_wounds(player_type* creature_ptr) {
     s16b wounds = creature_ptr->cut;
     s16b hit_p = (creature_ptr->mhp - creature_ptr->chp);
     s16b change = damroll(creature_ptr->lev, 5);
@@ -40,7 +39,8 @@ void do_poly_wounds(player_type *creature_ptr)
         msg_print(_("新たな傷ができた！", "A new wound was created!"));
         take_hit(creature_ptr, DAMAGE_LOSELIFE, change / 2, _("変化した傷", "a polymorphed wound"), -1);
         set_cut(creature_ptr, change);
-    } else {
+    }
+    else {
         set_cut(creature_ptr, creature_ptr->cut - (change / 2));
     }
 }
@@ -48,8 +48,7 @@ void do_poly_wounds(player_type *creature_ptr)
 /*
  * Change player race
  */
-void change_race(player_type *creature_ptr, player_race_type new_race, concptr effect_msg)
-{
+void change_race(player_type* creature_ptr, player_race_type new_race, concptr effect_msg) {
     concptr title = race_info[new_race].title;
     int old_race = creature_ptr->prace;
 #ifdef JP
@@ -61,7 +60,8 @@ void change_race(player_type *creature_ptr, player_race_type new_race, concptr e
     chg_virtue(creature_ptr, V_CHANCE, 2);
     if (creature_ptr->prace < 32) {
         creature_ptr->old_race1 |= 1L << creature_ptr->prace;
-    } else {
+    }
+    else {
         creature_ptr->old_race2 |= 1L << (creature_ptr->prace - 32);
     }
 
@@ -96,8 +96,7 @@ void change_race(player_type *creature_ptr, player_race_type new_race, concptr e
     lite_spot(creature_ptr, creature_ptr->y, creature_ptr->x);
 }
 
-void do_poly_self(player_type *creature_ptr)
-{
+void do_poly_self(player_type* creature_ptr) {
     int power = creature_ptr->lev;
 
     msg_print(_("あなたは変化の訪れを感じた...", "You feel a change coming over you..."));
@@ -114,7 +113,8 @@ void do_poly_self(player_type *creature_ptr)
                 creature_ptr->psex = SEX_FEMALE;
                 sp_ptr = &sex_info[creature_ptr->psex];
                 sprintf(effect_msg, _("女性の", "female "));
-            } else {
+            }
+            else {
                 creature_ptr->psex = SEX_MALE;
                 sp_ptr = &sex_info[creature_ptr->psex];
                 sprintf(effect_msg, _("男性の", "male "));
@@ -138,7 +138,8 @@ void do_poly_self(player_type *creature_ptr)
                 char tmp_msg[10];
                 sprintf(tmp_msg, _("%s", "%s "), effect_msg);
                 sprintf(effect_msg, _("奇形の%s", "deformed %s "), tmp_msg);
-            } else {
+            }
+            else {
                 sprintf(effect_msg, _("奇形の", "deformed "));
             }
         }

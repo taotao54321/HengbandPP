@@ -13,8 +13,7 @@
  * @details アンデッド種族は18:00からゲームを開始するので、この修正を予め行う。
  * @return 修正をかけた後のゲームターン
  */
-s32b turn_real(player_type *player_ptr, s32b hoge)
-{
+s32b turn_real(player_type* player_ptr, s32b hoge) {
     switch (player_ptr->start_race) {
     case RACE_VAMPIRE:
     case RACE_SKELETON:
@@ -32,8 +31,7 @@ s32b turn_real(player_type *player_ptr, s32b hoge)
  * @details ターン及びターンを記録する変数をターンの限界の1日前まで巻き戻す.
  * @return 修正をかけた後のゲームターン
  */
-void prevent_turn_overflow(player_type *player_ptr)
-{
+void prevent_turn_overflow(player_type* player_ptr) {
     if (current_world_ptr->game_turn < current_world_ptr->game_turn_limit)
         return;
 
@@ -44,7 +42,7 @@ void prevent_turn_overflow(player_type *player_ptr)
         current_world_ptr->game_turn -= rollback_turns;
     else
         current_world_ptr->game_turn = 1;
-    floor_type *floor_ptr = player_ptr->current_floor_ptr;
+    floor_type* floor_ptr = player_ptr->current_floor_ptr;
     if (floor_ptr->generated_turn > rollback_turns)
         floor_ptr->generated_turn -= rollback_turns;
     else
@@ -60,7 +58,7 @@ void prevent_turn_overflow(player_type *player_ptr)
 
     for (int i = 1; i < max_towns; i++) {
         for (int j = 0; j < MAX_STORES; j++) {
-            store_type *store_ptr = &town_info[i].store[j];
+            store_type* store_ptr = &town_info[i].store[j];
 
             if (store_ptr->last_visit > -10L * TURNS_PER_TICK * STORE_TICKS) {
                 store_ptr->last_visit -= rollback_turns;

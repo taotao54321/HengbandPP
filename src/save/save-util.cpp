@@ -1,6 +1,6 @@
 ﻿#include "save/save-util.h"
 
-FILE *saving_savefile; /* Current save "file" */
+FILE* saving_savefile; /* Current save "file" */
 byte save_xor_byte; /* Simple encryption */
 u32b v_stamp = 0L; /* A simple "checksum" on the actual values */
 u32b x_stamp = 0L; /* A simple "checksum" on the encoded bytes */
@@ -10,8 +10,7 @@ u32b x_stamp = 0L; /* A simple "checksum" on the encoded bytes */
  * @param v 書き込むバイト値
  * @return なし
  */
-static void sf_put(byte v)
-{
+static void sf_put(byte v) {
     /* Encode the value, write a character */
     save_xor_byte ^= v;
     (void)putc((int)save_xor_byte, saving_savefile);
@@ -33,8 +32,7 @@ void wr_byte(byte v) { sf_put(v); }
  * @param v 書き込む符号なし16bit値
  * @return なし
  */
-void wr_u16b(u16b v)
-{
+void wr_u16b(u16b v) {
     wr_byte((byte)(v & 0xFF));
     wr_byte((byte)((v >> 8) & 0xFF));
 }
@@ -51,8 +49,7 @@ void wr_s16b(s16b v) { wr_u16b((u16b)v); }
  * @param v 書き込む符号なし32bit値
  * @return なし
  */
-void wr_u32b(u32b v)
-{
+void wr_u32b(u32b v) {
     wr_byte((byte)(v & 0xFF));
     wr_byte((byte)((v >> 8) & 0xFF));
     wr_byte((byte)((v >> 16) & 0xFF));
@@ -71,8 +68,7 @@ void wr_s32b(s32b v) { wr_u32b((u32b)v); }
  * @param str 書き込む文字列
  * @return なし
  */
-void wr_string(concptr str)
-{
+void wr_string(concptr str) {
     while (*str) {
         wr_byte(*str);
         str++;

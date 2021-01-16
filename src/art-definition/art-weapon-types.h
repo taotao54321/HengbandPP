@@ -4,7 +4,7 @@
 #define ART_NAIN 211
 
 typedef enum art_polearm_type {
-	ART_THEODEN = 93,
+    ART_THEODEN = 93,
     ART_PAIN = 94,
     ART_OSONDIR = 95,
     ART_TIL = 96,

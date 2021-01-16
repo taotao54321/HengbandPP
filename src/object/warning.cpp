@@ -45,8 +45,7 @@
  * Calculate spell damages
  * @return 警告を行う
  */
-object_type *choose_warning_item(player_type *creature_ptr)
-{
+object_type* choose_warning_item(player_type* creature_ptr) {
     int choices[INVEN_TOTAL - INVEN_RARM];
 
     /* Paranoia -- Player has no warning ability */
@@ -57,7 +56,7 @@ object_type *choose_warning_item(player_type *creature_ptr)
     int number = 0;
     for (inventory_slot_type i = INVEN_RARM; i < INVEN_TOTAL; i = inventory_slot_type(i + 1)) {
         BIT_FLAGS flgs[TR_FLAG_SIZE];
-        object_type *o_ptr = &creature_ptr->inventory_list[i];
+        object_type* o_ptr = &creature_ptr->inventory_list[i];
 
         object_flags(creature_ptr, o_ptr, flgs);
         if (has_flag(flgs, TR_WARNING)) {
@@ -79,9 +78,8 @@ object_type *choose_warning_item(player_type *creature_ptr)
  * @param max 算出した最大ダメージを返すポインタ
  * @return なし
  */
-static void spell_damcalc(player_type *target_ptr, monster_type *m_ptr, EFFECT_ID typ, HIT_POINT dam, int *max)
-{
-    monster_race *r_ptr = &r_info[m_ptr->r_idx];
+static void spell_damcalc(player_type* target_ptr, monster_type* m_ptr, EFFECT_ID typ, HIT_POINT dam, int* max) {
+    monster_race* r_ptr = &r_info[m_ptr->r_idx];
     int rlev = r_ptr->level;
     bool ignore_wraith_form = FALSE;
 
@@ -251,9 +249,8 @@ static void spell_damcalc(player_type *target_ptr, monster_type *m_ptr, EFFECT_I
  * @param max 算出した最大ダメージを返すポインタ
  * @return なし
  */
-void spell_damcalc_by_spellnum(player_type *creature_ptr, monster_spell_type ms_type, EFFECT_ID typ, MONSTER_IDX m_idx, int *max)
-{
-    monster_type *m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
+void spell_damcalc_by_spellnum(player_type* creature_ptr, monster_spell_type ms_type, EFFECT_ID typ, MONSTER_IDX m_idx, int* max) {
+    monster_type* m_ptr = &creature_ptr->current_floor_ptr->m_list[m_idx];
     HIT_POINT dam = monspell_damage(creature_ptr, ms_type, m_idx, DAM_MAX);
     spell_damcalc(creature_ptr, m_ptr, typ, dam, max);
 }
@@ -265,8 +262,7 @@ void spell_damcalc_by_spellnum(player_type *creature_ptr, monster_spell_type ms_
  * @param blow_ptr モンスターの打撃能力の構造体参照ポインタ
  * @return 算出された最大ダメージを返す。
  */
-static int blow_damcalc(monster_type *m_ptr, player_type *target_ptr, monster_blow *blow_ptr)
-{
+static int blow_damcalc(monster_type* m_ptr, player_type* target_ptr, monster_blow* blow_ptr) {
     int dam = blow_ptr->d_dice * blow_ptr->d_side;
     int dummy_max = 0;
 
@@ -337,10 +333,9 @@ static int blow_damcalc(monster_type *m_ptr, player_type *target_ptr, monster_bl
  * @param yy 危険性を調査するマスのY座標
  * @return 警告を無視して進むことを選択するかか問題が無ければTRUE、警告に従ったならFALSEを返す。
  */
-bool process_warning(player_type *creature_ptr, POSITION xx, POSITION yy)
-{
+bool process_warning(player_type* creature_ptr, POSITION xx, POSITION yy) {
     POSITION mx, my;
-    grid_type *g_ptr;
+    grid_type* g_ptr;
     GAME_TEXT o_name[MAX_NLEN];
 
 #define WARNING_AWARE_RANGE 12
@@ -350,8 +345,8 @@ bool process_warning(player_type *creature_ptr, POSITION xx, POSITION yy)
     for (mx = xx - WARNING_AWARE_RANGE; mx < xx + WARNING_AWARE_RANGE + 1; mx++) {
         for (my = yy - WARNING_AWARE_RANGE; my < yy + WARNING_AWARE_RANGE + 1; my++) {
             int dam_max0 = 0;
-            monster_type *m_ptr;
-            monster_race *r_ptr;
+            monster_type* m_ptr;
+            monster_race* r_ptr;
 
             if (!in_bounds(creature_ptr->current_floor_ptr, my, mx) || (distance(my, mx, yy, xx) > WARNING_AWARE_RANGE))
                 continue;
@@ -473,7 +468,7 @@ bool process_warning(player_type *creature_ptr, POSITION xx, POSITION yy)
         old_damage = dam_max * 3 / 2;
 
         if (dam_max > creature_ptr->chp / 2) {
-            object_type *o_ptr = choose_warning_item(creature_ptr);
+            object_type* o_ptr = choose_warning_item(creature_ptr);
 
             if (o_ptr)
                 describe_flavor(creature_ptr, o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
@@ -484,7 +479,8 @@ bool process_warning(player_type *creature_ptr, POSITION xx, POSITION yy)
             disturb(creature_ptr, FALSE, TRUE);
             return get_check(_("本当にこのまま進むか？", "Really want to go ahead? "));
         }
-    } else
+    }
+    else
         old_damage = old_damage / 2;
 
     g_ptr = &creature_ptr->current_floor_ptr->grid_array[yy][xx];
@@ -493,7 +489,7 @@ bool process_warning(player_type *creature_ptr, POSITION xx, POSITION yy)
     if (!is_warning)
         return TRUE;
 
-    object_type *o_ptr = choose_warning_item(creature_ptr);
+    object_type* o_ptr = choose_warning_item(creature_ptr);
     if (o_ptr != NULL)
         describe_flavor(creature_ptr, o_name, o_ptr, (OD_OMIT_PREFIX | OD_NAME_ONLY));
     else

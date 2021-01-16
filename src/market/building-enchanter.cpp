@@ -21,8 +21,7 @@
  * @param to_ac ＡＣをアップさせる量
  * @return 実際に行ったらTRUE
  */
-bool enchant_item(player_type *player_ptr, PRICE cost, HIT_PROB to_hit, HIT_POINT to_dam, ARMOUR_CLASS to_ac, tval_type item_tester_tval)
-{
+bool enchant_item(player_type* player_ptr, PRICE cost, HIT_PROB to_hit, HIT_POINT to_dam, ARMOUR_CLASS to_ac, tval_type item_tester_tval) {
     clear_bldg(4, 18);
     int maxenchant = (player_ptr->lev / 5);
     prt(format(_("現在のあなたの技量だと、+%d まで改良できます。", "  Based on your skill, we can improve up to +%d."), maxenchant), 5, 0);
@@ -32,7 +31,7 @@ bool enchant_item(player_type *player_ptr, PRICE cost, HIT_PROB to_hit, HIT_POIN
     concptr s = _("改良できるものがありません。", "You have nothing to improve.");
 
     OBJECT_IDX item;
-    object_type *o_ptr;
+    object_type* o_ptr;
     o_ptr = choose_object(player_ptr, &item, q, s, (USE_INVEN | USE_EQUIP | IGNORE_BOTHHAND_SLOT), item_tester_tval);
     if (!o_ptr)
         return FALSE;

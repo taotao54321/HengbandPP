@@ -27,18 +27,17 @@
 #include "status/temporary-resistance.h"
 #include "view/display-messages.h"
 
-#include "status/buff-setter.h"
 #include "core/speed-table.h"
 #include "monster/monster-status-setter.h"
 #include "player/attack-defense-types.h"
 #include "player/player-race.h"
+#include "status/buff-setter.h"
 
 /*!
  * @brief プレイヤーに魔力消去効果を与える。
  * @return なし
  */
-static void dispel_player(player_type *creature_ptr)
-{
+static void dispel_player(player_type* creature_ptr) {
     (void)set_fast(creature_ptr, 0, TRUE);
     set_lightspeed(creature_ptr, 0, TRUE);
     (void)set_slow(creature_ptr, 0, TRUE);
@@ -105,8 +104,7 @@ static void dispel_player(player_type *creature_ptr)
  * @param t_idx 呪文を受けるモンスターID。プレイヤーの場合はdummyで0とする。
  * @param TARGET_TYPE プレイヤーを対象とする場合MONSTER_TO_PLAYER、モンスターを対象とする場合MONSTER_TO_MONSTER
  */
-void spell_RF4_DISPEL(MONSTER_IDX m_idx, player_type *target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE)
-{
+void spell_RF4_DISPEL(MONSTER_IDX m_idx, player_type* target_ptr, MONSTER_IDX t_idx, int TARGET_TYPE) {
     GAME_TEXT m_name[MAX_NLEN], t_name[MAX_NLEN];
     monster_name(target_ptr, m_idx, m_name);
     monster_name(target_ptr, t_idx, t_name);

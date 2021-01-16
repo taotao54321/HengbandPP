@@ -2,4 +2,4 @@
 
 #include "system/angband.h"
 
-bool import_magic_device(player_type *creature_ptr);
+bool import_magic_device(player_type* creature_ptr);
