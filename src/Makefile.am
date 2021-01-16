@@ -893,7 +893,7 @@ hengband_SOURCES = \
 
 EXTRA_hengband_SOURCES = \
 	angband.ico angband.rc ang_eng.rc maid-x11.c main-win.c \
-	makefile.bcc makefile.std term/readdib.c term/readdib.h wall.bmp
+	term/readdib.c term/readdib.h wall.bmp
 
 EXTRA_DIST = \
 	gcc-wrap
