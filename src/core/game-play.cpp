@@ -46,7 +46,6 @@
 #include "io/read-pref-file.h"
 #include "io/record-play-movie.h"
 #include "io/screen-util.h"
-#include "io/signal-handlers.h"
 #include "io/write-diary.h"
 #include "load/load.h"
 #include "main/sound-of-music.h"
@@ -112,7 +111,6 @@ static void send_waiting_record(player_type* player_ptr) {
     update_creature(player_ptr);
     player_ptr->is_dead = TRUE;
     current_world_ptr->start_time = (u32b)time(NULL);
-    signals_ignore_tstp();
     current_world_ptr->character_icky = TRUE;
     path_build(buf, sizeof(buf), ANGBAND_DIR_APEX, "scores.raw");
     highscore_fd = fd_open(buf, O_RDWR);
@@ -133,7 +131,6 @@ static void send_waiting_record(player_type* player_ptr) {
 
     (void)fd_close(highscore_fd);
     highscore_fd = -1;
-    signals_handle_tstp();
     quit(0);
 }
 

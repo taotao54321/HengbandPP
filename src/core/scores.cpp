@@ -19,7 +19,6 @@
 #include "game-option/game-play-options.h"
 #include "io/input-key-acceptor.h"
 #include "io/report.h"
-#include "io/signal-handlers.h"
 #include "io/uid-checker.h"
 #include "io/write-diary.h"
 #include "player/player-class.h"
@@ -409,8 +408,6 @@ void display_scores(int from, int to) {
  * case, displays some relevant portion of the high score list.
  * @param current_player_ptr スコアに適用するための現在プレイヤークリーチャー参照ポインタ
  * @return エラーコード
- * @details
- * Assumes "signals_ignore_tstp()" has been called.
  */
 errr top_twenty(player_type* current_player_ptr) {
     high_score the_score;

@@ -2,7 +2,6 @@
 #include "cmd-io/macro-util.h"
 #include "game-option/input-options.h"
 #include "game-option/map-screen-options.h"
-#include "io/signal-handlers.h"
 #include "term/gameterm.h"
 #include "util/string-processor.h"
 #include "world/world.h"
@@ -205,7 +204,6 @@ char inkey(void) {
             term_activate(angband_term[0]);
             current_world_ptr->character_saved = FALSE;
 
-            signal_count = 0;
             done = TRUE;
         }
 

@@ -292,7 +292,6 @@ hengband_SOURCES = \
 	\
 	io/command-repeater.cpp io/command-repeater.h \
 	io/cursor.cpp io/cursor.h \
-	io/exit-panic.cpp io/exit-panic.h \
 	io/files-util.cpp io/files-util.h \
 	io/gf-descriptions.cpp io/gf-descriptions.h \
 	io/input-key-acceptor.cpp io/input-key-acceptor.h \
@@ -305,7 +304,6 @@ hengband_SOURCES = \
 	io/record-play-movie.cpp io/record-play-movie.h \
 	io/report.cpp io/report.h \
 	io/screen-util.cpp io/screen-util.h \
-	io/signal-handlers.cpp io/signal-handlers.h \
 	io/store-key-processor.cpp io/store-key-processor.h \
 	io/tokenizer.cpp io/tokenizer.h \
 	io/uid-checker.cpp io/uid-checker.h \

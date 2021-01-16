@@ -158,7 +158,6 @@
 
 #include "game-option/runtime-arguments.h"
 #include "game-option/special-options.h"
-#include "io/exit-panic.h"
 #include "io/files-util.h"
 #include "main/sound-definitions-table.h"
 #include "main/sound-of-music.h"
@@ -683,17 +682,12 @@ static errr Term_xtra_gcu_event(int v) {
         /* Get a keypress */
         i = getch();
 
-        /* Broken input is special */
-        if (i == ERR) exit_game_panic(p_ptr);
-        if (i == EOF) exit_game_panic(p_ptr);
-
         *bp++ = (char)i;
 
         /* Do not wait for it */
         nodelay(stdscr, TRUE);
 
         while ((i = getch()) != EOF) {
-            if (i == ERR) exit_game_panic(p_ptr);
             *bp++ = (char)i;
             if (bp == &buf[255]) break;
         }
@@ -745,9 +739,6 @@ static errr Term_xtra_gcu_event(int v) {
 
         /* Wait for one byte */
         i = read(0, bp++, 1);
-
-        /* Hack -- Handle bizarre "errors" */
-        if ((i <= 0) && (errno != EINTR)) exit_game_panic(p_ptr);
 
         /* Get the current flags for stdin */
         k = fcntl(0, F_GETFL, 0);

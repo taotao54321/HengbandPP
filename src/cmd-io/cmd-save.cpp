@@ -2,7 +2,6 @@
 #include "cmd-io/cmd-dump.h"
 #include "core/disturbance.h"
 #include "core/stuff-handler.h"
-#include "io/signal-handlers.h"
 #include "io/write-diary.h"
 #include "monster/monster-status.h" // 違和感。要調査.
 #include "save/save.h"
@@ -29,13 +28,11 @@ void do_cmd_save_game(player_type* creature_ptr, int is_autosave) {
     prt(_("ゲームをセーブしています...", "Saving game..."), 0, 0);
     term_fresh();
     (void)strcpy(creature_ptr->died_from, _("(セーブ)", "(saved)"));
-    signals_ignore_tstp();
     if (save_player(creature_ptr))
         prt(_("ゲームをセーブしています... 終了", "Saving game... done."), 0, 0);
     else
         prt(_("ゲームをセーブしています... 失敗！", "Saving game... failed!"), 0, 0);
 
-    signals_handle_tstp();
     term_fresh();
     (void)strcpy(creature_ptr->died_from, _("(元気に生きている)", "(alive and well)"));
     current_world_ptr->is_loading_now = FALSE;

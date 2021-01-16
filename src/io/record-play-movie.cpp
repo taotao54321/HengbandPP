@@ -9,7 +9,6 @@
 #include "cmd-visual/cmd-draw.h"
 #include "core/asking-player.h"
 #include "io/files-util.h"
-#include "io/signal-handlers.h"
 #include "term/gameterm.h"
 #include "util/angband-files.h"
 #include "view/display-messages.h"

@@ -13,7 +13,6 @@
 #include "game-option/runtime-arguments.h"
 #include "io/files-util.h"
 #include "io/record-play-movie.h"
-#include "io/signal-handlers.h"
 #include "io/uid-checker.h"
 #include "main/angband-initializer.h"
 #include "player/process-name.h"
@@ -522,9 +521,6 @@ int main(int argc, char* argv[]) {
     /* Hack -- If requested, display scores and quit */
     if (show_score > 0)
         display_scores(0, show_score);
-
-    /* Catch nasty signals */
-    signals_init();
 
     /* Initialize */
     init_angband(p_ptr, process_autopick_file_command);

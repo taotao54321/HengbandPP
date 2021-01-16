@@ -5,7 +5,6 @@
 #include "core/stuff-handler.h"
 #include "game-option/cheat-options.h"
 #include "io/input-key-acceptor.h"
-#include "io/signal-handlers.h"
 #include "io/uid-checker.h"
 #include "main/music-definitions-table.h"
 #include "main/sound-of-music.h"
@@ -22,7 +21,6 @@ static void clear_floor(player_type* player_ptr) {
     (void)fd_close(highscore_fd);
     highscore_fd = -1;
     clear_saved_floor_files(player_ptr);
-    signals_handle_tstp();
 }
 
 /*!
@@ -51,7 +49,7 @@ static bool check_death(player_type* player_ptr) {
  * @return なし
  * @details
  * <pre>
- * This function is called only from "main.c" and "signals.c".
+ * This function is called only from "main.c".
  * </pre>
  */
 void close_game(player_type* player_ptr) {
@@ -59,7 +57,6 @@ void close_game(player_type* player_ptr) {
     handle_stuff(player_ptr);
     msg_print(NULL);
     flush();
-    signals_ignore_tstp();
 
     current_world_ptr->character_icky = TRUE;
     char buf[1024];

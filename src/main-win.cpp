@@ -106,7 +106,6 @@
 #include "io/files-util.h"
 #include "io/input-key-acceptor.h"
 #include "io/record-play-movie.h"
-#include "io/signal-handlers.h"
 #include "io/write-diary.h"
 #include "main/angband-initializer.h"
 #include "main/music-definitions-table.h"
@@ -3027,7 +3026,6 @@ LRESULT PASCAL AngbandWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         exe_write_diary(p_ptr, DIARY_GAMESTART, 0, _("----ゲーム中断----", "---- Save and Exit Game ----"));
 
         p_ptr->panic_save = 1;
-        signals_ignore_tstp();
         (void)strcpy(p_ptr->died_from, _("(緊急セーブ)", "(panic save)"));
         (void)save_player(p_ptr);
         quit(NULL);
@@ -3570,7 +3568,6 @@ int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
         }
     }
 
-    signals_init();
     term_activate(term_screen);
     init_angband(p_ptr, process_autopick_file_command);
     initialized = TRUE;
