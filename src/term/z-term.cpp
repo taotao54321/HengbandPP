@@ -670,9 +670,6 @@ static void term_fresh_row_both(TERM_LEN y, int x1, int x2) {
     TERM_COLOR nta;
     char ntc;
 
-    /* The "always_text" flag */
-    int always_text = Term->always_text;
-
     /* Pending length */
     int fn = 0;
 
@@ -736,7 +733,7 @@ static void term_fresh_row_both(TERM_LEN y, int x1, int x2) {
             /* Flush */
             if (fn) {
                 /* Draw pending chars (normal) */
-                if (fa || always_text) {
+                if (fa) {
                     (void)((*Term->text_hook)(fx, y, fn, fa, &scr_cc[fx]));
                 }
 
@@ -777,7 +774,7 @@ static void term_fresh_row_both(TERM_LEN y, int x1, int x2) {
             /* Flush */
             if (fn) {
                 /* Draw pending chars (normal) */
-                if (fa || always_text) {
+                if (fa) {
                     (void)((*Term->text_hook)(fx, y, fn, fa, &scr_cc[fx]));
                 }
 
@@ -808,7 +805,7 @@ static void term_fresh_row_both(TERM_LEN y, int x1, int x2) {
             /* Flush */
             if (fn) {
                 /* Draw the pending chars */
-                if (fa || always_text) {
+                if (fa) {
                     (void)((*Term->text_hook)(fx, y, fn, fa, &scr_cc[fx]));
                 }
 
@@ -837,7 +834,7 @@ static void term_fresh_row_both(TERM_LEN y, int x1, int x2) {
     /* Flush */
     if (fn) {
         /* Draw pending chars (normal) */
-        if (fa || always_text) {
+        if (fa) {
             (void)((*Term->text_hook)(fx, y, fn, fa, &scr_cc[fx]));
         }
 
@@ -859,9 +856,6 @@ static void term_fresh_row_text(TERM_LEN y, TERM_LEN x1, TERM_LEN x2) {
 
     TERM_COLOR* scr_aa = Term->scr->a[y];
     char* scr_cc = Term->scr->c[y];
-
-    /* The "always_text" flag */
-    int always_text = Term->always_text;
 
     /* Pending length */
     int fn = 0;
@@ -927,7 +921,7 @@ static void term_fresh_row_text(TERM_LEN y, TERM_LEN x1, TERM_LEN x2) {
             /* Flush */
             if (fn) {
                 /* Draw pending chars (normal) */
-                if (fa || always_text) {
+                if (fa) {
                     (void)((*Term->text_hook)(fx, y, fn, fa, &scr_cc[fx]));
                 }
 
@@ -967,7 +961,7 @@ static void term_fresh_row_text(TERM_LEN y, TERM_LEN x1, TERM_LEN x2) {
             /* Flush */
             if (fn) {
                 /* Draw the pending chars */
-                if (fa || always_text) {
+                if (fa) {
                     (void)((*Term->text_hook)(fx, y, fn, fa, &scr_cc[fx]));
                 }
 
@@ -996,7 +990,7 @@ static void term_fresh_row_text(TERM_LEN y, TERM_LEN x1, TERM_LEN x2) {
     /* Flush */
     if (fn) {
         /* Draw pending chars (normal) */
-        if (fa || always_text) {
+        if (fa) {
             (void)((*Term->text_hook)(fx, y, fn, fa, &scr_cc[fx]));
         }
 
@@ -1078,59 +1072,43 @@ errr term_fresh(void) {
         Term->total_erase = FALSE;
     }
 
-    /* Cursor update -- Erase old Cursor */
-    if (Term->soft_cursor) {
-        /* Cursor was visible */
-        if (!old->cu && old->cv) {
-            int csize = 1;
-            TERM_LEN tx = old->cx;
-            TERM_LEN ty = old->cy;
+    /* Cursor was visible */
+    if (!old->cu && old->cv) {
+        int csize = 1;
+        TERM_LEN tx = old->cx;
+        TERM_LEN ty = old->cy;
 
-            TERM_COLOR* old_aa = old->a[ty];
-            char* old_cc = old->c[ty];
+        TERM_COLOR* old_aa = old->a[ty];
+        char* old_cc = old->c[ty];
 
-            TERM_COLOR* old_taa = old->ta[ty];
-            char* old_tcc = old->tc[ty];
+        TERM_COLOR* old_taa = old->ta[ty];
+        char* old_tcc = old->tc[ty];
 
-            TERM_COLOR ota = old_taa[tx];
-            char otc = old_tcc[tx];
+        TERM_COLOR ota = old_taa[tx];
+        char otc = old_tcc[tx];
 
 #ifdef JP
-            if (tx + 1 < Term->wid && !(old_aa[tx] & AF_TILE1) && iskanji(old_cc[tx]))
-                csize = 2;
+        if (tx + 1 < Term->wid && !(old_aa[tx] & AF_TILE1) && iskanji(old_cc[tx]))
+            csize = 2;
 #endif
-            /* Use "term_pict()" always */
-            if (Term->always_pict)
-                (void)((*Term->pict_hook)(tx, ty, csize, &old_aa[tx], &old_cc[tx], &ota, &otc));
+        /* Use "term_pict()" sometimes */
+        if (Term->higher_pict && (old_aa[tx] & AF_TILE1) && (old_cc[tx] & 0x80))
+            (void)((*Term->pict_hook)(tx, ty, 1, &old_aa[tx], &old_cc[tx], &ota, &otc));
 
-            /* Use "term_pict()" sometimes */
-            else if (Term->higher_pict && (old_aa[tx] & AF_TILE1) && (old_cc[tx] & 0x80))
-                (void)((*Term->pict_hook)(tx, ty, 1, &old_aa[tx], &old_cc[tx], &ota, &otc));
-
-            /*
+        /*
              * Restore the actual character
              * 元の文字の描画範囲がカーソルより小さいと、
              * 上書きされなかった部分がゴミとして残る。
              * wipe_hook でカーソルを消去して text_hook で書き直す。
              */
-            else if (old_aa[tx] || Term->always_text) {
-                (void)((*Term->wipe_hook)(tx, ty, 1));
-                (void)((*Term->text_hook)(tx, ty, csize, (unsigned char)(old_aa[tx] & 0xf), &old_cc[tx]));
-            }
-
-            /* Erase the grid */
-            else
-                (void)((*Term->wipe_hook)(tx, ty, 1));
+        else if (old_aa[tx]) {
+            (void)((*Term->wipe_hook)(tx, ty, 1));
+            (void)((*Term->text_hook)(tx, ty, csize, (unsigned char)(old_aa[tx] & 0xf), &old_cc[tx]));
         }
-    }
 
-    /* Cursor Update -- Erase old Cursor */
-    else {
-        /* Cursor will be invisible */
-        if (scr->cu || !scr->cv) {
-            /* Make the cursor invisible */
-            term_xtra(TERM_XTRA_SHAPE, 0);
-        }
+        /* Erase the grid */
+        else
+            (void)((*Term->wipe_hook)(tx, ty, 1));
     }
 
     /* Something to update */
@@ -1142,14 +1120,8 @@ errr term_fresh(void) {
 
             /* Flush each "modified" row */
             if (x1 <= x2) {
-                /* Always use "term_pict()" */
-                if (Term->always_pict) {
-                    /* Flush the row */
-                    term_fresh_row_pict(y, x1, x2);
-                }
-
                 /* Sometimes use "term_pict()" */
-                else if (Term->higher_pict) {
+                if (Term->higher_pict) {
                     /* Flush the row */
                     term_fresh_row_both(y, x1, x2);
                 }
@@ -1164,9 +1136,7 @@ errr term_fresh(void) {
                 Term->x1[y] = (byte)w;
                 Term->x2[y] = 0;
 
-                /* Flush that row (if allowed) */
-                if (!Term->never_frosh)
-                    term_xtra(TERM_XTRA_FROSH, y);
+                term_xtra(TERM_XTRA_FROSH, y);
             }
         }
 
@@ -1175,55 +1145,22 @@ errr term_fresh(void) {
         Term->y2 = 0;
     }
 
-    /* Cursor update -- Show new Cursor */
-    if (Term->soft_cursor) {
-        /* Draw the cursor */
-        if (!scr->cu && scr->cv) {
+    /* Draw the cursor */
+    if (!scr->cu && scr->cv) {
 #ifdef JP
-            if ((scr->cx + 1 < w)
-                && ((old->a[scr->cy][scr->cx + 1] & AF_BIGTILE2) == AF_BIGTILE2
-                    || (!(old->a[scr->cy][scr->cx] & AF_TILE1) && iskanji(old->c[scr->cy][scr->cx]))))
+        if ((scr->cx + 1 < w)
+            && ((old->a[scr->cy][scr->cx + 1] & AF_BIGTILE2) == AF_BIGTILE2
+                || (!(old->a[scr->cy][scr->cx] & AF_TILE1) && iskanji(old->c[scr->cy][scr->cx]))))
 #else
-            if ((scr->cx + 1 < w) && (old->a[scr->cy][scr->cx + 1] & AF_BIGTILE2) == AF_BIGTILE2)
+        if ((scr->cx + 1 < w) && (old->a[scr->cy][scr->cx + 1] & AF_BIGTILE2) == AF_BIGTILE2)
 #endif
-            {
-                /* Double width cursor for the Bigtile mode */
-                (void)((*Term->bigcurs_hook)(scr->cx, scr->cy));
-            }
-            else {
-                /* Call the cursor display routine */
-                (void)((*Term->curs_hook)(scr->cx, scr->cy));
-            }
+        {
+            /* Double width cursor for the Bigtile mode */
+            (void)((*Term->bigcurs_hook)(scr->cx, scr->cy));
         }
-    }
-
-    /* Cursor Update -- Show new Cursor */
-    else {
-        /* The cursor is useless, hide it */
-        if (scr->cu) {
-            /* Paranoia -- Put the cursor NEAR where it belongs */
-            (void)((*Term->curs_hook)(w - 1, scr->cy));
-
-            /* Make the cursor invisible */
-            /* term_xtra(TERM_XTRA_SHAPE, 0); */
-        }
-
-        /* The cursor is invisible, hide it */
-        else if (!scr->cv) {
-            /* Paranoia -- Put the cursor where it belongs */
-            (void)((*Term->curs_hook)(scr->cx, scr->cy));
-
-            /* Make the cursor invisible */
-            /* term_xtra(TERM_XTRA_SHAPE, 0); */
-        }
-
-        /* The cursor is visible, display it correctly */
         else {
-            /* Put the cursor where it belongs */
+            /* Call the cursor display routine */
             (void)((*Term->curs_hook)(scr->cx, scr->cy));
-
-            /* Make the cursor visible */
-            term_xtra(TERM_XTRA_SHAPE, 1);
         }
     }
 
@@ -1797,10 +1734,8 @@ errr term_inkey(char* ch, bool wait, bool take) {
     (*ch) = '\0';
 
     /* get bored */
-    if (!Term->never_bored) {
-        /* Process random events */
-        term_xtra(TERM_XTRA_BORED, 0);
-    }
+    /* Process random events */
+    term_xtra(TERM_XTRA_BORED, 0);
 
     /* Wait */
     if (wait) {
@@ -1942,10 +1877,6 @@ errr term_resize(TERM_LEN w, TERM_LEN h) {
     term_win* hold_scr;
     term_win* hold_mem;
     term_win* hold_tmp;
-
-    /* Resizing is forbidden */
-    if (Term->fixed_shape)
-        return -1;
 
     /* Ignore illegal changes */
     if ((w < 1) || (h < 1))

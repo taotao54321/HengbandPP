@@ -45,14 +45,7 @@ struct term_type {
     bool active_flag; //!< Flag "active_flag" This "term" is "active"
     bool mapped_flag; //!< Flag "mapped_flag" This "term" is "mapped"
     bool total_erase; //!< Flag "total_erase" This "term" should be fully erased
-    bool fixed_shape; //!< Flag "fixed_shape" This "term" is not allowed to resize
-    bool soft_cursor; //!< Flag "soft_cursor" This "term" uses a "software" cursor
-    bool always_pict; //!< Flag "always_pict" Use the "Term_pict()" routine for all text
     bool higher_pict; //!< Flag "higher_pict" Use the "Term_pict()" routine for special text
-    bool always_text; //!< Flag "always_text" Use the "Term_text()" routine for invisible text
-    bool unused_flag; //!< Flag "unused_flag" Reserved for future use
-    bool never_bored; //!< Flag "never_bored" Never call the "TERM_XTRA_BORED" action
-    bool never_frosh; //!< Flag "never_frosh" Never call the "TERM_XTRA_FROSH" action
 
     byte attr_blank; //!< Value "attr_blank" Use this "attr" value for "blank" grids
     char char_blank; //!< Value "char_blank" Use this "char" value for "blank" grids

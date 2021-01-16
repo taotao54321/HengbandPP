@@ -2230,7 +2230,6 @@ static errr term_data_init(term_data* td, int i) {
         Infowin_impell(x, y);
 
     term_init(t, cols, rows, num);
-    t->soft_cursor = TRUE;
     t->attr_blank = TERM_WHITE;
     t->char_blank = ' ';
     t->xtra_hook = Term_xtra_x11;
