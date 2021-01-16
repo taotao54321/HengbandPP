@@ -367,7 +367,7 @@ hengband_SOURCES = \
 	lore/magic-types-setter.cpp lore/magic-types-setter.h \
 	lore/monster-lore.cpp lore/monster-lore.h \
 	\
-	main.cpp main-x11.cpp main-gcu.cpp \
+	main.cpp main-x11.cpp \
 	\
 	main/angband-headers.cpp main/angband-headers.h \
 	main/angband-initializer.cpp main/angband-initializer.h \

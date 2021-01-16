@@ -470,45 +470,12 @@ int main(int argc, char* argv[]) {
     /* Install "quit" hook */
     quit_aux = quit_hook;
 
-#ifdef USE_XAW
-    /* Attempt to use the "main-xaw.c" support */
-    if (!done && (!mstr || (streq(mstr, "xaw")))) {
-        extern errr init_xaw(int, char**);
-        if (0 == init_xaw(argc, argv)) {
-            ANGBAND_SYS = "xaw";
-            done = TRUE;
-        }
-    }
-#endif
-
 #ifdef USE_X11
     /* Attempt to use the "main-x11.c" support */
     if (!done && (!mstr || (streq(mstr, "x11")))) {
         extern errr init_x11(int, char**);
         if (0 == init_x11(argc, argv)) {
             ANGBAND_SYS = "x11";
-            done = TRUE;
-        }
-    }
-#endif
-
-#ifdef USE_GCU
-    /* Attempt to use the "main-gcu.c" support */
-    if (!done && (!mstr || (streq(mstr, "gcu")))) {
-        extern errr init_gcu(int, char**);
-        if (0 == init_gcu(argc, argv)) {
-            ANGBAND_SYS = "gcu";
-            done = TRUE;
-        }
-    }
-#endif
-
-#ifdef USE_CAP
-    /* Attempt to use the "main-cap.c" support */
-    if (!done && (!mstr || (streq(mstr, "cap")))) {
-        extern errr init_cap(int, char**);
-        if (0 == init_cap(argc, argv)) {
-            ANGBAND_SYS = "cap";
             done = TRUE;
         }
     }
