@@ -1135,18 +1135,6 @@ errr term_fresh(void) {
 
     /* Something to update */
     if (y1 <= y2) {
-        /* Handle "icky corner" */
-        if (Term->icky_corner) {
-            /* Avoid the corner */
-            if (y2 >= h - 1) {
-                /* Avoid the corner */
-                if (Term->x2[h - 1] > w - 2) {
-                    /* Avoid the corner */
-                    Term->x2[h - 1] = w - 2;
-                }
-            }
-        }
-
         /* Scan the "modified" rows */
         for (TERM_LEN y = y1; y <= y2; ++y) {
             TERM_LEN x1 = Term->x1[y];

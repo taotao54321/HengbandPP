@@ -46,7 +46,6 @@ struct term_type {
     bool mapped_flag; //!< Flag "mapped_flag" This "term" is "mapped"
     bool total_erase; //!< Flag "total_erase" This "term" should be fully erased
     bool fixed_shape; //!< Flag "fixed_shape" This "term" is not allowed to resize
-    bool icky_corner; //!< Flag "icky_corner" This "term" has an "icky" corner grid
     bool soft_cursor; //!< Flag "soft_cursor" This "term" uses a "software" cursor
     bool always_pict; //!< Flag "always_pict" Use the "Term_pict()" routine for all text
     bool higher_pict; //!< Flag "higher_pict" Use the "Term_pict()" routine for special text
