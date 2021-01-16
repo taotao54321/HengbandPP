@@ -513,9 +513,6 @@ int take_hit(player_type* creature_ptr, int damage_type, HIT_POINT damage, concp
 
                     term_putstr(w - 1, h - 1, 1, TERM_WHITE, " ");
                     flush();
-#ifdef WORLD_SCORE
-                    screen_dump = make_screen_dump(creature_ptr, process_autopick_file_command);
-#endif
                     (void)inkey();
                 }
                 else
