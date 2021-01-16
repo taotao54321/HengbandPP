@@ -56,8 +56,6 @@ AC_ARG_ENABLE(fontset,
 [  --disable-fontset       disable fontset support], use_fontset=no, use_fontset=yes)
 AC_ARG_ENABLE([xft],
 	AS_HELP_STRING([--enable-xft], [Enable xft support]))
-AC_ARG_ENABLE(worldscore,
-[  --disable-worldscore    disable worldscore support], ,AC_DEFINE(WORLD_SCORE, 1, [Allow the game to send scores to the score server]))
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -lncurses:

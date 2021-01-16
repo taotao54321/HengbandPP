@@ -41,11 +41,10 @@
 #include "grid/feature.h"
 #include "grid/grid.h"
 #include "info-reader/fixed-map-parser.h"
-#include "io/record-play-movie.h"
-#include "io/inet.h"
 #include "io/input-key-acceptor.h"
 #include "io/input-key-processor.h"
 #include "io/read-pref-file.h"
+#include "io/record-play-movie.h"
 #include "io/screen-util.h"
 #include "io/signal-handlers.h"
 #include "io/write-diary.h"
@@ -122,7 +121,7 @@ static void send_waiting_record(player_type *player_ptr)
 
     /* 町名消失バグ対策(#38205)のためここで世界マップ情報を読み出す */
     parse_fixed_map(player_ptr, "w_info.txt", 0, 0, current_world_ptr->max_wild_y, current_world_ptr->max_wild_x);
-    bool success = send_world_score(player_ptr, TRUE, update_playtime, display_player);
+    bool success = true;
     if (!success && !get_check_strict(player_ptr, _("スコア登録を諦めますか？", "Do you give up score registration? "), CHECK_NO_HISTORY)) {
         prt(_("引き続き待機します。", "standing by for future registration..."), 0, 0);
         (void)inkey();
@@ -226,7 +225,7 @@ static void set_wizard_mode_by_argument(player_type *player_ptr)
 
         return;
     }
-    
+
     if (player_ptr->is_dead)
         quit("Already dead.");
 }
@@ -329,7 +328,7 @@ static void decide_arena_death(player_type *player_ptr)
         if ((current_world_ptr->wizard || cheat_live) && !get_check(_("死にますか? ", "Die? ")))
             cheat_death(player_ptr);
 
-        return;    
+        return;
     }
 
     floor_ptr->inside_arena = FALSE;
@@ -409,7 +408,7 @@ void play_game(player_type *player_ptr, bool new_game, bool browsing_movie)
         init_world_floor_info(player_ptr);
     else
         restore_world_floor_info(player_ptr);
-    
+
     generate_world(player_ptr, new_game);
     player_ptr->playing = TRUE;
     reset_visuals(player_ptr, process_autopick_file_command);

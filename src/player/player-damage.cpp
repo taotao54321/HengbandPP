@@ -20,6 +20,7 @@
 #include "game-option/special-options.h"
 #include "inventory/inventory-damage.h"
 #include "inventory/inventory-slot-types.h"
+#include "io/files-util.h"
 #include "io/input-key-acceptor.h"
 #include "io/report.h"
 #include "io/write-diary.h"
@@ -375,9 +376,6 @@ int take_hit(player_type *creature_ptr, int damage_type, HIT_POINT damage, concp
 
             play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_GAMEOVER);
 
-#ifdef WORLD_SCORE
-            screen_dump = make_screen_dump(creature_ptr, process_autopick_file_command);
-#endif
             if (seppuku) {
                 strcpy(creature_ptr->died_from, hit_from);
 #ifdef JP
@@ -387,7 +385,10 @@ int take_hit(player_type *creature_ptr, int damage_type, HIT_POINT damage, concp
             } else {
                 char dummy[1024];
 #ifdef JP
-                sprintf(dummy, "%s%s%s", !creature_ptr->paralyzed ? "" : creature_ptr->free_act ? "彫像状態で" : "麻痺状態で",
+                sprintf(dummy, "%s%s%s",
+                    !creature_ptr->paralyzed     ? ""
+                        : creature_ptr->free_act ? "彫像状態で"
+                                                 : "麻痺状態で",
                     creature_ptr->image ? "幻覚に歪んだ" : "", hit_from);
 #else
                 sprintf(dummy, "%s%s", hit_from, !creature_ptr->paralyzed ? "" : " while helpless");

@@ -19,7 +19,7 @@
  * This software may be copied and distributed for educational, research,
  * and not for profit purposes provided that this copyright and statement
  * are included in all such copies.  Other copyrights may also apply.
-*/
+ */
 
 #ifndef INCLUDED_H_CONFIG_H
 #define INCLUDED_H_CONFIG_H
@@ -34,12 +34,10 @@
 /*
  * Extract the "WINDOWS" flag from the compiler
  */
-#if defined(_Windows) || defined(__WINDOWS__) || \
-    defined(__WIN32__) || defined(WIN32) || \
-    defined(__WINNT__) || defined(__NT__)
-# ifndef WINDOWS
-#  define WINDOWS
-# endif
+#if defined(_Windows) || defined(__WINDOWS__) || defined(__WIN32__) || defined(WIN32) || defined(__WINNT__) || defined(__NT__)
+#ifndef WINDOWS
+#define WINDOWS
+#endif
 #endif
 
 /*
@@ -48,7 +46,7 @@
  * DEC Alpha AXP running OSF/1 (OpenVMS uses 32-bit longs).
  */
 #if defined(__alpha) && defined(__osf__)
-# define L64
+#define L64
 #endif
 
 /*
@@ -63,7 +61,7 @@
  * or for the "Atari" platform which is Unix-like, apparently
  */
 #if !defined(WINDOWS) && !defined(VM)
-# define SET_UID
+#define SET_UID
 #endif
 
 /*
@@ -79,15 +77,15 @@
 #define PATH_SEP "/"
 
 #if defined(WINDOWS) || defined(WINNT)
-# undef PATH_SEP
-# define PATH_SEP "\\"
+#undef PATH_SEP
+#define PATH_SEP "\\"
 #endif
 
 /*
  * Linux has "stricmp()" with a different name
  */
 #if defined(linux)
-# define stricmp strcasecmp
+#define stricmp strcasecmp
 #endif
 
 /*
@@ -96,21 +94,21 @@
  * Note that this is only relevant for "SET_UID" machines.
  */
 #if defined(SET_UID) && !defined(HAVE_CONFIG_H)
-# if !defined(ISC)
-#  define HAVE_USLEEP
-# endif
+#if !defined(ISC)
+#define HAVE_USLEEP
+#endif
 #endif
 
 #ifdef JP
-# if defined(EUC)
-#  define iskanji(x) (((unsigned char)(x) >= 0xa1 && (unsigned char)(x) <= 0xfe) || (unsigned char)(x) == 0x8e)
-#  define iskana(x)  (0)
-# elif defined(SJIS)
-#  define iskanji(x) ((0x81 <= (unsigned char)(x) && (unsigned char)(x) <= 0x9f) || (0xe0 <= (unsigned char)(x) && (unsigned char)(x) <= 0xfc))
-#  define iskana(x)  (((unsigned char)(x) >= 0xA0) && ((unsigned char)(x) <= 0xDF))
-# else
-#  error Oops! Please define "EUC" or "SJIS" for kanji-code of your system.
-# endif
+#if defined(EUC)
+#define iskanji(x) (((unsigned char)(x) >= 0xa1 && (unsigned char)(x) <= 0xfe) || (unsigned char)(x) == 0x8e)
+#define iskana(x) (0)
+#elif defined(SJIS)
+#define iskanji(x) ((0x81 <= (unsigned char)(x) && (unsigned char)(x) <= 0x9f) || (0xe0 <= (unsigned char)(x) && (unsigned char)(x) <= 0xfc))
+#define iskana(x) (((unsigned char)(x) >= 0xA0) && ((unsigned char)(x) <= 0xDF))
+#else
+#error Oops! Please define "EUC" or "SJIS" for kanji-code of your system.
+#endif
 #endif
 
 #endif /* INCLUDED_H_CONFIG_H */
@@ -156,7 +154,7 @@
  * This flag enables the "POSIX" methods for "SAFE_SETUID".
  */
 #ifdef _POSIX_SAVED_IDS
-# define SAFE_SETUID_POSIX
+#define SAFE_SETUID_POSIX
 #endif
 
 /*
@@ -202,7 +200,7 @@
  * On multiuser systems, add the "uid" to savefile names
  */
 #ifdef SET_UID
-# define SAVEFILE_USE_UID
+#define SAVEFILE_USE_UID
 #endif
 
 /*
@@ -219,49 +217,45 @@
 /*
  * OPTION: Default font (when using X11).
  */
-#define DEFAULT_X11_FONT \
-	"-*-*-medium-r-normal--24-*-*-*-*-*-iso8859-1" \
-	",-*-*-medium-r-normal--24-*-*-*-*-*-jisx0208.1983-0"
+#define DEFAULT_X11_FONT                                                                                                                                       \
+    "-*-*-medium-r-normal--24-*-*-*-*-*-iso8859-1"                                                                                                             \
+    ",-*-*-medium-r-normal--24-*-*-*-*-*-jisx0208.1983-0"
 /*	"12x24" \
-	",kanji24"*/
-#define DEFAULT_X11_FONT_SUB \
-	"-*-*-medium-r-normal--16-*-*-*-*-*-iso8859-1" \
-	",-*-*-medium-r-normal--16-*-*-*-*-*-jisx0208.1983-0"
+        ",kanji24"*/
+#define DEFAULT_X11_FONT_SUB                                                                                                                                   \
+    "-*-*-medium-r-normal--16-*-*-*-*-*-iso8859-1"                                                                                                             \
+    ",-*-*-medium-r-normal--16-*-*-*-*-*-jisx0208.1983-0"
 #endif
 /*	"8x16" \
-	",kanji16"*/
+        ",kanji16"*/
 
 /*
  * OPTION: Default fonts (when using X11)
  */
-#define DEFAULT_X11_FONT_0		DEFAULT_X11_FONT
-#define DEFAULT_X11_FONT_1		DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_2		DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_3		DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_4		DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_5		DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_6		DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_7		DEFAULT_X11_FONT_SUB
+#define DEFAULT_X11_FONT_0 DEFAULT_X11_FONT
+#define DEFAULT_X11_FONT_1 DEFAULT_X11_FONT_SUB
+#define DEFAULT_X11_FONT_2 DEFAULT_X11_FONT_SUB
+#define DEFAULT_X11_FONT_3 DEFAULT_X11_FONT_SUB
+#define DEFAULT_X11_FONT_4 DEFAULT_X11_FONT_SUB
+#define DEFAULT_X11_FONT_5 DEFAULT_X11_FONT_SUB
+#define DEFAULT_X11_FONT_6 DEFAULT_X11_FONT_SUB
+#define DEFAULT_X11_FONT_7 DEFAULT_X11_FONT_SUB
 
 #else
 /*
  * OPTION: Default font (when using X11).
  */
-#define DEFAULT_X11_FONT		"9x15"
+#define DEFAULT_X11_FONT "9x15"
 
 /*
  * OPTION: Default fonts (when using X11)
  */
-#define DEFAULT_X11_FONT_0		"10x20"
-#define DEFAULT_X11_FONT_1		"9x15"
-#define DEFAULT_X11_FONT_2		"9x15"
-#define DEFAULT_X11_FONT_3		"5x8"
-#define DEFAULT_X11_FONT_4		"5x8"
-#define DEFAULT_X11_FONT_5		"5x8"
-#define DEFAULT_X11_FONT_6		"5x8"
-#define DEFAULT_X11_FONT_7		"5x8"
+#define DEFAULT_X11_FONT_0 "10x20"
+#define DEFAULT_X11_FONT_1 "9x15"
+#define DEFAULT_X11_FONT_2 "9x15"
+#define DEFAULT_X11_FONT_3 "5x8"
+#define DEFAULT_X11_FONT_4 "5x8"
+#define DEFAULT_X11_FONT_5 "5x8"
+#define DEFAULT_X11_FONT_6 "5x8"
+#define DEFAULT_X11_FONT_7 "5x8"
 #endif
-
-#ifndef HAVE_CONFIG_H
-#define WORLD_SCORE
-#endif /* HAVE_CONFIG_H */
