@@ -1,13 +1,16 @@
 ﻿#pragma once
 
+#include "system/angband.h"
+
 #include "floor/floor-base-definitions.h"
 #include "floor/sight-definitions.h"
 #include "monster/monster-timed-effect-types.h"
 
-typedef struct grid_type grid_type;
-typedef struct object_type object_type;
-typedef struct monster_type monster_type;
-typedef struct floor_type {
+struct grid_type;
+struct object_type;
+struct monster_type;
+
+struct floor_type {
     DUNGEON_IDX dungeon_idx;
     grid_type* grid_array[MAX_HGT];
     DEPTH dun_level; /*!< 現在の実ダンジョン階層 base_level の参照元となる / Current dungeon level */
@@ -50,5 +53,4 @@ typedef struct floor_type {
     bool monster_noise;
     QUEST_IDX inside_quest; /* Inside quest level */
     bool inside_arena; /* Is character inside on_defeat_arena_monster? */
-
-} floor_type;
+};

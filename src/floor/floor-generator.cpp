@@ -366,19 +366,24 @@ void clear_cave(player_type* player_ptr) {
 void generate_floor(player_type* player_ptr) {
     floor_type* floor_ptr = player_ptr->current_floor_ptr;
     floor_ptr->dungeon_idx = player_ptr->dungeon_idx;
+
     set_floor_and_wall(floor_ptr->dungeon_idx);
-    for (int num = 0; TRUE; num++) {
-        bool okay = TRUE;
-        concptr why = NULL;
+
+    for (int num = 0;; num++) {
+        bool okay = true;
+        concptr why = nullptr;
+
         clear_cave(player_ptr);
+
         player_ptr->x = player_ptr->y = 0;
+
         if (floor_ptr->inside_arena)
             generate_challenge_arena(player_ptr);
         else if (player_ptr->phase_out)
             generate_gambling_arena(player_ptr);
-        else if (floor_ptr->inside_quest)
+        else if (floor_ptr->inside_quest != 0)
             generate_fixed_floor(player_ptr);
-        else if (!floor_ptr->dun_level)
+        else if (floor_ptr->dun_level == 0)
             if (player_ptr->wild_mode)
                 wilderness_gen_small(player_ptr);
             else
@@ -388,11 +393,11 @@ void generate_floor(player_type* player_ptr) {
 
         if (floor_ptr->o_max >= current_world_ptr->max_o_idx) {
             why = _("アイテムが多すぎる", "too many objects");
-            okay = FALSE;
+            okay = false;
         }
         else if (floor_ptr->m_max >= current_world_ptr->max_m_idx) {
             why = _("モンスターが多すぎる", "too many monsters");
-            okay = FALSE;
+            okay = false;
         }
 
         if (okay)
@@ -406,6 +411,6 @@ void generate_floor(player_type* player_ptr) {
     }
 
     glow_deep_lava_and_bldg(player_ptr);
-    player_ptr->enter_dungeon = FALSE;
+    player_ptr->enter_dungeon = false;
     wipe_generate_random_floor_flags(floor_ptr);
 }

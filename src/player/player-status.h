@@ -58,9 +58,10 @@ enum empty_hand_status {
 #define SEX_MALE 1
 #define MAX_SEXES 2 /*!< 性別の定義最大数 / Maximum number of player "sex" types (see "table.c", etc) */
 
-typedef struct floor_type floor_type;
-typedef struct object_type object_type;
-typedef struct player_type {
+struct floor_type;
+struct object_type;
+
+struct player_type {
     int player_uid;
     int player_euid;
     int player_egid;
@@ -461,8 +462,7 @@ typedef struct player_type {
     POSITION x; /*!< ダンジョンの現在X座標 / Player location in dungeon */
     GAME_TEXT name[32]; /*!< 現在のプレイヤー名 / Current player's character name */
     char base_name[32]; /*!< Stripped version of "player_name" */
-
-} player_type;
+};
 
 extern player_type* p_ptr;
 
