@@ -66,16 +66,6 @@ static errr (*old_bigcurs_hook)(int x, int y);
 static errr (*old_wipe_hook)(int x, int y, int n);
 static errr (*old_text_hook)(int x, int y, int n, TERM_COLOR a, concptr s);
 
-static void disable_chuukei_server(void)
-{
-    term_type *t = angband_term[0];
-    t->xtra_hook = old_xtra_hook;
-    t->curs_hook = old_curs_hook;
-    t->bigcurs_hook = old_bigcurs_hook;
-    t->wipe_hook = old_wipe_hook;
-    t->text_hook = old_text_hook;
-}
-
 /* ANSI Cによればstatic変数は0で初期化されるが一応初期化する */
 static errr init_buffer(void)
 {
@@ -164,113 +154,6 @@ static bool string_is_repeat(char *str, int len)
     return TRUE;
 }
 
-static errr send_text_to_chuukei_server(TERM_LEN x, TERM_LEN y, int len, TERM_COLOR col, concptr str)
-{
-    char buf[1024];
-    char buf2[1024];
-
-    strncpy(buf2, str, len);
-    buf2[len] = '\0';
-
-    if (len == 1) {
-        sprintf(buf, "s%c%c%c%c", x + 1, y + 1, col, buf2[0]);
-    } else if (string_is_repeat(buf2, len)) {
-        int i;
-        for (i = len; i > 0; i -= 127) {
-            sprintf(buf, "n%c%c%c%c%c", x + 1, y + 1, MIN(i, 127), col, buf2[0]);
-        }
-    } else {
-#if defined(SJIS) && defined(JP)
-        sjis2euc(buf2);
-#endif
-        sprintf(buf, "t%c%c%c%c%s", x + 1, y + 1, len, col, buf2);
-    }
-
-    insert_ringbuf(buf);
-
-    return (*old_text_hook)(x, y, len, col, str);
-}
-
-static errr send_wipe_to_chuukei_server(int x, int y, int len)
-{
-    char buf[1024];
-
-    sprintf(buf, "w%c%c%c", x + 1, y + 1, len);
-
-    insert_ringbuf(buf);
-
-    return (*old_wipe_hook)(x, y, len);
-}
-
-static errr send_xtra_to_chuukei_server(int n, int v)
-{
-    char buf[1024];
-
-    if (n == TERM_XTRA_CLEAR || n == TERM_XTRA_FRESH || n == TERM_XTRA_SHAPE) {
-        sprintf(buf, "x%c", n + 1);
-
-        insert_ringbuf(buf);
-
-        if (n == TERM_XTRA_FRESH) {
-            sprintf(buf, "d%ld", get_current_time() - epoch_time);
-            insert_ringbuf(buf);
-        }
-    }
-
-    /* Verify the hook */
-    if (!old_xtra_hook)
-        return -1;
-
-    return (*old_xtra_hook)(n, v);
-}
-
-static errr send_curs_to_chuukei_server(int x, int y)
-{
-    char buf[1024];
-
-    sprintf(buf, "c%c%c", x + 1, y + 1);
-
-    insert_ringbuf(buf);
-
-    return (*old_curs_hook)(x, y);
-}
-
-static errr send_bigcurs_to_chuukei_server(int x, int y)
-{
-    char buf[1024];
-
-    sprintf(buf, "C%c%c", x + 1, y + 1);
-
-    insert_ringbuf(buf);
-
-    return (*old_bigcurs_hook)(x, y);
-}
-
-/*
- * Prepare z-term hooks to call send_*_to_chuukei_server()'s
- */
-void prepare_chuukei_hooks(void)
-{
-    term_type *t0 = angband_term[0];
-
-    /* Save original z-term hooks */
-    old_xtra_hook = t0->xtra_hook;
-    old_curs_hook = t0->curs_hook;
-    old_bigcurs_hook = t0->bigcurs_hook;
-    old_wipe_hook = t0->wipe_hook;
-    old_text_hook = t0->text_hook;
-
-    /* Prepare z-term hooks */
-    t0->xtra_hook = send_xtra_to_chuukei_server;
-    t0->curs_hook = send_curs_to_chuukei_server;
-    t0->bigcurs_hook = send_bigcurs_to_chuukei_server;
-    t0->wipe_hook = send_wipe_to_chuukei_server;
-    t0->text_hook = send_text_to_chuukei_server;
-}
-
-/*
- * Prepare z-term hooks to call send_*_to_chuukei_server()'s
- */
 void prepare_movie_hooks(player_type *player_ptr)
 {
     char buf[1024];
@@ -278,7 +161,6 @@ void prepare_movie_hooks(player_type *player_ptr)
 
     if (movie_mode) {
         movie_mode = 0;
-        disable_chuukei_server();
         fd_close(movie_fd);
         msg_print(_("録画を終了しました。", "Stopped recording."));
     } else {
@@ -313,7 +195,6 @@ void prepare_movie_hooks(player_type *player_ptr)
             }
 
             movie_mode = 1;
-            prepare_chuukei_hooks();
             do_cmd_redraw(player_ptr);
         }
     }

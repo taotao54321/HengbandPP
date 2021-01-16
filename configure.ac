@@ -58,8 +58,6 @@ AC_ARG_ENABLE([xft],
 	AS_HELP_STRING([--enable-xft], [Enable xft support]))
 AC_ARG_ENABLE(worldscore,
 [  --disable-worldscore    disable worldscore support], ,AC_DEFINE(WORLD_SCORE, 1, [Allow the game to send scores to the score server]))
-AC_ARG_ENABLE(chuukei,
-[  --enable-chuukei        enable internet chuukei support], AC_DEFINE(CHUUKEI, 1, [Chuukei mode]))
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -lncurses:

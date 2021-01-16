@@ -899,7 +899,7 @@ EXTRA_DIST = \
 	gcc-wrap
 
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)/src 
-CXXFLAGS += $(XFT_CFLAGS)
+CXXFLAGS += -Wall -Wextra $(XFT_CFLAGS)
 LIBS += $(XFT_LIBS)
 CXXCOMPILE = $(srcdir)/gcc-wrap $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) 
