@@ -21,8 +21,7 @@
  * are included in all such copies.  Other copyrights may also apply.
  */
 
-#ifndef INCLUDED_H_CONFIG_H
-#define INCLUDED_H_CONFIG_H
+#pragma once
 
 /*
  * OPTION: Compile on Windows (automatic)
@@ -110,8 +109,6 @@
 #error Oops! Please define "EUC" or "SJIS" for kanji-code of your system.
 #endif
 #endif
-
-#endif /* INCLUDED_H_CONFIG_H */
 
 #ifndef HAVE_CONFIG_H
 

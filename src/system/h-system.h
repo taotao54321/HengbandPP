@@ -16,8 +16,7 @@
  * because VMS does not use the "ASCII" character set.
  */
 
-#ifndef INCLUDED_H_SYSTEM_H
-#define INCLUDED_H_SYSTEM_H
+#pragma once
 
 #include <ctype.h>
 #include <errno.h>
@@ -67,5 +66,3 @@
 #include <string.h>
 
 #include <stdarg.h>
-
-#endif /* INCLUDED_H_SYSTEM_H */

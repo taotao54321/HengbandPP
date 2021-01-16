@@ -6,8 +6,7 @@
  * 不明(変愚蛮怒開発チーム？)
  */
 
-#ifndef INCLUDED_H_DEFINE_H
-#define INCLUDED_H_DEFINE_H
+#pragma once
 
 /*
  * The constants "TRUE" and "FALSE"
@@ -54,5 +53,3 @@
  * Refer to the member at offset of structure
  */
 #define atoffset(TYPE, STRUCT_PTR, OFFSET) (*(TYPE*)(((char*)STRUCT_PTR) + (OFFSET)))
-
-#endif

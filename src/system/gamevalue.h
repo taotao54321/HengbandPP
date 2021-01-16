@@ -1,4 +1,5 @@
-﻿
+﻿#pragma once
+
 /*!
 * @brief ベースアイテム生成階層が加算される確率
 * @details

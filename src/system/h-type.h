@@ -33,9 +33,6 @@
  * </pre>
  */
 
-#ifndef INCLUDED_H_TYPE_H
-#define INCLUDED_H_TYPE_H
-
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -250,5 +247,3 @@ typedef enum process_result {
     PROCESS_TRUE = 1,
     PROCESS_CONTINUE = 2,
 } process_result;
-
-#endif
