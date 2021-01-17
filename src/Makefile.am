@@ -377,7 +377,6 @@ hengband_SOURCES = \
 	main/music-definitions-table.cpp main/music-definitions-table.h \
 	main/sound-definitions-table.cpp main/sound-definitions-table.h \
 	main/sound-of-music.cpp main/sound-of-music.h \
-	main/x11-gamma-builder.cpp main/x11-gamma-builder.h \
 	main/x11-type-string.cpp main/x11-type-string.h \
 	\
 	market/arena-info-table.cpp market/arena-info-table.h \
@@ -889,7 +888,7 @@ hengband_SOURCES = \
 	world/world-turn-processor.cpp world/world-turn-processor.h
 
 EXTRA_hengband_SOURCES = \
-	angband.ico angband.rc ang_eng.rc maid-x11.cpp main-win.cpp \
+	angband.ico angband.rc ang_eng.rc main-win.cpp \
 	term/readdib.cpp term/readdib.h wall.bmp
 
 EXTRA_DIST = \

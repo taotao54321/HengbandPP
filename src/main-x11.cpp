@@ -101,9 +101,39 @@
 #include <iconv.h>
 
 /*
- * Include some helpful X11 code.
+ * Hack -- Convert an RGB value to an X11 Pixel, or die.
  */
-#include "maid-x11.cpp"
+static XftColor create_pixel(Display* dpy, byte red, byte green, byte blue) {
+    Colormap cmap = DefaultColormapOfScreen(DefaultScreenOfDisplay(dpy));
+    XColor xcolour;
+
+    /* Build the color */
+
+    xcolour.red = red * 255;
+    xcolour.green = green * 255;
+    xcolour.blue = blue * 255;
+    xcolour.flags = DoRed | DoGreen | DoBlue;
+
+    XftColor color;
+    XRenderColor xcol;
+    xcol.red = xcolour.red;
+    xcol.green = xcolour.green;
+    xcol.blue = xcolour.blue;
+    if (!XftColorAllocValue(dpy, DefaultVisual(dpy, 0), cmap, &xcol, &color)) {
+        quit_fmt("Couldn't allocate bitmap color '#%02x%02x%02x'\n",
+            red, green, blue);
+    }
+
+    return color;
+}
+
+static bool is_modifier_key(KeySym ks) {
+    return (XK_Shift_L <= ks) && (ks <= XK_Hyper_R);
+}
+
+static bool is_special_key(KeySym ks) {
+    return ks >= 0xFF00;
+}
 
 /*
  * Notes on Colors:
@@ -153,9 +183,7 @@ struct metadpy {
     Pixell bg; // The background Pixell (default: black)
     Pixell fg; // The foreground Pixell (default: white)
 
-    uint mono : 1;  // Bit Flag: Force all colors to black and white (default: !color)
-    uint color : 1; // Bit Flag: Allow the use of color (default: depth > 1)
-    uint nuke : 1;  // Bit Flag: We created 'dpy', and so should nuke it when done.
+    bool nuke; // We created 'dpy', and so should nuke it when done.
 };
 
 /*
@@ -305,10 +333,10 @@ static errr Metadpy_init_2(Display* dpy, concptr name) {
         if (!dpy)
             return (-1);
 
-        m->nuke = 1;
+        m->nuke = true;
     }
     else {
-        m->nuke = 0;
+        m->nuke = false;
     }
 
     m->dpy = dpy;
@@ -328,19 +356,17 @@ static errr Metadpy_init_2(Display* dpy, concptr name) {
     m->bg = m->black;
     m->fg = m->white;
 
-    m->color = ((m->depth > 1) ? 1 : 0);
-    m->mono = ((m->color) ? 0 : 1);
     return (0);
 }
 
 /*
  * General Flush/ Sync/ Discard routine
  */
-static errr Metadpy_update(int flush, int sync, int discard) {
+static errr Metadpy_update(bool flush, bool sync, bool discard) {
     if (flush)
         XFlush(Metadpy->dpy);
     if (sync)
-        XSync(Metadpy->dpy, discard);
+        XSync(Metadpy->dpy, Bool(discard));
 
     return (0);
 }
@@ -348,7 +374,7 @@ static errr Metadpy_update(int flush, int sync, int discard) {
 /*
  * Make a simple beep
  */
-static errr Metadpy_do_beep(void) {
+static errr Metadpy_do_beep() {
     XBell(Metadpy->dpy, 100);
     return (0);
 }
@@ -806,7 +832,7 @@ static void react_keypress(XKeyEvent* xev) {
     }
 #endif
 
-    if (IsModifierKey(ks))
+    if (is_modifier_key(ks))
         return;
 
     ks1 = (uint)(ks);
@@ -814,7 +840,7 @@ static void react_keypress(XKeyEvent* xev) {
     ms = (ev->state & ShiftMask) ? TRUE : FALSE;
     mo = (ev->state & Mod1Mask) ? TRUE : FALSE;
     mx = (ev->state & Mod2Mask) ? TRUE : FALSE;
-    if (n && !mo && !mx && !IsSpecialKey(ks)) {
+    if (n && !mo && !mx && !is_special_key(ks)) {
         term_string_push(buf);
         return;
     }
@@ -1506,19 +1532,17 @@ static errr Term_xtra_x11_level(int v) {
 static errr Term_xtra_x11_react(void) {
     int i;
 
-    if (Metadpy->color) {
-        for (i = 0; i < 256; i++) {
-            if ((color_table[i][0] != angband_color_table[i][0]) || (color_table[i][1] != angband_color_table[i][1])
-                || (color_table[i][2] != angband_color_table[i][2]) || (color_table[i][3] != angband_color_table[i][3])) {
-                Pixell pixel;
-                color_table[i][0] = angband_color_table[i][0];
-                color_table[i][1] = angband_color_table[i][1];
-                color_table[i][2] = angband_color_table[i][2];
-                color_table[i][3] = angband_color_table[i][3];
-                pixel = create_pixel(Metadpy->dpy, color_table[i][1], color_table[i][2], color_table[i][3]);
-                Infoclr_set(clr[i]);
-                Infoclr_change_fg(pixel);
-            }
+    for (i = 0; i < 256; i++) {
+        if ((color_table[i][0] != angband_color_table[i][0]) || (color_table[i][1] != angband_color_table[i][1])
+            || (color_table[i][2] != angband_color_table[i][2]) || (color_table[i][3] != angband_color_table[i][3])) {
+            Pixell pixel;
+            color_table[i][0] = angband_color_table[i][0];
+            color_table[i][1] = angband_color_table[i][1];
+            color_table[i][2] = angband_color_table[i][2];
+            color_table[i][3] = angband_color_table[i][3];
+            pixel = create_pixel(Metadpy->dpy, color_table[i][1], color_table[i][2], color_table[i][3]);
+            Infoclr_set(clr[i]);
+            Infoclr_change_fg(pixel);
         }
     }
 
@@ -1536,7 +1560,7 @@ static errr Term_xtra_x11(int n, int v) {
     case TERM_XTRA_SOUND:
         return (Term_xtra_x11_sound(v));
     case TERM_XTRA_FRESH:
-        Metadpy_update(1, 1, 0);
+        Metadpy_update(true, true, false);
         return (0);
     case TERM_XTRA_BORED:
         return (CheckEvent(0));
@@ -1971,9 +1995,7 @@ errr init_x11(int argc, char* argv[]) {
         color_table[i][2] = angband_color_table[i][2];
         color_table[i][3] = angband_color_table[i][3];
         pixel = ((i == 0) ? Metadpy->bg : Metadpy->fg);
-        if (Metadpy->color) {
-            pixel = create_pixel(Metadpy->dpy, color_table[i][1], color_table[i][2], color_table[i][3]);
-        }
+        pixel = create_pixel(Metadpy->dpy, color_table[i][1], color_table[i][2], color_table[i][3]);
 
         Infoclr_init_ppn(pixel, Metadpy->bg, "cpy", 0);
     }
