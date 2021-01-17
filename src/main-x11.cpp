@@ -498,7 +498,6 @@ static void react_keypress(XKeyEvent* ev) {
     int n;
     KeySym ks;
     char buf[128];
-    char msg[128];
 
     int valid_keysym = TRUE;
 
@@ -516,7 +515,6 @@ static void react_keypress(XKeyEvent* ev) {
     else {
         n = XLookupString(ev, buf, 125, &ks, NULL);
     }
-
     buf[n] = '\0';
 
     if (!valid_keysym) { /* XIMからの入力時のみ FALSE になる */
@@ -566,6 +564,7 @@ static void react_keypress(XKeyEvent* ev) {
     }
     }
 
+    char msg[128];
     if (ks) {
         sprintf(msg, "%c%s%s%s%s_%lX%c", 31, mc ? "N" : "", ms ? "S" : "", mo ? "O" : "", mx ? "M" : "", (unsigned long)(ks), 13);
     }
