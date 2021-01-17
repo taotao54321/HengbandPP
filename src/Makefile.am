@@ -795,7 +795,8 @@ hengband_SOURCES = \
 	\
 	system/alloc-entries.cpp system/alloc-entries.h \
 	system/alloc-entry-definition.h \
-	system/angband.h system/angband-version.h \
+	system/angband.h \
+	system/angband-version.cpp system/angband-version.h \
 	system/artifact-type-definition.cpp system/artifact-type-definition.h \
 	system/building-type-definition.cpp system/building-type-definition.h \
 	system/dungeon-data-definition.h \
