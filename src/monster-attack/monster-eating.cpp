@@ -208,6 +208,8 @@ bool process_un_power(player_type* target_ptr, monap_type* monap_ptr) {
     if (monap_ptr->o_ptr->tval == TV_STAFF)
         drain *= monap_ptr->o_ptr->number;
 
+    if (drain == 0) return FALSE;
+
     drain = MIN(drain, (monap_ptr->m_ptr->maxhp - monap_ptr->m_ptr->hp) / drain);
     msg_print(_("ザックからエネルギーが吸い取られた！", "Energy drains from your pack!"));
     monap_ptr->obvious = TRUE;
