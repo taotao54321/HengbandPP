@@ -1086,32 +1086,27 @@ static errr CheckEvent(bool wait) {
         break;
     }
     case ConfigureNotify: {
-        int cols, rows, wid, hgt;
         int ox = Infowin->ox;
         int oy = Infowin->oy;
+
         Infowin->w = xev->xconfigure.width;
         Infowin->h = xev->xconfigure.height;
-        cols = ((Infowin->w - (ox + ox)) / td->fnt->wid);
-        rows = ((Infowin->h - (oy + oy)) / td->fnt->hgt);
-        if (cols < 1)
-            cols = 1;
-        if (rows < 1)
-            rows = 1;
+
+        int cols = ((Infowin->w - (ox + ox)) / td->fnt->wid);
+        int rows = ((Infowin->h - (oy + oy)) / td->fnt->hgt);
+        chmax(cols, 1);
+        chmax(rows, 1);
 
         if (td == &data[0]) {
-            if (cols < 80)
-                cols = 80;
-            if (rows < 24)
-                rows = 24;
+            chmax(cols, 80);
+            chmax(rows, 24);
         }
 
-        wid = cols * td->fnt->wid + (ox + ox);
-        hgt = rows * td->fnt->hgt + (oy + oy);
+        int wid = cols * td->fnt->wid + (ox + ox);
+        int hgt = rows * td->fnt->hgt + (oy + oy);
         term_resize(cols, rows);
-        if ((Infowin->w != wid) || (Infowin->h != hgt)) {
-            Infowin = td->win;
+        if ((Infowin->w != wid) || (Infowin->h != hgt))
             Infowin_resize(wid, hgt);
-        }
 
         break;
     }
@@ -1126,14 +1121,14 @@ static errr CheckEvent(bool wait) {
         if (iwin->xic) {
             XUnsetICFocus(iwin->xic);
         }
-
         break;
     }
     }
 
     term_activate(&old_td->t);
     Infowin = old_td->win;
-    return (0);
+
+    return 0;
 }
 
 /*
