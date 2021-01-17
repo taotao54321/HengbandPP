@@ -499,7 +499,7 @@ static void react_keypress(XKeyEvent* ev) {
     KeySym ks;
     char buf[128];
 
-    int valid_keysym = TRUE;
+    bool valid_keysym = true;
 
     if (Focuswin && Focuswin->xic) {
         Status status;
@@ -509,7 +509,7 @@ static void react_keypress(XKeyEvent* ev) {
             return;
         }
         if (status != XLookupKeySym && status != XLookupBoth) {
-            valid_keysym = FALSE;
+            valid_keysym = false;
         }
     }
     else {
@@ -517,7 +517,7 @@ static void react_keypress(XKeyEvent* ev) {
     }
     buf[n] = '\0';
 
-    if (!valid_keysym) { /* XIMからの入力時のみ FALSE になる */
+    if (!valid_keysym) { /* XIMからの入力時のみ false になる */
         convert_to_euc(buf);
         term_string_push(buf);
         return;
