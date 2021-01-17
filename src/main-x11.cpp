@@ -1,33 +1,4 @@
-﻿/* File: main-x11.c */
-
-/*
- * Copyright (c) 1997 Ben Harrison, and others
- *
- * This software may be copied and distributed for educational, research,
- * and not for profit purposes provided that this copyright and statement
- * are included in all such copies.
- */
-
-/*
- * This file helps Angband work with UNIX/X11 computers.
- *
- * To use this file, compile with "USE_X11" defined, and link against all
- * the various "X11" libraries which may be needed.
- *
- * See also "main-xaw.c".
- *
- * Part of this file provides a user interface package composed of several
- * pseudo-objects, including "metadpy" (a display), "infowin" (a window),
- * "infoclr" (a color), and "infofnt" (a font).  Actually, the package was
- * originally much more interesting, but it was bastardized to keep this
- * file simple.
- *
- * The rest of this file is an implementation of "main-xxx.c" for X11.
- *
- * Most of this file is by Ben Harrison (benh@phial.com).
- */
-
-/*
+﻿/*
  * The following shell script can be used to launch Angband, assuming that
  * it was extracted into "~/Angband", and compiled using "USE_X11", on a
  * Linux machine, with a 1280x1024 screen, using 6 windows (with the given
@@ -157,69 +128,34 @@
 /*
  * An X11 pixell specifier
  */
-typedef XftColor Pixell;
+using Pixell = XftColor;
 
-/*
- * The structures defined below
- */
-typedef struct metadpy metadpy;
-typedef struct infowin infowin;
-typedef struct infoclr infoclr;
-typedef struct infofnt infofnt;
-
-/*
- * A structure summarizing a given Display.
- *
- *	- The Display itself
- *	- The default Screen for the display
- *	- The virtual root (usually just the root)
- *	- The default colormap (from a macro)
- *
- *	- The "name" of the display
- *
- *	- The socket to listen to for events
- *
- *	- The width of the display screen (from a macro)
- *	- The height of the display screen (from a macro)
- *	- The bit depth of the display screen (from a macro)
- *
- *	- The black Pixell (from a macro)
- *	- The white Pixell (from a macro)
- *
- *	- The background Pixell (default: black)
- *	- The foreground Pixell (default: white)
- *	- The maximal Pixell (Equals: ((2 ^ depth)-1), is usually ugly)
- *
- *	- Bit Flag: Force all colors to black and white (default: !color)
- *	- Bit Flag: Allow the use of color (default: depth > 1)
- *	- Bit Flag: We created 'dpy', and so should nuke it when done.
- */
 struct metadpy {
-    Display* dpy;
-    Screen* screen;
-    Window root;
-    Colormap cmap;
+    Display* dpy;   // The Display itself
+    Screen* screen; // The default Screen for the display
+    Window root;    // The virtual root (usually just the root)
+    Colormap cmap;  // The default colormap (from a macro)
 #ifdef USE_XIM
     XIM xim;
 #endif
 
-    char* name;
+    char* name; // The "name" of the display
 
-    int fd;
+    int fd; // The socket to listen to for events
 
-    uint width;
-    uint height;
-    uint depth;
+    uint width;  // The width of the display screen (from a macro)
+    uint height; // The height of the display screen (from a macro)
+    uint depth;  // The bit depth of the display screen (from a macro)
 
-    Pixell black;
-    Pixell white;
+    Pixell black; // The black Pixell (from a macro)
+    Pixell white; // The white Pixell (from a macro)
 
-    Pixell bg;
-    Pixell fg;
+    Pixell bg; // The background Pixell (default: black)
+    Pixell fg; // The foreground Pixell (default: white)
 
-    uint mono : 1;
-    uint color : 1;
-    uint nuke : 1;
+    uint mono : 1;  // Bit Flag: Force all colors to black and white (default: !color)
+    uint color : 1; // Bit Flag: Allow the use of color (default: depth > 1)
+    uint nuke : 1;  // Bit Flag: We created 'dpy', and so should nuke it when done.
 };
 
 /*
@@ -227,26 +163,6 @@ struct metadpy {
  *
  * I assume that a window is at most 30000 pixels on a side.
  * I assume that the root windw is also at most 30000 square.
- *
- *	- The Window
- *	- The current Input Event Mask
- *
- *	- The location of the window
- *	- The width, height of the window
- *	- The border width of this window
- *
- *	- Byte: 1st Extra byte
- *
- *	- Bit Flag: This window is currently Mapped
- *	- Bit Flag: This window needs to be redrawn
- *	- Bit Flag: This window has been resized
- *
- *	- Bit Flag: We should nuke 'win' when done with it
- *
- *	- Bit Flag: 1st extra flag
- *	- Bit Flag: 2nd extra flag
- *	- Bit Flag: 3rd extra flag
- *	- Bit Flag: 4th extra flag
  */
 struct infowin {
     Window win;
@@ -262,13 +178,13 @@ struct infowin {
 
     s16b x, y;
     s16b w, h;
-    u16b b;
+    u16b b; // The border width of this window
 
     byte byte1;
 
-    uint mapped : 1;
-    uint redraw : 1;
-    uint resize : 1;
+    uint mapped : 1; // Bit Flag: This window is currently Mapped
+    uint redraw : 1; // Bit Flag: This window needs to be redrawn
+    uint resize : 1; // Bit Flag: This window has been resized
 
     uint nuke : 1;
 
@@ -280,40 +196,18 @@ struct infowin {
 
 /*
  * A Structure summarizing Operation+Color Information
- *
- *	- The actual GC corresponding to this info
- *
- *	- The Foreground Pixell Value
- *	- The Background Pixell Value
- *
- *	- Num (0-15): The operation code (As in Clear, Xor, etc)
- *	- Bit Flag: The GC is in stipple mode
- *	- Bit Flag: Destroy 'gc' at Nuke time.
  */
 struct infoclr {
     Pixell fg;
     Pixell bg;
 
-    uint code : 4;
-    uint stip : 1;
-    uint nuke : 1;
+    uint code : 4; // Num (0-15): The operation code (As in Clear, Xor, etc)
+    uint stip : 1; // Bit Flag: The GC is in stipple mode
+    uint nuke : 1; // Bit Flag: Destroy 'gc' at Nuke time.
 };
 
 /*
  * A Structure to Hold Font Information
- *
- *	- The 'XFontStruct*' (yields the 'Font')
- *
- *	- The font name
- *
- *	- The default character width
- *	- The default character height
- *	- The default character ascent
- *
- *	- Byte: Pixel offset used during fake mono
- *
- *	- Flag: Force monospacing via 'wid'
- *	- Flag: Nuke info when done
  */
 struct infofnt {
     XftFont* info;
@@ -324,9 +218,9 @@ struct infofnt {
     s16b hgt;
     s16b asc;
 
-    byte off;
+    byte off; // Byte: Pixel offset used during fake mono
 
-    uint mono : 1;
+    uint mono : 1; // Flag: Force monospacing via 'wid'
     uint nuke : 1;
 };
 
@@ -383,12 +277,12 @@ static metadpy metadpy_default;
  * The "current" variables
  */
 static metadpy* Metadpy = &metadpy_default;
-static infowin* Infowin = (infowin*)(NULL);
+static infowin* Infowin = nullptr;
 #ifdef USE_XIM
-static infowin* Focuswin = (infowin*)(NULL);
+static infowin* Focuswin = nullptr;
 #endif
-static infoclr* Infoclr = (infoclr*)(NULL);
-static infofnt* Infofnt = (infofnt*)(NULL);
+static infoclr* Infoclr = nullptr;
+static infofnt* Infofnt = nullptr;
 
 /*
  * Init the current metadpy, with various initialization stuff.
@@ -824,13 +718,13 @@ struct co_ord {
  */
 typedef struct x11_selection_type x11_selection_type;
 struct x11_selection_type {
-    bool select; /* The selection is currently in use. */
-    bool drawn; /* The selection is currently displayed. */
+    bool select;  /* The selection is currently in use. */
+    bool drawn;   /* The selection is currently displayed. */
     term_type* t; /* The window where the selection is found. */
-    co_ord init; /* The starting co-ordinates. */
-    co_ord cur; /* The end co-ordinates (the current ones if still copying). */
-    co_ord old; /* The previous end co-ordinates. */
-    Time time; /* The time at which the selection was finalised. */
+    co_ord init;  /* The starting co-ordinates. */
+    co_ord cur;   /* The end co-ordinates (the current ones if still copying). */
+    co_ord old;   /* The previous end co-ordinates. */
+    Time time;    /* The time at which the selection was finalised. */
 };
 
 static x11_selection_type s_ptr[1];

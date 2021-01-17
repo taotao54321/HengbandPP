@@ -1,6 +1,8 @@
 ---
 BasedOnStyle: WebKit
 
+AlignTrailingComments: true
+
 AllowShortBlocksOnASingleLine:       true
 AllowShortCaseLabelsOnASingleLine:   true
 AllowShortFunctionsOnASingleLine:    All
