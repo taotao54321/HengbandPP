@@ -43,14 +43,9 @@
  *
  * Close down, then fall back into "quit()".
  */
-static void quit_hook(concptr s) {
-    int j;
-
-    /* Unused */
-    (void)s;
-
+static void quit_hook(concptr) {
     /* Scan windows */
-    for (j = 8 - 1; j >= 0; j--) {
+    for (int j = 8 - 1; j >= 0; j--) {
         /* Unused */
         if (!angband_term[j])
             continue;
@@ -71,7 +66,7 @@ static void quit_hook(concptr s) {
  * ToDo: Add error handling.
  * ToDo: Only create the directories when actually writing files.
  */
-static void create_user_dir(void) {
+static void create_user_dir() {
     char dirpath[1024];
     char subdirpath[1024];
 
@@ -110,7 +105,7 @@ static void create_user_dir(void) {
  * to leave enough space for the path separator, directory, and
  * filenames.
  */
-static void init_stuff(void) {
+static void init_stuff() {
     char libpath[1024], varpath[1024];
 
     concptr tail;
@@ -229,8 +224,7 @@ static void change_path(concptr info) {
     }
 }
 
-static void display_usage(void) {
-    /* Dump usage information */
+static void display_usage() {
     puts("Usage: angband [options] [-- subopts]");
     puts("  -n       Start a new character");
     puts("  -f       Request fiddle mode");
@@ -247,7 +241,6 @@ static void display_usage(void) {
     puts("  -d<def>  Define a 'lib' dir sub-path");
     puts("");
 
-#ifdef USE_X11
     puts("  -mx11    To use X11");
     puts("  --       Sub options");
     puts("  -- -d    Set display name");
@@ -257,18 +250,8 @@ static void display_usage(void) {
     puts("  -- -s    Turn off smoothscaling graphics");
     puts("  -- -n#   Number of terms to use");
     puts("");
-#endif /* USE_X11 */
 
-#ifdef USE_GCU
-    puts("  -mgcu    To use GCU (GNU Curses)");
-#endif /* USE_GCU */
-
-#ifdef USE_CAP
-    puts("  -mcap    To use CAP (\"Termcap\" calls)");
-#endif /* USE_CAP */
-
-    /* Actually abort the process */
-    quit(NULL);
+    quit(nullptr);
 }
 
 /*
@@ -470,7 +453,6 @@ int main(int argc, char* argv[]) {
     /* Install "quit" hook */
     quit_aux = quit_hook;
 
-#ifdef USE_X11
     /* Attempt to use the "main-x11.c" support */
     if (!done && (!mstr || (streq(mstr, "x11")))) {
         extern errr init_x11(int, char**);
@@ -479,7 +461,6 @@ int main(int argc, char* argv[]) {
             done = TRUE;
         }
     }
-#endif
 
     /* Make sure we have a display! */
     if (!done)
@@ -489,20 +470,16 @@ int main(int argc, char* argv[]) {
     if (show_score > 0)
         display_scores(0, show_score);
 
-    /* Initialize */
     init_angband(p_ptr, process_autopick_file_command);
 
     /* Wait for response */
     pause_line(23);
 
-    /* Play the game */
     play_game(p_ptr, new_game, browsing_movie);
 
-    /* Quit */
-    quit(NULL);
+    quit(nullptr);
 
-    /* Exit */
-    return (0);
+    return 0;
 }
 
 #endif
