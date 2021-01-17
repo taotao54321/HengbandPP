@@ -56,6 +56,7 @@ AC_CHECK_LIB(iconv, iconv_open)
 AC_CHECK_FILE(/dev/urandom, AC_DEFINE(RNG_DEVICE, "/dev/urandom", [Random Number Generation device file]))
 
 PKG_CHECK_MODULES(XFT, [xft])
+PKG_CHECK_MODULES(FMT, [fmt])
 
 dnl Checks for header files.
 AC_PATH_XTRA

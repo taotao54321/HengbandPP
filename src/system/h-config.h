@@ -24,28 +24,12 @@
 #pragma once
 
 /*
- * OPTION: Compile on Windows (automatic)
- */
-#ifndef WINDOWS
-/* #define WINDOWS */
-#endif
-
-/*
  * Extract the "WINDOWS" flag from the compiler
  */
 #if defined(_Windows) || defined(__WINDOWS__) || defined(__WIN32__) || defined(WIN32) || defined(__WINNT__) || defined(__NT__)
 #ifndef WINDOWS
 #define WINDOWS
 #endif
-#endif
-
-/*
- * OPTION: Define "L64" if a "long" is 64-bits.  See "h-types.h".
- * The only such platform that angband is ported to is currently
- * DEC Alpha AXP running OSF/1 (OpenVMS uses 32-bit longs).
- */
-#if defined(__alpha) && defined(__osf__)
-#define L64
 #endif
 
 /*
@@ -194,37 +178,24 @@
 /* #define MAINTAINER	"rr9@angband.org" */
 #define MAINTAINER "echizen@users.sourceforge.jp"
 
+constexpr const char* DEFAULT_X11_FONTS[8] {
 #ifdef JP
-#define DEFAULT_X11_FONT "monospace-24:lang=ja:spacing=90"
-#define DEFAULT_X11_FONT_SUB "sans-serif-16:lang=ja"
-
-/*
- * OPTION: Default fonts (when using X11)
- */
-#define DEFAULT_X11_FONT_0 DEFAULT_X11_FONT
-#define DEFAULT_X11_FONT_1 DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_2 DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_3 DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_4 DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_5 DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_6 DEFAULT_X11_FONT_SUB
-#define DEFAULT_X11_FONT_7 DEFAULT_X11_FONT_SUB
-
+    "monospace-24:lang=ja:spacing=90",
+    "sans-serif-16:lang=ja",
+    "sans-serif-16:lang=ja",
+    "sans-serif-16:lang=ja",
+    "sans-serif-16:lang=ja",
+    "sans-serif-16:lang=ja",
+    "sans-serif-16:lang=ja",
+    "sans-serif-16:lang=ja",
 #else
-/*
- * OPTION: Default font (when using X11).
- */
-#define DEFAULT_X11_FONT "9x15"
-
-/*
- * OPTION: Default fonts (when using X11)
- */
-#define DEFAULT_X11_FONT_0 "10x20"
-#define DEFAULT_X11_FONT_1 "9x15"
-#define DEFAULT_X11_FONT_2 "9x15"
-#define DEFAULT_X11_FONT_3 "5x8"
-#define DEFAULT_X11_FONT_4 "5x8"
-#define DEFAULT_X11_FONT_5 "5x8"
-#define DEFAULT_X11_FONT_6 "5x8"
-#define DEFAULT_X11_FONT_7 "5x8"
+    "10x20",
+    "9x15",
+    "9x15",
+    "5x8",
+    "5x8",
+    "5x8",
+    "5x8",
+    "5x8",
 #endif
+};

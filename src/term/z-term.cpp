@@ -1004,7 +1004,7 @@ static void term_fresh_row_text(TERM_LEN y, TERM_LEN x1, TERM_LEN x2) {
 /*
  * @brief Actually perform all requested changes to the window
  */
-errr term_fresh(void) {
+errr term_fresh() {
     int w = Term->wid;
     int h = Term->hgt;
 
@@ -1557,7 +1557,7 @@ errr term_clear(void) {
 /*
  * Redraw (and refresh) the whole window.
  */
-errr term_redraw(void) {
+errr term_redraw() {
     /* Force "total erase" */
     Term->total_erase = TRUE;
     term_fresh();

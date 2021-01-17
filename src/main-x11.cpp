@@ -37,6 +37,8 @@
 
 #include <iconv.h>
 
+#include "prelude.hpp"
+
 /*
  * Hack -- Convert an RGB value to an X11 Pixel, or die.
  */
@@ -493,8 +495,7 @@ static void term_string_push(char* buf) {
  * Process a keypress event
  */
 static void react_keypress(XKeyEvent* ev) {
-    int n, mc, ms, mo, mx;
-    uint ks1;
+    int n;
     KeySym ks;
     char buf[128];
     char msg[128];
@@ -527,11 +528,13 @@ static void react_keypress(XKeyEvent* ev) {
     if (is_modifier_key(ks))
         return;
 
-    ks1 = (uint)(ks);
-    mc = (ev->state & ControlMask) ? TRUE : FALSE;
-    ms = (ev->state & ShiftMask) ? TRUE : FALSE;
-    mo = (ev->state & Mod1Mask) ? TRUE : FALSE;
-    mx = (ev->state & Mod2Mask) ? TRUE : FALSE;
+    const auto ks1 = uint(ks);
+
+    const auto mc = bool(ev->state & ControlMask);
+    const auto ms = bool(ev->state & ShiftMask);
+    const auto mo = bool(ev->state & Mod1Mask);
+    const auto mx = bool(ev->state & Mod2Mask);
+
     if (n && !mo && !mx && !is_special_key(ks)) {
         term_string_push(buf);
         return;
@@ -971,35 +974,36 @@ static void handle_button(Time time, int x, int y, int button, bool press) {
 
 /*
  * Process events
+ *
+ * イベントがあったら 0 を、なかったら 1 を返す。
  */
 static errr CheckEvent(bool wait) {
-    term_data* old_td = (term_data*)(Term->data);
+    auto* old_td = static_cast<term_data*>(Term->data);
 
-    XEvent xev_body, *xev = &xev_body;
+    XEvent xev_body;
+    XEvent* xev = &xev_body;
 
-    term_data* td = NULL;
-    infowin* iwin = NULL;
-
-    int i;
+    term_data* td = nullptr;
+    infowin* iwin = nullptr;
 
     do {
-        if (!wait && !XPending(Metadpy->dpy))
-            return (1);
+        if (!wait && XPending(Metadpy->dpy) == 0)
+            return 1;
 
         if (s_ptr->select && !s_ptr->drawn)
             mark_selection();
 
         XNextEvent(Metadpy->dpy, xev);
-    } while (XFilterEvent(xev, xev->xany.window));
+    } while (bool(XFilterEvent(xev, xev->xany.window)));
 
     if (xev->type == MappingNotify) {
         XRefreshKeyboardMapping(&xev->xmapping);
         return 0;
     }
 
-    for (i = 0; i < TERM_DATA_COUNT; i++) {
-        if (!data[i].win)
-            continue;
+    // イベントが発生したウィンドウと、それに対応する端末を得る
+    for (int i = 0; i < TERM_DATA_COUNT; i++) {
+        if (!data[i].win) continue;
         if (xev->xany.window == data[i].win->win) {
             td = &data[i];
             iwin = td->win;
@@ -1007,11 +1011,12 @@ static errr CheckEvent(bool wait) {
         }
     }
 
-    if (!td || !iwin)
-        return (0);
+    // ウィンドウまたは端末がなければイベントを無視
+    if (!td || !iwin) return 0;
 
     term_activate(&td->t);
     Infowin = iwin;
+
     switch (xev->type) {
     case ButtonPress:
     case ButtonRelease: {
@@ -1069,14 +1074,7 @@ static errr CheckEvent(bool wait) {
         break;
     }
     case Expose: {
-        int x1, x2, y1, y2;
-        x1 = (xev->xexpose.x - Infowin->ox) / Infofnt->wid;
-        x2 = (xev->xexpose.x + xev->xexpose.width - Infowin->ox) / Infofnt->wid;
-
-        y1 = (xev->xexpose.y - Infowin->oy) / Infofnt->hgt;
-        y2 = (xev->xexpose.y + xev->xexpose.height - Infowin->oy) / Infofnt->hgt;
-
-        term_redraw_section(x1, y1, x2, y2);
+        term_redraw();
         break;
     }
     case MapNotify: {
@@ -1160,13 +1158,12 @@ static bool check_file(concptr s) {
 /*
  * Initialize sound
  */
-static void init_sound(void) {
-    int i;
+static void init_sound() {
     char wav[128];
     char buf[1024];
     char dir_xtra_sound[1024];
     path_build(dir_xtra_sound, sizeof(dir_xtra_sound), ANGBAND_DIR_XTRA, "sound");
-    for (i = 1; i < SOUND_MAX; i++) {
+    for (int i = 1; i < SOUND_MAX; i++) {
         sprintf(wav, "%s.wav", angband_sound_name[i]);
         path_build(buf, sizeof(buf), dir_xtra_sound, wav);
         if (check_file(buf))
@@ -1174,7 +1171,6 @@ static void init_sound(void) {
     }
 
     use_sound = TRUE;
-    return;
 }
 
 /*
@@ -1243,11 +1239,11 @@ static errr Term_xtra_x11(int n, int v) {
         Metadpy_update(true, true, false);
         return (0);
     case TERM_XTRA_BORED:
-        return (CheckEvent(0));
+        return (CheckEvent(false));
     case TERM_XTRA_EVENT:
-        return (CheckEvent(v));
+        return (CheckEvent(bool(v)));
     case TERM_XTRA_FLUSH:
-        while (!CheckEvent(FALSE))
+        while (CheckEvent(false) == 0)
             ;
         return (0);
     case TERM_XTRA_LEVEL:
@@ -1407,10 +1403,6 @@ static errr term_data_init(term_data* td, int i) {
 
     concptr name = angband_term_name[i];
 
-    concptr font;
-    int x = 0;
-    int y = 0;
-
     int cols = 80;
     int rows = 24;
 
@@ -1433,50 +1425,19 @@ static errr term_data_init(term_data* td, int i) {
     XSizeHints* sh;
     XWMHints* wh;
 
-    sprintf(buf, "ANGBAND_X11_FONT_%d", i);
-    font = getenv(buf);
+    const char* font = getenv(FORMAT("ANGBAND_X11_FONT_{}", i).c_str());
     if (!font)
         font = getenv("ANGBAND_X11_FONT");
-
-    if (!font) {
-        switch (i) {
-        case 0: {
-            font = DEFAULT_X11_FONT_0;
-        } break;
-        case 1: {
-            font = DEFAULT_X11_FONT_1;
-        } break;
-        case 2: {
-            font = DEFAULT_X11_FONT_2;
-        } break;
-        case 3: {
-            font = DEFAULT_X11_FONT_3;
-        } break;
-        case 4: {
-            font = DEFAULT_X11_FONT_4;
-        } break;
-        case 5: {
-            font = DEFAULT_X11_FONT_5;
-        } break;
-        case 6: {
-            font = DEFAULT_X11_FONT_6;
-        } break;
-        case 7: {
-            font = DEFAULT_X11_FONT_7;
-        } break;
-        default: {
-            font = DEFAULT_X11_FONT;
-        }
-        }
-    }
+    if (!font)
+        font = DEFAULT_X11_FONTS[i];
 
     sprintf(buf, "ANGBAND_X11_AT_X_%d", i);
     str = getenv(buf);
-    x = (str != NULL) ? atoi(str) : -1;
+    int x = (str != NULL) ? atoi(str) : -1;
 
     sprintf(buf, "ANGBAND_X11_AT_Y_%d", i);
     str = getenv(buf);
-    y = (str != NULL) ? atoi(str) : -1;
+    int y = (str != NULL) ? atoi(str) : -1;
 
     sprintf(buf, "ANGBAND_X11_COLS_%d", i);
     str = getenv(buf);
@@ -1586,18 +1547,18 @@ static errr term_data_init(term_data* td, int i) {
     t->text_hook = Term_text_x11;
     t->data = td;
     term_activate(t);
-    return (0);
+
+    return 0;
 }
 
 /*
  * Initialization function for an "X11" module to Angband
  */
 errr init_x11(int argc, char* argv[]) {
-    int i;
     concptr dpy_name = "";
     int num_term = 3;
 
-    for (i = 1; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
         if (prefix(argv[i], "-d")) {
             dpy_name = &argv[i][2];
             continue;
@@ -1649,7 +1610,7 @@ errr init_x11(int argc, char* argv[]) {
     MAKE(xor_, infoclr);
     Infoclr = xor_;
     Infoclr_init(Metadpy->fg, Metadpy->bg);
-    for (i = 0; i < 256; ++i) {
+    for (int i = 0; i < 256; ++i) {
         Pixell pixel;
         MAKE(clr[i], infoclr);
         Infoclr = clr[i];
@@ -1664,7 +1625,7 @@ errr init_x11(int argc, char* argv[]) {
     }
 
     set_atoms();
-    for (i = 0; i < num_term; i++) {
+    for (int i = 0; i < num_term; i++) {
         term_data* td = &data[i];
         term_data_init(td, i);
         angband_term[i] = Term;
