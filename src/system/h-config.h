@@ -110,18 +110,6 @@
 #endif
 #endif
 
-#ifndef HAVE_CONFIG_H
-
-#ifdef JP
-#define USE_XIM
-#endif
-
-#if defined(USE_XIM)
-#define USE_LOCALE
-#endif
-
-#endif /* HAVE_CONFIG_H */
-
 /*
  * Look through the following lines, and where a comment includes the
  * tag "OPTION:", examine the associated "#define" statements, and decide

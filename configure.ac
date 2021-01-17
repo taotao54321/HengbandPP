@@ -50,11 +50,6 @@ AX_CXX_COMPILE_STDCXX_17
 AC_ARG_ENABLE(japanese,
 [  --disable-japanese      build english version], use_japanese=no, [AC_DEFINE(JP, 1, [Enable Japanese]) AC_DEFINE(EUC, 1, [Use Extended Unix Code])])
 
-AC_ARG_ENABLE(xim,
-[  --disable-xim           disable xim support], use_xim=no, use_xim=yes)
-AC_ARG_ENABLE(fontset,
-[  --disable-fontset       disable fontset support], use_fontset=no, use_fontset=yes)
-
 dnl Checks for libraries.
 AC_CHECK_LIB(iconv, iconv_open)
 
@@ -70,26 +65,11 @@ if test "$have_x" = yes; then
   CXXFLAGS="$X_CXXFLAGS $CXXFLAGS"
   LDFLAGS="$X_LIBS $LDFLAGS"
 
-  if test "$use_fontset" = yes; then
-    AC_DEFINE(USE_FONTSET, 1, [Use FontSet])
-  else
-    if test "$use_japanese" != no; then
-      AC_DEFINE(USE_JP_FONTSTRUCT, 1, [Use Kanji without FontSet])
-    fi
+  if test "$use_japanese" != no; then
+    AC_DEFINE(DEFAULT_LOCALE, "ja_JP.eucJP", Default Japanese Locale)
   fi
-
-  if test "$use_xim" = yes; then
-    AC_DEFINE(USE_XIM, 1, [Use X Imput Method])
-  fi
-
-  if test "$use_fontset" = yes || test "$use_xim" = yes; then
-    AC_DEFINE(USE_LOCALE, 1, [Support Locale])
-    if test "$use_japanese" != no; then
-      AC_DEFINE(DEFAULT_LOCALE, "ja_JP.eucJP", Default Japanese Locale)
-    fi
-    AC_CHECK_LIB(X11, _Xsetlocale, AC_DEFINE(X_LOCALE, 1, [Use XLocale]))
-    AC_CHECK_LIB(xpg4, setlocale, LIBS="$LIBS -lxpg4")
-  fi
+  AC_CHECK_LIB(X11, _Xsetlocale, AC_DEFINE(X_LOCALE, 1, [Use XLocale]))
+  AC_CHECK_LIB(xpg4, setlocale, LIBS="$LIBS -lxpg4")
 fi
 
 if test "$use_japanese" != no; then

@@ -25,14 +25,12 @@
 #define GRAPHICS_HENGBAND 3
 
 #ifndef __MAKEDEPEND__
+#include <X11/Xatom.h>
 #include <X11/Xlib.h>
+#include <X11/Xlocale.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
-#ifdef USE_LOCALE
-#include <X11/Xlocale.h>
-#endif
-#include <X11/Xatom.h>
 #endif /* __MAKEDEPEND__ */
 
 #include <X11/Xft/Xft.h>
@@ -79,9 +77,7 @@ struct metadpy {
     Screen* screen; // The default Screen for the display
     Window root;    // The virtual root (usually just the root)
     Colormap cmap;  // The default colormap (from a macro)
-#ifdef USE_XIM
     XIM xim;
-#endif
 
     Pixell black; // The black Pixell (from a macro)
     Pixell white; // The white Pixell (from a macro)
@@ -98,10 +94,10 @@ struct metadpy {
  */
 struct infowin {
     Window win;
-#ifdef USE_XIM
+
     XIC xic;
     long xic_mask;
-#endif
+
     XftDraw* draw;
 
     long mask;
@@ -138,9 +134,7 @@ static metadpy metadpy_default;
  */
 static metadpy* Metadpy = &metadpy_default;
 static infowin* Infowin = nullptr;
-#ifdef USE_XIM
 static infowin* Focuswin = nullptr;
-#endif
 static infoclr* Infoclr = nullptr;
 static infofnt* Infofnt = nullptr;
 
@@ -469,7 +463,6 @@ static x11_selection_type s_ptr[1];
 /*
  * Convert to EUC-JP
  */
-#ifdef USE_XIM
 static void convert_to_euc(char* buf) {
     size_t inlen = strlen(buf);
     size_t outlen = inlen + 1;
@@ -486,7 +479,6 @@ static void convert_to_euc(char* buf) {
         buf[i] = tmp[i];
     buf[l] = '\0';
 }
-#endif
 
 /*
  * Push multiple keys reversal
@@ -507,11 +499,8 @@ static void react_keypress(XKeyEvent* ev) {
     char buf[128];
     char msg[128];
 
-#ifdef USE_XIM
     int valid_keysym = TRUE;
-#endif
 
-#ifdef USE_XIM
     if (Focuswin && Focuswin->xic) {
         Status status;
         n = XmbLookupString(Focuswin->xic, ev, buf, 125, &ks, &status);
@@ -526,19 +515,14 @@ static void react_keypress(XKeyEvent* ev) {
     else {
         n = XLookupString(ev, buf, 125, &ks, NULL);
     }
-#else
-    n = XLookupString(ev, buf, 125, &ks, NULL);
-#endif
 
     buf[n] = '\0';
 
-#ifdef USE_XIM
     if (!valid_keysym) { /* XIMからの入力時のみ FALSE になる */
         convert_to_euc(buf);
         term_string_push(buf);
         return;
     }
-#endif
 
     if (is_modifier_key(ks))
         return;
@@ -998,10 +982,7 @@ static errr CheckEvent(bool wait) {
 
     int i;
 
-#ifdef USE_XIM
     do {
-#endif
-
         if (!wait && !XPending(Metadpy->dpy))
             return (1);
 
@@ -1009,10 +990,7 @@ static errr CheckEvent(bool wait) {
             mark_selection();
 
         XNextEvent(Metadpy->dpy, xev);
-
-#ifdef USE_XIM
     } while (XFilterEvent(xev, xev->xany.window));
-#endif
 
     if (xev->type == MappingNotify) {
         XRefreshKeyboardMapping(&xev->xmapping);
@@ -1139,7 +1117,6 @@ static errr CheckEvent(bool wait) {
 
         break;
     }
-#ifdef USE_XIM
     case FocusIn: {
         if (iwin->xic) {
             XSetICFocus(iwin->xic);
@@ -1154,7 +1131,6 @@ static errr CheckEvent(bool wait) {
 
         break;
     }
-#endif
     }
 
     term_activate(&old_td->t);
@@ -1344,7 +1320,6 @@ static errr Term_text_x11(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr s
     return (0);
 }
 
-#ifdef USE_XIM
 static void IMDestroyCallback(XIM, XPointer, XPointer);
 
 static void IMInstantiateCallback(Display* display, XPointer unused1, XPointer unused2) {
@@ -1421,7 +1396,6 @@ static void IMDestroyCallback(XIM xim, XPointer client_data, XPointer call_data)
 
     Metadpy->xim = NULL;
 }
-#endif
 
 static char force_lower(char a) { return ((isupper((a))) ? tolower((a)) : (a)); }
 
@@ -1457,9 +1431,7 @@ static errr term_data_init(term_data* td, int i) {
     char res_class[20];
 
     XSizeHints* sh;
-#ifdef USE_XIM
     XWMHints* wh;
-#endif
 
     sprintf(buf, "ANGBAND_X11_FONT_%d", i);
     font = getenv(buf);
@@ -1548,11 +1520,7 @@ static errr term_data_init(term_data* td, int i) {
     Infowin = td->win;
     Infowin_init(x, y, wid, hgt, 0, Metadpy->fg, Metadpy->bg);
 
-#if defined(USE_XIM)
     Infowin_set_mask(ExposureMask | StructureNotifyMask | KeyPressMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask | FocusChangeMask);
-#else
-    Infowin_set_mask(ExposureMask | StructureNotifyMask | KeyPressMask | PointerMotionMask | ButtonPressMask | ButtonReleaseMask);
-#endif
 
     Infowin_set_name(name);
     Infowin->ox = ox;
@@ -1598,14 +1566,12 @@ static errr term_data_init(term_data* td, int i) {
     XSetWMNormalHints(Metadpy->dpy, Infowin->win, sh);
     Infowin_map();
 
-#ifdef USE_XIM
     wh = XAllocWMHints();
     if (wh == NULL)
         quit("XAllocWMHints failed");
     wh->flags = InputHint;
     wh->input = True;
     XSetWMHints(Metadpy->dpy, Infowin->win, wh);
-#endif
 
     if ((x >= 0) && (y >= 0))
         Infowin_impell(x, y);
@@ -1655,8 +1621,6 @@ errr init_x11(int argc, char* argv[]) {
         plog_fmt("Ignoring option: %s", argv[i]);
     }
 
-#ifdef USE_LOCALE
-
 #ifdef JP
     setlocale(LC_ALL, "");
 
@@ -1678,8 +1642,6 @@ errr init_x11(int argc, char* argv[]) {
 #else
     setlocale(LC_ALL, "C");
 #endif /* JP */
-
-#endif /* USE_LOCALE */
 
     if (Metadpy_init(dpy_name))
         return (-1);
@@ -1712,7 +1674,6 @@ errr init_x11(int argc, char* argv[]) {
     Infowin_raise();
     term_activate(&data[0].t);
 
-#ifdef USE_XIM
     {
         char* p;
         p = XSetLocaleModifiers("");
@@ -1721,7 +1682,6 @@ errr init_x11(int argc, char* argv[]) {
         }
     }
     XRegisterIMInstantiateCallback(Metadpy->dpy, NULL, NULL, NULL, IMInstantiateCallback, NULL);
-#endif
 
     if (arg_sound)
         init_sound();
