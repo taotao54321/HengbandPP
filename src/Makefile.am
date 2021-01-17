@@ -367,7 +367,7 @@ hengband_SOURCES = \
 	lore/magic-types-setter.cpp lore/magic-types-setter.h \
 	lore/monster-lore.cpp lore/monster-lore.h \
 	\
-	main.cpp main-x11.cpp \
+	main.cpp main-x11.cpp main-sdl2.cpp \
 	\
 	main/angband-headers.cpp main/angband-headers.h \
 	main/angband-initializer.cpp main/angband-initializer.h \
@@ -895,8 +895,8 @@ EXTRA_DIST = \
 	gcc-wrap
 
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)/src 
-CXXFLAGS += -Wall -Wextra $(XFT_CFLAGS) $(FMT_CFLAGS)
-LIBS += $(XFT_LIBS) $(FMT_LIBS)
+CXXFLAGS += -Wall -Wextra $(XFT_CFLAGS) $(FMT_CFLAGS) $(SDL2_CFLAGS) $(SDL2_TTF_CFLAGS)
+LIBS += $(XFT_LIBS) $(FMT_LIBS) $(SDL2_LIBS) $(SDL2_TTF_LIBS)
 CXXCOMPILE = $(srcdir)/gcc-wrap $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) 
 

@@ -44,7 +44,7 @@ inline auto IRANGE(const Integer last) {
 
 #define LOOP(n) for ([[maybe_unused]] std::add_const_t<std::remove_cv_t<std::remove_reference_t<decltype(n)>>> BOOST_PP_CAT(macro_loop_counter, __COUNTER__) : IRANGE(n))
 
-#define ALL(f, c, ...) (([&](decltype((c)) cccc) { using std::begin, std::end; return (f)(begin(cccc), end(cccc) __VA_OPT__(,) __VA_ARGS__); })(c))
+#define ALL(f, c, ...) (([&](decltype((c)) cccc) { using std::begin, std::end; return (f)(begin(cccc), end(cccc), ##__VA_ARGS__); })(c))
 
 template <class T, class Comp = std::less<>>
 inline bool chmin(T& xmin, const T& x, Comp comp = {}) {

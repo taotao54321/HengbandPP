@@ -58,6 +58,9 @@ AC_CHECK_FILE(/dev/urandom, AC_DEFINE(RNG_DEVICE, "/dev/urandom", [Random Number
 PKG_CHECK_MODULES(XFT, [xft])
 PKG_CHECK_MODULES(FMT, [fmt])
 
+PKG_CHECK_MODULES(SDL2, [sdl2])
+PKG_CHECK_MODULES(SDL2_TTF, [SDL2_ttf])
+
 dnl Checks for header files.
 AC_PATH_XTRA
 if test "$have_x" = yes; then

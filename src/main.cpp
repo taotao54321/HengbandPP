@@ -462,6 +462,13 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    if (!done && (!mstr || streq(mstr, "sdl2"))) {
+        extern void init_sdl2(int, char**);
+        init_sdl2(argc, argv);
+        ANGBAND_SYS = "sdl2";
+        done = TRUE;
+    }
+
     /* Make sure we have a display! */
     if (!done)
         quit("Unable to prepare any 'display module'!");
