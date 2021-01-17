@@ -277,7 +277,7 @@ BIT_FLAGS has_invuln_arrow(player_type* creature_ptr) {
     return result;
 }
 
-void has_no_flowed(player_type* creature_ptr) {
+void check_no_flowed(player_type* creature_ptr) {
     object_type* o_ptr;
     bool has_sw = FALSE, has_kabe = FALSE;
     OBJECT_IDX this_o_idx, next_o_idx = 0;
