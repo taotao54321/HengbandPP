@@ -243,9 +243,9 @@
  * Exclude parts of WINDOWS.H that are not needed (Win32)
  */
 #define WIN32_LEAN_AND_MEAN
-#define NONLS /* All NLS defines and routines */
+#define NONLS     /* All NLS defines and routines */
 #define NOSERVICE /* All Service Controller routines, SERVICE_ equates, etc. */
-#define NOMCX /* Modem Configuration Extensions */
+#define NOMCX     /* Modem Configuration Extensions */
 
 /*
  * Include the "windows" support file
@@ -255,14 +255,14 @@
 /*
  * Exclude parts of MMSYSTEM.H that are not needed
  */
-#define MMNODRV /* Installable driver support */
-#define MMNOWAVE /* Waveform support */
-#define MMNOMIDI /* MIDI support */
-#define MMNOAUX /* Auxiliary audio support */
+#define MMNODRV   /* Installable driver support */
+#define MMNOWAVE  /* Waveform support */
+#define MMNOMIDI  /* MIDI support */
+#define MMNOAUX   /* Auxiliary audio support */
 #define MMNOTIMER /* Timer support */
-#define MMNOJOY /* Joystick support */
-#define MMNOMCI /* MCI support */
-#define MMNOMMIO /* Multimedia file I/O support */
+#define MMNOJOY   /* Joystick support */
+#define MMNOMCI   /* MCI support */
+#define MMNOMMIO  /* Multimedia file I/O support */
 
 #define INVALID_FILE_NAME (DWORD)0xFFFFFFFF
 #define MOUSE_SENS 40
@@ -364,8 +364,8 @@ typedef struct {
 #define MAX_TERM_DATA 8 //!< Maximum number of windows
 
 static term_data data[MAX_TERM_DATA]; //!< An array of term_data's
-static term_data* my_td; //!< Hack -- global "window creation" pointer
-POINT normsize; //!< Remember normal size of main window when maxmized
+static term_data* my_td;              //!< Hack -- global "window creation" pointer
+POINT normsize;                       //!< Remember normal size of main window when maxmized
 
 /*
  * was main window maximized on previous playing
@@ -414,7 +414,7 @@ static HPALETTE hPal;
 
 /* bg */
 static HBITMAP hBG = NULL;
-static int use_bg = 0; //!< 背景使用フラグ、1なら私用。
+static int use_bg = 0;                       //!< 背景使用フラグ、1なら私用。
 static char bg_bitmap_file[1024] = "bg.bmp"; //!< 現在の背景ビットマップファイル名。
 
 /*
@@ -512,22 +512,22 @@ static TERM_LEN oldx, oldy;
  * Note that many of the choices below suck, but so do crappy monitors.
  */
 static BYTE win_pal[256] = {
-    VID_BLACK, /* Dark */
-    VID_WHITE, /* White */
-    VID_CYAN, /* Slate XXX */
-    VID_RED | VID_BRIGHT, /* Orange XXX */
-    VID_RED, /* Red */
-    VID_GREEN, /* Green */
-    VID_BLUE, /* Blue */
-    VID_YELLOW, /* Umber XXX */
-    VID_BLACK | VID_BRIGHT, /* Light Dark */
-    VID_CYAN | VID_BRIGHT, /* Light Slate XXX */
-    VID_MAGENTA, /* Violet XXX */
-    VID_YELLOW | VID_BRIGHT, /* Yellow */
+    VID_BLACK,                /* Dark */
+    VID_WHITE,                /* White */
+    VID_CYAN,                 /* Slate XXX */
+    VID_RED | VID_BRIGHT,     /* Orange XXX */
+    VID_RED,                  /* Red */
+    VID_GREEN,                /* Green */
+    VID_BLUE,                 /* Blue */
+    VID_YELLOW,               /* Umber XXX */
+    VID_BLACK | VID_BRIGHT,   /* Light Dark */
+    VID_CYAN | VID_BRIGHT,    /* Light Slate XXX */
+    VID_MAGENTA,              /* Violet XXX */
+    VID_YELLOW | VID_BRIGHT,  /* Yellow */
     VID_MAGENTA | VID_BRIGHT, /* Light Red XXX */
-    VID_GREEN | VID_BRIGHT, /* Light Green */
-    VID_BLUE | VID_BRIGHT, /* Light Blue */
-    VID_YELLOW /* Light Umber XXX */
+    VID_GREEN | VID_BRIGHT,   /* Light Green */
+    VID_BLUE | VID_BRIGHT,    /* Light Blue */
+    VID_YELLOW                /* Light Umber XXX */
 };
 
 /*
@@ -549,7 +549,7 @@ static byte special_key_list[] = {
 };
 
 static byte ignore_key_list[] = {
-    VK_ESCAPE, VK_TAB, VK_SPACE, 'F', 'W', 'O', /*'H',*/ /* these are menu characters.*/
+    VK_ESCAPE, VK_TAB, VK_SPACE, 'F', 'W', 'O', /*'H',*/                                                                   /* these are menu characters.*/
     VK_SHIFT, VK_CONTROL, VK_MENU, VK_LWIN, VK_RWIN, VK_LSHIFT, VK_RSHIFT, VK_LCONTROL, VK_RCONTROL, VK_LMENU, VK_RMENU, 0 /* End of List */
 };
 

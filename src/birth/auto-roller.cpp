@@ -40,7 +40,7 @@ static s32b get_autoroller_prob(int* minval) {
 
     /* random combinations out of 60 (1d3+1d4+1d5) patterns */
     int pp[18] = {
-        0, 0, 0, 0, 0, 0, 0, 0, /* 0-7 */
+        0, 0, 0, 0, 0, 0, 0, 0,        /* 0-7 */
         1, 3, 6, 9, 11, 11, 9, 6, 3, 1 /* 8-17 */
     };
 

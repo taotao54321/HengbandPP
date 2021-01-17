@@ -27,9 +27,9 @@
 /*
  * Player constants
  */
-#define PY_MAX_EXP 99999999L /*!< プレイヤー経験値の最大値 / Maximum exp */
+#define PY_MAX_EXP 99999999L   /*!< プレイヤー経験値の最大値 / Maximum exp */
 #define PY_MAX_GOLD 999999999L /*!< プレイヤー所持金の最大値 / Maximum gold */
-#define PY_MAX_LEVEL 50 /*!< プレイヤーレベルの最大値 / Maximum level */
+#define PY_MAX_LEVEL 50        /*!< プレイヤーレベルの最大値 / Maximum level */
 
 #define GINOU_MAX 10
 #define MAX_MANE 16
@@ -48,7 +48,7 @@
 enum empty_hand_status {
     EMPTY_HAND_NONE = 0x0000, /*!<Both hands are used */
     EMPTY_HAND_LARM = 0x0001, /*!<Left hand is empty */
-    EMPTY_HAND_RARM = 0x0002 /*!<Right hand is empty */
+    EMPTY_HAND_RARM = 0x0002  /*!<Right hand is empty */
 };
 
 /*
@@ -70,40 +70,40 @@ struct player_type {
     POSITION oldpy; /* Previous player location -KMW- */
     POSITION oldpx; /* Previous player location -KMW- */
 
-    SEX_IDX psex; /* Sex index */
-    player_race_type prace; /* Race index */
-    player_class_type pclass; /* Class index */
+    SEX_IDX psex;                     /* Sex index */
+    player_race_type prace;           /* Race index */
+    player_class_type pclass;         /* Class index */
     player_personality_type pseikaku; /* Seikaku index */
-    REALM_IDX realm1; /* First magic realm */
-    REALM_IDX realm2; /* Second magic realm */
-    player_personality_type oops; /* Unused */
+    REALM_IDX realm1;                 /* First magic realm */
+    REALM_IDX realm2;                 /* Second magic realm */
+    player_personality_type oops;     /* Unused */
 
     DICE_SID hitdie; /* Hit dice (sides) */
-    u16b expfact; /* Experience factor
+    u16b expfact;    /* Experience factor
                    * Note: was byte, causing overflow for Amberite
                    * characters (such as Amberite Paladins)
                    */
 
     s16b age; /* Characters age */
-    s16b ht; /* Height */
-    s16b wt; /* Weight */
-    s16b sc; /* Social Class */
+    s16b ht;  /* Height */
+    s16b wt;  /* Weight */
+    s16b sc;  /* Social Class */
 
     PRICE au; /* Current Gold */
 
     EXP max_max_exp; /* Max max experience (only to calculate score) */
-    EXP max_exp; /* Max experience */
-    EXP exp; /* Cur experience */
-    u32b exp_frac; /* Cur exp frac (times 2^16) */
+    EXP max_exp;     /* Max experience */
+    EXP exp;         /* Cur experience */
+    u32b exp_frac;   /* Cur exp frac (times 2^16) */
 
     PLAYER_LEVEL lev; /* Level */
 
     TOWN_IDX town_num; /* Current town number */
     s16b arena_number; /* monster number in on_defeat_arena_monster -KMW- */
-    bool phase_out; /*!< フェイズアウト状態(闘技場観戦状態などに利用、NPCの処理の対象にならず自身もほとんどの行動ができない) */
+    bool phase_out;    /*!< フェイズアウト状態(闘技場観戦状態などに利用、NPCの処理の対象にならず自身もほとんどの行動ができない) */
 
     DUNGEON_IDX dungeon_idx; /* current dungeon index */
-    POSITION wilderness_x; /* Coordinates in the wilderness */
+    POSITION wilderness_x;   /* Coordinates in the wilderness */
     POSITION wilderness_y;
     bool wild_mode;
 
@@ -114,40 +114,40 @@ struct player_type {
 
     MANA_POINT msp; /* Max mana pts */
     MANA_POINT csp; /* Cur mana pts */
-    u32b csp_frac; /* Cur mana frac (times 2^16) */
+    u32b csp_frac;  /* Cur mana frac (times 2^16) */
 
     s16b max_plv; /* Max Player Level */
 
-    BASE_STATUS stat_max[A_MAX]; /* Current "maximal" stat values */
+    BASE_STATUS stat_max[A_MAX];     /* Current "maximal" stat values */
     BASE_STATUS stat_max_max[A_MAX]; /* Maximal "maximal" stat values */
-    BASE_STATUS stat_cur[A_MAX]; /* Current "natural" stat values */
+    BASE_STATUS stat_cur[A_MAX];     /* Current "natural" stat values */
 
     s16b learned_spells;
     s16b add_spells;
 
     u32b count;
 
-    TIME_EFFECT fast; /* Timed -- Fast */
-    TIME_EFFECT slow; /* Timed -- Slow */
-    TIME_EFFECT blind; /* Timed -- Blindness */
+    TIME_EFFECT fast;      /* Timed -- Fast */
+    TIME_EFFECT slow;      /* Timed -- Slow */
+    TIME_EFFECT blind;     /* Timed -- Blindness */
     TIME_EFFECT paralyzed; /* Timed -- Paralysis */
-    TIME_EFFECT confused; /* Timed -- Confusion */
-    TIME_EFFECT afraid; /* Timed -- Fear */
-    TIME_EFFECT image; /* Timed -- Hallucination */
-    TIME_EFFECT poisoned; /* Timed -- Poisoned */
-    TIME_EFFECT cut; /* Timed -- Cut */
-    TIME_EFFECT stun; /* Timed -- Stun */
+    TIME_EFFECT confused;  /* Timed -- Confusion */
+    TIME_EFFECT afraid;    /* Timed -- Fear */
+    TIME_EFFECT image;     /* Timed -- Hallucination */
+    TIME_EFFECT poisoned;  /* Timed -- Poisoned */
+    TIME_EFFECT cut;       /* Timed -- Cut */
+    TIME_EFFECT stun;      /* Timed -- Stun */
 
-    TIME_EFFECT protevil; /* Timed -- Protection */
-    TIME_EFFECT invuln; /* Timed -- Invulnerable */
-    TIME_EFFECT ult_res; /* Timed -- Ultimate Resistance */
-    TIME_EFFECT hero; /* Timed -- Heroism */
-    TIME_EFFECT shero; /* Timed -- Super Heroism */
-    TIME_EFFECT shield; /* Timed -- Shield Spell */
-    TIME_EFFECT blessed; /* Timed -- Blessed */
-    TIME_EFFECT tim_invis; /* Timed -- See Invisible */
-    TIME_EFFECT tim_infra; /* Timed -- Infra Vision */
-    TIME_EFFECT tsuyoshi; /* Timed -- Tsuyoshi Special */
+    TIME_EFFECT protevil;   /* Timed -- Protection */
+    TIME_EFFECT invuln;     /* Timed -- Invulnerable */
+    TIME_EFFECT ult_res;    /* Timed -- Ultimate Resistance */
+    TIME_EFFECT hero;       /* Timed -- Heroism */
+    TIME_EFFECT shero;      /* Timed -- Super Heroism */
+    TIME_EFFECT shield;     /* Timed -- Shield Spell */
+    TIME_EFFECT blessed;    /* Timed -- Blessed */
+    TIME_EFFECT tim_invis;  /* Timed -- See Invisible */
+    TIME_EFFECT tim_infra;  /* Timed -- Infra Vision */
+    TIME_EFFECT tsuyoshi;   /* Timed -- Tsuyoshi Special */
     TIME_EFFECT ele_attack; /* Timed -- Elemental Attack */
     TIME_EFFECT ele_immune; /* Timed -- Elemental Immune */
 
@@ -157,7 +157,7 @@ struct player_type {
     TIME_EFFECT oppose_cold; /* Timed -- oppose cold */
     TIME_EFFECT oppose_pois; /* Timed -- oppose poison */
 
-    TIME_EFFECT tim_esp; /* Timed ESP */
+    TIME_EFFECT tim_esp;     /* Timed ESP */
     TIME_EFFECT wraith_form; /* Timed wraithform */
 
     TIME_EFFECT resist_magic; /* Timed Resist Magic (later) */
@@ -170,7 +170,7 @@ struct player_type {
     TIME_EFFECT tsubureru;
     TIME_EFFECT magicdef;
     TIME_EFFECT tim_res_nether; /* Timed -- Nether resistance */
-    TIME_EFFECT tim_res_time; /* Timed -- Time resistance */
+    TIME_EFFECT tim_res_time;   /* Timed -- Time resistance */
     MIMIC_RACE_IDX mimic_form;
     TIME_EFFECT tim_mimic;
     TIME_EFFECT tim_sh_fire;
@@ -180,13 +180,13 @@ struct player_type {
     /* for mirror master */
     TIME_EFFECT tim_reflect; /* Timed -- Reflect */
     TIME_EFFECT multishadow; /* Timed -- Multi-shadow */
-    TIME_EFFECT dustrobe; /* Timed -- Robe of dust */
+    TIME_EFFECT dustrobe;    /* Timed -- Robe of dust */
 
     bool timewalk;
 
-#define COMMAND_ARG_REST_UNTIL_DONE -2 /*!<休憩コマンド引数 … 必要な分だけ回復 */
+#define COMMAND_ARG_REST_UNTIL_DONE -2   /*!<休憩コマンド引数 … 必要な分だけ回復 */
 #define COMMAND_ARG_REST_FULL_HEALING -1 /*!<休憩コマンド引数 … HPとMPが全回復するまで */
-    GAME_TURN resting; /* Current counter for resting, if any */
+    GAME_TURN resting;                   /* Current counter for resting, if any */
 
     PATRON_IDX chaos_patron;
 
@@ -197,11 +197,11 @@ struct player_type {
     s16b virtues[8];
     s16b vir_types[8];
 
-    TIME_EFFECT word_recall; /* Word of recall counter */
-    TIME_EFFECT alter_reality; /* Alter reality counter */
+    TIME_EFFECT word_recall;    /* Word of recall counter */
+    TIME_EFFECT alter_reality;  /* Alter reality counter */
     DUNGEON_IDX recall_dungeon; /* Dungeon set to be recalled */
 
-    ENERGY energy_need; /* Energy needed for next move */
+    ENERGY energy_need;         /* Energy needed for next move */
     ENERGY enchant_energy_need; /* Energy needed for next upkeep effect	 */
 
     FEED food; /* Current nutrition */
@@ -217,17 +217,17 @@ struct player_type {
 
     /* プレイヤーの防御状態の定義 / Bit flags for the "p_ptr->special_defense" variable. -LM- */
     BIT_FLAGS special_defense;
-    ACTION_IDX action; /* Currently action */
-    BIT_FLAGS spell_learned1; /* bit mask of spells learned */
-    BIT_FLAGS spell_learned2; /* bit mask of spells learned */
-    BIT_FLAGS spell_worked1; /* bit mask of spells tried and worked */
-    BIT_FLAGS spell_worked2; /* bit mask of spells tried and worked */
+    ACTION_IDX action;          /* Currently action */
+    BIT_FLAGS spell_learned1;   /* bit mask of spells learned */
+    BIT_FLAGS spell_learned2;   /* bit mask of spells learned */
+    BIT_FLAGS spell_worked1;    /* bit mask of spells tried and worked */
+    BIT_FLAGS spell_worked2;    /* bit mask of spells tried and worked */
     BIT_FLAGS spell_forgotten1; /* bit mask of spells learned but forgotten */
     BIT_FLAGS spell_forgotten2; /* bit mask of spells learned but forgotten */
-    SPELL_IDX spell_order[64]; /* order spells learned/remembered/forgotten */
+    SPELL_IDX spell_order[64];  /* order spells learned/remembered/forgotten */
 
-    SUB_EXP spell_exp[64]; /* Proficiency of spells */
-    SUB_EXP weapon_exp[5][64]; /* Proficiency of weapons */
+    SUB_EXP spell_exp[64];        /* Proficiency of spells */
+    SUB_EXP weapon_exp[5][64];    /* Proficiency of weapons */
     SUB_EXP skill_exp[GINOU_MAX]; /* Proficiency of misc. skill */
 
     MAGIC_NUM1 magic_num1[MAX_SPELLS]; /*!< Array for non-spellbook type magic */
@@ -243,14 +243,14 @@ struct player_type {
     s16b concent; /* Sniper's concentration level */
 
     HIT_POINT player_hp[PY_MAX_LEVEL];
-    char died_from[80]; /* What killed the player */
+    char died_from[80];   /* What killed the player */
     concptr last_message; /* Last message on death or retirement */
-    char history[4][60]; /* Textual "history" for the Player */
+    char history[4][60];  /* Textual "history" for the Player */
 
     u16b panic_save; /* Panic save */
 
     bool wait_report_score; /* Waiting to report score */
-    bool is_dead; /* Player is dead */
+    bool is_dead;           /* Player is dead */
     bool now_damaged;
     bool ambush_flag;
     BIT_FLAGS change_floor_mode; /*!<フロア移行処理に関するフラグ / Mode flags for changing floor */
@@ -262,29 +262,29 @@ struct player_type {
 #define KNOW_STAT 0x01
 #define KNOW_HPRATE 0x02
     BIT_FLAGS8 knowledge; /* Knowledge about yourself */
-    BIT_FLAGS visit; /* Visited towns */
+    BIT_FLAGS visit;      /* Visited towns */
 
     player_race_type start_race; /* Race at birth */
-    BIT_FLAGS old_race1; /* Record of race changes */
-    BIT_FLAGS old_race2; /* Record of race changes */
-    s16b old_realm; /* Record of realm changes */
+    BIT_FLAGS old_race1;         /* Record of race changes */
+    BIT_FLAGS old_race2;         /* Record of race changes */
+    s16b old_realm;              /* Record of realm changes */
 
     s16b pet_follow_distance; /* Length of the imaginary "leash" for pets */
-    s16b pet_extra_flags; /* Various flags for controling pets */
+    s16b pet_extra_flags;     /* Various flags for controling pets */
 
     s16b today_mon; /* Wanted monster */
 
-    bool dtrap; /* Whether you are on trap-safe grids */
+    bool dtrap;         /* Whether you are on trap-safe grids */
     FLOOR_IDX floor_id; /* Current floor location */
 
     bool autopick_autoregister; /* auto register is in-use or not */
 
-    byte feeling; /* Most recent dungeon feeling */
+    byte feeling;      /* Most recent dungeon feeling */
     s32b feeling_turn; /* The turn of the last dungeon feeling */
 
     object_type* inventory_list; /* The player's inventory */
-    s16b inven_cnt; /* Number of items in inventory */
-    s16b equip_cnt; /* Number of items in equipment */
+    s16b inven_cnt;              /* Number of items in inventory */
+    s16b equip_cnt;              /* Number of items in equipment */
 
     /*** Temporary fields ***/
 
@@ -325,12 +325,12 @@ struct player_type {
 
     POSITION old_lite; /* Old radius of lite (if any) */
 
-    bool cumber_armor; /* Mana draining armor */
-    bool cumber_glove; /* Mana draining gloves */
-    bool heavy_wield[2]; /* Heavy weapon */
-    bool icky_wield[2]; /* Icky weapon */
+    bool cumber_armor;    /* Mana draining armor */
+    bool cumber_glove;    /* Mana draining gloves */
+    bool heavy_wield[2];  /* Heavy weapon */
+    bool icky_wield[2];   /* Icky weapon */
     bool riding_wield[2]; /* Riding weapon */
-    bool riding_ryoute; /* Riding weapon */
+    bool riding_ryoute;   /* Riding weapon */
     bool monlite;
     BIT_FLAGS yoiyami;
     BIT_FLAGS easy_2weapon;
@@ -338,9 +338,9 @@ struct player_type {
 
     POSITION cur_lite; /* Radius of lite (if any) */
 
-    BIT_FLAGS update; /* Pending Updates */
-    BIT_FLAGS redraw; /* Normal Redraws */
-    BIT_FLAGS window; /* Window Redraws */
+    BIT_FLAGS update;     /* Pending Updates */
+    BIT_FLAGS redraw;     /* Normal Redraws */
+    BIT_FLAGS window;     /* Window Redraws */
     s16b stat_use[A_MAX]; /* Current modified stats */
     s16b stat_top[A_MAX]; /* Maximal modified stats */
 
@@ -357,7 +357,7 @@ struct player_type {
 
     /*** Extracted fields ***/
 
-    s16b running; /* Current counter for running, if any */
+    s16b running;               /* Current counter for running, if any */
     bool suppress_multi_reward; /*!< 複数レベルアップ時のパトロンからの報酬多重受け取りを防止 */
 
     s16b stat_add[A_MAX]; /* Modifiers to stat values */
@@ -368,17 +368,17 @@ struct player_type {
     bool level_up_message;
 
     BIT_FLAGS anti_magic; /* Anti-magic */
-    BIT_FLAGS anti_tele; /* Prevent teleportation */
+    BIT_FLAGS anti_tele;  /* Prevent teleportation */
 
     BIT_FLAGS cursed; /* Player is cursed */
 
-    bool can_swim; /* No damage falling */
+    bool can_swim;        /* No damage falling */
     BIT_FLAGS levitation; /* No damage falling */
-    BIT_FLAGS lite; /* Permanent light */
-    BIT_FLAGS free_act; /* Never paralyzed */
-    BIT_FLAGS see_inv; /* Can see invisible */
+    BIT_FLAGS lite;       /* Permanent light */
+    BIT_FLAGS free_act;   /* Never paralyzed */
+    BIT_FLAGS see_inv;    /* Can see invisible */
     BIT_FLAGS regenerate; /* Regenerate hit pts */
-    BIT_FLAGS hold_exp; /* Resist exp draining */
+    BIT_FLAGS hold_exp;   /* Resist exp draining */
 
     BIT_FLAGS telepathy; /* Telepathy */
     BIT_FLAGS esp_animal;
@@ -396,8 +396,8 @@ struct player_type {
 
     BIT_FLAGS slow_digest; /* Slower digestion */
     BIT_FLAGS bless_blade; /* Blessed blade */
-    BIT_FLAGS xtra_might; /* Extra might bow */
-    BIT_FLAGS impact; /* Earthquake blows */
+    BIT_FLAGS xtra_might;  /* Extra might bow */
+    BIT_FLAGS impact;      /* Earthquake blows */
     BIT_FLAGS dec_mana;
     BIT_FLAGS easy_spell;
     BIT_FLAGS heavy_spell;
@@ -409,17 +409,17 @@ struct player_type {
     DICE_NUMBER to_dd[2]; /* Extra dice/sides */
     DICE_SID to_ds[2];
 
-    HIT_PROB dis_to_h[2]; /*!< 判明している現在の表記上の近接武器命中修正値 /  Known bonus to hit (wield) */
-    HIT_PROB dis_to_h_b; /*!< 判明している現在の表記上の射撃武器命中修正値 / Known bonus to hit (bow) */
+    HIT_PROB dis_to_h[2];  /*!< 判明している現在の表記上の近接武器命中修正値 /  Known bonus to hit (wield) */
+    HIT_PROB dis_to_h_b;   /*!< 判明している現在の表記上の射撃武器命中修正値 / Known bonus to hit (bow) */
     HIT_POINT dis_to_d[2]; /*!< 判明している現在の表記上の近接武器ダメージ修正値 / Known bonus to dam (wield) */
     ARMOUR_CLASS dis_to_a; /*!< 判明している現在の表記上の装備AC修正値 / Known bonus to ac */
-    ARMOUR_CLASS dis_ac; /*!< 判明している現在の表記上の装備AC基礎値 / Known base ac */
+    ARMOUR_CLASS dis_ac;   /*!< 判明している現在の表記上の装備AC基礎値 / Known base ac */
 
-    s16b to_h[2]; /* Bonus to hit (wield) */
-    s16b to_h_b; /* Bonus to hit (bow) */
-    s16b to_h_m; /* Bonus to hit (misc) */
-    s16b to_d[2]; /* Bonus to dam (wield) */
-    s16b to_d_m; /* Bonus to dam (misc) */
+    s16b to_h[2];      /* Bonus to hit (wield) */
+    s16b to_h_b;       /* Bonus to hit (bow) */
+    s16b to_h_m;       /* Bonus to hit (misc) */
+    s16b to_d[2];      /* Bonus to dam (wield) */
+    s16b to_d_m;       /* Bonus to dam (misc) */
     ARMOUR_CLASS to_a; /* Bonus to ac */
 
     s16b to_m_chance; /* Minusses to cast chance */
@@ -449,7 +449,7 @@ struct player_type {
     ACTION_SKILL_POWER skill_dig; /*!< 行動技能値:掘削 / Skill: Digging */
 
     s16b num_blow[2]; /* Number of blows */
-    s16b num_fire; /* Number of shots */
+    s16b num_fire;    /* Number of shots */
 
     byte tval_xtra; /* (Unused)Correct xtra tval */
     byte tval_ammo; /* Correct ammo tval */
@@ -458,8 +458,8 @@ struct player_type {
 
     ENERGY energy_use; /*!< 直近のターンに消費したエネルギー / Energy use this turn */
 
-    POSITION y; /*!< ダンジョンの現在Y座標 / Player location in dungeon */
-    POSITION x; /*!< ダンジョンの現在X座標 / Player location in dungeon */
+    POSITION y;         /*!< ダンジョンの現在Y座標 / Player location in dungeon */
+    POSITION x;         /*!< ダンジョンの現在X座標 / Player location in dungeon */
     GAME_TEXT name[32]; /*!< 現在のプレイヤー名 / Current player's character name */
     char base_name[32]; /*!< Stripped version of "player_name" */
 };
@@ -508,21 +508,21 @@ bool is_echizen(player_type* creature_ptr);
 /*
  * Player "food" crucial values
  */
-#define PY_FOOD_MAX 15000 /*!< 食べ過ぎ～満腹の閾値 / Food value (Bloated) */
+#define PY_FOOD_MAX 15000  /*!< 食べ過ぎ～満腹の閾値 / Food value (Bloated) */
 #define PY_FOOD_FULL 10000 /*!< 満腹～平常の閾値 / Food value (Normal) */
 #define PY_FOOD_ALERT 2000 /*!< 平常～空腹の閾値 / Food value (Hungry) */
-#define PY_FOOD_WEAK 1000 /*!< 空腹～衰弱の閾値 / Food value (Weak) */
-#define PY_FOOD_FAINT 500 /*!< 衰弱～衰弱(赤表示/麻痺)の閾値 / Food value (Fainting) */
+#define PY_FOOD_WEAK 1000  /*!< 空腹～衰弱の閾値 / Food value (Weak) */
+#define PY_FOOD_FAINT 500  /*!< 衰弱～衰弱(赤表示/麻痺)の閾値 / Food value (Fainting) */
 #define PY_FOOD_STARVE 100 /*!< 衰弱(赤表示/麻痺)～飢餓ダメージの閾値 / Food value (Starving) */
 
 /*
  * Player regeneration constants
  */
-#define PY_REGEN_NORMAL 197 /* Regen factor*2^16 when full */
-#define PY_REGEN_WEAK 98 /* Regen factor*2^16 when weak */
-#define PY_REGEN_FAINT 33 /* Regen factor*2^16 when fainting */
+#define PY_REGEN_NORMAL 197  /* Regen factor*2^16 when full */
+#define PY_REGEN_WEAK 98     /* Regen factor*2^16 when weak */
+#define PY_REGEN_FAINT 33    /* Regen factor*2^16 when fainting */
 #define PY_REGEN_HPBASE 1442 /* Min amount hp regen*2^16 */
-#define PY_REGEN_MNBASE 524 /* Min amount mana regen*2^16 */
+#define PY_REGEN_MNBASE 524  /* Min amount mana regen*2^16 */
 
 extern void stop_singing(player_type* creature_ptr);
 extern void stop_mouth(player_type* caster_ptr);

@@ -602,10 +602,10 @@ void wilderness_gen_small(player_type* creature_ptr) {
 
 typedef struct wilderness_grid {
     wt_type terrain; /* Terrain type */
-    TOWN_IDX town; /* Town number */
-    DEPTH level; /* Level of the wilderness */
-    byte road; /* Road */
-    char name[32]; /* Name of the town/wilderness */
+    TOWN_IDX town;   /* Town number */
+    DEPTH level;     /* Level of the wilderness */
+    byte road;       /* Road */
+    char name[32];   /* Name of the town/wilderness */
 } wilderness_grid;
 
 static wilderness_grid w_letter[255];

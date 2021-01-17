@@ -39,7 +39,7 @@
  */
 static void next_mirror(player_type* creature_ptr, POSITION* next_y, POSITION* next_x, POSITION cury, POSITION curx) {
     POSITION mirror_x[10], mirror_y[10]; /* 鏡はもっと少ない */
-    int mirror_num = 0; /* 鏡の数 */
+    int mirror_num = 0;                  /* 鏡の数 */
     for (POSITION x = 0; x < creature_ptr->current_floor_ptr->width; x++) {
         for (POSITION y = 0; y < creature_ptr->current_floor_ptr->height; y++) {
             if (is_mirror_grid(&creature_ptr->current_floor_ptr->grid_array[y][x])) {

@@ -9,7 +9,7 @@ bool speed_monster(player_type* caster_ptr, DIRECTION dir, int power);
 bool slow_monster(player_type* caster_ptr, DIRECTION dir, int power);
 bool sleep_monster(player_type* caster_ptr, DIRECTION dir, int power);
 bool stasis_monster(player_type* caster_ptr, DIRECTION dir); /* Like sleep, affects undead as well */
-bool stasis_evil(player_type* caster_ptr, DIRECTION dir); /* Like sleep, affects undead as well */
+bool stasis_evil(player_type* caster_ptr, DIRECTION dir);    /* Like sleep, affects undead as well */
 bool confuse_monster(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev);
 bool stun_monster(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev);
 bool fear_monster(player_type* caster_ptr, DIRECTION dir, PLAYER_LEVEL plev);

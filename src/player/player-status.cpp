@@ -3380,7 +3380,7 @@ static DICE_NUMBER calc_to_weapon_dice_num(player_type* creature_ptr, INVENTORY_
 
 static DICE_NUMBER calc_to_weapon_dice_side(player_type* creature_ptr, INVENTORY_IDX slot) {
     (void)creature_ptr; // unused
-    (void)slot; // unused
+    (void)slot;         // unused
     return 0;
 }
 

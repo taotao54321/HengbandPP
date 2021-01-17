@@ -25,9 +25,9 @@ typedef struct alloc_entry {
     KIND_OBJECT_IDX index; /* The actual index */
 
     DEPTH level; /* Base dungeon level */
-    PROB prob1; /* Probability, pass 1 */
-    PROB prob2; /* Probability, pass 2 */
-    PROB prob3; /* Probability, pass 3 */
+    PROB prob1;  /* Probability, pass 1 */
+    PROB prob2;  /* Probability, pass 2 */
+    PROB prob3;  /* Probability, pass 3 */
 
     u16b total; /* Unused for now */
 } alloc_entry;

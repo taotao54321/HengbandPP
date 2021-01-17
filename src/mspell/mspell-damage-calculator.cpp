@@ -411,7 +411,7 @@ static HIT_POINT monspell_damage_base(
  */
 void monspell_shoot_dice(monster_race* r_ptr, int* dd, int* ds) {
     int p = -1; /* Position of SHOOT */
-    int n = 0; /* Number of blows */
+    int n = 0;  /* Number of blows */
     const int max_blows = 4;
     for (int m = 0; m < max_blows; m++) {
         if (r_ptr->blow[m].method != RBM_NONE)

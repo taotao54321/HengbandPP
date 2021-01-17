@@ -3,7 +3,7 @@
 #include "system/angband.h"
 
 /* Flags for save/load temporary saved floor file */
-#define SLF_SECOND 0x0001 /* Called from another save/load function */
+#define SLF_SECOND 0x0001  /* Called from another save/load function */
 #define SLF_NO_KILL 0x0002 /* Don't kill temporary files */
 
 typedef struct saved_floor_type saved_floor_type;

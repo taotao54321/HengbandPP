@@ -1,14 +1,14 @@
 ﻿#pragma once
 
 typedef enum race_flags4 {
-    RF4_SHRIEK = 0x00000001, /*!< モンスター能力: 叫ぶ / Shriek for help */
-    RF4_XXX1 = 0x00000002, /*!< モンスター能力: 未使用 / XXX */
-    RF4_DISPEL = 0x00000004, /*!< モンスター能力: 魔力消去 / Dispel magic */
-    RF4_ROCKET = 0x00000008, /*!< モンスター能力: ロケット / TY: Rocket */
-    RF4_SHOOT = 0x00000010, /*!< モンスター能力: 射撃/ Fire missiles */
-    RF4_XXX2 = 0x00000020, /*!< モンスター能力: 未使用 / XXX */
-    RF4_XXX3 = 0x00000040, /*!< モンスター能力: 未使用 / XXX */
-    RF4_XXX4 = 0x00000080, /*!< モンスター能力: 未使用 / XXX */
+    RF4_SHRIEK = 0x00000001,  /*!< モンスター能力: 叫ぶ / Shriek for help */
+    RF4_XXX1 = 0x00000002,    /*!< モンスター能力: 未使用 / XXX */
+    RF4_DISPEL = 0x00000004,  /*!< モンスター能力: 魔力消去 / Dispel magic */
+    RF4_ROCKET = 0x00000008,  /*!< モンスター能力: ロケット / TY: Rocket */
+    RF4_SHOOT = 0x00000010,   /*!< モンスター能力: 射撃/ Fire missiles */
+    RF4_XXX2 = 0x00000020,    /*!< モンスター能力: 未使用 / XXX */
+    RF4_XXX3 = 0x00000040,    /*!< モンスター能力: 未使用 / XXX */
+    RF4_XXX4 = 0x00000080,    /*!< モンスター能力: 未使用 / XXX */
     RF4_BR_ACID = 0x00000100, /*!< モンスター能力: 酸のブレス / Breathe Acid */
     RF4_BR_ELEC = 0x00000200, /*!< モンスター能力: 電撃のブレス / Breathe Elec */
     RF4_BR_FIRE = 0x00000400, /*!< モンスター能力: 火炎のブレス / Breathe Fire */

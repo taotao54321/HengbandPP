@@ -11,7 +11,7 @@ typedef enum sv_soft_armor_type {
     SV_HARD_LEATHER_ARMOR = 6,
     SV_HARD_STUDDED_LEATHER = 7,
     SV_RHINO_HIDE_ARMOR = 8,
-    SV_CORD_ARMOR = 9, /*  6 */
+    SV_CORD_ARMOR = 9,    /*  6 */
     SV_PADDED_ARMOR = 10, /*  4 */
     SV_LEATHER_SCALE_MAIL = 11,
     SV_LEATHER_JACK = 12,
@@ -24,26 +24,26 @@ typedef enum sv_soft_armor_type {
 
 /* The "sval" codes for TV_HARD_ARMOR */
 typedef enum sv_hard_armor_type {
-    SV_RUSTY_CHAIN_MAIL = 1, /* 14- */
-    SV_RING_MAIL = 2, /* 12  */
-    SV_METAL_SCALE_MAIL = 3, /* 13  */
-    SV_CHAIN_MAIL = 4, /* 14  */
-    SV_DOUBLE_RING_MAIL = 5, /* 15  */
-    SV_AUGMENTED_CHAIN_MAIL = 6, /* 16  */
-    SV_DOUBLE_CHAIN_MAIL = 7, /* 16  */
-    SV_BAR_CHAIN_MAIL = 8, /* 18  */
+    SV_RUSTY_CHAIN_MAIL = 1,        /* 14- */
+    SV_RING_MAIL = 2,               /* 12  */
+    SV_METAL_SCALE_MAIL = 3,        /* 13  */
+    SV_CHAIN_MAIL = 4,              /* 14  */
+    SV_DOUBLE_RING_MAIL = 5,        /* 15  */
+    SV_AUGMENTED_CHAIN_MAIL = 6,    /* 16  */
+    SV_DOUBLE_CHAIN_MAIL = 7,       /* 16  */
+    SV_BAR_CHAIN_MAIL = 8,          /* 18  */
     SV_METAL_BRIGANDINE_ARMOUR = 9, /* 19  */
-    SV_SPLINT_MAIL = 10, /* 19  */
-    SV_DO_MARU = 11, /* 20  */
-    SV_PARTIAL_PLATE_ARMOUR = 12, /* 22  */
-    SV_METAL_LAMELLAR_ARMOUR = 13, /* 23  */
-    SV_HARAMAKIDO = 14, /* 17  */
-    SV_FULL_PLATE_ARMOUR = 15, /* 25  */
-    SV_O_YOROI = 16, /* 24  */
-    SV_RIBBED_PLATE_ARMOUR = 18, /* 28  */
-    SV_MITHRIL_CHAIN_MAIL = 20, /* 28+ */
-    SV_MITHRIL_PLATE_MAIL = 25, /* 35+ */
-    SV_ADAMANTITE_PLATE_MAIL = 30, /* 40+ */
+    SV_SPLINT_MAIL = 10,            /* 19  */
+    SV_DO_MARU = 11,                /* 20  */
+    SV_PARTIAL_PLATE_ARMOUR = 12,   /* 22  */
+    SV_METAL_LAMELLAR_ARMOUR = 13,  /* 23  */
+    SV_HARAMAKIDO = 14,             /* 17  */
+    SV_FULL_PLATE_ARMOUR = 15,      /* 25  */
+    SV_O_YOROI = 16,                /* 24  */
+    SV_RIBBED_PLATE_ARMOUR = 18,    /* 28  */
+    SV_MITHRIL_CHAIN_MAIL = 20,     /* 28+ */
+    SV_MITHRIL_PLATE_MAIL = 25,     /* 35+ */
+    SV_ADAMANTITE_PLATE_MAIL = 30,  /* 40+ */
 } sv_hard_armor_type;
 
 /* The "sval" codes for TV_DRAG_ARMOR */

@@ -20,8 +20,8 @@
 
 /**** Simple "Macros" ****/
 #ifdef JP
-#define lbtokg(x) ((int)((x)*5)) /*!< 変愚蛮怒基準のポンド→キログラム変換定義(全体) */
-#define lbtokg1(x) (lbtokg(x) / 100) /*!< 変愚蛮怒基準のポンド→キログラム変換定義(整数部) */
+#define lbtokg(x) ((int)((x)*5))            /*!< 変愚蛮怒基準のポンド→キログラム変換定義(全体) */
+#define lbtokg1(x) (lbtokg(x) / 100)        /*!< 変愚蛮怒基準のポンド→キログラム変換定義(整数部) */
 #define lbtokg2(x) ((lbtokg(x) % 100) / 10) /*!< 変愚蛮怒基準のポンド→キログラム変換定義(少数部) */
 #endif
 

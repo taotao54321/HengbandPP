@@ -54,8 +54,8 @@ bool eval_ac(ARMOUR_CLASS iAC) {
 
     for (col = 17 + 1, lvl = 0; lvl <= 100; lvl += 10, col += 5) {
         int quality = 60 + lvl * 3; /* attack quality with power 60 */
-        int dodge; /* 回避率(%) */
-        int average; /* ダメージ期待値 */
+        int dodge;                  /* 回避率(%) */
+        int average;                /* ダメージ期待値 */
 
         put_str(format("%3d", lvl), row + 0, col);
 

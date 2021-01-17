@@ -4,20 +4,20 @@
  * todo TRが何の略か分かる人、補足求む
  */
 enum tr_type {
-    TR_STR = 0, /* STR += "pval" */
-    TR_INT = 1, /* INT += "pval" */
-    TR_WIS = 2, /* WIS += "pval" */
-    TR_DEX = 3, /* DEX += "pval" */
-    TR_CON = 4, /* CON += "pval" */
-    TR_CHR = 5, /* CHR += "pval" */
+    TR_STR = 0,           /* STR += "pval" */
+    TR_INT = 1,           /* INT += "pval" */
+    TR_WIS = 2,           /* WIS += "pval" */
+    TR_DEX = 3,           /* DEX += "pval" */
+    TR_CON = 4,           /* CON += "pval" */
+    TR_CHR = 5,           /* CHR += "pval" */
     TR_MAGIC_MASTERY = 6, /* 魔道具使用能力向上 */
-    TR_FORCE_WEAPON = 7, /* Later */
-    TR_STEALTH = 8, /* Stealth += "pval" */
-    TR_SEARCH = 9, /* Search += "pval" */
-    TR_INFRA = 10, /* Infra += "pval" */
-    TR_TUNNEL = 11, /* Tunnel += "pval" */
-    TR_SPEED = 12, /* Speed += "pval" */
-    TR_BLOWS = 13, /* Blows += "pval" */
+    TR_FORCE_WEAPON = 7,  /* Later */
+    TR_STEALTH = 8,       /* Stealth += "pval" */
+    TR_SEARCH = 9,        /* Search += "pval" */
+    TR_INFRA = 10,        /* Infra += "pval" */
+    TR_TUNNEL = 11,       /* Tunnel += "pval" */
+    TR_SPEED = 12,        /* Speed += "pval" */
+    TR_BLOWS = 13,        /* Blows += "pval" */
     TR_CHAOTIC = 14,
     TR_VAMPIRIC = 15,
     TR_SLAY_ANIMAL = 16,
@@ -29,8 +29,8 @@ enum tr_type {
     TR_SLAY_GIANT = 22,
     TR_SLAY_DRAGON = 23,
     TR_KILL_DRAGON = 24, /* Execute Dragon */
-    TR_VORPAL = 25, /* Later */
-    TR_IMPACT = 26, /* Cause Earthquakes */
+    TR_VORPAL = 25,      /* Later */
+    TR_IMPACT = 26,      /* Cause Earthquakes */
     TR_BRAND_POIS = 27,
     TR_BRAND_ACID = 28,
     TR_BRAND_ELEC = 29,
@@ -49,8 +49,8 @@ enum tr_type {
     TR_IM_ELEC = 41,
     TR_IM_FIRE = 42,
     TR_IM_COLD = 43,
-    TR_THROW = 44, /* 強力投擲 */
-    TR_REFLECT = 45, /* Reflect 'bolts' */
+    TR_THROW = 44,    /* 強力投擲 */
+    TR_REFLECT = 45,  /* Reflect 'bolts' */
     TR_FREE_ACT = 46, /* 耐麻痺 */
     TR_HOLD_EXP = 47, /* 経験値維持 */
     TR_RES_ACID = 48,
@@ -70,37 +70,37 @@ enum tr_type {
     TR_RES_CHAOS = 62,
     TR_RES_DISEN = 63,
 
-    TR_SH_FIRE = 64, /* Immolation (Fire) */
-    TR_SH_ELEC = 65, /* Electric Sheath */
+    TR_SH_FIRE = 64,    /* Immolation (Fire) */
+    TR_SH_ELEC = 65,    /* Electric Sheath */
     TR_SLAY_HUMAN = 66, /* Slay human */
-    TR_SH_COLD = 67, /* cold aura */
-    TR_NO_TELE = 68, /* 反テレポート */
-    TR_NO_MAGIC = 69, /* 反魔法 */
-    TR_DEC_MANA = 70, /* 消費魔力減少 */
-    TR_TY_CURSE = 71, /* The Ancient Curse */
-    TR_WARNING = 72, /* Warning */
-    TR_HIDE_TYPE = 73, /* Hide "pval" description */
-    TR_SHOW_MODS = 74, /* Always show Tohit/Todam */
+    TR_SH_COLD = 67,    /* cold aura */
+    TR_NO_TELE = 68,    /* 反テレポート */
+    TR_NO_MAGIC = 69,   /* 反魔法 */
+    TR_DEC_MANA = 70,   /* 消費魔力減少 */
+    TR_TY_CURSE = 71,   /* The Ancient Curse */
+    TR_WARNING = 72,    /* Warning */
+    TR_HIDE_TYPE = 73,  /* Hide "pval" description */
+    TR_SHOW_MODS = 74,  /* Always show Tohit/Todam */
     TR_SLAY_GOOD = 75,
-    TR_LEVITATION = 76, /* Feather Falling */
-    TR_LITE_1 = 77, /* Light Radius 1*/
-    TR_SEE_INVIS = 78, /* See Invisible */
-    TR_TELEPATHY = 79, /* Telepathy */
+    TR_LEVITATION = 76,  /* Feather Falling */
+    TR_LITE_1 = 77,      /* Light Radius 1*/
+    TR_SEE_INVIS = 78,   /* See Invisible */
+    TR_TELEPATHY = 79,   /* Telepathy */
     TR_SLOW_DIGEST = 80, /* Item slows down digestion */
-    TR_REGEN = 81, /* Item induces regeneration */
-    TR_XTRA_MIGHT = 82, /* Bows get extra multiplier */
-    TR_XTRA_SHOTS = 83, /* Bows get extra shots */
+    TR_REGEN = 81,       /* Item induces regeneration */
+    TR_XTRA_MIGHT = 82,  /* Bows get extra multiplier */
+    TR_XTRA_SHOTS = 83,  /* Bows get extra shots */
     TR_IGNORE_ACID = 84, /* Item ignores Acid Damage */
     TR_IGNORE_ELEC = 85, /* Item ignores Elec Damage */
     TR_IGNORE_FIRE = 86, /* Item ignores Fire Damage */
     TR_IGNORE_COLD = 87, /* Item ignores Cold Damage */
-    TR_ACTIVATE = 88, /* Item can be activated */
-    TR_DRAIN_EXP = 89, /* Item drains Experience */
-    TR_TELEPORT = 90, /* Item teleports player */
-    TR_AGGRAVATE = 91, /* Item aggravates monsters */
-    TR_BLESSED = 92, /* Item is Blessed */
-    TR_ES_ATTACK = 93, /* Fake flag for Smith */
-    TR_ES_AC = 94, /* Fake flag for Smith */
+    TR_ACTIVATE = 88,    /* Item can be activated */
+    TR_DRAIN_EXP = 89,   /* Item drains Experience */
+    TR_TELEPORT = 90,    /* Item teleports player */
+    TR_AGGRAVATE = 91,   /* Item aggravates monsters */
+    TR_BLESSED = 92,     /* Item is Blessed */
+    TR_ES_ATTACK = 93,   /* Fake flag for Smith */
+    TR_ES_AC = 94,       /* Fake flag for Smith */
     TR_KILL_GOOD = 95,
 
     TR_KILL_ANIMAL = 96,
@@ -131,9 +131,9 @@ enum tr_type {
     TR_DRAIN_MANA = 121,
     TR_LITE_2 = 122,
     TR_LITE_3 = 123,
-    TR_LITE_M1 = 124, /* Permanent decrease Light Area (-1) */
-    TR_LITE_M2 = 125, /* Permanent decrease Light Area (-1) */
-    TR_LITE_M3 = 126, /* Permanent decrease Light Area (-1) */
+    TR_LITE_M1 = 124,   /* Permanent decrease Light Area (-1) */
+    TR_LITE_M2 = 125,   /* Permanent decrease Light Area (-1) */
+    TR_LITE_M3 = 126,   /* Permanent decrease Light Area (-1) */
     TR_LITE_FUEL = 127, /* Lights need Fuels */
 
     TR_CALL_ANIMAL = 128,

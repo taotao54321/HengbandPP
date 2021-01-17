@@ -406,9 +406,9 @@ const concptr player_title[MAX_CLASS][PY_MAX_LEVEL / 5] = {
         "熟練僧",
         "聖職者", /*聖職者 */
         "伝道師", /*司祭評議員、修道会会員 */
-        "牧師", /*ラマ教の僧 */
-        "聖人", /*大司教、総主教、総大司教 */
-        "祭司", /*祭司、司祭 */
+        "牧師",   /*ラマ教の僧 */
+        "聖人",   /*大司教、総主教、総大司教 */
+        "祭司",   /*祭司、司祭 */
         "祭司長", /*大祭司、祭司長 */
         "教皇",
     },
@@ -418,14 +418,14 @@ const concptr player_title[MAX_CLASS][PY_MAX_LEVEL / 5] = {
         /* "ごろつき",*/ /*ごろつき、風来坊、浮浪者 */
         "すり",
         "追いはぎ", /*追い剥ぎ、強盗、泥棒 */
-        "夜盗", /*強盗、夜盗、泥棒 */
-        "こそ泥", /*こそ泥、小泥棒 */
+        "夜盗",     /*強盗、夜盗、泥棒 */
+        "こそ泥",   /*こそ泥、小泥棒 */
         "ペテン師", /*博徒、ペテン師、詐欺師 */
         "ロウシーフ",
         "ハイシーフ",
         "マスター", /* "マスターシーフ", */
         "アサシン", /* 暗殺者 */
-        "頭領", /*"ギルドマスター",*/
+        "頭領",     /*"ギルドマスター",*/
     },
 
     /* Rangers */
@@ -615,16 +615,16 @@ const concptr player_title[MAX_CLASS][PY_MAX_LEVEL / 5] = {
 
     /* Bard */
     {
-        "見習い", /*"Apprentice"*/
-        "作曲家", /*"Songsmith"*/
-        "吟遊詩人", /*"Bard"*/
+        "見習い",       /*"Apprentice"*/
+        "作曲家",       /*"Songsmith"*/
+        "吟遊詩人",     /*"Bard"*/
         "コンパニオン", /*"Companion"*/
-        "心の癒し手", /*"Minstrel"*/
-        "竪琴師", /*"Harper"*/
+        "心の癒し手",   /*"Minstrel"*/
+        "竪琴師",       /*"Harper"*/
         "伝承の紡ぎ手", /*"Loreweaver"*/
         "詩神の申し子", /*"Muse"*/
-        "夢紡ぎ", /*"Dreamweaver"*/
-        "マスター", /*"Master Harper"*/
+        "夢紡ぎ",       /*"Dreamweaver"*/
+        "マスター",     /*"Master Harper"*/
     },
 
     /* Red Mage; same as Warrior-Mage */
@@ -1011,15 +1011,15 @@ const concptr player_title[MAX_CLASS][PY_MAX_LEVEL / 5] = {
 
     /* Bard */
     {
-        "Apprentice", /*"Apprentice"*/
-        "Songsmith", /*"Songsmith"*/
-        "Bard", /*"Bard"*/
-        "Companion", /*"Companion"*/
-        "Minstrel", /*"Minstrel"*/
-        "Harper", /*"Harper"*/
-        "Loreweaver", /*"Loreweaver"*/
-        "Muse", /*"Muse"*/
-        "Dreamweaver", /*"Dreamweaver"*/
+        "Apprentice",    /*"Apprentice"*/
+        "Songsmith",     /*"Songsmith"*/
+        "Bard",          /*"Bard"*/
+        "Companion",     /*"Companion"*/
+        "Minstrel",      /*"Minstrel"*/
+        "Harper",        /*"Harper"*/
+        "Loreweaver",    /*"Loreweaver"*/
+        "Muse",          /*"Muse"*/
+        "Dreamweaver",   /*"Dreamweaver"*/
         "Master Harper", /*"Master Harper"*/
     },
 

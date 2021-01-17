@@ -100,7 +100,7 @@ void remove_all_mirrors(player_type* caster_ptr, bool explode) {
  */
 bool binding_field(player_type* caster_ptr, HIT_POINT dam) {
     POSITION mirror_x[10], mirror_y[10]; /* 鏡はもっと少ない */
-    int mirror_num = 0; /* 鏡の数 */
+    int mirror_num = 0;                  /* 鏡の数 */
     int msec = delay_factor * delay_factor * delay_factor;
 
     /* 三角形の頂点 */

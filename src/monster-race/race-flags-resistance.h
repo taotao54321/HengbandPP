@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 typedef enum race_flags_resistance {
-    RFR_IM_ACID = 0x00000001, /* Immunity acid */
-    RFR_IM_ELEC = 0x00000002, /* Immunity elec */
-    RFR_IM_FIRE = 0x00000004, /* Immunity fire */
-    RFR_IM_COLD = 0x00000008, /* Immunity cold */
-    RFR_IM_POIS = 0x00000010, /* Immunity poison */
+    RFR_IM_ACID = 0x00000001,  /* Immunity acid */
+    RFR_IM_ELEC = 0x00000002,  /* Immunity elec */
+    RFR_IM_FIRE = 0x00000004,  /* Immunity fire */
+    RFR_IM_COLD = 0x00000008,  /* Immunity cold */
+    RFR_IM_POIS = 0x00000010,  /* Immunity poison */
     RFR_RES_LITE = 0x00000020, /* Resist lite */
     RFR_RES_DARK = 0x00000040, /* Resist dark */
     RFR_RES_NETH = 0x00000080, /* Resist nether */
@@ -20,7 +20,7 @@ typedef enum race_flags_resistance {
     RFR_RES_INER = 0x00010000, /* Resist inertia */
     RFR_RES_TIME = 0x00020000, /* Resist time */
     RFR_RES_GRAV = 0x00040000, /* Resist gravity */
-    RFR_RES_ALL = 0x00080000, /* Resist all */
+    RFR_RES_ALL = 0x00080000,  /* Resist all */
     RFR_RES_TELE = 0x00100000, /* Resist teleportation */
     RFR_XXX21 = 0x00200000,
     RFR_XXX22 = 0x00400000,

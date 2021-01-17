@@ -7,7 +7,7 @@ typedef struct vault_type {
     STR_OFFSET text; /* Text (offset) */
 
     ROOM_IDX typ; /* Vault type */
-    PROB rat; /* Vault rating (unused) */
+    PROB rat;     /* Vault rating (unused) */
     POSITION hgt; /* Vault height */
     POSITION wid; /* Vault width */
 } vault_type;

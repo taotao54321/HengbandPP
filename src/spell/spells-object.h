@@ -14,7 +14,7 @@ bool perilous_secrets(player_type* user_ptr);
  */
 #define ENCH_TOHIT 0x01 /*!< 装備強化処理: 命中強化 / Enchant to hit */
 #define ENCH_TODAM 0x02 /*!< 装備強化処理: ダメージ強化 / Enchant to damage */
-#define ENCH_TOAC 0x04 /*!< 装備強化処理: AC強化 / Enchant to AC */
+#define ENCH_TOAC 0x04  /*!< 装備強化処理: AC強化 / Enchant to AC */
 #define ENCH_FORCE 0x08 /*!< 装備強化処理: 無条件に成功させる / Force enchantment */
 bool enchant(player_type* caster_ptr, object_type* o_ptr, int n, int eflag);
 bool enchant_spell(player_type* caster_ptr, HIT_PROB num_hit, HIT_POINT num_dam, ARMOUR_CLASS num_ac);

@@ -6,8 +6,8 @@
 
 FILE* loading_savefile;
 byte load_xor_byte; // Old "encryption" byte.
-u32b v_check = 0L; // Simple "checksum" on the actual values.
-u32b x_check = 0L; // Simple "checksum" on the encoded bytes.
+u32b v_check = 0L;  // Simple "checksum" on the actual values.
+u32b x_check = 0L;  // Simple "checksum" on the encoded bytes.
 
 /*
  * Japanese Kanji code

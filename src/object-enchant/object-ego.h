@@ -219,13 +219,13 @@ typedef struct ego_item_type {
     STR_OFFSET text; /* Text (offset) */
 
     INVENTORY_IDX slot; /*!< 装備部位 / Standard slot value */
-    PRICE rating; /*!< ベースアイテムからの価値加速 / Rating boost */
+    PRICE rating;       /*!< ベースアイテムからの価値加速 / Rating boost */
 
-    DEPTH level; /* Minimum level */
+    DEPTH level;   /* Minimum level */
     RARITY rarity; /* Object rarity */
 
-    HIT_PROB max_to_h; /* Maximum to-hit bonus */
-    HIT_POINT max_to_d; /* Maximum to-dam bonus */
+    HIT_PROB max_to_h;     /* Maximum to-hit bonus */
+    HIT_POINT max_to_d;    /* Maximum to-dam bonus */
     ARMOUR_CLASS max_to_a; /* Maximum to-ac bonus */
 
     PARAMETER_VALUE max_pval; /* Maximum pval */
@@ -233,7 +233,7 @@ typedef struct ego_item_type {
     PRICE cost; /* Ego-item "cost" */
 
     BIT_FLAGS flags[TR_FLAG_SIZE]; /* Ego-Item Flags */
-    BIT_FLAGS gen_flags; /* flags for generate */
+    BIT_FLAGS gen_flags;           /* flags for generate */
 
     IDX act_idx; /* Activative ability index */
 } ego_item_type;

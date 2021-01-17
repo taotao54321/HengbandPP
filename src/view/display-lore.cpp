@@ -510,7 +510,7 @@ void display_monster_launching(player_type* player_ptr, lore_type* lore_ptr) {
         return;
 
     int p = -1; /* Position of SHOOT */
-    int n = 0; /* Number of blows */
+    int n = 0;  /* Number of blows */
     const int max_blows = 4;
     for (int m = 0; m < max_blows; m++) {
         if (lore_ptr->r_ptr->blow[m].method != RBM_NONE)

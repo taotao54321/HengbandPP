@@ -1,9 +1,9 @@
 ﻿#include "save/save-util.h"
 
 FILE* saving_savefile; /* Current save "file" */
-byte save_xor_byte; /* Simple encryption */
-u32b v_stamp = 0L; /* A simple "checksum" on the actual values */
-u32b x_stamp = 0L; /* A simple "checksum" on the encoded bytes */
+byte save_xor_byte;    /* Simple encryption */
+u32b v_stamp = 0L;     /* A simple "checksum" on the actual values */
+u32b x_stamp = 0L;     /* A simple "checksum" on the encoded bytes */
 
 /*!
  * @brief 1バイトをファイルに書き込む / These functions place information into a savefile a byte at a time

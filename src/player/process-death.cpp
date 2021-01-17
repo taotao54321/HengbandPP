@@ -82,7 +82,7 @@ static int show_killing_monster(player_type* dead_ptr, char* buf, char* tomb_mes
         return 0;
 
     char dummy[80];
-    strcpy(dummy, t); /* 2nd line */
+    strcpy(dummy, t);         /* 2nd line */
     if (*(t + strlen(t) + 1)) /* Does 3rd line exist? */
     {
         for (t = dummy + strlen(dummy) - 2; iskanji(*(t - 1)); t--) /* Loop */
@@ -197,7 +197,7 @@ static void show_tomb_detail(player_type* dead_ptr, char* buf) {
         return;
 
     char dummy[80];
-    strcpy(dummy, t); /* 2nd line */
+    strcpy(dummy, t);         /* 2nd line */
     if (*(t + strlen(t) + 1)) /* Does 3rd line exist? */
     {
         int dummy_len = strlen(dummy);

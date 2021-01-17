@@ -47,8 +47,8 @@
 struct grid_type {
     BIT_FLAGS info; /* Hack -- grid flags */
 
-    FEAT_IDX feat; /* Hack -- feature type */
-    OBJECT_IDX o_idx; /* Object in this grid */
+    FEAT_IDX feat;     /* Hack -- feature type */
+    OBJECT_IDX o_idx;  /* Object in this grid */
     MONSTER_IDX m_idx; /* Monster in this grid */
 
     /*! 地形の特別な情報を保存する / Special grid info
@@ -124,11 +124,11 @@ struct grid_template_type {
 #define CAVE_MASK (CAVE_FLOOR | CAVE_EXTRA | CAVE_INNER | CAVE_OUTER | CAVE_SOLID | CAVE_VAULT)
 
 /* Used only after floor generation */
-#define CAVE_KNOWN 0x0200 /* Directly viewed or map detected flag */
-#define CAVE_NOTE 0x0400 /* Flag for delayed visual update (needs note_spot()) */
-#define CAVE_REDRAW 0x0800 /* Flag for delayed visual update (needs lite_spot()) */
-#define CAVE_OBJECT 0x1000 /* Mirror, glyph, etc. */
-#define CAVE_UNSAFE 0x2000 /* Might have trap */
+#define CAVE_KNOWN 0x0200     /* Directly viewed or map detected flag */
+#define CAVE_NOTE 0x0400      /* Flag for delayed visual update (needs note_spot()) */
+#define CAVE_REDRAW 0x0800    /* Flag for delayed visual update (needs lite_spot()) */
+#define CAVE_OBJECT 0x1000    /* Mirror, glyph, etc. */
+#define CAVE_UNSAFE 0x2000    /* Might have trap */
 #define CAVE_IN_DETECT 0x4000 /* trap detected area (inner circle only) */
 
 /* Types of conversions */

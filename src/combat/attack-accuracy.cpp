@@ -138,7 +138,7 @@ bool process_attack_hit(player_type* attacker_ptr, player_attack_type* pa_ptr, i
     if (decide_attack_hit(attacker_ptr, pa_ptr, chance))
         return TRUE;
 
-    pa_ptr->backstab = FALSE; /* Clumsy! */
+    pa_ptr->backstab = FALSE;        /* Clumsy! */
     pa_ptr->surprise_attack = FALSE; /* Clumsy! */
 
     if ((o_ptr->tval == TV_POLEARM) && (o_ptr->sval == SV_DEATH_SCYTHE) && one_in_(3)) {

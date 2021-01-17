@@ -21,7 +21,7 @@ OBJECT_IDX chest_check(floor_type* floor_ptr, POSITION y, POSITION x, bool trapp
         o_ptr = &floor_ptr->o_list[this_o_idx];
         next_o_idx = o_ptr->next_o_idx;
         if ((o_ptr->tval == TV_CHEST)
-            && (((!trapped) && (o_ptr->pval)) || /* non empty */
+            && (((!trapped) && (o_ptr->pval)) ||   /* non empty */
                 ((trapped) && (o_ptr->pval > 0)))) /* trapped only */
             return this_o_idx;
     }

@@ -32,7 +32,7 @@
 #include "term/term-color-types.h"
 #include "util/buffer-shaper.h"
 #include "util/int-char-converter.h"
-#include "view/display-birth.h" // 暫定。後で消す予定。
+#include "view/display-birth.h"  // 暫定。後で消す予定。
 #include "view/display-player.h" // 暫定。後で消す.
 #include "world/world.h"
 

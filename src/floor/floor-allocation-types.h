@@ -10,8 +10,8 @@ enum dap_type {
 /* Dungeon allocation "types" */
 enum dungeon_allocation_type {
     ALLOC_TYP_RUBBLE = 1, /* Rubble */
-    ALLOC_TYP_TRAP = 3, /* Trap */
-    ALLOC_TYP_GOLD = 4, /* Gold */
+    ALLOC_TYP_TRAP = 3,   /* Trap */
+    ALLOC_TYP_GOLD = 4,   /* Gold */
     ALLOC_TYP_OBJECT = 5, /* Object */
-    ALLOC_TYP_INVIS = 6, /* Invisible wall */
+    ALLOC_TYP_INVIS = 6,  /* Invisible wall */
 };

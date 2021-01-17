@@ -23,7 +23,7 @@ typedef struct player_personality {
 
     s16b a_mhp; /* Race hit-dice modifier */
 
-    byte no; /* の */
+    byte no;  /* の */
     byte sex; /* seibetu seigen */
 } player_personality;
 

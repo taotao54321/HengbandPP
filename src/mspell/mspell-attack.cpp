@@ -213,9 +213,9 @@ static bool check_thrown_mspell(player_type* target_ptr, msa_type* msa_ptr) {
         return TRUE;
 
     switch (msa_ptr->thrown_spell) {
-    case 96 + 2: /* RF4_DISPEL */
-    case 96 + 4: /* RF4_SHOOT */
-    case 128 + 9: /* RF5_DRAIN_MANA */
+    case 96 + 2:   /* RF4_DISPEL */
+    case 96 + 4:   /* RF4_SHOOT */
+    case 128 + 9:  /* RF5_DRAIN_MANA */
     case 128 + 10: /* RF5_MIND_BLAST */
     case 128 + 11: /* RF5_BRAIN_SMASH */
     case 128 + 12: /* RF5_CAUSE_1 */
@@ -237,9 +237,9 @@ static bool check_thrown_mspell(player_type* target_ptr, msa_type* msa_ptr) {
     case 128 + 29: /* RF5_CONF */
     case 128 + 30: /* RF5_SLOW */
     case 128 + 31: /* RF5_HOLD */
-    case 160 + 1: /* RF6_HAND_DOOM */
-    case 160 + 8: /* RF6_TELE_TO */
-    case 160 + 9: /* RF6_TELE_AWAY */
+    case 160 + 1:  /* RF6_HAND_DOOM */
+    case 160 + 8:  /* RF6_TELE_TO */
+    case 160 + 9:  /* RF6_TELE_AWAY */
     case 160 + 10: /* RF6_TELE_LEVEL */
     case 160 + 11: /* RF6_PSY_SPEAR */
     case 160 + 12: /* RF6_DARKNESS */

@@ -3,16 +3,16 @@
 
 /*! @brief アイテムの価値記述テーブル */
 const concptr game_inscriptions[MAX_GAME_INSCRIPTIONS] = {
-    NULL, /* FEEL_NONE */
-    _("壊れている", "broken"), /* FEEL_BROKEN */
-    _("恐ろしい", "terrible"), /* FEEL_TERRIBLE */
-    _("無価値", "worthless"), /* FEEL_WORTHLESS */
+    NULL,                        /* FEEL_NONE */
+    _("壊れている", "broken"),   /* FEEL_BROKEN */
+    _("恐ろしい", "terrible"),   /* FEEL_TERRIBLE */
+    _("無価値", "worthless"),    /* FEEL_WORTHLESS */
     _("呪われている", "cursed"), /* FEEL_CURSED */
-    _("上質以上", "uncursed"), /* FEEL_UNCURSED */
-    _("並", "average"), /* FEEL_AVERAGE */
-    _("上質", "good"), /* FEEL_GOOD */
-    _("高級品", "excellent"), /* FEEL_EXCELLENT */
-    _("特別製", "special"), /* FEEL_SPECIAL */
+    _("上質以上", "uncursed"),   /* FEEL_UNCURSED */
+    _("並", "average"),          /* FEEL_AVERAGE */
+    _("上質", "good"),           /* FEEL_GOOD */
+    _("高級品", "excellent"),    /* FEEL_EXCELLENT */
+    _("特別製", "special"),      /* FEEL_SPECIAL */
 };
 
 #ifdef JP

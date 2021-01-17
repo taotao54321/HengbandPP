@@ -66,17 +66,17 @@ static int enchant_table[16] = { 0, 10, 50, 100, 200, 300, 400, 500, 650, 800, 9
  * Scatter some "amusing" objects near the player
  */
 
-#define AMS_NOTHING 0x00 /* No restriction */
+#define AMS_NOTHING 0x00   /* No restriction */
 #define AMS_NO_UNIQUE 0x01 /* Don't make the amusing object of uniques */
 #define AMS_FIXED_ART 0x02 /* Make a fixed artifact based on the amusing object */
-#define AMS_MULTIPLE 0x04 /* Drop 1-3 objects for one type */
-#define AMS_PILE 0x08 /* Drop 1-99 pile objects for one type */
+#define AMS_MULTIPLE 0x04  /* Drop 1-3 objects for one type */
+#define AMS_PILE 0x08      /* Drop 1-99 pile objects for one type */
 
 static amuse_type amuse_info[]
     = { { TV_BOTTLE, SV_ANY, 5, AMS_NOTHING }, { TV_JUNK, SV_ANY, 3, AMS_MULTIPLE }, { TV_SPIKE, SV_ANY, 10, AMS_PILE }, { TV_STATUE, SV_ANY, 15, AMS_NOTHING },
           { TV_CORPSE, SV_ANY, 15, AMS_NO_UNIQUE }, { TV_SKELETON, SV_ANY, 10, AMS_NO_UNIQUE }, { TV_FIGURINE, SV_ANY, 10, AMS_NO_UNIQUE },
           { TV_PARCHMENT, SV_ANY, 1, AMS_NOTHING }, { TV_POLEARM, SV_TSURIZAO, 3, AMS_NOTHING }, // Fishing Pole of Taikobo
-          { TV_SWORD, SV_BROKEN_DAGGER, 3, AMS_FIXED_ART }, // Broken Dagger of Magician
+          { TV_SWORD, SV_BROKEN_DAGGER, 3, AMS_FIXED_ART },                                      // Broken Dagger of Magician
           { TV_SWORD, SV_BROKEN_DAGGER, 10, AMS_NOTHING }, { TV_SWORD, SV_BROKEN_SWORD, 5, AMS_NOTHING }, { TV_SCROLL, SV_SCROLL_AMUSEMENT, 10, AMS_NOTHING },
 
           { TV_NONE, 0, 0, 0 } };

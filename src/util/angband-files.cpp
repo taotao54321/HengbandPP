@@ -115,7 +115,7 @@ errr path_parse(char* buf, int max, concptr file) {
 
     return 0;
 }
-#else /* SET_UID */
+#else  /* SET_UID */
 /*
  * Extract a "parsed" path from an initial filename
  *
@@ -216,7 +216,7 @@ FILE* angband_fopen_temp(char* buf, int max) {
 
     return (fdopen(fd, "w"));
 }
-#else /* HAVE_MKSTEMP */
+#else  /* HAVE_MKSTEMP */
 FILE* angband_fopen_temp(char* buf, int max) {
     if (path_temp(buf, max))
         return (NULL);

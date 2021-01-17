@@ -35,7 +35,7 @@
 #define DEFAULT_DELAY 50
 #define RECVBUF_SIZE 1024
 
-static long epoch_time; /* バッファ開始時刻 */
+static long epoch_time;  /* バッファ開始時刻 */
 static int browse_delay; /* 表示するまでの時間(100ms単位)(この間にラグを吸収する) */
 static int movie_fd;
 static int movie_mode;
@@ -110,7 +110,7 @@ static errr insert_ringbuf(char* buf) {
     /* バッファの終端までに収まらない(ピッタリ収まる場合も含む) */
     else {
         int head = RINGBUF_SIZE - ring.wptr; /* 前半 */
-        int tail = len - head; /* 後半 */
+        int tail = len - head;               /* 後半 */
 
         memcpy(ring.buf + ring.wptr, buf, head);
         memcpy(ring.buf, buf + head, tail);

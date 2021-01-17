@@ -48,8 +48,8 @@
 static const BIT_FLAGS CAVE_TRAP = 0x8000;
 
 const int OLD_QUEST_WATER_CAVE = 18; // 湖の洞窟.
-const int QUEST_OLD_CASTLE = 27; // 古い城.
-const int QUEST_ROYAL_CRYPT = 28; // 王家の墓.
+const int QUEST_OLD_CASTLE = 27;     // 古い城.
+const int QUEST_ROYAL_CRYPT = 28;    // 王家の墓.
 
 /*!
  * @brief アイテムオブジェクト1件を読み込む / Read an object

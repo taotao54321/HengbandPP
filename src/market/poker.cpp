@@ -11,15 +11,15 @@
 static int cards[5];
 
 #define ODDS_5A 3000 /*!< ファイブエースの役倍率 */
-#define ODDS_5C 400 /*!< ファイブカードの役倍率 */
-#define ODDS_RF 200 /*!< ロイヤルストレートフラッシュの役倍率 */
-#define ODDS_SF 80 /*!< ストレートフラッシュの役倍率 */
-#define ODDS_4C 16 /*!< フォアカードの役倍率 */
-#define ODDS_FH 12 /*!< フルハウスの役倍率 */
-#define ODDS_FL 8 /*!< フラッシュの役倍率 */
-#define ODDS_ST 4 /*!< ストレートの役倍率 */
-#define ODDS_3C 1 /*!< スリーカードの役倍率 */
-#define ODDS_2P 1 /*!< ツーペアの役倍率 */
+#define ODDS_5C 400  /*!< ファイブカードの役倍率 */
+#define ODDS_RF 200  /*!< ロイヤルストレートフラッシュの役倍率 */
+#define ODDS_SF 80   /*!< ストレートフラッシュの役倍率 */
+#define ODDS_4C 16   /*!< フォアカードの役倍率 */
+#define ODDS_FH 12   /*!< フルハウスの役倍率 */
+#define ODDS_FL 8    /*!< フラッシュの役倍率 */
+#define ODDS_ST 4    /*!< ストレートの役倍率 */
+#define ODDS_3C 1    /*!< スリーカードの役倍率 */
+#define ODDS_2P 1    /*!< ツーペアの役倍率 */
 
 /*! @note
  * kpoker no (tyuto-hannpa na)pakuri desu...
@@ -37,8 +37,8 @@ static int cards[5];
  * 9/15/2000 joker wo jissou. soreto, code wo sukosi kakikae. --Habu
  */
 
-#define SUIT_OF(card) ((card) / 13) /*!< トランプカードのスートを返す */
-#define NUM_OF(card) ((card) % 13) /*!< トランプカードの番号を返す */
+#define SUIT_OF(card) ((card) / 13)   /*!< トランプカードのスートを返す */
+#define NUM_OF(card) ((card) % 13)    /*!< トランプカードの番号を返す */
 #define IS_JOKER(card) ((card) == 52) /*!< トランプカードがジョーカーかどうかを返す */
 
 /*!

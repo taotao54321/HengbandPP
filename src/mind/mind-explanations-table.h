@@ -2,7 +2,7 @@
 
 #include "system/angband.h"
 
-#define MAX_MIND_KINDS 5 /* 職業特有の特殊能力数 */
+#define MAX_MIND_KINDS 5   /* 職業特有の特殊能力数 */
 #define MAX_MIND_POWERS 21 /*!< 超能力の数 / Mindcraft */
 
 typedef struct mind_type {

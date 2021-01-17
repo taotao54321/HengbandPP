@@ -4,7 +4,7 @@
 #include "view/display-messages.h"
 
 /* Help give useful error messages */
-int error_idx; /*!< データ読み込み/初期化時に汎用的にエラーコードを保存するグローバル変数 */
+int error_idx;  /*!< データ読み込み/初期化時に汎用的にエラーコードを保存するグローバル変数 */
 int error_line; /*!< データ読み込み/初期化時に汎用的にエラー行数を保存するグローバル変数 */
 
 /*!

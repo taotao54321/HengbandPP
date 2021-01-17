@@ -28,7 +28,7 @@ POSITION panel_row_prt;
 
 int match_autopick;
 object_type* autopick_obj; /*!< 各種自動拾い処理時に使うオブジェクトポインタ */
-int feat_priority; /*!< マップ縮小表示時に表示すべき地形の優先度を保管する */
+int feat_priority;         /*!< マップ縮小表示時に表示すべき地形の優先度を保管する */
 
 static concptr simplify_list[][2] = {
 #ifdef JP

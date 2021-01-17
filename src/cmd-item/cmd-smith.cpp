@@ -43,11 +43,11 @@
  * エッセンス情報の構造体 / A structure for smithing
  */
 typedef struct {
-    int add; /* TR flag number or special essence id */
+    int add;          /* TR flag number or special essence id */
     concptr add_name; /* Name of this ability */
     ESSENCE_IDX type; /* Menu number */
-    int essence; /* Index for carrying essences */
-    int value; /* Needed value to add this ability */
+    int essence;      /* Index for carrying essences */
+    int value;        /* Needed value to add this ability */
 } essence_type;
 
 /*!

@@ -16,20 +16,20 @@
  * @brief A term_win is a "window" for a Term
  */
 struct term_win {
-    bool cu, cv; //!< Cursor Useless / Visible codes
+    bool cu, cv;     //!< Cursor Useless / Visible codes
     TERM_LEN cx, cy; //!< Cursor Location (see "Useless")
 
     TERM_COLOR** a; //!< Array[h*w] -- Attribute array
-    char** c; //!< Array[h*w] -- Character array
+    char** c;       //!< Array[h*w] -- Character array
 
     TERM_COLOR* va; //!< Array[h] -- Access to the attribute array
-    char* vc; //!< Array[h] -- Access to the character array
+    char* vc;       //!< Array[h] -- Access to the character array
 
     TERM_COLOR** ta; //!< Note that the attr pair at(x, y) is a[y][x]
-    char** tc; //!< Note that the char pair at(x, y) is c[y][x]
+    char** tc;       //!< Note that the char pair at(x, y) is c[y][x]
 
     TERM_COLOR* vta; //!< Note that the row of attr at(0, y) is a[y]
-    char* vtc; //!< Note that the row of chars at(0, y) is c[y]
+    char* vtc;       //!< Note that the row of chars at(0, y) is c[y]
 };
 
 /*!
@@ -74,13 +74,13 @@ struct term_type {
     void (*init_hook)(term_type* t); //!< Hook for init - ing the term
     void (*nuke_hook)(term_type* t); //!< Hook for nuke - ing the term
 
-    errr (*user_hook)(int n); //!< ユーザ設定項目実装部 / Hook for user actions
-    errr (*xtra_hook)(int n, int v); //!< 拡張機能実装部 / Hook for extra actions
-    errr (*curs_hook)(TERM_LEN x, TERM_LEN y); //!< カーソル描画実装部 / Hook for placing the cursor
-    errr (*bigcurs_hook)(TERM_LEN x, TERM_LEN y); //!< 大型タイル時カーソル描画実装部 / Hook for placing the cursor on bigtile mode
-    errr (*wipe_hook)(TERM_LEN x, TERM_LEN y, int n); //!< 指定座標テキスト消去実装部 / Hook for drawing some blank spaces
-    errr (*text_hook)(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr s); //!< テキスト描画実装部 / Hook for drawing a string of chars using an attr
-    void (*resize_hook)(); //!< 画面リサイズ実装部
+    errr (*user_hook)(int n);                                                                                               //!< ユーザ設定項目実装部 / Hook for user actions
+    errr (*xtra_hook)(int n, int v);                                                                                        //!< 拡張機能実装部 / Hook for extra actions
+    errr (*curs_hook)(TERM_LEN x, TERM_LEN y);                                                                              //!< カーソル描画実装部 / Hook for placing the cursor
+    errr (*bigcurs_hook)(TERM_LEN x, TERM_LEN y);                                                                           //!< 大型タイル時カーソル描画実装部 / Hook for placing the cursor on bigtile mode
+    errr (*wipe_hook)(TERM_LEN x, TERM_LEN y, int n);                                                                       //!< 指定座標テキスト消去実装部 / Hook for drawing some blank spaces
+    errr (*text_hook)(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr s);                                              //!< テキスト描画実装部 / Hook for drawing a string of chars using an attr
+    void (*resize_hook)();                                                                                                  //!< 画面リサイズ実装部
     errr (*pict_hook)(TERM_LEN x, TERM_LEN y, int n, const TERM_COLOR* ap, concptr cp, const TERM_COLOR* tap, concptr tcp); //!< タイル描画実装部 / Hook for drawing a sequence of special attr / char pairs
 };
 
@@ -103,23 +103,23 @@ struct term_type {
  *
  * The other actions do not need a "v" code, so "zero" is used.
  */
-#define TERM_XTRA_EVENT 1 /* Process some pending events */
-#define TERM_XTRA_FLUSH 2 /* Flush all pending events */
-#define TERM_XTRA_CLEAR 3 /* Clear the entire window */
-#define TERM_XTRA_SHAPE 4 /* Set cursor shape (optional) */
-#define TERM_XTRA_FROSH 5 /* Flush one row (optional) */
-#define TERM_XTRA_FRESH 6 /* Flush all rows (optional) */
-#define TERM_XTRA_NOISE 7 /* Make a noise (optional) */
-#define TERM_XTRA_SOUND 8 /* Make a sound (optional) */
-#define TERM_XTRA_BORED 9 /* Handle stuff when bored (optional) */
-#define TERM_XTRA_REACT 10 /* React to global changes (optional) */
-#define TERM_XTRA_ALIVE 11 /* Change the "hard" level (optional) */
-#define TERM_XTRA_LEVEL 12 /* Change the "soft" level (optional) */
-#define TERM_XTRA_DELAY 13 /* Delay some milliseconds (optional) */
-#define TERM_XTRA_MUSIC_BASIC 14 /* Play a music(basic)   (optional) */
+#define TERM_XTRA_EVENT 1          /* Process some pending events */
+#define TERM_XTRA_FLUSH 2          /* Flush all pending events */
+#define TERM_XTRA_CLEAR 3          /* Clear the entire window */
+#define TERM_XTRA_SHAPE 4          /* Set cursor shape (optional) */
+#define TERM_XTRA_FROSH 5          /* Flush one row (optional) */
+#define TERM_XTRA_FRESH 6          /* Flush all rows (optional) */
+#define TERM_XTRA_NOISE 7          /* Make a noise (optional) */
+#define TERM_XTRA_SOUND 8          /* Make a sound (optional) */
+#define TERM_XTRA_BORED 9          /* Handle stuff when bored (optional) */
+#define TERM_XTRA_REACT 10         /* React to global changes (optional) */
+#define TERM_XTRA_ALIVE 11         /* Change the "hard" level (optional) */
+#define TERM_XTRA_LEVEL 12         /* Change the "soft" level (optional) */
+#define TERM_XTRA_DELAY 13         /* Delay some milliseconds (optional) */
+#define TERM_XTRA_MUSIC_BASIC 14   /* Play a music(basic)   (optional) */
 #define TERM_XTRA_MUSIC_DUNGEON 15 /* Play a music(dungeon) (optional) */
-#define TERM_XTRA_MUSIC_QUEST 16 /* Play a music(quest)   (optional) */
-#define TERM_XTRA_MUSIC_TOWN 17 /* Play a music(floor)   (optional) */
+#define TERM_XTRA_MUSIC_QUEST 16   /* Play a music(quest)   (optional) */
+#define TERM_XTRA_MUSIC_TOWN 17    /* Play a music(floor)   (optional) */
 #define TERM_XTRA_MUSIC_MUTE 18
 
 /**** Available Variables ****/

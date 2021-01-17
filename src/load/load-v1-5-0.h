@@ -5,18 +5,18 @@
 
 // TODO: 更に分割する可能性が中程度あるのでヘッダに置いておく
 typedef enum old_monster_resistance_type {
-    RF3_IM_ACID = 0x00010000, /* Resist acid a lot */
-    RF3_IM_ELEC = 0x00020000, /* Resist elec a lot */
-    RF3_IM_FIRE = 0x00040000, /* Resist fire a lot */
-    RF3_IM_COLD = 0x00080000, /* Resist cold a lot */
-    RF3_IM_POIS = 0x00100000, /* Resist poison a lot */
+    RF3_IM_ACID = 0x00010000,  /* Resist acid a lot */
+    RF3_IM_ELEC = 0x00020000,  /* Resist elec a lot */
+    RF3_IM_FIRE = 0x00040000,  /* Resist fire a lot */
+    RF3_IM_COLD = 0x00080000,  /* Resist cold a lot */
+    RF3_IM_POIS = 0x00100000,  /* Resist poison a lot */
     RF3_RES_TELE = 0x00200000, /* Resist teleportation */
     RF3_RES_NETH = 0x00400000, /* Resist nether a lot */
     RF3_RES_WATE = 0x00800000, /* Resist water */
     RF3_RES_PLAS = 0x01000000, /* Resist plasma */
     RF3_RES_NEXU = 0x02000000, /* Resist nexus */
     RF3_RES_DISE = 0x04000000, /* Resist disenchantment */
-    RF3_RES_ALL = 0x08000000, /* Resist all */
+    RF3_RES_ALL = 0x08000000,  /* Resist all */
 } old_monster_resistance_type;
 
 typedef enum old_monster_breath_type {

@@ -6,12 +6,12 @@
  * A structure to hold "rolled" information
  */
 typedef struct birther {
-    SEX_IDX psex; /* Sex index */
-    player_race_type prace; /* Race index */
-    player_class_type pclass; /* Class index */
+    SEX_IDX psex;                     /* Sex index */
+    player_race_type prace;           /* Race index */
+    player_class_type pclass;         /* Class index */
     player_personality_type pseikaku; /* Seikaku index */
-    REALM_IDX realm1; /* First magic realm */
-    REALM_IDX realm2; /* Second magic realm */
+    REALM_IDX realm1;                 /* First magic realm */
+    REALM_IDX realm2;                 /* Second magic realm */
 
     s16b age;
     s16b ht;
@@ -20,7 +20,7 @@ typedef struct birther {
 
     PRICE au; /*!< 初期の所持金 */
 
-    BASE_STATUS stat_max[6]; /* Current "maximal" stat values */
+    BASE_STATUS stat_max[6];     /* Current "maximal" stat values */
     BASE_STATUS stat_max_max[6]; /* Maximal "maximal" stat values */
     HIT_POINT player_hp[PY_MAX_LEVEL];
 

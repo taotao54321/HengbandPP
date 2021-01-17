@@ -71,7 +71,7 @@ const int chaos_stats[MAX_PATRON] = {
     A_CON, /* Eequor */
     A_CHR, /* Narjhan */
 
-    -1, /* Balo */
+    -1,    /* Balo */
     A_STR, /* Khorne */
     A_CHR, /* Slaanesh */
     A_CON, /* Nurgle */

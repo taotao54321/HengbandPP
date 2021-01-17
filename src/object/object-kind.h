@@ -4,17 +4,17 @@
 #include "system/object-type-definition.h"
 
 typedef struct object_kind {
-    STR_OFFSET name; /*!< ベースアイテム名参照のためのネームバッファオフセット値 / Name (offset) */
-    STR_OFFSET text; /*!< 解説テキスト参照のためのネームバッファオフセット値 / Text (offset) */
+    STR_OFFSET name;        /*!< ベースアイテム名参照のためのネームバッファオフセット値 / Name (offset) */
+    STR_OFFSET text;        /*!< 解説テキスト参照のためのネームバッファオフセット値 / Text (offset) */
     STR_OFFSET flavor_name; /*!< 未確定名参照のためのネームバッファオフセット値 / Flavor name (offset) */
 
-    tval_type tval; /*!< ベースアイテム種別の大項目値 Object type */
+    tval_type tval;            /*!< ベースアイテム種別の大項目値 Object type */
     OBJECT_SUBTYPE_VALUE sval; /*!< ベースアイテム種別の小項目値 Object sub type */
 
     PARAMETER_VALUE pval; /*!< ベースアイテムのpval（能力修正共通値） Object extra info */
 
-    HIT_PROB to_h; /*!< ベースアイテムの命中修正値 / Bonus to hit */
-    HIT_POINT to_d; /*!< ベースアイテムのダメージ修正値 / Bonus to damage */
+    HIT_PROB to_h;     /*!< ベースアイテムの命中修正値 / Bonus to hit */
+    HIT_POINT to_d;    /*!< ベースアイテムのダメージ修正値 / Bonus to damage */
     ARMOUR_CLASS to_a; /*!< ベースアイテムのAC修正値 / Bonus to armor */
 
     ARMOUR_CLASS ac; /*!< ベースアイテムのAC基本値 /  Base armor */
@@ -31,15 +31,15 @@ typedef struct object_kind {
     BIT_FLAGS gen_flags; /*!< ベースアイテムの生成特性ビット配列 / flags for generate */
 
     DEPTH locale[4]; /*!< ベースアイテムの生成階テーブル / Allocation level(s) */
-    PROB chance[4]; /*!< ベースアイテムの生成確率テーブル / Allocation chance(s) */
+    PROB chance[4];  /*!< ベースアイテムの生成確率テーブル / Allocation chance(s) */
 
-    DEPTH level; /*!< ベースアイテムの基本生成階 / Level */
+    DEPTH level;      /*!< ベースアイテムの基本生成階 / Level */
     BIT_FLAGS8 extra; /*!< その他色々のビットフラグ配列 / Something */
 
-    TERM_COLOR d_attr; /*!< デフォルトのアイテムシンボルカラー / Default object attribute */
+    TERM_COLOR d_attr;  /*!< デフォルトのアイテムシンボルカラー / Default object attribute */
     SYMBOL_CODE d_char; /*!< デフォルトのアイテムシンボルアルファベット / Default object character */
 
-    TERM_COLOR x_attr; /*!< 設定変更後のアイテムシンボルカラー /  Desired object attribute */
+    TERM_COLOR x_attr;  /*!< 設定変更後のアイテムシンボルカラー /  Desired object attribute */
     SYMBOL_CODE x_char; /*!< 設定変更後のアイテムシンボルアルファベット /  Desired object character */
 
     IDX flavor; /*!< 調査中(TODO) / Special object flavor (or zero) */
