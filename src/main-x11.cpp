@@ -125,10 +125,9 @@
 #include <X11/Xatom.h>
 #endif /* __MAKEDEPEND__ */
 
-#include <iconv.h>
-#ifdef USE_XFT
 #include <X11/Xft/Xft.h>
-#endif
+
+#include <iconv.h>
 
 /*
  * Include some helpful X11 code.
@@ -158,11 +157,7 @@
 /*
  * An X11 pixell specifier
  */
-#ifdef USE_XFT
 typedef XftColor Pixell;
-#else
-typedef unsigned long Pixell;
-#endif
 
 /*
  * The structures defined below
@@ -221,9 +216,6 @@ struct metadpy {
 
     Pixell bg;
     Pixell fg;
-#ifndef USE_XFT
-    Pixell zg;
-#endif
 
     uint mono : 1;
     uint color : 1;
@@ -262,9 +254,7 @@ struct infowin {
     XIC xic;
     long xic_mask;
 #endif
-#ifdef USE_XFT
     XftDraw* draw;
-#endif
 
     long mask;
 
@@ -301,10 +291,6 @@ struct infowin {
  *	- Bit Flag: Destroy 'gc' at Nuke time.
  */
 struct infoclr {
-#ifndef USE_XFT
-    GC gc;
-#endif
-
     Pixell fg;
     Pixell bg;
 
@@ -330,11 +316,7 @@ struct infoclr {
  *	- Flag: Nuke info when done
  */
 struct infofnt {
-#ifdef USE_XFT
     XftFont* info;
-#else
-    XFontSet info;
-#endif
     concptr name;
 
     s16b wid;
@@ -445,21 +427,12 @@ static errr Metadpy_init_2(Display* dpy, concptr name) {
     m->height = HeightOfScreen(m->screen);
     m->depth = DefaultDepthOfScreen(m->screen);
 
-#ifdef USE_XFT
     Visual* vis = DefaultVisual(dpy, 0);
     XftColorAllocName(dpy, vis, m->cmap, "black", &m->black);
     XftColorAllocName(dpy, vis, m->cmap, "white", &m->white);
-#else
-    m->black = BlackPixelOfScreen(m->screen);
-    m->white = WhitePixelOfScreen(m->screen);
-#endif
 
     m->bg = m->black;
     m->fg = m->white;
-
-#ifndef USE_XFT
-    m->zg = (1 << m->depth) - 1;
-#endif
 
     m->color = ((m->depth > 1) ? 1 : 0);
     m->mono = ((m->color) ? 0 : 1);
@@ -513,13 +486,11 @@ static errr Infowin_prepare(Window xid) {
     iwin->win = xid;
     XGetGeometry(Metadpy->dpy, xid, &tmp_win, &x, &y, &w, &h, &b, &d);
 
-#ifdef USE_XFT
     Visual* vis = DefaultVisual(Metadpy->dpy, 0);
     if (vis->c_class != TrueColor) {
         quit_fmt("Display does not support truecolor.\n");
     }
     iwin->draw = XftDrawCreate(Metadpy->dpy, iwin->win, vis, Metadpy->cmap);
-#endif
 
     iwin->x = x;
     iwin->y = y;
@@ -552,11 +523,7 @@ static errr Infowin_init_data(Window dad, int x, int y, int w, int h, int b, Pix
     if (dad == None)
         dad = Metadpy->root;
 
-#ifdef USE_XFT
     xid = XCreateSimpleWindow(Metadpy->dpy, dad, x, y, w, h, b, fg.pixel, bg.pixel);
-#else
-    xid = XCreateSimpleWindow(Metadpy->dpy, dad, x, y, w, h, b, fg, bg);
-#endif
 
     XSelectInput(Metadpy->dpy, xid, 0L);
     Infowin->nuke = 1;
@@ -657,39 +624,7 @@ static int Infoclr_Opcode(concptr str) {
 static errr Infoclr_init_data(Pixell fg, Pixell bg, int op, int stip) {
     infoclr* iclr = Infoclr;
 
-#ifndef USE_XFT
-    GC gc;
-    XGCValues gcv;
-    unsigned long gc_mask;
-#endif
-
-#ifndef USE_XFT
-    if (bg > Metadpy->zg)
-        return (-1);
-    if (fg > Metadpy->zg)
-        return (-1);
-    if ((op < 0) || (op > 15))
-        return (-1);
-
-    gcv.function = op;
-    gcv.background = bg;
-    gcv.foreground = fg;
-    if (op == 6)
-        gcv.background = 0;
-    if (op == 6)
-        gcv.foreground = (bg ^ fg);
-
-    gcv.fill_style = (stip ? FillStippled : FillSolid);
-    gcv.graphics_exposures = False;
-    gc_mask = (GCFunction | GCBackground | GCForeground | GCFillStyle | GCGraphicsExposures);
-    gc = XCreateGC(Metadpy->dpy, Metadpy->root, gc_mask, &gcv);
-#endif
-
     (void)WIPE(iclr, infoclr);
-
-#ifndef USE_XFT
-    iclr->gc = gc;
-#endif
 
     iclr->nuke = 1;
     iclr->fg = fg;
@@ -708,14 +643,7 @@ static errr Infoclr_init_data(Pixell fg, Pixell bg, int op, int stip) {
 static errr Infoclr_change_fg(Pixell fg) {
     infoclr* iclr = Infoclr;
 
-#ifdef USE_XFT
     iclr->fg = fg;
-#else
-    if (fg > Metadpy->zg)
-        return (-1);
-
-    XSetForeground(Metadpy->dpy, iclr->gc, fg);
-#endif
 
     return (0);
 }
@@ -723,57 +651,17 @@ static errr Infoclr_change_fg(Pixell fg) {
 /*
  * Prepare a new 'infofnt'
  */
-#ifdef USE_XFT
-static errr Infofnt_prepare(XftFont* info)
-#else
-static errr Infofnt_prepare(XFontSet info)
-#endif
-{
+static errr Infofnt_prepare(XftFont* info) {
     infofnt* ifnt = Infofnt;
-
-#ifndef USE_XFT
-    XCharStruct* cs;
-    XFontStruct** fontinfo;
-    char** fontname;
-    int n_fonts;
-    int ascent, descent, width;
-#endif
 
     ifnt->info = info;
 
-#ifdef USE_XFT
     ifnt->asc = info->ascent;
     ifnt->hgt = info->ascent + info->descent;
     const char* text = "A";
     XGlyphInfo extent;
     XftTextExtentsUtf8(Metadpy->dpy, info, (FcChar8*)text, strlen(text), &extent);
     ifnt->wid = extent.xOff;
-#else
-    n_fonts = XFontsOfFontSet(info, &fontinfo, &fontname);
-
-    ascent = descent = width = 0;
-    while (n_fonts-- > 0) {
-        cs = &((*fontinfo)->max_bounds);
-        if (ascent < (*fontinfo)->ascent)
-            ascent = (*fontinfo)->ascent;
-        if (descent < (*fontinfo)->descent)
-            descent = (*fontinfo)->descent;
-        if (((*fontinfo)->max_byte1) > 0) {
-            /* 多バイト文字の場合は幅半分(端数切り上げ)で評価する */
-            if (width < (cs->width + 1) / 2)
-                width = (cs->width + 1) / 2;
-        }
-        else {
-            if (width < cs->width)
-                width = cs->width;
-        }
-        fontinfo++;
-        fontname++;
-    }
-    ifnt->asc = ascent;
-    ifnt->hgt = ascent + descent;
-    ifnt->wid = width;
-#endif
 
     if (use_bigtile)
         ifnt->twid = 2 * ifnt->wid;
@@ -792,42 +680,20 @@ static errr Infofnt_prepare(XFontSet info)
 static void Infofnt_init_data(concptr name)
 
 {
-#ifdef USE_XFT
     XftFont* info;
-#else
-    XFontSet info;
-    char** missing_list;
-    int missing_count;
-    char* default_font;
-#endif
 
     if (!name || !*name)
         quit("Missing font!");
 
-#ifdef USE_XFT
     info = XftFontOpenName(Metadpy->dpy, 0, name);
     /* TODO: error handling */
-#else
-    info = XCreateFontSet(Metadpy->dpy, name, &missing_list, &missing_count, &default_font);
-    if (missing_count > 0) {
-        printf("missing font(s): \n");
-        while (missing_count-- > 0) {
-            printf("\t%s\n", missing_list[missing_count]);
-        }
-        XFreeStringList(missing_list);
-    }
-#endif
 
     if (!info)
         quit_fmt("Failed to find font:\"%s\"", name);
 
     (void)WIPE(Infofnt, infofnt);
     if (Infofnt_prepare(info)) {
-#ifdef USE_XFT
         XftFontClose(Metadpy->dpy, info);
-#else
-        XFreeFontSet(Metadpy->dpy, info);
-#endif
         quit_fmt("Failed to prepare font:\"%s\"", name);
     }
 
@@ -848,12 +714,6 @@ static errr Infofnt_text_std(int x, int y, concptr str, int len) {
     y = (y * Infofnt->hgt) + Infofnt->asc + Infowin->oy;
     x = (x * Infofnt->wid) + Infowin->ox;
     if (Infofnt->mono) {
-#ifndef USE_XFT
-        int i;
-        for (i = 0; i < len; ++i) {
-            XDrawImageString(Metadpy->dpy, Infowin->win, Infoclr->gc, x + i * Infofnt->wid + Infofnt->off, y, str + i, 1);
-        }
-#endif
     }
     else {
         iconv_t cd = iconv_open("UTF-8", "EUC-JP");
@@ -868,7 +728,6 @@ static errr Infofnt_text_std(int x, int y, concptr str, int len) {
         iconv(cd, &sp, &inlen, &kp, &outlen);
         iconv_close(cd);
 
-#ifdef USE_XFT
         XftDraw* draw = Infowin->draw;
 
         XRectangle r;
@@ -880,9 +739,7 @@ static errr Infofnt_text_std(int x, int y, concptr str, int len) {
         XftDrawRect(draw, &Infoclr->bg, x, y - Infofnt->asc, Infofnt->wid * len, Infofnt->hgt);
         XftDrawStringUtf8(draw, &Infoclr->fg, Infofnt->info, x, y, (FcChar8*)kanji, kp - kanji);
         XftDrawSetClip(draw, 0);
-#else
-        XmbDrawImageString(Metadpy->dpy, Infowin->win, Infofnt->info, Infoclr->gc, x, y, kanji, kp - kanji);
-#endif
+
         free(kanji);
     }
 
@@ -902,11 +759,7 @@ static errr Infofnt_text_non(int x, int y, concptr str, int len) {
     h = Infofnt->hgt;
     y = y * h + Infowin->oy;
 
-#ifdef USE_XFT
     XftDrawRect(Infowin->draw, &Infoclr->fg, x, y, w, h);
-#else
-    XFillRectangle(Metadpy->dpy, Infowin->win, Infoclr->gc, x, y, w, h);
-#endif
 
     return (0);
 }
@@ -942,10 +795,6 @@ struct term_data {
     term_type t;
     infofnt* fnt;
     infowin* win;
-#ifndef USE_XFT
-    XImage* tiles;
-    XImage* TmpImage;
-#endif
 };
 
 /*
@@ -1155,11 +1004,7 @@ static void mark_selection_clear(int x1, int y1, int x2, int y2) { term_redraw_s
 static void mark_selection_mark(int x1, int y1, int x2, int y2) {
     square_to_pixel(&x1, &y1, x1, y1);
     square_to_pixel(&x2, &y2, x2, y2);
-#ifdef USE_XFT
     XftDrawRect(Infowin->draw, &clr[2]->fg, x1, y1, x2 - x1 + Infofnt->wid - 1, y2 - y1 + Infofnt->hgt - 1);
-#else
-    XDrawRectangle(Metadpy->dpy, Infowin->win, clr[2]->gc, x1, y1, x2 - x1 + Infofnt->wid - 1, y2 - y1 + Infofnt->hgt - 1);
-#endif
 }
 
 /*
@@ -1796,15 +1641,9 @@ static errr Term_xtra_x11(int n, int v) {
         return (0);
     case TERM_XTRA_SOUND:
         return (Term_xtra_x11_sound(v));
-#ifdef USE_XFT
     case TERM_XTRA_FRESH:
         Metadpy_update(1, 1, 0);
         return (0);
-#else
-    case TERM_XTRA_FRESH:
-        Metadpy_update(1, 0, 0);
-        return (0);
-#endif
     case TERM_XTRA_BORED:
         return (CheckEvent(0));
     case TERM_XTRA_EVENT:
@@ -1836,15 +1675,8 @@ static errr Term_xtra_x11(int n, int v) {
  */
 static errr Term_curs_x11(int x, int y) {
     if (use_graphics) {
-#ifdef USE_XFT
         XftDrawRect(Infowin->draw, &xor_->fg, x * Infofnt->wid + Infowin->ox, y * Infofnt->hgt + Infowin->oy, Infofnt->wid - 1, Infofnt->hgt - 1);
         XftDrawRect(Infowin->draw, &xor_->fg, x * Infofnt->wid + Infowin->ox + 1, y * Infofnt->hgt + Infowin->oy + 1, Infofnt->wid - 3, Infofnt->hgt - 3);
-#else
-        XDrawRectangle(
-            Metadpy->dpy, Infowin->win, xor_->gc, x * Infofnt->wid + Infowin->ox, y * Infofnt->hgt + Infowin->oy, Infofnt->wid - 1, Infofnt->hgt - 1);
-        XDrawRectangle(
-            Metadpy->dpy, Infowin->win, xor_->gc, x * Infofnt->wid + Infowin->ox + 1, y * Infofnt->hgt + Infowin->oy + 1, Infofnt->wid - 3, Infofnt->hgt - 3);
-#endif
     }
     else {
         Infoclr_set(xor_);
@@ -1859,15 +1691,8 @@ static errr Term_curs_x11(int x, int y) {
  */
 static errr Term_bigcurs_x11(int x, int y) {
     if (use_graphics) {
-#ifdef USE_XFT
         XftDrawRect(Infowin->draw, &xor_->fg, x * Infofnt->wid + Infowin->ox, y * Infofnt->hgt + Infowin->oy, Infofnt->twid - 1, Infofnt->hgt - 1);
         XftDrawRect(Infowin->draw, &xor_->fg, x * Infofnt->wid + Infowin->ox + 1, y * Infofnt->hgt + Infowin->oy + 1, Infofnt->twid - 3, Infofnt->hgt - 3);
-#else
-        XDrawRectangle(
-            Metadpy->dpy, Infowin->win, xor_->gc, x * Infofnt->wid + Infowin->ox, y * Infofnt->hgt + Infowin->oy, Infofnt->twid - 1, Infofnt->hgt - 1);
-        XDrawRectangle(
-            Metadpy->dpy, Infowin->win, xor_->gc, x * Infofnt->wid + Infowin->ox + 1, y * Infofnt->hgt + Infowin->oy + 1, Infofnt->twid - 3, Infofnt->hgt - 3);
-#endif
     }
     else {
         Infoclr_set(xor_);
@@ -1896,72 +1721,6 @@ static errr Term_text_x11(TERM_LEN x, TERM_LEN y, int n, TERM_COLOR a, concptr s
     s_ptr->drawn = FALSE;
     return (0);
 }
-
-#ifndef USE_XFT
-/*
- * Draw some graphical characters.
- */
-static errr Term_pict_x11(TERM_LEN x, TERM_LEN y, int n, const TERM_COLOR* ap, const char* cp, const TERM_COLOR* tap, const char* tcp) {
-    int i, x1, y1;
-
-    TERM_COLOR a;
-    char c;
-
-    TERM_COLOR ta;
-    char tc;
-
-    int x2, y2;
-    int k, l;
-
-    unsigned long pixel, blank;
-
-    term_data* td = (term_data*)(Term->data);
-
-    y *= Infofnt->hgt;
-    x *= Infofnt->wid;
-
-    y += Infowin->oy;
-    x += Infowin->ox;
-    for (i = 0; i < n; ++i, x += td->fnt->wid) {
-        a = *ap++;
-        c = *cp++;
-        x1 = (c & 0x7F) * td->fnt->twid;
-        y1 = (a & 0x7F) * td->fnt->hgt;
-        if (td->tiles->width < x1 + td->fnt->wid || td->tiles->height < y1 + td->fnt->hgt) {
-            XFillRectangle(Metadpy->dpy, td->win->win, clr[0]->gc, x, y, td->fnt->twid, td->fnt->hgt);
-            continue;
-        }
-
-        ta = *tap++;
-        tc = *tcp++;
-
-        x2 = (tc & 0x7F) * td->fnt->twid;
-        y2 = (ta & 0x7F) * td->fnt->hgt;
-
-        if (((x1 == x2) && (y1 == y2)) || !(((byte)ta & 0x80) && ((byte)tc & 0x80)) || td->tiles->width < x2 + td->fnt->wid
-            || td->tiles->height < y2 + td->fnt->hgt) {
-            XPutImage(Metadpy->dpy, td->win->win, clr[0]->gc, td->tiles, x1, y1, x, y, td->fnt->twid, td->fnt->hgt);
-        }
-        else {
-            blank = XGetPixel(td->tiles, 0, td->fnt->hgt * 6);
-            for (k = 0; k < td->fnt->twid; k++) {
-                for (l = 0; l < td->fnt->hgt; l++) {
-                    if ((pixel = XGetPixel(td->tiles, x1 + k, y1 + l)) == blank) {
-                        pixel = XGetPixel(td->tiles, x2 + k, y2 + l);
-                    }
-
-                    XPutPixel(td->TmpImage, k, l, pixel);
-                }
-            }
-
-            XPutImage(Metadpy->dpy, td->win->win, clr[0]->gc, td->TmpImage, 0, 0, x, y, td->fnt->twid, td->fnt->hgt);
-        }
-    }
-
-    s_ptr->drawn = FALSE;
-    return (0);
-}
-#endif
 
 #ifdef USE_XIM
 static void IMDestroyCallback(XIM, XPointer, XPointer);
@@ -2250,37 +2009,11 @@ errr init_x11(int argc, char* argv[]) {
     concptr dpy_name = "";
     int num_term = 3;
 
-#ifndef USE_XFT
-    char filename[1024];
-
-    int pict_wid = 0;
-    int pict_hgt = 0;
-
-    char* TmpData;
-#endif
-
     for (i = 1; i < argc; i++) {
         if (prefix(argv[i], "-d")) {
             dpy_name = &argv[i][2];
             continue;
         }
-
-#ifndef USE_XFT
-        if (prefix(argv[i], "-s")) {
-            smoothRescaling = FALSE;
-            continue;
-        }
-
-        if (prefix(argv[i], "-a")) {
-            arg_graphics = GRAPHICS_ADAM_BOLT;
-            continue;
-        }
-
-        if (prefix(argv[i], "-o")) {
-            arg_graphics = GRAPHICS_ORIGINAL;
-            continue;
-        }
-#endif
 
         if (prefix(argv[i], "-b")) {
             arg_bigtile = use_bigtile = TRUE;
@@ -2376,54 +2109,6 @@ errr init_x11(int argc, char* argv[]) {
     if (arg_sound)
         init_sound();
 
-#ifndef USE_XFT
-    switch (arg_graphics) {
-    case GRAPHICS_ORIGINAL:
-        path_build(filename, sizeof(filename), ANGBAND_DIR_XTRA, "graf/8x8.bmp");
-        if (0 == fd_close(fd_open(filename, O_RDONLY))) {
-            use_graphics = TRUE;
-            pict_wid = pict_hgt = 8;
-            ANGBAND_GRAF = "old";
-        }
-        break;
-    case GRAPHICS_ADAM_BOLT:
-        path_build(filename, sizeof(filename), ANGBAND_DIR_XTRA, "graf/16x16.bmp");
-        if (0 == fd_close(fd_open(filename, O_RDONLY))) {
-            use_graphics = TRUE;
-            pict_wid = pict_hgt = 16;
-            ANGBAND_GRAF = "new";
-        }
-        break;
-    }
-
-    if (use_graphics) {
-        Display* dpy = Metadpy->dpy;
-        XImage* tiles_raw;
-        tiles_raw = ReadBMP(dpy, filename);
-        for (i = 0; i < num_term; i++) {
-            term_data* td = &data[i];
-            term_type* t = &td->t;
-            t->pict_hook = Term_pict_x11;
-            t->higher_pict = TRUE;
-            td->tiles = ResizeImage(dpy, tiles_raw, pict_wid, pict_hgt, td->fnt->twid, td->fnt->hgt);
-        }
-
-        for (i = 0; i < num_term; i++) {
-            term_data* td = &data[i];
-            int ii, jj;
-            int depth = DefaultDepth(dpy, DefaultScreen(dpy));
-            Visual* visual = DefaultVisual(dpy, DefaultScreen(dpy));
-            int total;
-            ii = 1;
-            jj = (depth - 1) >> 2;
-            while (jj >>= 1)
-                ii <<= 1;
-            total = td->fnt->twid * td->fnt->hgt * ii;
-            TmpData = (char*)malloc(total);
-            td->TmpImage = XCreateImage(dpy, visual, depth, ZPixmap, 0, TmpData, td->fnt->twid, td->fnt->hgt, 8, 0);
-        }
-    }
-#endif /* ! USE_XFT */
     return (0);
 }
 

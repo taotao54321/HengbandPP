@@ -54,13 +54,13 @@ AC_ARG_ENABLE(xim,
 [  --disable-xim           disable xim support], use_xim=no, use_xim=yes)
 AC_ARG_ENABLE(fontset,
 [  --disable-fontset       disable fontset support], use_fontset=no, use_fontset=yes)
-AC_ARG_ENABLE([xft],
-	AS_HELP_STRING([--enable-xft], [Enable xft support]))
 
 dnl Checks for libraries.
 AC_CHECK_LIB(iconv, iconv_open)
 
 AC_CHECK_FILE(/dev/urandom, AC_DEFINE(RNG_DEVICE, "/dev/urandom", [Random Number Generation device file]))
+
+PKG_CHECK_MODULES(XFT, [xft])
 
 dnl Checks for header files.
 AC_PATH_XTRA
@@ -90,11 +90,6 @@ if test "$have_x" = yes; then
     AC_CHECK_LIB(X11, _Xsetlocale, AC_DEFINE(X_LOCALE, 1, [Use XLocale]))
     AC_CHECK_LIB(xpg4, setlocale, LIBS="$LIBS -lxpg4")
   fi
-
-  AS_IF([test "x$enable_xft" = "xyes"], [
-    PKG_CHECK_MODULES(XFT, [xft],
-      [AC_DEFINE([USE_XFT], [1], [Use XFT])])
-  ])
 fi
 
 if test "$use_japanese" != no; then
