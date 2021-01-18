@@ -108,7 +108,7 @@ public:
         : font_(font) {
         const auto w = font_.w() * ncol;
         const auto h = font_.h() * nrow;
-        ENSURE(win_ = SDL_CreateWindow(title.c_str(), x, y, w, h, 0));
+        ENSURE(win_ = SDL_CreateWindow(title.c_str(), x, y, w, h, SDL_WINDOW_RESIZABLE));
         ENSURE(ren_ = SDL_CreateRenderer(win_, -1, 0));
     }
 
@@ -117,6 +117,8 @@ public:
         ENSURE(res != 0);
         return res;
     }
+
+    [[nodiscard]] const Font& font() const { return font_; }
 
     void clear() const {
         ENSURE(SDL_RenderClear(ren_) == 0);
@@ -182,6 +184,19 @@ void window_redraw(const int term_id) {
     win->present();
 }
 
+errr on_window_size_change(const SDL_WindowEvent& ev, const int term_id) {
+    const auto* win = wins[term_id];
+    const auto font_w = win->font().w();
+    const auto font_h = win->font().h();
+
+    const auto ncol = ev.data1 / font_w;
+    const auto nrow = ev.data2 / font_h;
+    term_activate(&terms[term_id]);
+    term_resize(ncol, nrow);
+
+    return 0;
+}
+
 errr on_window(const SDL_WindowEvent& ev) {
     const auto term_id = window_id_to_term_id(ev.windowID);
 
@@ -207,6 +222,10 @@ errr on_window(const SDL_WindowEvent& ev) {
         EPRINTLN("SDL_WINDOWEVENT_TAKE_FOCUS {}", term_id);
         break;
 #endif
+    case SDL_WINDOWEVENT_SIZE_CHANGED: {
+        res = on_window_size_change(ev, term_id);
+        break;
+    }
     default:
         break;
     }
