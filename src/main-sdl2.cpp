@@ -122,8 +122,8 @@ public:
         ENSURE(SDL_RenderClear(ren_) == 0);
     }
 
-    void draw_text(const int c, const int r, const std::string& text) const {
-        auto* surf = font_.render(text, { 255, 255, 255, 255 }, { 0, 0, 0, 255 });
+    void draw_text(const int c, const int r, const std::string& text, SDL_Color fg, SDL_Color bg) const {
+        auto* surf = font_.render(text, fg, bg);
         SDL_Texture* tex;
         ENSURE(tex = SDL_CreateTextureFromSurface(ren_, surf));
         SDL_Rect rect { font_.w() * c, font_.h() * r, surf->w, surf->h };
@@ -215,8 +215,6 @@ errr on_window(const SDL_WindowEvent& ev) {
 }
 
 errr handle_event(const SDL_Event& ev) {
-    // FIXME: for debug
-    EPRINTLN("handle_event");
     const auto term_id_orig = current_term_id();
 
     errr res = 0;
@@ -264,42 +262,29 @@ errr term_xtra_sdl2(const int name, const int value) {
 
     switch (name) {
     case TERM_XTRA_EVENT:
-        // FIXME: for debug
-        EPRINTLN("TERM_XTRA_EVENT {}", value);
         res = value == 0 ? wait_event() : poll_event();
         break;
     case TERM_XTRA_BORED:
-        // FIXME: for debug
-        EPRINTLN("TERM_XTRA_BORED");
         res = poll_event();
         break;
     case TERM_XTRA_FLUSH:
-        // FIXME: for debug
-        EPRINTLN("TERM_XTRA_FLUSH");
         res = flush_events();
         break;
     case TERM_XTRA_CLEAR: {
-        // FIXME: for debug
-        EPRINTLN("TERM_XTRA_CLEAR");
         const auto* win = wins[current_term_id()];
         win->clear();
         //win->present();
         break;
     }
     case TERM_XTRA_FRESH: {
-        EPRINTLN("TERM_XTRA_FRESH");
         const auto* win = wins[current_term_id()];
         win->present();
         break;
     }
     case TERM_XTRA_DELAY:
-        // FIXME: for debug
-        EPRINTLN("TERM_XTRA_DELAY");
         SDL_Delay(value);
         break;
     case TERM_XTRA_REACT:
-        // FIXME: for debug
-        EPRINTLN("TERM_XTRA_REACT");
         break;
     default:
         break;
@@ -327,9 +312,10 @@ errr term_wipe_sdl2(const int c, const int r, const int n) {
 }
 
 errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_COLOR attr, const char* euc) {
-    // TODO: 色
     const auto* win = wins[current_term_id()];
-    win->draw_text(c, r, euc_to_utf8(std::string(euc, n)));
+    SDL_Color fg { angband_color_table[attr][1], angband_color_table[attr][2], angband_color_table[attr][3], 255 };
+    SDL_Color bg { 0, 0, 0, 255 };
+    win->draw_text(c, r, euc_to_utf8(std::string(euc, n)), fg, bg);
     //win->present();
     return 0;
 }
