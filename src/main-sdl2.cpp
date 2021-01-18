@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <array>
+#include <cerrno>
 #include <string>
 #include <utility>
 
@@ -20,6 +21,31 @@ namespace {
 // clang-format off
 #define ENSURE(cond) do { if (!(cond)) { detail::PANIC_IMPL(__FILE__, __LINE__, "{}", "`" #cond "` is not satisfied"); } } while (false)
 // clang-format on
+
+std::string euc_to_utf8(const std::string& euc) {
+    constexpr std::size_t BUF_SIZE = 1024;
+
+    static iconv_t conv = iconv_open("UTF-8", "EUC-JP");
+    ENSURE(conv != iconv_t(-1));
+
+    const auto* src = euc.data();
+    auto src_size = euc.size();
+    std::string utf8;
+    utf8.reserve(src_size);
+
+    char buf[BUF_SIZE];
+    while (src_size > 0) {
+        auto* dst = buf;
+        auto dst_size = BUF_SIZE;
+
+        const auto n = iconv(conv, const_cast<char**>(&src), &src_size, &dst, &dst_size);
+        ENSURE(n != std::size_t(-1) || errno == E2BIG);
+
+        utf8.append(buf, BUF_SIZE - dst_size);
+    }
+
+    return utf8;
+}
 
 constexpr int TERM_COUNT = 8;
 
@@ -65,7 +91,9 @@ public:
     [[nodiscard]] int h() const { return h_; }
 
     [[nodiscard]] SDL_Surface* render(const std::string& text, SDL_Color fg, SDL_Color bg) const {
-        return TTF_RenderUTF8_Shaded(font_, text.c_str(), fg, bg);
+        SDL_Surface* surf;
+        ENSURE(surf = TTF_RenderUTF8_Shaded(font_, text.c_str(), fg, bg));
+        return surf;
     }
 };
 
@@ -92,6 +120,14 @@ public:
 
     void clear() const {
         ENSURE(SDL_RenderClear(ren_) == 0);
+    }
+
+    void draw_text(const int c, const int r, const std::string& text) const {
+        auto* surf = font_.render(text, { 255, 255, 255, 255 }, { 0, 0, 0, 255 });
+        SDL_Texture* tex;
+        ENSURE(tex = SDL_CreateTextureFromSurface(ren_, surf));
+        SDL_Rect rect { font_.w() * c, font_.h() * r, surf->w, surf->h };
+        ENSURE(SDL_RenderCopy(ren_, tex, nullptr, &rect) == 0);
     }
 
     void present() const {
@@ -126,15 +162,24 @@ int window_id_to_term_id(const u32 win_id) {
 }
 
 errr on_keydown(const SDL_KeyboardEvent& ev) {
+    const auto sym = ev.keysym.sym;
+
+    if (0x20 <= sym && sym <= 0x7E) {
+        term_key_push(sym);
+    }
+
     return 0;
 }
 
-errr on_window_expose(const SDL_WindowEvent&, const int term_id) {
-    // FIXME: for debug
-    EPRINTLN("window expose: term_id={}", term_id);
+void window_redraw(const int term_id) {
+    const auto* win = wins[term_id];
+    win->clear();
+
     auto* term = &terms[term_id];
     term_activate(term);
-    return 0;
+    term_redraw();
+
+    win->present();
 }
 
 errr on_window(const SDL_WindowEvent& ev) {
@@ -142,9 +187,26 @@ errr on_window(const SDL_WindowEvent& ev) {
 
     errr res = 0;
 
-    switch (ev.type) {
+    switch (ev.event) {
+    //case SDL_WINDOWEVENT_SHOWN:
     case SDL_WINDOWEVENT_EXPOSED:
-        res = on_window_expose(ev, term_id);
+        //case SDL_WINDOWEVENT_FOCUS_GAINED:
+        //window_redraw(term_id);
+        break;
+#if 0
+    case SDL_WINDOWEVENT_HIDDEN:
+        EPRINTLN("SDL_WINDOWEVENT_HIDDEN {}", term_id);
+        break;
+    case SDL_WINDOWEVENT_MOVED:
+        EPRINTLN("SDL_WINDOWEVENT_MOVED {}", term_id);
+        break;
+    case SDL_WINDOWEVENT_RESIZED:
+        EPRINTLN("SDL_WINDOWEVENT_RESIZED {}", term_id);
+        break;
+    case SDL_WINDOWEVENT_TAKE_FOCUS:
+        EPRINTLN("SDL_WINDOWEVENT_TAKE_FOCUS {}", term_id);
+        break;
+#endif
     default:
         break;
     }
@@ -166,6 +228,9 @@ errr handle_event(const SDL_Event& ev) {
     case SDL_WINDOWEVENT:
         res = on_window(ev.window);
         break;
+    case SDL_QUIT:
+        PANIC("SDL_QUIT");
+        break;
     default:
         break;
     }
@@ -177,12 +242,8 @@ errr handle_event(const SDL_Event& ev) {
 
 errr poll_event() {
     SDL_Event ev;
-    //if (SDL_PollEvent(&ev) == 0) return 1;
-    // FIXME: for debug
-    if (SDL_PollEvent(&ev) == 0) {
-        EPRINTLN("event queue empty");
-        return 1;
-    }
+    if (SDL_PollEvent(&ev) == 0) return 1;
+    //if (SDL_WaitEventTimeout(&ev, 10) == 0) return 1;
     return handle_event(ev);
 }
 
@@ -222,6 +283,12 @@ errr term_xtra_sdl2(const int name, const int value) {
         EPRINTLN("TERM_XTRA_CLEAR");
         const auto* win = wins[current_term_id()];
         win->clear();
+        //win->present();
+        break;
+    }
+    case TERM_XTRA_FRESH: {
+        EPRINTLN("TERM_XTRA_FRESH");
+        const auto* win = wins[current_term_id()];
         win->present();
         break;
     }
@@ -259,9 +326,11 @@ errr term_wipe_sdl2(const int c, const int r, const int n) {
     return 0;
 }
 
-errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_COLOR attr, const char* text) {
-    // TODO: stub
-    //EPRINTLN("text {} {} {} {} {}", c, r, n, attr, text);
+errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_COLOR attr, const char* euc) {
+    // TODO: 色
+    const auto* win = wins[current_term_id()];
+    win->draw_text(c, r, euc_to_utf8(std::string(euc, n)));
+    //win->present();
     return 0;
 }
 
@@ -274,7 +343,9 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
     for (const auto i : IRANGE(TERM_COUNT)) {
         const auto [ncol, nrow] = TERM_SIZES_INI[i];
 
-        wins[i] = new Window(FORMAT("Term-{}", i), 0, 0, ncol, nrow, *font);
+        const auto* win = wins[i] = new Window(FORMAT("Term-{}", i), 0, 0, ncol, nrow, *font);
+        win->clear();
+        win->present();
 
         auto* term = &terms[i];
         term_init(term, ncol, nrow, 1024);
