@@ -1612,7 +1612,6 @@ errr init_x11(int argc, char* argv[]) {
         color_table[i][1] = angband_color_table[i][1];
         color_table[i][2] = angband_color_table[i][2];
         color_table[i][3] = angband_color_table[i][3];
-        pixel = ((i == 0) ? Metadpy->bg : Metadpy->fg);
         pixel = create_pixel(Metadpy->dpy, color_table[i][1], color_table[i][2], color_table[i][3]);
 
         Infoclr_init(pixel, Metadpy->bg);
