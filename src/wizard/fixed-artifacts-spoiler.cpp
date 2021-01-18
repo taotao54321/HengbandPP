@@ -71,7 +71,9 @@ void spoiler_outlist(concptr header, concptr* list, char separator) {
  */
 static void print_header(void) {
     char buf[80];
-    sprintf(buf, "Artifact Spoilers for Hengband Version %d.%d.%d", FAKE_VER_MAJOR - 10, FAKE_VER_MINOR, FAKE_VER_PATCH);
+    char title[80];
+    put_version(title);
+    sprintf(buf, "Artifact Spoilers for Hengband Version %s", title);
     spoiler_underline(buf);
 }
 
