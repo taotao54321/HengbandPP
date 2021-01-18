@@ -332,10 +332,12 @@ errr term_wipe_sdl2(const int c, const int r, const int n) {
 
 errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_COLOR attr, const char* euc) {
     const auto* win = wins[current_term_id()];
+
+    const auto utf8 = euc_to_utf8(std::string(euc, n));
     SDL_Color fg { angband_color_table[attr][1], angband_color_table[attr][2], angband_color_table[attr][3], 255 };
     SDL_Color bg { 0, 0, 0, 255 };
-    win->draw_text(c, r, euc_to_utf8(std::string(euc, n)), fg, bg);
-    //win->present();
+    win->draw_text(c, r, utf8, fg, bg);
+
     return 0;
 }
 
