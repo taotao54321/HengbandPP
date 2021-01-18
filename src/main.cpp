@@ -465,7 +465,7 @@ int main(int argc, char* argv[]) {
     if (!done && (!mstr || streq(mstr, "sdl2"))) {
         extern void init_sdl2(int, char**);
         init_sdl2(argc, argv);
-        ANGBAND_SYS = "sdl2";
+        ANGBAND_SYS = "sdl";
         done = TRUE;
     }
 
