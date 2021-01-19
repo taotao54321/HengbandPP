@@ -312,17 +312,6 @@ errr on_keydown(const SDL_KeyboardEvent& ev) {
     return 0;
 }
 
-void window_redraw(const int term_id) {
-    const auto* win = wins[term_id];
-    win->clear();
-
-    auto* term = &terms[term_id];
-    term_activate(term);
-    term_redraw();
-
-    win->present();
-}
-
 errr on_window_size_change(const SDL_WindowEvent& ev, const int term_id) {
     const auto* win = wins[term_id];
     const auto font_w = win->font().w();
@@ -342,25 +331,6 @@ errr on_window(const SDL_WindowEvent& ev) {
     errr res = 0;
 
     switch (ev.event) {
-    //case SDL_WINDOWEVENT_SHOWN:
-    case SDL_WINDOWEVENT_EXPOSED:
-        //case SDL_WINDOWEVENT_FOCUS_GAINED:
-        //window_redraw(term_id);
-        break;
-#if 0
-    case SDL_WINDOWEVENT_HIDDEN:
-        EPRINTLN("SDL_WINDOWEVENT_HIDDEN {}", term_id);
-        break;
-    case SDL_WINDOWEVENT_MOVED:
-        EPRINTLN("SDL_WINDOWEVENT_MOVED {}", term_id);
-        break;
-    case SDL_WINDOWEVENT_RESIZED:
-        EPRINTLN("SDL_WINDOWEVENT_RESIZED {}", term_id);
-        break;
-    case SDL_WINDOWEVENT_TAKE_FOCUS:
-        EPRINTLN("SDL_WINDOWEVENT_TAKE_FOCUS {}", term_id);
-        break;
-#endif
     case SDL_WINDOWEVENT_SIZE_CHANGED: {
         res = on_window_size_change(ev, term_id);
         break;
