@@ -222,10 +222,72 @@ int window_id_to_term_id(const u32 win_id) {
 }
 
 errr on_keydown(const SDL_KeyboardEvent& ev) {
-    const auto sym = ev.keysym.sym;
+    constexpr int TERM_KEY_BS = '\x08';
+    constexpr int TERM_KEY_TAB = '\x09';
+    constexpr int TERM_KEY_CR = '\x0D';
+    constexpr int TERM_KEY_ESC = '\x1B';
+    constexpr int TERM_KEY_DEL = '\x7F';
 
-    if (0x20 <= sym && sym <= 0x7E) {
-        term_key_push(sym);
+    const auto TERM_KEY_CTRL = [](const int key) { return key & 0x1F; };
+
+    const auto sym = ev.keysym.sym;
+    const auto shift = bool(ev.keysym.mod & KMOD_SHIFT);
+    const auto ctrl = bool(ev.keysym.mod & KMOD_CTRL);
+
+    if (ctrl) {
+        switch (sym) {
+        case '[': term_key_push(TERM_KEY_ESC); break;
+        default:
+            if ('a' <= sym && sym <= 'z')
+                term_key_push(TERM_KEY_CTRL(sym));
+            break;
+        }
+    }
+    else if (shift) {
+        switch (sym) {
+        case '1': term_key_push('!'); break;
+        case '2': term_key_push('"'); break;
+        case '3': term_key_push('#'); break;
+        case '4': term_key_push('$'); break;
+        case '5': term_key_push('%'); break;
+        case '6': term_key_push('&'); break;
+        case '7': term_key_push('\''); break;
+        case '8': term_key_push('('); break;
+        case '9': term_key_push(')'); break;
+        case '-': term_key_push('='); break;
+        case '^': term_key_push('~'); break;
+        case '@': term_key_push('`'); break;
+        case '[': term_key_push('{'); break;
+        case ';': term_key_push('+'); break;
+        case ':': term_key_push('*'); break;
+        case ']': term_key_push('}'); break;
+        case ',': term_key_push('<'); break;
+        case '.': term_key_push('>'); break;
+        case '/': term_key_push('?'); break;
+        case '\\':
+            if (ev.keysym.scancode == SDL_SCANCODE_INTERNATIONAL3)
+                term_key_push('|');
+            else if (ev.keysym.scancode == SDL_SCANCODE_INTERNATIONAL1)
+                term_key_push('_');
+            break;
+        default:
+            if ('a' <= sym && sym <= 'z')
+                term_key_push(sym & ~0x20);
+            break;
+        }
+    }
+    else {
+        switch (sym) {
+        case SDLK_BACKSPACE: term_key_push(TERM_KEY_BS); break;
+        case SDLK_TAB: term_key_push(TERM_KEY_TAB); break;
+        case SDLK_RETURN: term_key_push(TERM_KEY_CR); break;
+        case SDLK_ESCAPE: term_key_push(TERM_KEY_ESC); break;
+        case SDLK_DELETE: term_key_push(TERM_KEY_DEL); break;
+        default:
+            if (0x20 <= sym && sym <= 0x7E)
+                term_key_push(sym);
+            break;
+        }
     }
 
     return 0;
