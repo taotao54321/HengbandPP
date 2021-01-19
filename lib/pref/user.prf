@@ -18,6 +18,9 @@
 
 ##### System Specific Subfiles #####
 
+?:[EQU $SYS sdl]
+%:user-sdl.prf
+
 ?:[IOR [EQU $SYS xaw] [EQU $SYS x11]]
 %:user-x11.prf
 
