@@ -122,7 +122,15 @@ private:
 public:
     Font(const std::string& path, const int pt) {
         ENSURE(font_ = TTF_OpenFont(path.c_str(), pt));
-        ENSURE(TTF_SizeUTF8(font_, "X", &w_, &h_) == 0);
+
+        // 半角文字の幅を得る (等幅フォントを仮定)
+        ENSURE(TTF_SizeUTF8(font_, "X", &w_, nullptr) == 0);
+
+        // 文字の高さの最大値を得る。
+        // TTF_FontHeight() は最大値より小さい値を返すことがあるため、
+        // TTF_SizeUTF8() に全ての ASCII 文字からなる文字列を渡す方法をとる。
+        // 非 ASCII 文字については全て調べるのが非現実的なので妥協する。
+        ENSURE(TTF_SizeUTF8(font_, " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", nullptr, &h_) == 0);
     }
 
     [[nodiscard]] int w() const { return w_; }
@@ -476,6 +484,8 @@ errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_
 
     const auto* win = wins[current_term_id()];
 
+    // Byte 数 == 文字幅と仮定
+
     std::string euc(euc_arg, n);
     std::vector<int> offs_wall;
     {
@@ -490,6 +500,8 @@ errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_
             }
         }
     }
+
+    win->draw_blanks(c, r, n);
 
     const auto utf8 = euc_to_utf8(euc);
     const SDL_Color fg { angband_color_table[attr][1], angband_color_table[attr][2], angband_color_table[attr][3], 0xFF };
