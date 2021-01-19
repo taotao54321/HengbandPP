@@ -1,8 +1,10 @@
 #include <algorithm>
 #include <array>
 #include <cerrno>
+#include <iterator>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <iconv.h>
 
@@ -21,6 +23,25 @@ namespace {
 // clang-format off
 #define ENSURE(cond) do { if (!(cond)) { detail::PANIC_IMPL(__FILE__, __LINE__, "{}", "`" #cond "` is not satisfied"); } } while (false)
 // clang-format on
+
+template <class InputIt>
+u16 euc_next(InputIt& it, InputIt last) {
+    ENSURE(it != last);
+
+    const u8 b1 = *it++;
+
+    if (b1 <= 0x7F) {
+        return b1;
+    }
+
+    if (0xA1 <= b1 && b1 <= 0xFE) {
+        if (it == last) PANIC("incomplete euc character");
+        const u8 b2 = *it++;
+        return b1 | (b2 << 8);
+    }
+
+    PANIC("invalid euc character");
+}
 
 std::string euc_to_utf8(const std::string& euc) {
     constexpr std::size_t BUF_SIZE = 1024;
@@ -47,21 +68,25 @@ std::string euc_to_utf8(const std::string& euc) {
     return utf8;
 }
 
-constexpr int TERM_COUNT = 8;
-
 constexpr char FONT_PATH[] = "/usr/share/fonts/truetype/vlgothic/VL-Gothic-Regular.ttf";
 constexpr int FONT_PT = 16;
 
-constexpr std::array<int, TERM_COUNT> TERM_IDS {
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
+constexpr u8 WALL_BMP[] = {
+    0x42, 0x4d, 0x5e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x00,
+    0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x08, 0x00,
+    0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+    0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff,
+    0xff, 0x00, 0x44, 0x00, 0x00, 0x00, 0xaa, 0x00, 0x00, 0x00, 0x05, 0x00,
+    0x00, 0x00, 0xaa, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x96, 0x00,
+    0x00, 0x00, 0x41, 0x00, 0x00, 0x00, 0xaa, 0x00, 0x00, 0x00
 };
+
+constexpr int TERM_COUNT = 8;
+
+// clang-format off
+constexpr std::array<int, TERM_COUNT> TERM_IDS { 0, 1, 2, 3, 4, 5, 6, 7 };
+// clang-format on
 
 // (ncol, nrow)
 constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_SIZES_INI { {
@@ -102,14 +127,19 @@ private:
     SDL_Window* win_;
     SDL_Renderer* ren_;
     Font& font_;
+    SDL_Texture* tex_wall_;
 
 public:
-    Window(const std::string& title, const int x, const int y, const int ncol, const int nrow, Font& font)
+    Window(
+        const std::string& title,
+        const int x, const int y, const int ncol, const int nrow,
+        Font& font, SDL_Surface* surf_wall)
         : font_(font) {
         const auto w = font_.w() * ncol;
         const auto h = font_.h() * nrow;
         ENSURE(win_ = SDL_CreateWindow(title.c_str(), x, y, w, h, SDL_WINDOW_RESIZABLE));
         ENSURE(ren_ = SDL_CreateRenderer(win_, -1, 0));
+        ENSURE(tex_wall_ = SDL_CreateTextureFromSurface(ren_, surf_wall));
     }
 
     [[nodiscard]] u32 id() const {
@@ -132,6 +162,12 @@ public:
         ENSURE(SDL_RenderCopy(ren_, tex, nullptr, &rect) == 0);
     }
 
+    void draw_wall(const int c, const int r, SDL_Color color) const {
+        SDL_Rect rect { font_.w() * c, font_.h() * r, font_.w(), font_.h() };
+        ENSURE(SDL_SetTextureColorMod(tex_wall_, color.r, color.g, color.b) == 0);
+        ENSURE(SDL_RenderCopy(ren_, tex_wall_, nullptr, &rect) == 0);
+    }
+
     void present() const {
         SDL_RenderPresent(ren_);
     }
@@ -147,6 +183,7 @@ public:
 
 System* sys {};
 Font* font {};
+
 std::array<Window*, TERM_COUNT> wins {};
 
 std::array<term_type, TERM_COUNT> terms {};
@@ -330,15 +367,50 @@ errr term_wipe_sdl2(const int c, const int r, const int n) {
     return 0;
 }
 
-errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_COLOR attr, const char* euc) {
+errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_COLOR attr, const char* euc_arg) {
+    using std::begin, std::end;
+
+    constexpr char CH_WALL = 0x7F;
+
     const auto* win = wins[current_term_id()];
 
-    const auto utf8 = euc_to_utf8(std::string(euc, n));
-    SDL_Color fg { angband_color_table[attr][1], angband_color_table[attr][2], angband_color_table[attr][3], 255 };
-    SDL_Color bg { 0, 0, 0, 255 };
+    std::string euc(euc_arg, n);
+    std::vector<int> offs_wall;
+    {
+        for (auto it = begin(euc); it != end(euc);) {
+            if (*it == CH_WALL) {
+                offs_wall.emplace_back(std::distance(begin(euc), it));
+                *it = '#';
+                ++it;
+            }
+            else {
+                euc_next(it, end(euc));
+            }
+        }
+    }
+
+    const auto utf8 = euc_to_utf8(euc);
+    const SDL_Color fg { angband_color_table[attr][1], angband_color_table[attr][2], angband_color_table[attr][3], 255 };
+    const SDL_Color bg { 0, 0, 0, 255 };
     win->draw_text(c, r, utf8, fg, bg);
 
+    for (const auto off : offs_wall) {
+        win->draw_wall(c + off, r, fg);
+    }
+
     return 0;
+}
+
+SDL_Surface* make_wall_surface() {
+    using std::begin, std::size;
+
+    SDL_RWops* rdr;
+    ENSURE(rdr = SDL_RWFromConstMem(begin(WALL_BMP), size(WALL_BMP)));
+
+    SDL_Surface* surf;
+    ENSURE(surf = SDL_LoadBMP_RW(rdr, 1));
+
+    return surf;
 }
 
 } // anonymous namespace
@@ -347,10 +419,12 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
     sys = new System;
     font = new Font(FONT_PATH, FONT_PT);
 
+    auto* surf_wall = make_wall_surface();
+
     for (const auto i : IRANGE(TERM_COUNT)) {
         const auto [ncol, nrow] = TERM_SIZES_INI[i];
 
-        const auto* win = wins[i] = new Window(FORMAT("Term-{}", i), 0, 0, ncol, nrow, *font);
+        const auto* win = wins[i] = new Window(FORMAT("Term-{}", i), 0, 0, ncol, nrow, *font, surf_wall);
         win->clear();
         win->present();
 
