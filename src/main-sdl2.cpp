@@ -172,12 +172,25 @@ public:
     [[nodiscard]] const Font& font() const { return font_; }
 
     void clear() const {
+        ENSURE(SDL_SetRenderDrawColor(ren_, 0, 0, 0, 0xFF) == 0);
         ENSURE(SDL_RenderClear(ren_) == 0);
     }
 
     void draw_blanks(const int c, const int r, const int n) const {
         const SDL_Rect rect { font_.w() * c, font_.h() * r, font_.w() * n, font_.h() };
         ENSURE(SDL_SetRenderDrawColor(ren_, 0, 0, 0, 0xFF) == 0);
+        ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
+    }
+
+    void draw_curs(const int c, const int r) const {
+        const SDL_Rect rect { font_.w() * c, font_.h() * r, font_.w(), font_.h() };
+        ENSURE(SDL_SetRenderDrawColor(ren_, 0xFF, 0xFF, 0xFF, 0xFF) == 0);
+        ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
+    }
+
+    void draw_bigcurs(const int c, const int r) const {
+        const SDL_Rect rect { font_.w() * c, font_.h() * r, 2 * font_.w(), font_.h() };
+        ENSURE(SDL_SetRenderDrawColor(ren_, 0xFF, 0xFF, 0xFF, 0xFF) == 0);
         ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
     }
 
@@ -437,14 +450,16 @@ errr term_xtra_sdl2(const int name, const int value) {
 }
 
 errr term_curs_sdl2(const int c, const int r) {
-    // TODO: stub
-    EPRINTLN("curs {} {}", c, r);
+    const auto* win = wins[current_term_id()];
+    win->draw_curs(c, r);
+
     return 0;
 }
 
 errr term_bigcurs_sdl2(const int c, const int r) {
-    // TODO: stub
-    EPRINTLN("bigcurs {} {}", c, r);
+    const auto* win = wins[current_term_id()];
+    win->draw_bigcurs(c, r);
+
     return 0;
 }
 
