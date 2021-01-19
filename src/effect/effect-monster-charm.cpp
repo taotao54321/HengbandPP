@@ -17,6 +17,7 @@
 #include "object-enchant/trc-types.h"
 #include "pet/pet-fall-off.h"
 #include "player-info/avatar.h"
+#include "player/player-status-flags.h"
 #include "spell/spells-diceroll.h"
 #include "status/bad-status-setter.h"
 #include "system/floor-type-definition.h"
@@ -30,7 +31,7 @@ static void effect_monster_charm_resist(player_type* caster_ptr, effect_monster_
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
     }
-    else if (caster_ptr->cursed & TRC_AGGRAVATE) {
+    else if (has_aggravate(caster_ptr)) {
         em_ptr->note = _("はあなたに敵意を抱いている！", " hates you too much!");
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
@@ -84,7 +85,7 @@ process_result effect_monster_control_undead(player_type* caster_ptr, effect_mon
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
     }
-    else if (caster_ptr->cursed & TRC_AGGRAVATE) {
+    else if (has_aggravate(caster_ptr)) {
         em_ptr->note = _("はあなたに敵意を抱いている！", " hates you too much!");
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
@@ -118,7 +119,7 @@ process_result effect_monster_control_demon(player_type* caster_ptr, effect_mons
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
     }
-    else if (caster_ptr->cursed & TRC_AGGRAVATE) {
+    else if (has_aggravate(caster_ptr)) {
         em_ptr->note = _("はあなたに敵意を抱いている！", " hates you too much!");
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
@@ -152,7 +153,7 @@ process_result effect_monster_control_animal(player_type* caster_ptr, effect_mon
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
     }
-    else if (caster_ptr->cursed & TRC_AGGRAVATE) {
+    else if (has_aggravate(caster_ptr)) {
         em_ptr->note = _("はあなたに敵意を抱いている！", " hates you too much!");
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
@@ -191,7 +192,7 @@ process_result effect_monster_charm_living(player_type* caster_ptr, effect_monst
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
     }
-    else if (caster_ptr->cursed & TRC_AGGRAVATE) {
+    else if (has_aggravate(caster_ptr)) {
         em_ptr->note = _("はあなたに敵意を抱いている！", " hates you too much!");
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
@@ -304,7 +305,7 @@ static bool effect_monster_crusade_domination(player_type* caster_ptr, effect_mo
     }
 
     if ((em_ptr->r_ptr->flags1 & RF1_QUESTOR) || (em_ptr->r_ptr->flags1 & RF1_UNIQUE) || (em_ptr->m_ptr->mflag2 & MFLAG2_NOPET)
-        || (caster_ptr->cursed & TRC_AGGRAVATE) || ((em_ptr->r_ptr->level + 10) > randint1(em_ptr->dam))) {
+        || has_aggravate(caster_ptr) || ((em_ptr->r_ptr->level + 10) > randint1(em_ptr->dam))) {
         if (one_in_(4))
             em_ptr->m_ptr->mflag2 |= MFLAG2_NOPET;
 
