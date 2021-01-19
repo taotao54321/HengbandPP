@@ -68,9 +68,6 @@ std::string euc_to_utf8(const std::string& euc) {
     return utf8;
 }
 
-constexpr char FONT_PATH[] = "/usr/share/fonts/truetype/vlgothic/VL-Gothic-Regular.ttf";
-constexpr int FONT_PT = 16;
-
 constexpr u8 WALL_BMP[] = {
     0x42, 0x4d, 0x5e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x00,
     0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x08, 0x00,
@@ -82,23 +79,39 @@ constexpr u8 WALL_BMP[] = {
     0x00, 0x00, 0x41, 0x00, 0x00, 0x00, 0xaa, 0x00, 0x00, 0x00
 };
 
+constexpr char FONT_PATH[] = "/usr/share/fonts/truetype/vlgothic/VL-Gothic-Regular.ttf";
+constexpr int FONT_PT = 18;
+
 constexpr int TERM_COUNT = 8;
+constexpr int TERM_ENABLE_COUNT = 5;
 
 // clang-format off
 constexpr std::array<int, TERM_COUNT> TERM_IDS { 0, 1, 2, 3, 4, 5, 6, 7 };
-// clang-format on
+
+// (x, y)
+constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_POSS_INI { {
+    {    0,   0 },
+    {    0, 740 },
+    { 1360,   0 },
+    { 1360, 260 },
+    { 1360, 740 },
+    {    0,   0 },
+    {    0,   0 },
+    {    0,   0 },
+} };
 
 // (ncol, nrow)
 constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_SIZES_INI { {
-    { 100, 30 },
-    { 20, 20 },
-    { 20, 20 },
-    { 20, 20 },
-    { 20, 20 },
-    { 20, 20 },
-    { 20, 20 },
-    { 20, 20 },
+    { 150, 40 },
+    { 150, 16 },
+    {  61, 12 },
+    {  61, 23 },
+    {  61, 15 },
+    {  10, 10 },
+    {  10, 10 },
+    {  10, 10 },
 } };
+// clang-format on
 
 class Font {
 private:
@@ -170,6 +183,10 @@ public:
     }
 
     [[nodiscard]] const Font& font() const { return font_; }
+
+    void hide() const {
+        SDL_HideWindow(win_);
+    }
 
     void clear() const {
         ENSURE(SDL_SetRenderDrawColor(ren_, 0, 0, 0, 0xFF) == 0);
@@ -312,6 +329,17 @@ errr on_keydown(const SDL_KeyboardEvent& ev) {
     return 0;
 }
 
+void window_redraw(const int term_id) {
+    const auto* win = wins[term_id];
+    win->clear();
+
+    auto* term = &terms[term_id];
+    term_activate(term);
+    term_redraw();
+
+    win->present();
+}
+
 errr on_window_size_change(const SDL_WindowEvent& ev, const int term_id) {
     const auto* win = wins[term_id];
     const auto font_w = win->font().w();
@@ -331,6 +359,9 @@ errr on_window(const SDL_WindowEvent& ev) {
     errr res = 0;
 
     switch (ev.event) {
+    case SDL_WINDOWEVENT_EXPOSED:
+        window_redraw(term_id);
+        break;
     case SDL_WINDOWEVENT_SIZE_CHANGED: {
         res = on_window_size_change(ev, term_id);
         break;
@@ -493,9 +524,10 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
     auto* surf_wall = make_wall_surface();
 
     for (const auto i : IRANGE(TERM_COUNT)) {
+        const auto [x, y] = TERM_POSS_INI[i];
         const auto [ncol, nrow] = TERM_SIZES_INI[i];
 
-        const auto* win = wins[i] = new Window(FORMAT("Term-{}", i), 0, 0, ncol, nrow, *font, surf_wall);
+        const auto* win = wins[i] = new Window(FORMAT("Term-{}", i), x, y, ncol, nrow, *font, surf_wall);
         win->clear();
         win->present();
 
@@ -511,6 +543,9 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
         term->data = const_cast<void*>(static_cast<const void*>(&TERM_IDS[i]));
         angband_term[i] = term;
     }
+
+    for (const auto i : IRANGE(TERM_ENABLE_COUNT, TERM_COUNT))
+        wins[i]->hide();
 
     term_activate(angband_term[0]);
 }
