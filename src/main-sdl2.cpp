@@ -175,16 +175,22 @@ public:
         ENSURE(SDL_RenderClear(ren_) == 0);
     }
 
+    void draw_blanks(const int c, const int r, const int n) const {
+        const SDL_Rect rect { font_.w() * c, font_.h() * r, font_.w() * n, font_.h() };
+        ENSURE(SDL_SetRenderDrawColor(ren_, 0, 0, 0, 0xFF) == 0);
+        ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
+    }
+
     void draw_text(const int c, const int r, const std::string& text, SDL_Color fg, SDL_Color bg) const {
         auto* surf = font_.render(text, fg, bg);
         SDL_Texture* tex;
         ENSURE(tex = SDL_CreateTextureFromSurface(ren_, surf));
-        SDL_Rect rect { font_.w() * c, font_.h() * r, surf->w, surf->h };
+        const SDL_Rect rect { font_.w() * c, font_.h() * r, surf->w, surf->h };
         ENSURE(SDL_RenderCopy(ren_, tex, nullptr, &rect) == 0);
     }
 
     void draw_wall(const int c, const int r, SDL_Color color) const {
-        SDL_Rect rect { font_.w() * c, font_.h() * r, font_.w(), font_.h() };
+        const SDL_Rect rect { font_.w() * c, font_.h() * r, font_.w(), font_.h() };
         ENSURE(SDL_SetTextureColorMod(tex_wall_, color.r, color.g, color.b) == 0);
         ENSURE(SDL_RenderCopy(ren_, tex_wall_, nullptr, &rect) == 0);
     }
@@ -443,8 +449,9 @@ errr term_bigcurs_sdl2(const int c, const int r) {
 }
 
 errr term_wipe_sdl2(const int c, const int r, const int n) {
-    // TODO: stub
-    EPRINTLN("wipe {} {} {}", c, r, n);
+    const auto* win = wins[current_term_id()];
+    win->draw_blanks(c, r, n);
+
     return 0;
 }
 
@@ -471,8 +478,8 @@ errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_
     }
 
     const auto utf8 = euc_to_utf8(euc);
-    const SDL_Color fg { angband_color_table[attr][1], angband_color_table[attr][2], angband_color_table[attr][3], 255 };
-    const SDL_Color bg { 0, 0, 0, 255 };
+    const SDL_Color fg { angband_color_table[attr][1], angband_color_table[attr][2], angband_color_table[attr][3], 0xFF };
+    const SDL_Color bg { 0, 0, 0, 0xFF };
     win->draw_text(c, r, utf8, fg, bg);
 
     for (const auto off : offs_wall) {
