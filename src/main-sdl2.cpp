@@ -129,6 +129,25 @@ private:
     Font& font_;
     SDL_Texture* tex_wall_;
 
+    // 元画像 surf_orig をサイズ (w,h) の領域にリピートしたテクスチャを作る。
+    static SDL_Texture* make_wall_texture(SDL_Renderer* ren, SDL_Surface* surf_orig, const int w, const int h) {
+        const int w_orig = surf_orig->w;
+        const int h_orig = surf_orig->h;
+
+        SDL_Surface* surf;
+        ENSURE(surf = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_RGBA32));
+        for (int y = 0; y < h; y += h_orig) {
+            for (int x = 0; x < w; x += w_orig) {
+                SDL_Rect rect { x, y, w_orig, h_orig };
+                ENSURE(SDL_BlitSurface(surf_orig, nullptr, surf, &rect) == 0);
+            }
+        }
+
+        SDL_Texture* tex;
+        ENSURE(tex = SDL_CreateTextureFromSurface(ren, surf));
+        return tex;
+    }
+
 public:
     Window(
         const std::string& title,
@@ -137,9 +156,11 @@ public:
         : font_(font) {
         const auto w = font_.w() * ncol;
         const auto h = font_.h() * nrow;
+
         ENSURE(win_ = SDL_CreateWindow(title.c_str(), x, y, w, h, SDL_WINDOW_RESIZABLE));
         ENSURE(ren_ = SDL_CreateRenderer(win_, -1, 0));
-        ENSURE(tex_wall_ = SDL_CreateTextureFromSurface(ren_, surf_wall));
+
+        tex_wall_ = make_wall_texture(ren_, surf_wall, font_.w(), font_.h());
     }
 
     [[nodiscard]] u32 id() const {
