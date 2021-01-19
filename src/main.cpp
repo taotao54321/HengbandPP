@@ -462,7 +462,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    if (!done && (!mstr || streq(mstr, "sdl2"))) {
+    if (!done && (!mstr || streq(mstr, "sdl"))) {
         extern void init_sdl2(int, char**);
         init_sdl2(argc, argv);
         ANGBAND_SYS = "sdl";
