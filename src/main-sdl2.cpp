@@ -380,7 +380,6 @@ errr handle_event(const SDL_Event& ev) {
 errr poll_event() {
     SDL_Event ev;
     if (SDL_PollEvent(&ev) == 0) return 1;
-    //if (SDL_WaitEventTimeout(&ev, 10) == 0) return 1;
     return handle_event(ev);
 }
 
@@ -391,8 +390,8 @@ errr wait_event() {
 }
 
 errr flush_events() {
-    SDL_PumpEvents();
-    SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
+    while (poll_event() == 0)
+        ;
     return 0;
 }
 
@@ -401,7 +400,7 @@ errr term_xtra_sdl2(const int name, const int value) {
 
     switch (name) {
     case TERM_XTRA_EVENT:
-        res = value == 0 ? wait_event() : poll_event();
+        res = value == 0 ? poll_event() : wait_event();
         break;
     case TERM_XTRA_BORED:
         res = poll_event();
@@ -412,7 +411,6 @@ errr term_xtra_sdl2(const int name, const int value) {
     case TERM_XTRA_CLEAR: {
         const auto* win = wins[current_term_id()];
         win->clear();
-        //win->present();
         break;
     }
     case TERM_XTRA_FRESH: {
