@@ -447,8 +447,6 @@ errr term_xtra_sdl2(const int name, const int value) {
     case TERM_XTRA_DELAY:
         SDL_Delay(value);
         break;
-    case TERM_XTRA_REACT:
-        break;
     default:
         break;
     }
