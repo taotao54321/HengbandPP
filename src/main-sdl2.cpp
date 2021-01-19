@@ -384,9 +384,7 @@ errr handle_event(const SDL_Event& ev) {
     case SDL_WINDOWEVENT:
         res = on_window(ev.window);
         break;
-    case SDL_QUIT:
-        PANIC("SDL_QUIT");
-        break;
+    // SDL_QUIT は無視する
     default:
         break;
     }
