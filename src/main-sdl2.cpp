@@ -92,10 +92,10 @@ constexpr std::array<int, TERM_COUNT> TERM_IDS { 0, 1, 2, 3, 4, 5, 6, 7 };
 // (x, y)
 constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_POSS_INI { {
     {    0,   0 },
-    {    0, 740 },
+    {    0, 780 },
     { 1360,   0 },
     { 1360, 260 },
-    { 1360, 740 },
+    { 1360, 780 },
     {    0,   0 },
     {    0,   0 },
     {    0,   0 },
@@ -103,11 +103,11 @@ constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_POSS_INI { {
 
 // (ncol, nrow)
 constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_SIZES_INI { {
-    { 150, 40 },
-    { 150, 16 },
+    { 150, 36 },
+    { 150, 12 },
     {  61, 12 },
     {  61, 23 },
-    {  61, 15 },
+    {  61, 13 },
     {  10, 10 },
     {  10, 10 },
     {  10, 10 },
