@@ -24,6 +24,7 @@ namespace {
 #define ENSURE(cond) do { if (!(cond)) { detail::PANIC_IMPL(__FILE__, __LINE__, "{}", "`" #cond "` is not satisfied"); } } while (false)
 // clang-format on
 
+// EUC-JP を1文字読み進める。
 template <class InputIt>
 u16 euc_next(InputIt& it, InputIt last) {
     ENSURE(it != last);
@@ -68,6 +69,7 @@ std::string euc_to_utf8(const std::string& euc) {
     return utf8;
 }
 
+// src/wall.bmp と同一
 constexpr u8 WALL_BMP[] = {
     0x42, 0x4d, 0x5e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x00,
     0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x08, 0x00,
@@ -287,6 +289,8 @@ int window_id_to_term_id(const u32 win_id) {
     PANIC("invalid window id: {}", win_id);
 }
 
+// Shift や Ctrl は適宜変換する(とりあえず日本語キーボード決め打ち)。
+// SDL_TextInputEvent で済ませられればよいのだが、それだと Ctrl などの変換を制御できないので。
 errr on_keydown(const SDL_KeyboardEvent& ev) {
     constexpr int TERM_KEY_BS = '\x08';
     constexpr int TERM_KEY_TAB = '\x09';
@@ -388,6 +392,7 @@ errr on_window(const SDL_WindowEvent& ev) {
 
     switch (ev.event) {
     case SDL_WINDOWEVENT_EXPOSED:
+        // これを行わないとリサイズ中に真っ黒になることがある
         window_redraw(term_id);
         break;
     case SDL_WINDOWEVENT_SIZE_CHANGED: {
@@ -413,11 +418,12 @@ errr handle_event(const SDL_Event& ev) {
     case SDL_WINDOWEVENT:
         res = on_window(ev.window);
         break;
-    // SDL_QUIT は無視する
+    // SDL_QUIT は無視する。これにより端末からの Ctrl+C も無視される
     default:
         break;
     }
 
+    // イベント処理中に Term が切り替わることがあるので元に戻す
     term_activate(&terms[term_id_orig]);
 
     return res;
@@ -446,25 +452,32 @@ errr term_xtra_sdl2(const int name, const int value) {
 
     switch (name) {
     case TERM_XTRA_EVENT:
+        // UI 側イベントを1つ処理
+        // 引数が 0 なら poll, 非0 なら wait
         res = value == 0 ? poll_event() : wait_event();
         break;
     case TERM_XTRA_BORED:
+        // UI 側イベントを1つ処理 (poll)
         res = poll_event();
         break;
     case TERM_XTRA_FLUSH:
+        // UI 側イベントを全て処理
         res = flush_events();
         break;
     case TERM_XTRA_CLEAR: {
+        // 現在のウィンドウの内容をクリア
         const auto* win = wins[current_term_id()];
         win->clear();
         break;
     }
     case TERM_XTRA_FRESH: {
+        // 現在のウィンドウの描画内容を反映
         const auto* win = wins[current_term_id()];
         win->present();
         break;
     }
     case TERM_XTRA_DELAY:
+        // ディレイ (引数: ミリ秒)
         SDL_Delay(value);
         break;
     default:
@@ -561,6 +574,8 @@ SDL_Surface* make_wall_surface() {
 } // anonymous namespace
 
 void init_sdl2(int /*argc*/, char** /*argv*/) {
+    // 確保したリソースは解放しない。どうせプログラム終了時に解放されるので。
+
     sys = new System;
     font = new Font(FONT_PATH, FONT_PT);
 
@@ -590,5 +605,7 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
     for (const auto i : IRANGE(TERM_ENABLE_COUNT, TERM_COUNT))
         wins[i]->hide();
 
+    // これを行わないとクラッシュする
+    // Term の初期化はドライバ側の責任らしい
     term_activate(angband_term[0]);
 }
