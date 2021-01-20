@@ -136,6 +136,14 @@ public:
     [[nodiscard]] int w() const { return w_; }
     [[nodiscard]] int h() const { return h_; }
 
+    [[nodiscard]] std::pair<int, int> xy2cr(const int x, const int y) const {
+        return { x / w_, y / h_ };
+    }
+
+    [[nodiscard]] std::pair<int, int> cr2xy(const int c, const int r) const {
+        return { w_ * c, h_ * r };
+    }
+
     [[nodiscard]] SDL_Surface* render(const std::string& text, SDL_Color fg, SDL_Color bg) const {
         SDL_Surface* surf;
         ENSURE(surf = TTF_RenderUTF8_Shaded(font_, text.c_str(), fg, bg));
@@ -175,8 +183,7 @@ public:
         const int x, const int y, const int ncol, const int nrow,
         Font& font, SDL_Surface* surf_wall)
         : font_(font) {
-        const auto w = font_.w() * ncol;
-        const auto h = font_.h() * nrow;
+        const auto [w, h] = font_.cr2xy(ncol, nrow);
 
         ENSURE(win_ = SDL_CreateWindow(title.c_str(), x, y, w, h, SDL_WINDOW_RESIZABLE));
         ENSURE(ren_ = SDL_CreateRenderer(win_, -1, 0));
@@ -202,33 +209,48 @@ public:
     }
 
     void draw_blanks(const int c, const int r, const int n) const {
-        const SDL_Rect rect { font_.w() * c, font_.h() * r, font_.w() * n, font_.h() };
+        const auto [x, y] = font_.cr2xy(c, r);
+        const auto [w, h] = font_.cr2xy(n, 1);
+        const SDL_Rect rect { x, y, w, h };
+
         ENSURE(SDL_SetRenderDrawColor(ren_, 0, 0, 0, 0xFF) == 0);
         ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
     }
 
     void draw_curs(const int c, const int r) const {
-        const SDL_Rect rect { font_.w() * c, font_.h() * r, font_.w(), font_.h() };
+        const auto [x, y] = font_.cr2xy(c, r);
+        const auto [w, h] = font_.cr2xy(1, 1);
+        const SDL_Rect rect { x, y, w, h };
+
         ENSURE(SDL_SetRenderDrawColor(ren_, 0xFF, 0xFF, 0xFF, 0xFF) == 0);
         ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
     }
 
     void draw_bigcurs(const int c, const int r) const {
-        const SDL_Rect rect { font_.w() * c, font_.h() * r, 2 * font_.w(), font_.h() };
+        const auto [x, y] = font_.cr2xy(c, r);
+        const auto [w, h] = font_.cr2xy(2, 1);
+        const SDL_Rect rect { x, y, w, h };
+
         ENSURE(SDL_SetRenderDrawColor(ren_, 0xFF, 0xFF, 0xFF, 0xFF) == 0);
         ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
     }
 
     void draw_text(const int c, const int r, const std::string& text, SDL_Color fg, SDL_Color bg) const {
         auto* surf = font_.render(text, fg, bg);
+
+        const auto [x, y] = font_.cr2xy(c, r);
+        const SDL_Rect rect { x, y, surf->w, surf->h };
+
         SDL_Texture* tex;
         ENSURE(tex = SDL_CreateTextureFromSurface(ren_, surf));
-        const SDL_Rect rect { font_.w() * c, font_.h() * r, surf->w, surf->h };
         ENSURE(SDL_RenderCopy(ren_, tex, nullptr, &rect) == 0);
     }
 
     void draw_wall(const int c, const int r, SDL_Color color) const {
-        const SDL_Rect rect { font_.w() * c, font_.h() * r, font_.w(), font_.h() };
+        const auto [x, y] = font_.cr2xy(c, r);
+        const auto [w, h] = font_.cr2xy(1, 1);
+        const SDL_Rect rect { x, y, w, h };
+
         ENSURE(SDL_SetTextureColorMod(tex_wall_, color.r, color.g, color.b) == 0);
         ENSURE(SDL_RenderCopy(ren_, tex_wall_, nullptr, &rect) == 0);
     }
@@ -350,11 +372,9 @@ void window_redraw(const int term_id) {
 
 errr on_window_size_change(const SDL_WindowEvent& ev, const int term_id) {
     const auto* win = wins[term_id];
-    const auto font_w = win->font().w();
-    const auto font_h = win->font().h();
 
-    const auto ncol = ev.data1 / font_w;
-    const auto nrow = ev.data2 / font_h;
+    const auto [ncol, nrow] = win->font().xy2cr(ev.data1, ev.data2);
+
     term_activate(&terms[term_id]);
     term_resize(ncol, nrow);
 
