@@ -374,7 +374,7 @@ bool switch_cast_blue_magic(player_type* caster_ptr, bmc_type* bmc_ptr, SPELL_ID
 bool cast_learned_spell(player_type* caster_ptr, SPELL_IDX spell, const bool success) {
     bmc_type tmp_bm;
     bmc_type* bmc_ptr = initialize_blue_magic_type(caster_ptr, &tmp_bm, success, get_pseudo_monstetr_level);
-    if (switch_cast_blue_magic(caster_ptr, bmc_ptr, spell))
+    if (!switch_cast_blue_magic(caster_ptr, bmc_ptr, spell))
         return FALSE;
 
     if (bmc_ptr->no_trump)
