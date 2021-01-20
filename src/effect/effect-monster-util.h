@@ -4,12 +4,12 @@
 #include "system/angband.h"
 #include "system/monster-type-definition.h"
 
-typedef struct effect_monster_type {
+struct effect_monster_type {
     grid_type* g_ptr;
     monster_type* m_ptr;
     monster_type* m_caster_ptr;
     monster_race* r_ptr;
-    char killer[80];
+    char killer[MAX_MONSTER_NAME];
     bool seen;
     bool seen_msg;
     bool slept;
@@ -40,6 +40,6 @@ typedef struct effect_monster_type {
     EFFECT_ID effect_type;
     BIT_FLAGS flag;
     bool see_s_msg;
-} effect_monster_type;
+};
 
 effect_monster_type* initialize_effect_monster(player_type* caster_ptr, effect_monster_type* em_ptr, MONSTER_IDX who, POSITION r, POSITION y, POSITION x, HIT_POINT dam, EFFECT_ID effect_type, BIT_FLAGS flag, bool see_s_msg);

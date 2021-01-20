@@ -243,9 +243,9 @@ struct player_type {
     s16b concent; /* Sniper's concentration level */
 
     HIT_POINT player_hp[PY_MAX_LEVEL];
-    char died_from[80];   /* What killed the player */
-    concptr last_message; /* Last message on death or retirement */
-    char history[4][60];  /* Textual "history" for the Player */
+    char died_from[MAX_MONSTER_NAME]; /* What killed the player */
+    concptr last_message;             /* Last message on death or retirement */
+    char history[4][60];              /* Textual "history" for the Player */
 
     u16b panic_save; /* Panic save */
 
