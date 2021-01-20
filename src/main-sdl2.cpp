@@ -1,7 +1,9 @@
 #include <algorithm>
 #include <array>
 #include <cerrno>
+#include <cstdio>
 #include <iterator>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
@@ -80,9 +82,6 @@ constexpr u8 WALL_BMP[] = {
     0x00, 0x00, 0xaa, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x96, 0x00,
     0x00, 0x00, 0x41, 0x00, 0x00, 0x00, 0xaa, 0x00, 0x00, 0x00
 };
-
-constexpr char FONT_PATH[] = "/usr/share/fonts/truetype/vlgothic/VL-Gothic-Regular.ttf";
-constexpr int FONT_PT = 18;
 
 constexpr int TERM_COUNT = 8;
 constexpr int TERM_ENABLE_COUNT = 5;
@@ -571,13 +570,33 @@ SDL_Surface* make_wall_surface() {
     return surf;
 }
 
+std::optional<std::string> get_font_path(const std::string& name) {
+    const auto cmdline = FORMAT("fc-match --format=%{{file}} {}", name);
+
+    FILE* in = popen(cmdline.c_str(), "r");
+    if (!in) return std::nullopt;
+
+    char buf[1024];
+    const char* status = std::fgets(buf, sizeof(buf), in);
+
+    pclose(in);
+
+    if (!status) return std::nullopt;
+
+    return std::string(buf);
+}
+
 } // anonymous namespace
 
 void init_sdl2(int /*argc*/, char** /*argv*/) {
     // 確保したリソースは解放しない。どうせプログラム終了時に解放されるので。
 
+    const auto font_path = get_font_path("monospace");
+    if (!font_path) PANIC("cannot find font path");
+    const auto font_pt = 18;
+
     sys = new System;
-    font = new Font(FONT_PATH, FONT_PT);
+    font = new Font(*font_path, font_pt);
 
     auto* surf_wall = make_wall_surface();
 
