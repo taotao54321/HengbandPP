@@ -498,6 +498,8 @@ errr term_wipe_sdl2(const int c, const int r, const int n) {
 errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_COLOR attr, const char* euc_arg) {
     using std::begin, std::end;
 
+    // 壁の内部コード。lib/pref/font-sdl.prf で指定されている。
+    // この値は EUC-JP と干渉しない。
     constexpr char CH_WALL = 0x7F;
 
     const auto* win = wins[current_term_id()];
@@ -505,10 +507,11 @@ errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_
     // Byte 数 == 文字幅と仮定
 
     std::string euc(euc_arg, n);
-    std::vector<int> offs_wall;
+    std::vector<int> offs_wall; // 壁描画位置たち(文字単位)
     {
         for (auto it = begin(euc); it != end(euc);) {
             if (*it == CH_WALL) {
+                // 壁の内部コードが現れたら位置を記録し、通常の文字に置換する
                 offs_wall.emplace_back(std::distance(begin(euc), it));
                 *it = '#';
                 ++it;
@@ -518,17 +521,27 @@ errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_
             }
         }
     }
+    const auto utf8 = euc_to_utf8(euc);
 
+    const SDL_Color fg {
+        angband_color_table[attr][1],
+        angband_color_table[attr][2],
+        angband_color_table[attr][3],
+        0xFF
+    };
+    const SDL_Color bg { 0, 0, 0, 0xFF };
+
+    // 最初に draw_blanks() を行わないと画面にゴミが残ることがある。
+    // draw_text() の描画範囲はテキスト内の文字によって変動するため。
+    // (等幅フォントであっても高さは文字ごとに異なる)
     win->draw_blanks(c, r, n);
 
-    const auto utf8 = euc_to_utf8(euc);
-    const SDL_Color fg { angband_color_table[attr][1], angband_color_table[attr][2], angband_color_table[attr][3], 0xFF };
-    const SDL_Color bg { 0, 0, 0, 0xFF };
+    // 先にテキストを描画
     win->draw_text(c, r, utf8, fg, bg);
 
-    for (const auto off : offs_wall) {
+    // 後から壁を描画
+    for (const auto off : offs_wall)
         win->draw_wall(c + off, r, fg);
-    }
 
     return 0;
 }
