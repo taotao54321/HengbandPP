@@ -6,6 +6,7 @@
 
 #include <boost/core/noncopyable.hpp>
 
+#include <SDL.h>
 #include <SDL_ttf.h>
 
 #include "main-sdl2/system.hpp"
@@ -35,11 +36,26 @@ public:
     // 文字の高さを得る。
     [[nodiscard]] int h() const;
 
+    // ピクセル座標 x を文字座標 c に変換する。
+    [[nodiscard]] int x2c(int x) const;
+
+    // ピクセル座標 y を文字座標 r に変換する。
+    [[nodiscard]] int y2r(int y) const;
+
+    // 文字座標 c をピクセル座標 x に変換する。
+    [[nodiscard]] int c2x(int c) const;
+
+    // 文字座標 r をピクセル座標 y に変換する。
+    [[nodiscard]] int r2y(int r) const;
+
     // ピクセル座標 (x,y) を文字座標 (c,r) に変換する。
     [[nodiscard]] std::pair<int, int> xy2cr(int x, int y) const;
 
     // 文字座標 (c,r) をピクセル座標 (x,y) に変換する。
     [[nodiscard]] std::pair<int, int> cr2xy(int c, int r) const;
+
+    // (c,r,ncol,nrow) をカバーする矩形を求める。
+    [[nodiscard]] SDL_Rect calc_rect(int c, int r, int ncol, int nrow) const;
 
     // UTF-8 文字列 text を色 (fg,bg) で描画する。
     [[nodiscard]] Surface render(const std::string& text, Color fg, Color bg) const;

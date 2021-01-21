@@ -111,12 +111,24 @@ Font::~Font() { drop(); }
 int Font::w() const { return w_; }
 int Font::h() const { return h_; }
 
+int Font::x2c(const int x) const { return x / w_; }
+int Font::y2r(const int y) const { return y / h_; }
+
+int Font::c2x(const int c) const { return w_ * c; }
+int Font::r2y(const int r) const { return h_ * r; }
+
 std::pair<int, int> Font::xy2cr(const int x, const int y) const {
-    return { x / w_, y / h_ };
+    return { x2c(x), y2r(y) };
 }
 
 std::pair<int, int> Font::cr2xy(const int c, const int r) const {
-    return { w_ * c, h_ * r };
+    return { c2x(c), r2y(r) };
+}
+
+SDL_Rect Font::calc_rect(const int c, const int r, const int ncol, const int nrow) const {
+    const auto [x, y] = cr2xy(c, r);
+    const auto [w, h] = cr2xy(ncol, nrow);
+    return { x, y, w, h };
 }
 
 Surface Font::render(const std::string& text, Color fg, Color bg) const {
