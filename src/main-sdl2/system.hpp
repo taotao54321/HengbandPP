@@ -9,6 +9,7 @@
 class System : private boost::noncopyable {
 public:
     System();
+
     ~System();
 };
 
@@ -29,12 +30,17 @@ public:
     [[nodiscard]] SDL_Color to_sdl_color() const;
 };
 
+class Surface;
+
 class Texture : private boost::noncopyable {
 private:
     SDL_Texture* tex_;
 
 public:
     explicit Texture(SDL_Texture* tex);
+
+    static Texture from_surface(SDL_Renderer* ren, const Surface& surf);
+
     ~Texture();
 
     [[nodiscard]] SDL_Texture* get() const;
@@ -46,6 +52,7 @@ private:
 
 public:
     explicit Surface(SDL_Surface* surf);
+
     ~Surface();
 
     [[nodiscard]] SDL_Surface* get() const;

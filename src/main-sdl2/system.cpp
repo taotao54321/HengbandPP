@@ -35,6 +35,12 @@ SDL_Color Color::to_sdl_color() const { return color_; }
 Texture::Texture(SDL_Texture* tex)
     : tex_(tex) { }
 
+Texture Texture::from_surface(SDL_Renderer* ren, const Surface& surf) {
+    auto* tex = SDL_CreateTextureFromSurface(ren, surf.get());
+    if (!tex) PANIC("SDL_CreateTextureFromSurface() failed");
+    return Texture(tex);
+}
+
 Texture::~Texture() {
     SDL_DestroyTexture(tex_);
 }
@@ -51,7 +57,5 @@ Surface::~Surface() {
 SDL_Surface* Surface::get() const { return surf_; }
 
 Texture Surface::to_texture(SDL_Renderer* ren) const {
-    auto* tex = SDL_CreateTextureFromSurface(ren, surf_);
-    if (!tex) PANIC("SDL_CreateTextureFromSurface() failed");
-    return Texture(tex);
+    return Texture::from_surface(ren, *this);
 }
