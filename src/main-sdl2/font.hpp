@@ -18,8 +18,14 @@ private:
     int w_;
     int h_;
 
+    void drop();
+
 public:
     Font(const std::string& path, int pt);
+
+    // movable
+    Font(Font&& other) noexcept;
+    Font& operator=(Font&& rhs) noexcept;
 
     ~Font();
 

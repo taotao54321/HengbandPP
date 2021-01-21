@@ -36,6 +36,13 @@ System::~System() {
     SDL_Quit();
 }
 
+void Window::drop() {
+    if (win_) {
+        SDL_DestroyWindow(win_);
+        win_ = nullptr;
+    }
+}
+
 Window::Window(SDL_Window* win)
     : win_(win) { }
 
@@ -45,11 +52,25 @@ Window Window::create(const std::string& title, const int x, const int y, const 
     return Window(win);
 }
 
-Window::~Window() {
-    SDL_DestroyWindow(win_);
+Window::Window(Window&& other) noexcept
+    : win_(std::exchange(other.win_, nullptr)) { }
+
+Window& Window::operator=(Window&& rhs) noexcept {
+    drop();
+    win_ = std::exchange(rhs.win_, nullptr);
+    return *this;
 }
 
+Window::~Window() { drop(); }
+
 SDL_Window* Window::get() const { return win_; }
+
+void Renderer::drop() {
+    if (ren_) {
+        SDL_DestroyRenderer(ren_);
+        ren_ = nullptr;
+    }
+}
 
 Renderer::Renderer(SDL_Renderer* ren)
     : ren_(ren) { }
@@ -58,6 +79,15 @@ Renderer Renderer::with_window(SDL_Window* win) {
     auto* ren = SDL_CreateRenderer(win, -1, 0);
     if (!ren) PANIC("SDL_CreateRenderer() failed");
     return Renderer(ren);
+}
+
+Renderer::Renderer(Renderer&& other) noexcept
+    : ren_(std::exchange(other.ren_, nullptr)) { }
+
+Renderer& Renderer::operator=(Renderer&& rhs) noexcept {
+    drop();
+    ren_ = std::exchange(rhs.ren_, nullptr);
+    return *this;
 }
 
 Renderer::~Renderer() {
@@ -83,9 +113,7 @@ Texture Texture::from_surface(SDL_Renderer* ren, SDL_Surface* surf) {
 }
 
 Texture::Texture(Texture&& other) noexcept
-    : tex_(other.tex_) {
-    other.tex_ = nullptr;
-}
+    : tex_(std::exchange(other.tex_, nullptr)) { }
 
 Texture& Texture::operator=(Texture&& rhs) noexcept {
     drop();
@@ -140,9 +168,7 @@ Surface Surface::from_bmp_bytes(const u8* buf, const std::size_t len) {
 }
 
 Surface::Surface(Surface&& other) noexcept
-    : surf_(other.surf_) {
-    other.surf_ = nullptr;
-}
+    : surf_(std::exchange(other.surf_, nullptr)) { }
 
 Surface& Surface::operator=(Surface&& rhs) noexcept {
     drop();

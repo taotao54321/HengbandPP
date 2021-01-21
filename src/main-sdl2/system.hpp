@@ -37,10 +37,16 @@ class Window : private boost::noncopyable {
 private:
     SDL_Window* win_;
 
+    void drop();
+
 public:
     explicit Window(SDL_Window* win);
 
     static Window create(const std::string& title, int x, int y, int w, int h);
+
+    // movable
+    Window(Window&& other) noexcept;
+    Window& operator=(Window&& rhs) noexcept;
 
     ~Window();
 
@@ -51,10 +57,16 @@ class Renderer : private boost::noncopyable {
 private:
     SDL_Renderer* ren_;
 
+    void drop();
+
 public:
     explicit Renderer(SDL_Renderer* ren);
 
     static Renderer with_window(SDL_Window* win);
+
+    // movable
+    Renderer(Renderer&& other) noexcept;
+    Renderer& operator=(Renderer&& rhs) noexcept;
 
     ~Renderer();
 
@@ -74,7 +86,7 @@ public:
 
     static Texture from_surface(SDL_Renderer* ren, SDL_Surface* surf);
 
-    // ムーブは自前で書きたくないが必要なので仕方ない
+    // movable
     Texture(Texture&& other) noexcept;
     Texture& operator=(Texture&& rhs) noexcept;
 
@@ -101,7 +113,7 @@ public:
     // メモリ上の BMP ファイルからサーフェスを作る。
     static Surface from_bmp_bytes(const u8* buf, std::size_t len);
 
-    // ムーブは自前で書きたくないが必要なので仕方ない
+    // movable
     Surface(Surface&& other) noexcept;
     Surface& operator=(Surface&& rhs) noexcept;
 

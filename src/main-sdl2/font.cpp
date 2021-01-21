@@ -68,6 +68,13 @@ public:
 
 } // anonymous namespace
 
+void Font::drop() {
+    if (font_) {
+        TTF_CloseFont(font_);
+        font_ = nullptr;
+    }
+}
+
 Font::Font(const std::string& path, const int pt)
     : font_(TTF_OpenFont(path.c_str(), pt)) {
     constexpr char CHARS_ASCII[] = R"( !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
@@ -86,9 +93,20 @@ Font::Font(const std::string& path, const int pt)
         PANIC("TTF_SizeUTF8() failed");
 }
 
-Font::~Font() {
-    TTF_CloseFont(font_);
+Font::Font(Font&& other) noexcept
+    : font_(std::exchange(other.font_, nullptr))
+    , w_(other.w_)
+    , h_(other.h_) { }
+
+Font& Font::operator=(Font&& rhs) noexcept {
+    drop();
+    font_ = std::exchange(rhs.font_, nullptr);
+    w_ = rhs.w_;
+    h_ = rhs.h_;
+    return *this;
 }
+
+Font::~Font() { drop(); }
 
 int Font::w() const { return w_; }
 int Font::h() const { return h_; }
