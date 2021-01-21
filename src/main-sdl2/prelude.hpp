@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <functional>
 #include <iostream>
 #include <iterator>
@@ -135,12 +136,14 @@ inline void EPRINTLN_IMPL(const S& format_str, Args&&... args) {
 namespace detail {
 template <class S, class... Args>
 [[noreturn]] inline void PANIC_IMPL(const std::string_view file, const int line, const S& format_str, Args&&... args) {
-    throw std::logic_error(FORMAT("[{}:{}]: PANIC: {}", file, line, FORMAT_IMPL(format_str, std::forward<Args>(args)...)));
+    // デバッグ用に core dump を吐かせたいので abort する。
+    // C と C++ が混在する環境を考慮し、例外は使わない。
+    EPRINTLN("[{}:{}]: PANIC: {}", file, line, FORMAT_IMPL(format_str, std::forward<Args>(args)...));
+    std::abort();
 }
 } // namespace detail
 
 // Rust の panic! 模造品
-// 例外を用いて実装しているので、C と C++ が混在する環境では C 側に例外が漏れないよう注意すること
 #define PANIC(s, ...) detail::PANIC_IMPL(__FILE__, __LINE__, FMT_STRING(s), ##__VA_ARGS__)
 
 namespace detail {
