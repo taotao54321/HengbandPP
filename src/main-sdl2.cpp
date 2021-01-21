@@ -8,20 +8,12 @@
 //   は厳密には正しくない(3バイト文字や半角カナがあると崩れる)。この件について
 //   は開発コミュニティの判断に委ねたい。
 
-#include <algorithm>
 #include <array>
-#include <cerrno>
-#include <cstdio>
-#include <iterator>
-#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <iconv.h>
-
 #include <SDL.h>
-#include <SDL_ttf.h>
 
 #include "system/angband.h"
 #include "term/gameterm.h"
@@ -30,6 +22,7 @@
 
 #include "main-sdl2/encoding.hpp"
 #include "main-sdl2/font.hpp"
+#include "main-sdl2/game-window.hpp"
 #include "main-sdl2/prelude.hpp"
 #include "main-sdl2/system.hpp"
 
@@ -39,146 +32,15 @@ namespace {
 #define ENSURE(cond) do { if (!(cond)) { detail::PANIC_IMPL(__FILE__, __LINE__, "{}", "`" #cond "` is not satisfied"); } } while (false)
 // clang-format on
 
-// src/wall.bmp と同一
-constexpr u8 WALL_BMP[] = {
-    0x42, 0x4d, 0x5e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x00,
-    0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x08, 0x00,
-    0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
-    0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff,
-    0xff, 0x00, 0x44, 0x00, 0x00, 0x00, 0xaa, 0x00, 0x00, 0x00, 0x05, 0x00,
-    0x00, 0x00, 0xaa, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x96, 0x00,
-    0x00, 0x00, 0x41, 0x00, 0x00, 0x00, 0xaa, 0x00, 0x00, 0x00
-};
-
 constexpr int TERM_COUNT = 8;
-constexpr int TERM_ENABLE_COUNT = 5;
 
 // clang-format off
 constexpr std::array<int, TERM_COUNT> TERM_IDS { 0, 1, 2, 3, 4, 5, 6, 7 };
-
-// (x, y)
-constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_POSS_INI { {
-    {    0,   0 },
-    {    0, 780 },
-    { 1360,   0 },
-    { 1360, 260 },
-    { 1360, 780 },
-    {    0,   0 },
-    {    0,   0 },
-    {    0,   0 },
-} };
-
-// (ncol, nrow)
-constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_SIZES_INI { {
-    { 150, 36 },
-    { 150, 12 },
-    {  61, 12 },
-    {  61, 23 },
-    {  61, 13 },
-    {  10, 10 },
-    {  10, 10 },
-    {  10, 10 },
-} };
 // clang-format on
 
-class HengWindow {
-private:
-    Font& font_;
-    Window win_;
-    Renderer ren_;
-    Texture tex_wall_;
-
-    static Window init_win(
-        const std::string& title,
-        const int x, const int y, const int ncol, const int nrow,
-        const Font& font) {
-        const auto [w, h] = font.cr2xy(ncol, nrow);
-        return Window::create(title, x, y, w, h);
-    }
-
-public:
-    HengWindow(
-        const std::string& title,
-        const int x, const int y, const int ncol, const int nrow,
-        Font& font, const Surface& surf_wall)
-        : font_(font)
-        , win_(init_win(title, x, y, ncol, nrow, font))
-        , ren_(Renderer::with_window(win_.get()))
-        , tex_wall_(Surface::create_tiled(surf_wall.get(), font_.w(), font_.h()).to_texture(ren_.get())) { }
-
-    [[nodiscard]] u32 id() const {
-        u32 res = SDL_GetWindowID(win_.get());
-        ENSURE(res != 0);
-        return res;
-    }
-
-    [[nodiscard]] const Font& font() const { return font_; }
-
-    void hide() const {
-        SDL_HideWindow(win_.get());
-    }
-
-    void clear() const {
-        ENSURE(SDL_SetRenderDrawColor(ren_.get(), 0, 0, 0, 0xFF) == 0);
-        ENSURE(SDL_RenderClear(ren_.get()) == 0);
-    }
-
-    void draw_blanks(const int c, const int r, const int n) const {
-        const auto [x, y] = font_.cr2xy(c, r);
-        const auto [w, h] = font_.cr2xy(n, 1);
-        const SDL_Rect rect { x, y, w, h };
-
-        ENSURE(SDL_SetRenderDrawColor(ren_.get(), 0, 0, 0, 0xFF) == 0);
-        ENSURE(SDL_RenderFillRect(ren_.get(), &rect) == 0);
-    }
-
-    void draw_curs(const int c, const int r) const {
-        const auto [x, y] = font_.cr2xy(c, r);
-        const auto [w, h] = font_.cr2xy(1, 1);
-        const SDL_Rect rect { x, y, w, h };
-
-        ENSURE(SDL_SetRenderDrawColor(ren_.get(), 0xFF, 0xFF, 0xFF, 0xFF) == 0);
-        ENSURE(SDL_RenderFillRect(ren_.get(), &rect) == 0);
-    }
-
-    void draw_bigcurs(const int c, const int r) const {
-        const auto [x, y] = font_.cr2xy(c, r);
-        const auto [w, h] = font_.cr2xy(2, 1);
-        const SDL_Rect rect { x, y, w, h };
-
-        ENSURE(SDL_SetRenderDrawColor(ren_.get(), 0xFF, 0xFF, 0xFF, 0xFF) == 0);
-        ENSURE(SDL_RenderFillRect(ren_.get(), &rect) == 0);
-    }
-
-    void draw_text(const int c, const int r, const std::string& text, Color fg, Color bg) const {
-        const auto surf = font_.render(text, fg, bg);
-
-        const auto [x, y] = font_.cr2xy(c, r);
-        const SDL_Rect rect { x, y, surf.get()->w, surf.get()->h };
-
-        const auto tex = surf.to_texture(ren_.get());
-        ENSURE(SDL_RenderCopy(ren_.get(), tex.get(), nullptr, &rect) == 0);
-    }
-
-    void draw_wall(const int c, const int r, Color color) const {
-        const auto [x, y] = font_.cr2xy(c, r);
-        const auto [w, h] = font_.cr2xy(1, 1);
-        const SDL_Rect rect { x, y, w, h };
-
-        ENSURE(SDL_SetTextureColorMod(tex_wall_.get(), color.r(), color.g(), color.b()) == 0);
-        ENSURE(SDL_RenderCopy(ren_.get(), tex_wall_.get(), nullptr, &rect) == 0);
-    }
-
-    void present() const {
-        SDL_RenderPresent(ren_.get());
-    }
-};
-
 System* sys {};
-Font* font {};
 
-std::array<HengWindow*, TERM_COUNT> wins {};
+std::vector<GameWindow> wins {};
 
 std::array<term_type, TERM_COUNT> terms {};
 
@@ -188,7 +50,7 @@ int current_term_id() {
 
 int window_id_to_term_id(const u32 win_id) {
     for (const auto i : IRANGE(TERM_COUNT)) {
-        if (wins[i]->id() == win_id)
+        if (wins[i].id() == win_id)
             return i;
     }
     PANIC("invalid window id: {}", win_id);
@@ -269,20 +131,20 @@ errr on_keydown(const SDL_KeyboardEvent& ev) {
 }
 
 void window_redraw(const int term_id) {
-    const auto* win = wins[term_id];
-    win->clear();
+    const auto& win = wins[term_id];
+    win.term_clear();
 
     auto* term = &terms[term_id];
     term_activate(term);
     term_redraw();
 
-    win->present();
+    win.present();
 }
 
 errr on_window_size_change(const SDL_WindowEvent& ev, const int term_id) {
-    const auto* win = wins[term_id];
+    const auto& win = wins[term_id];
 
-    const auto [ncol, nrow] = win->font().xy2cr(ev.data1, ev.data2);
+    const auto [ncol, nrow] = win.font().xy2cr(ev.data1, ev.data2);
 
     term_activate(&terms[term_id]);
     term_resize(ncol, nrow);
@@ -371,14 +233,14 @@ errr term_xtra_sdl2(const int name, const int value) {
         break;
     case TERM_XTRA_CLEAR: {
         // 現在のウィンドウの内容をクリア
-        const auto* win = wins[current_term_id()];
-        win->clear();
+        const auto& win = wins[current_term_id()];
+        win.term_clear();
         break;
     }
     case TERM_XTRA_FRESH: {
         // 現在のウィンドウの描画内容を反映
-        const auto* win = wins[current_term_id()];
-        win->present();
+        const auto& win = wins[current_term_id()];
+        win.present();
         break;
     }
     case TERM_XTRA_DELAY:
@@ -393,22 +255,22 @@ errr term_xtra_sdl2(const int name, const int value) {
 }
 
 errr term_curs_sdl2(const int c, const int r) {
-    const auto* win = wins[current_term_id()];
-    win->draw_curs(c, r);
+    const auto& win = wins[current_term_id()];
+    win.term_fill_rect(c, r, 1, 1, Color(0xFF, 0xFF, 0xFF, 0xFF));
 
     return 0;
 }
 
 errr term_bigcurs_sdl2(const int c, const int r) {
-    const auto* win = wins[current_term_id()];
-    win->draw_bigcurs(c, r);
+    const auto& win = wins[current_term_id()];
+    win.term_fill_rect(c, r, 2, 1, Color(0xFF, 0xFF, 0xFF, 0xFF));
 
     return 0;
 }
 
 errr term_wipe_sdl2(const int c, const int r, const int n) {
-    const auto* win = wins[current_term_id()];
-    win->draw_blanks(c, r, n);
+    const auto& win = wins[current_term_id()];
+    win.term_fill_rect(c, r, n, 1, Color(0, 0, 0, 0xFF));
 
     return 0;
 }
@@ -418,7 +280,7 @@ errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_
     // この値は EUC-JP と干渉しない。
     constexpr char CH_WALL = 0x7F;
 
-    const auto* win = wins[current_term_id()];
+    const auto& win = wins[current_term_id()];
 
     // 入力文字列内の CH_WALL を '#' に置換し、そのインデックスを記録していく。
     // このインデックスたちを壁描画位置として使う。
@@ -447,39 +309,45 @@ errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_
     // draw_text() の描画範囲はテキスト内の文字によって変動するため。
     // (等幅フォントであっても高さは文字ごとに異なる)
     // XXX: バイト数と文字幅が一致すると仮定しているが、これは厳密には正しくない
-    win->draw_blanks(c, r, n);
+    win.term_fill_rect(c, r, n, 1, Color(0, 0, 0, 0xFF));
 
     // 先にテキストを描画
-    win->draw_text(c, r, utf8, fg, bg);
+    win.term_draw_text(c, r, utf8, fg, bg);
 
     // 後から壁を描画
     for (const auto off : offs_wall)
-        win->draw_wall(c + off, r, fg);
+        win.term_draw_wall(c + off, r, fg);
 
     return 0;
+}
+
+std::vector<GameWindowDesc> get_window_descs() {
+    return {
+        GameWindowDesc().title("Hengband").x(0).y(0).w(1350).h(756).font_pt(18),
+        GameWindowDesc().title("Term-1").x(0).y(780).w(1350).h(252).font_pt(18),
+        GameWindowDesc().title("Term-2").x(1360).y(0).w(549).h(252).font_pt(18),
+        GameWindowDesc().title("Term-3").x(1360).y(0).w(549).h(483).font_pt(18),
+        GameWindowDesc().title("Term-4").x(1360).y(0).w(549).h(273).font_pt(18),
+        GameWindowDesc().title("Term-5").visible(false),
+        GameWindowDesc().title("Term-6").visible(false),
+        GameWindowDesc().title("Term-7").visible(false),
+    };
 }
 
 } // anonymous namespace
 
 void init_sdl2(int /*argc*/, char** /*argv*/) {
-    // 確保したリソースは解放しない。どうせプログラム終了時に解放されるので。
-
-    const auto font_path = get_font_path("monospace");
-    if (!font_path) PANIC("cannot find font path");
-    const auto font_pt = 18;
+    // ファイルローカルで確保したリソースの解放については考えない。
+    // どうせプログラム終了時に解放されるので。
 
     sys = new System;
-    font = new Font(*font_path, font_pt);
 
-    const auto surf_wall = Surface::from_bmp_bytes(WALL_BMP, std::size(WALL_BMP));
+    const auto win_descs = get_window_descs();
 
     for (const auto i : IRANGE(TERM_COUNT)) {
-        const auto [x, y] = TERM_POSS_INI[i];
-        const auto [ncol, nrow] = TERM_SIZES_INI[i];
-
-        const auto* win = wins[i] = new HengWindow(FORMAT("Term-{}", i), x, y, ncol, nrow, *font, surf_wall);
-        win->clear();
-        win->present();
+        auto win = win_descs[i].build(i == 0);
+        const auto [ncol, nrow] = win.term_size();
+        wins.emplace_back(std::move(win));
 
         auto* term = &terms[i];
         term_init(term, ncol, nrow, 1024);
@@ -493,9 +361,6 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
         term->data = const_cast<void*>(static_cast<const void*>(&TERM_IDS[i]));
         angband_term[i] = term;
     }
-
-    for (const auto i : IRANGE(TERM_ENABLE_COUNT, TERM_COUNT))
-        wins[i]->hide();
 
     // これを行わないとクラッシュする
     // Term の初期化はドライバ側の責任らしい

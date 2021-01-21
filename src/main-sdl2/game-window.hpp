@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 
 #include <boost/core/noncopyable.hpp>
 
@@ -19,6 +20,7 @@ private:
     int h_;
     std::string font_path_;
     int font_pt_;
+    bool visible_;
 
 public:
     GameWindowDesc();
@@ -30,11 +32,12 @@ public:
     GameWindowDesc& h(int h);
     GameWindowDesc& font_path(std::string path);
     GameWindowDesc& font_pt(int pt);
+    GameWindowDesc& visible(bool visible);
 
     [[nodiscard]] GameWindow build(bool is_main) const;
 };
 
-class GameWindow : private boost::noncopyable {
+class GameWindow {
 private:
     Font font_;
     Window win_;
@@ -48,10 +51,27 @@ private:
     friend class GameWindowDesc;
 
 public:
+    // noncopyable
+    GameWindow(GameWindow&) = delete;
+    GameWindow& operator=(GameWindow&) = delete;
+
+    // movable
+    GameWindow(GameWindow&& other) noexcept = default;
+    GameWindow& operator=(GameWindow&& rhs) noexcept = default;
+
+    // FIXME: リサイズ処理に必要なので生やしたが、リファクタの余地ありそう
+    [[nodiscard]] const Font& font() const;
+
     [[nodiscard]] u32 id() const;
+
+    // クライアント領域のサイズを得る。
+    [[nodiscard]] std::pair<int, int> client_area_size() const;
 
     [[nodiscard]] bool is_visible() const;
     void set_visible(bool visible);
+
+    // 端末画面の (ncol,nrow) を得る。
+    [[nodiscard]] std::pair<int, int> term_size() const;
 
     // 端末画面全体をクリアする。
     void term_clear() const;

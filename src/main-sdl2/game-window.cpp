@@ -1,4 +1,5 @@
 #include <string>
+#include <utility>
 
 #include "main-sdl2/font.hpp"
 #include "main-sdl2/game-window.hpp"
@@ -33,7 +34,8 @@ GameWindowDesc::GameWindowDesc()
     , w_(400)
     , h_(400)
     , font_path_()
-    , font_pt_(16) { }
+    , font_pt_(16)
+    , visible_(true) { }
 
 GameWindowDesc& GameWindowDesc::title(std::string title) {
     title_ = std::move(title);
@@ -70,6 +72,11 @@ GameWindowDesc& GameWindowDesc::font_pt(const int pt) {
     return *this;
 }
 
+GameWindowDesc& GameWindowDesc::visible(const bool visible) {
+    visible_ = visible;
+    return *this;
+}
+
 GameWindow GameWindowDesc::build(const bool is_main) const {
     // フォント生成
     // フォント名が未指定ならデフォルトフォント名を使う
@@ -94,7 +101,12 @@ GameWindow GameWindowDesc::build(const bool is_main) const {
     }
     auto win = Window::create(title_, x_, y_, w, h);
 
-    return GameWindow(std::move(font), std::move(win));
+    auto game_win = GameWindow(std::move(font), std::move(win));
+
+    // メインウィンドウは非表示にできない
+    game_win.set_visible(visible_ || is_main);
+
+    return game_win;
 }
 
 Texture GameWindow::init_tex_wall() const {
@@ -107,12 +119,34 @@ GameWindow::GameWindow(Font font, Window win)
     : font_(std::move(font))
     , win_(std::move(win))
     , ren_(Renderer::with_window(win_.get()))
-    , tex_wall_(init_tex_wall()) { }
+    , tex_wall_(init_tex_wall()) {
+    // TODO: 再描画関数を設けるべきでは
+    term_clear();
+    present();
+}
+
+const Font& GameWindow::font() const { return font_; }
 
 u32 GameWindow::id() const {
     const auto res = SDL_GetWindowID(win_.get());
     if (res == 0) PANIC("SDL_GetWindowID() failed");
     return res;
+}
+
+std::pair<int, int> GameWindow::client_area_size() const {
+    // TODO:
+    //   全ての環境でうまくいくかは未確認。
+    //   X11 環境では
+    //
+    //     * SDL_CreateWindow() に指定したサイズ
+    //     * SDL_GetWindowSize() で得られるサイズ
+    //     * SDL_RendererOutputSize() で得られるサイズ
+    //
+    //   は全て一致し、クライアント領域サイズとなるようだ。
+
+    int w, h;
+    SDL_GetWindowSize(win_.get(), &w, &h);
+    return { w, h };
 }
 
 bool GameWindow::is_visible() const {
@@ -126,6 +160,13 @@ void GameWindow::set_visible(const bool visible) {
         SDL_ShowWindow(win_.get());
     else
         SDL_HideWindow(win_.get());
+}
+
+std::pair<int, int> GameWindow::term_size() const {
+    // TODO: メインウィンドウの場合は最小端末サイズを下回らない措置を設けたい
+
+    const auto [w, h] = client_area_size();
+    return { w / font_.w(), h / font_.h() };
 }
 
 void GameWindow::term_clear() const {
@@ -165,4 +206,8 @@ void GameWindow::term_draw_wall(const int c, const int r, Color color) const {
         PANIC("SDL_SetTextureColorMod() failed");
     if (SDL_RenderCopy(ren_.get(), tex_wall_.get(), nullptr, &rect) != 0)
         PANIC("SDL_RenderCopy() failed");
+}
+
+void GameWindow::present() const {
+    SDL_RenderPresent(ren_.get());
 }
