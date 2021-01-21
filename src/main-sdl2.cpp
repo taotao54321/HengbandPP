@@ -77,48 +77,49 @@ constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_SIZES_INI { {
 } };
 // clang-format on
 
-class Window {
+class HengWindow {
 private:
-    SDL_Window* win_;
-    SDL_Renderer* ren_;
     Font& font_;
-    SDL_Texture* tex_wall_;
+    Window win_;
+    Renderer ren_;
+    Texture tex_wall_;
 
     // 元画像 surf_orig をサイズ (w,h) の領域にリピートしたテクスチャを作る。
-    static SDL_Texture* make_wall_texture(SDL_Renderer* ren, SDL_Surface* surf_orig, const int w, const int h) {
-        const int w_orig = surf_orig->w;
-        const int h_orig = surf_orig->h;
+    static Texture make_wall_texture(SDL_Renderer* ren, const Surface& surf_orig, const int w, const int h) {
+        const int w_orig = surf_orig.get()->w;
+        const int h_orig = surf_orig.get()->h;
 
-        SDL_Surface* surf;
-        ENSURE(surf = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_RGBA32));
+        const auto surf = Surface::with_size_rgba(w, h);
         for (int y = 0; y < h; y += h_orig) {
             for (int x = 0; x < w; x += w_orig) {
                 SDL_Rect rect { x, y, w_orig, h_orig };
-                ENSURE(SDL_BlitSurface(surf_orig, nullptr, surf, &rect) == 0);
+                ENSURE(SDL_BlitSurface(surf_orig.get(), nullptr, surf.get(), &rect) == 0);
             }
         }
 
-        SDL_Texture* tex;
-        ENSURE(tex = SDL_CreateTextureFromSurface(ren, surf));
-        return tex;
+        return surf.to_texture(ren);
+    }
+
+    static Window init_win(
+        const std::string& title,
+        const int x, const int y, const int ncol, const int nrow,
+        const Font& font) {
+        const auto [w, h] = font.cr2xy(ncol, nrow);
+        return Window::create(title, x, y, w, h);
     }
 
 public:
-    Window(
+    HengWindow(
         const std::string& title,
         const int x, const int y, const int ncol, const int nrow,
-        Font& font, SDL_Surface* surf_wall)
-        : font_(font) {
-        const auto [w, h] = font_.cr2xy(ncol, nrow);
-
-        ENSURE(win_ = SDL_CreateWindow(title.c_str(), x, y, w, h, SDL_WINDOW_RESIZABLE));
-        ENSURE(ren_ = SDL_CreateRenderer(win_, -1, 0));
-
-        tex_wall_ = make_wall_texture(ren_, surf_wall, font_.w(), font_.h());
-    }
+        Font& font, const Surface& surf_wall)
+        : font_(font)
+        , win_(init_win(title, x, y, ncol, nrow, font))
+        , ren_(Renderer::with_window(win_))
+        , tex_wall_(make_wall_texture(ren_.get(), surf_wall, font_.w(), font_.h())) { }
 
     [[nodiscard]] u32 id() const {
-        u32 res = SDL_GetWindowID(win_);
+        u32 res = SDL_GetWindowID(win_.get());
         ENSURE(res != 0);
         return res;
     }
@@ -126,12 +127,12 @@ public:
     [[nodiscard]] const Font& font() const { return font_; }
 
     void hide() const {
-        SDL_HideWindow(win_);
+        SDL_HideWindow(win_.get());
     }
 
     void clear() const {
-        ENSURE(SDL_SetRenderDrawColor(ren_, 0, 0, 0, 0xFF) == 0);
-        ENSURE(SDL_RenderClear(ren_) == 0);
+        ENSURE(SDL_SetRenderDrawColor(ren_.get(), 0, 0, 0, 0xFF) == 0);
+        ENSURE(SDL_RenderClear(ren_.get()) == 0);
     }
 
     void draw_blanks(const int c, const int r, const int n) const {
@@ -139,8 +140,8 @@ public:
         const auto [w, h] = font_.cr2xy(n, 1);
         const SDL_Rect rect { x, y, w, h };
 
-        ENSURE(SDL_SetRenderDrawColor(ren_, 0, 0, 0, 0xFF) == 0);
-        ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
+        ENSURE(SDL_SetRenderDrawColor(ren_.get(), 0, 0, 0, 0xFF) == 0);
+        ENSURE(SDL_RenderFillRect(ren_.get(), &rect) == 0);
     }
 
     void draw_curs(const int c, const int r) const {
@@ -148,8 +149,8 @@ public:
         const auto [w, h] = font_.cr2xy(1, 1);
         const SDL_Rect rect { x, y, w, h };
 
-        ENSURE(SDL_SetRenderDrawColor(ren_, 0xFF, 0xFF, 0xFF, 0xFF) == 0);
-        ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
+        ENSURE(SDL_SetRenderDrawColor(ren_.get(), 0xFF, 0xFF, 0xFF, 0xFF) == 0);
+        ENSURE(SDL_RenderFillRect(ren_.get(), &rect) == 0);
     }
 
     void draw_bigcurs(const int c, const int r) const {
@@ -157,8 +158,8 @@ public:
         const auto [w, h] = font_.cr2xy(2, 1);
         const SDL_Rect rect { x, y, w, h };
 
-        ENSURE(SDL_SetRenderDrawColor(ren_, 0xFF, 0xFF, 0xFF, 0xFF) == 0);
-        ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
+        ENSURE(SDL_SetRenderDrawColor(ren_.get(), 0xFF, 0xFF, 0xFF, 0xFF) == 0);
+        ENSURE(SDL_RenderFillRect(ren_.get(), &rect) == 0);
     }
 
     void draw_text(const int c, const int r, const std::string& text, Color fg, Color bg) const {
@@ -167,8 +168,8 @@ public:
         const auto [x, y] = font_.cr2xy(c, r);
         const SDL_Rect rect { x, y, surf.get()->w, surf.get()->h };
 
-        const auto tex = surf.to_texture(ren_);
-        ENSURE(SDL_RenderCopy(ren_, tex.get(), nullptr, &rect) == 0);
+        const auto tex = surf.to_texture(ren_.get());
+        ENSURE(SDL_RenderCopy(ren_.get(), tex.get(), nullptr, &rect) == 0);
     }
 
     void draw_wall(const int c, const int r, Color color) const {
@@ -176,19 +177,19 @@ public:
         const auto [w, h] = font_.cr2xy(1, 1);
         const SDL_Rect rect { x, y, w, h };
 
-        ENSURE(SDL_SetTextureColorMod(tex_wall_, color.r(), color.g(), color.b()) == 0);
-        ENSURE(SDL_RenderCopy(ren_, tex_wall_, nullptr, &rect) == 0);
+        ENSURE(SDL_SetTextureColorMod(tex_wall_.get(), color.r(), color.g(), color.b()) == 0);
+        ENSURE(SDL_RenderCopy(ren_.get(), tex_wall_.get(), nullptr, &rect) == 0);
     }
 
     void present() const {
-        SDL_RenderPresent(ren_);
+        SDL_RenderPresent(ren_.get());
     }
 };
 
 System* sys {};
 Font* font {};
 
-std::array<Window*, TERM_COUNT> wins {};
+std::array<HengWindow*, TERM_COUNT> wins {};
 
 std::array<term_type, TERM_COUNT> terms {};
 
@@ -468,18 +469,6 @@ errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_
     return 0;
 }
 
-SDL_Surface* make_wall_surface() {
-    using std::begin, std::size;
-
-    SDL_RWops* rdr;
-    ENSURE(rdr = SDL_RWFromConstMem(begin(WALL_BMP), size(WALL_BMP)));
-
-    SDL_Surface* surf;
-    ENSURE(surf = SDL_LoadBMP_RW(rdr, 1));
-
-    return surf;
-}
-
 } // anonymous namespace
 
 void init_sdl2(int /*argc*/, char** /*argv*/) {
@@ -492,13 +481,13 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
     sys = new System;
     font = new Font(*font_path, font_pt);
 
-    auto* surf_wall = make_wall_surface();
+    const auto surf_wall = Surface::from_bmp_bytes(WALL_BMP, std::size(WALL_BMP));
 
     for (const auto i : IRANGE(TERM_COUNT)) {
         const auto [x, y] = TERM_POSS_INI[i];
         const auto [ncol, nrow] = TERM_SIZES_INI[i];
 
-        const auto* win = wins[i] = new Window(FORMAT("Term-{}", i), x, y, ncol, nrow, *font, surf_wall);
+        const auto* win = wins[i] = new HengWindow(FORMAT("Term-{}", i), x, y, ncol, nrow, *font, surf_wall);
         win->clear();
         win->present();
 
