@@ -25,19 +25,17 @@ public:
     }
 
     [[nodiscard]] std::string convert(const std::string& src) const {
-        using std::size;
-
         constexpr std::size_t BUF_SIZE = 1024;
 
-        const char* inbuf = src.data();
-        std::size_t inbytesleft = size(src);
+        const auto* inbuf = src.data();
+        auto inbytesleft = std::size(src);
         std::string dst;
         dst.reserve(inbytesleft); // 入力と同程度の Byte 数は必要
 
         char buf[BUF_SIZE];
         while (inbytesleft > 0) {
-            char* outbuf = buf;
-            std::size_t outbytesleft = size(buf);
+            auto* outbuf = buf;
+            auto outbytesleft = std::size(buf);
 
             // iconv() は inbuf の内容を変更しないので const_cast してよい
             const auto n = iconv(conv_, const_cast<char**>(&inbuf), &inbytesleft, &outbuf, &outbytesleft);
@@ -50,7 +48,7 @@ public:
                 }
             }
 
-            dst.append(buf, size(buf) - outbytesleft);
+            dst.append(buf, std::size(buf) - outbytesleft);
         }
 
         return dst;
