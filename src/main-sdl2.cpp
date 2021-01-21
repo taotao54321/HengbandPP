@@ -21,16 +21,11 @@
 #include "term/z-term.h"
 
 #include "main-sdl2/encoding.hpp"
-#include "main-sdl2/font.hpp"
 #include "main-sdl2/game-window.hpp"
 #include "main-sdl2/prelude.hpp"
 #include "main-sdl2/system.hpp"
 
 namespace {
-
-// clang-format off
-#define ENSURE(cond) do { if (!(cond)) { detail::PANIC_IMPL(__FILE__, __LINE__, "{}", "`" #cond "` is not satisfied"); } } while (false)
-// clang-format on
 
 constexpr int TERM_COUNT = 8;
 
@@ -204,7 +199,8 @@ errr poll_event() {
 
 errr wait_event() {
     SDL_Event ev;
-    ENSURE(SDL_WaitEvent(&ev) != 0);
+    if (SDL_WaitEvent(&ev) == 0)
+        PANIC("SDL_WaitEvent() failed");
     return handle_event(ev);
 }
 
