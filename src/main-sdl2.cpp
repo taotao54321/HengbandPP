@@ -84,22 +84,6 @@ private:
     Renderer ren_;
     Texture tex_wall_;
 
-    // 元画像 surf_orig をサイズ (w,h) の領域にリピートしたテクスチャを作る。
-    static Texture make_wall_texture(SDL_Renderer* ren, const Surface& surf_orig, const int w, const int h) {
-        const int w_orig = surf_orig.get()->w;
-        const int h_orig = surf_orig.get()->h;
-
-        const auto surf = Surface::with_size_rgba(w, h);
-        for (int y = 0; y < h; y += h_orig) {
-            for (int x = 0; x < w; x += w_orig) {
-                SDL_Rect rect { x, y, w_orig, h_orig };
-                ENSURE(SDL_BlitSurface(surf_orig.get(), nullptr, surf.get(), &rect) == 0);
-            }
-        }
-
-        return surf.to_texture(ren);
-    }
-
     static Window init_win(
         const std::string& title,
         const int x, const int y, const int ncol, const int nrow,
@@ -115,8 +99,8 @@ public:
         Font& font, const Surface& surf_wall)
         : font_(font)
         , win_(init_win(title, x, y, ncol, nrow, font))
-        , ren_(Renderer::with_window(win_))
-        , tex_wall_(make_wall_texture(ren_.get(), surf_wall, font_.w(), font_.h())) { }
+        , ren_(Renderer::with_window(win_.get()))
+        , tex_wall_(Surface::create_tiled(surf_wall.get(), font_.w(), font_.h()).to_texture(ren_.get())) { }
 
     [[nodiscard]] u32 id() const {
         u32 res = SDL_GetWindowID(win_.get());

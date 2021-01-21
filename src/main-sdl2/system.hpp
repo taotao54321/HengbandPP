@@ -53,7 +53,7 @@ private:
 public:
     explicit Renderer(SDL_Renderer* ren);
 
-    static Renderer with_window(const Window& win);
+    static Renderer with_window(SDL_Window* win);
 
     ~Renderer();
 
@@ -71,10 +71,10 @@ private:
 public:
     explicit Texture(SDL_Texture* tex);
 
-    static Texture from_surface(SDL_Renderer* ren, const Surface& surf);
+    static Texture from_surface(SDL_Renderer* ren, SDL_Surface* surf);
 
-    // Texture は動的な変更がありうるのでムーブ代入を書いておく。
-    // 解放処理がバグりやすいのであまり書きたくないが仕方ない。
+    // ムーブは自前で書きたくないが必要なので仕方ない
+    Texture(Texture&& other) noexcept;
     Texture& operator=(Texture&& rhs) noexcept;
 
     ~Texture();
@@ -86,12 +86,23 @@ class Surface : private boost::noncopyable {
 private:
     SDL_Surface* surf_;
 
+    void drop();
+
 public:
     explicit Surface(SDL_Surface* surf);
 
-    static Surface with_size_rgba(int w, int h);
+    // サイズ (w,h) の RGBA サーフェスを作る。
+    static Surface create(int w, int h);
 
+    // サイズ (w,h) に tile を敷き詰めた RGBA サーフェスを作る。
+    static Surface create_tiled(SDL_Surface* tile, int w, int h);
+
+    // メモリ上の BMP ファイルからサーフェスを作る。
     static Surface from_bmp_bytes(const u8* buf, std::size_t len);
+
+    // ムーブは自前で書きたくないが必要なので仕方ない
+    Surface(Surface&& other) noexcept;
+    Surface& operator=(Surface&& rhs) noexcept;
 
     ~Surface();
 

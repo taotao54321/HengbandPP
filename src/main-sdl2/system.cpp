@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <utility>
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -52,8 +53,8 @@ SDL_Window* Window::get() const { return win_; }
 Renderer::Renderer(SDL_Renderer* ren)
     : ren_(ren) { }
 
-Renderer Renderer::with_window(const Window& win) {
-    auto* ren = SDL_CreateRenderer(win.get(), -1, 0);
+Renderer Renderer::with_window(SDL_Window* win) {
+    auto* ren = SDL_CreateRenderer(win, -1, 0);
     if (!ren) PANIC("SDL_CreateRenderer() failed");
     return Renderer(ren);
 }
@@ -74,16 +75,20 @@ void Texture::drop() {
 Texture::Texture(SDL_Texture* tex)
     : tex_(tex) { }
 
-Texture Texture::from_surface(SDL_Renderer* ren, const Surface& surf) {
-    auto* tex = SDL_CreateTextureFromSurface(ren, surf.get());
+Texture Texture::from_surface(SDL_Renderer* ren, SDL_Surface* surf) {
+    auto* tex = SDL_CreateTextureFromSurface(ren, surf);
     if (!tex) PANIC("SDL_CreateTextureFromSurface() failed");
     return Texture(tex);
 }
 
+Texture::Texture(Texture&& other) noexcept
+    : tex_(other.tex_) {
+    other.tex_ = nullptr;
+}
+
 Texture& Texture::operator=(Texture&& rhs) noexcept {
     drop();
-    tex_ = rhs.tex_;
-    rhs.tex_ = nullptr;
+    tex_ = std::exchange(rhs.tex_, nullptr);
     return *this;
 }
 
@@ -91,13 +96,36 @@ Texture::~Texture() { drop(); }
 
 SDL_Texture* Texture::get() const { return tex_; }
 
+void Surface::drop() {
+    if (surf_) {
+        SDL_FreeSurface(surf_);
+        surf_ = nullptr;
+    }
+}
+
 Surface::Surface(SDL_Surface* surf)
     : surf_(surf) { }
 
-Surface Surface::with_size_rgba(const int w, const int h) {
+Surface Surface::create(const int w, const int h) {
     auto* surf = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_RGBA32);
     if (!surf) PANIC("SDL_CreateRGBSurfaceWithFormat() failed");
     return Surface(surf);
+}
+
+Surface Surface::create_tiled(SDL_Surface* tile, const int w, const int h) {
+    const int w_tile = tile->w;
+    const int h_tile = tile->h;
+
+    auto surf = Surface::create(w, h);
+    for (int y = 0; y < h; y += h_tile) {
+        for (int x = 0; x < w; x += w_tile) {
+            SDL_Rect rect { x, y, w_tile, h_tile };
+            if (SDL_BlitSurface(tile, nullptr, surf.get(), &rect) != 0)
+                PANIC("SDL_BlitSurface() failed");
+        }
+    }
+
+    return surf;
 }
 
 Surface Surface::from_bmp_bytes(const u8* buf, const std::size_t len) {
@@ -110,12 +138,21 @@ Surface Surface::from_bmp_bytes(const u8* buf, const std::size_t len) {
     return Surface(surf);
 }
 
-Surface::~Surface() {
-    SDL_FreeSurface(surf_);
+Surface::Surface(Surface&& other) noexcept
+    : surf_(other.surf_) {
+    other.surf_ = nullptr;
 }
+
+Surface& Surface::operator=(Surface&& rhs) noexcept {
+    drop();
+    surf_ = std::exchange(rhs.surf_, nullptr);
+    return *this;
+}
+
+Surface::~Surface() { drop(); }
 
 SDL_Surface* Surface::get() const { return surf_; }
 
 Texture Surface::to_texture(SDL_Renderer* ren) const {
-    return Texture::from_surface(ren, *this);
+    return Texture::from_surface(ren, get());
 }
