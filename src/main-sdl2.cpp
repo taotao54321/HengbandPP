@@ -23,6 +23,7 @@
 #include "term/term-color-types.h"
 #include "term/z-term.h"
 
+#include "main-sdl2/encoding.hpp"
 #include "main-sdl2/prelude.hpp"
 
 namespace {
@@ -49,31 +50,6 @@ u16 euc_next(InputIt& it, InputIt last) {
     }
 
     PANIC("invalid euc character");
-}
-
-std::string euc_to_utf8(const std::string& euc) {
-    constexpr std::size_t BUF_SIZE = 1024;
-
-    static iconv_t conv = iconv_open("UTF-8", "EUC-JP");
-    ENSURE(conv != iconv_t(-1));
-
-    const auto* src = euc.data();
-    auto src_size = euc.size();
-    std::string utf8;
-    utf8.reserve(src_size);
-
-    char buf[BUF_SIZE];
-    while (src_size > 0) {
-        auto* dst = buf;
-        auto dst_size = BUF_SIZE;
-
-        const auto n = iconv(conv, const_cast<char**>(&src), &src_size, &dst, &dst_size);
-        ENSURE(n != std::size_t(-1) || errno == E2BIG);
-
-        utf8.append(buf, BUF_SIZE - dst_size);
-    }
-
-    return utf8;
 }
 
 // src/wall.bmp と同一
