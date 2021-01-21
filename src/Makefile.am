@@ -370,8 +370,10 @@ hengband_SOURCES = \
 	main.cpp main-x11.cpp \
 	\
 	main-sdl2.cpp \
-	main-sdl2/prelude.hpp \
 	main-sdl2/encoding.cpp main-sdl2/encoding.hpp \
+	main-sdl2/font.cpp main-sdl2/font.hpp \
+	main-sdl2/prelude.hpp \
+	main-sdl2/system.cpp main-sdl2/system.hpp \
 	\
 	main/angband-headers.cpp main/angband-headers.h \
 	main/angband-initializer.cpp main/angband-initializer.h \

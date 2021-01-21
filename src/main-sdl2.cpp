@@ -24,7 +24,9 @@
 #include "term/z-term.h"
 
 #include "main-sdl2/encoding.hpp"
+#include "main-sdl2/font.hpp"
 #include "main-sdl2/prelude.hpp"
+#include "main-sdl2/system.hpp"
 
 namespace {
 
@@ -74,44 +76,6 @@ constexpr std::array<std::pair<int, int>, TERM_COUNT> TERM_SIZES_INI { {
     {  10, 10 },
 } };
 // clang-format on
-
-class Font {
-private:
-    TTF_Font* font_;
-    int w_;
-    int h_;
-
-public:
-    Font(const std::string& path, const int pt) {
-        ENSURE(font_ = TTF_OpenFont(path.c_str(), pt));
-
-        // 半角文字の幅を得る (等幅フォントを仮定)
-        ENSURE(TTF_SizeUTF8(font_, "X", &w_, nullptr) == 0);
-
-        // 文字の高さの最大値を得る。
-        // TTF_FontHeight() は最大値より小さい値を返すことがあるため、
-        // TTF_SizeUTF8() に全ての ASCII 文字からなる文字列を渡す方法をとる。
-        // 非 ASCII 文字については全て調べるのが非現実的なので妥協する。
-        ENSURE(TTF_SizeUTF8(font_, " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", nullptr, &h_) == 0);
-    }
-
-    [[nodiscard]] int w() const { return w_; }
-    [[nodiscard]] int h() const { return h_; }
-
-    [[nodiscard]] std::pair<int, int> xy2cr(const int x, const int y) const {
-        return { x / w_, y / h_ };
-    }
-
-    [[nodiscard]] std::pair<int, int> cr2xy(const int c, const int r) const {
-        return { w_ * c, h_ * r };
-    }
-
-    [[nodiscard]] SDL_Surface* render(const std::string& text, SDL_Color fg, SDL_Color bg) const {
-        SDL_Surface* surf;
-        ENSURE(surf = TTF_RenderUTF8_Shaded(font_, text.c_str(), fg, bg));
-        return surf;
-    }
-};
 
 class Window {
 private:
@@ -197,39 +161,27 @@ public:
         ENSURE(SDL_RenderFillRect(ren_, &rect) == 0);
     }
 
-    void draw_text(const int c, const int r, const std::string& text, SDL_Color fg, SDL_Color bg) const {
-        auto* surf = font_.render(text, fg, bg);
+    void draw_text(const int c, const int r, const std::string& text, Color fg, Color bg) const {
+        const auto surf = font_.render(text, fg, bg);
 
         const auto [x, y] = font_.cr2xy(c, r);
-        const SDL_Rect rect { x, y, surf->w, surf->h };
+        const SDL_Rect rect { x, y, surf.get()->w, surf.get()->h };
 
-        SDL_Texture* tex;
-        ENSURE(tex = SDL_CreateTextureFromSurface(ren_, surf));
-        ENSURE(SDL_RenderCopy(ren_, tex, nullptr, &rect) == 0);
-
-        SDL_DestroyTexture(tex);
-        SDL_FreeSurface(surf);
+        const auto tex = surf.to_texture(ren_);
+        ENSURE(SDL_RenderCopy(ren_, tex.get(), nullptr, &rect) == 0);
     }
 
-    void draw_wall(const int c, const int r, SDL_Color color) const {
+    void draw_wall(const int c, const int r, Color color) const {
         const auto [x, y] = font_.cr2xy(c, r);
         const auto [w, h] = font_.cr2xy(1, 1);
         const SDL_Rect rect { x, y, w, h };
 
-        ENSURE(SDL_SetTextureColorMod(tex_wall_, color.r, color.g, color.b) == 0);
+        ENSURE(SDL_SetTextureColorMod(tex_wall_, color.r(), color.g(), color.b()) == 0);
         ENSURE(SDL_RenderCopy(ren_, tex_wall_, nullptr, &rect) == 0);
     }
 
     void present() const {
         SDL_RenderPresent(ren_);
-    }
-};
-
-class System {
-public:
-    System() {
-        ENSURE(SDL_Init(SDL_INIT_VIDEO) == 0);
-        ENSURE(TTF_Init() == 0);
     }
 };
 
@@ -494,13 +446,12 @@ errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_
 
     const auto utf8 = euc_to_utf8(euc);
 
-    const SDL_Color fg {
+    const Color fg(
         angband_color_table[attr][1],
         angband_color_table[attr][2],
         angband_color_table[attr][3],
-        0xFF
-    };
-    const SDL_Color bg { 0, 0, 0, 0xFF };
+        0xFF);
+    const Color bg(0, 0, 0, 0xFF);
 
     // 最初に draw_blanks() を行わないと画面にゴミが残ることがある。
     // draw_text() の描画範囲はテキスト内の文字によって変動するため。
