@@ -245,6 +245,7 @@ public:
         SDL_Texture* tex;
         ENSURE(tex = SDL_CreateTextureFromSurface(ren_, surf));
         ENSURE(SDL_RenderCopy(ren_, tex, nullptr, &rect) == 0);
+        SDL_DestroyTexture(tex);
     }
 
     void draw_wall(const int c, const int r, SDL_Color color) const {
