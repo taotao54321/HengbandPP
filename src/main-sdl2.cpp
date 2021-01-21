@@ -341,7 +341,8 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
     const auto win_descs = get_window_descs();
 
     for (const auto i : IRANGE(TERM_COUNT)) {
-        auto win = win_descs[i].build(i == 0);
+        const auto is_main = i == 0;
+        auto win = win_descs[i].build(is_main);
         const auto [ncol, nrow] = win.term_size();
         wins.emplace_back(std::move(win));
 
