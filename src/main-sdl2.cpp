@@ -18,7 +18,7 @@
 #include "term/term-color-types.h"
 #include "term/z-term.h"
 
-#include "prelude.hpp"
+#include "main-sdl2/prelude.hpp"
 
 namespace {
 

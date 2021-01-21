@@ -37,7 +37,8 @@
 
 #include <iconv.h>
 
-#include "prelude.hpp"
+// FIXME: とりあえず間借り
+#include "main-sdl2/prelude.hpp"
 
 /*
  * Hack -- Convert an RGB value to an X11 Pixel, or die.
