@@ -115,8 +115,17 @@ u32 GameWindow::id() const {
     return res;
 }
 
-void GameWindow::hide() const {
-    SDL_HideWindow(win_.get());
+bool GameWindow::is_visible() const {
+    // SDL_WINDOW_SHOWN と SDL_WINDOW_HIDDEN を両方指定したウィンドウは hidden
+    // になるようなので、後者で判定する
+    return !bool(SDL_GetWindowFlags(win_.get()) & SDL_WINDOW_HIDDEN);
+}
+
+void GameWindow::set_visible(const bool visible) {
+    if (visible)
+        SDL_ShowWindow(win_.get());
+    else
+        SDL_HideWindow(win_.get());
 }
 
 void GameWindow::term_clear() const {

@@ -50,7 +50,8 @@ private:
 public:
     [[nodiscard]] u32 id() const;
 
-    void hide() const;
+    [[nodiscard]] bool is_visible() const;
+    void set_visible(bool visible);
 
     // 端末画面全体をクリアする。
     void term_clear() const;
