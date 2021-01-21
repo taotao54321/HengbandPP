@@ -32,26 +32,6 @@ namespace {
 #define ENSURE(cond) do { if (!(cond)) { detail::PANIC_IMPL(__FILE__, __LINE__, "{}", "`" #cond "` is not satisfied"); } } while (false)
 // clang-format on
 
-// EUC-JP を1文字読み進める。
-template <class InputIt>
-u16 euc_next(InputIt& it, InputIt last) {
-    ENSURE(it != last);
-
-    const u8 b1 = *it++;
-
-    if (b1 <= 0x7F) {
-        return b1;
-    }
-
-    if (0xA1 <= b1 && b1 <= 0xFE) {
-        if (it == last) PANIC("incomplete euc character");
-        const u8 b2 = *it++;
-        return b1 | (b2 << 8);
-    }
-
-    PANIC("invalid euc character");
-}
-
 // src/wall.bmp と同一
 constexpr u8 WALL_BMP[] = {
     0x42, 0x4d, 0x5e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x00,
