@@ -1,5 +1,8 @@
+#include <optional>
 #include <string>
 #include <utility>
+
+#include <fontconfig/fontconfig.h>
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -9,6 +12,57 @@
 #include "main-sdl2/system.hpp"
 
 namespace {
+
+class FontConfigPattern {
+private:
+    FcPattern* pat_;
+
+public:
+    explicit FontConfigPattern(FcPattern* pat)
+        : pat_(pat) { }
+
+    ~FontConfigPattern() {
+        FcPatternDestroy(pat_);
+    }
+
+    [[nodiscard]] FcPattern* get() const { return pat_; }
+};
+
+class FontConfig {
+public:
+    FontConfig() {
+        if (FcInit() != FcTrue)
+            PANIC("FcInit() failed");
+    }
+
+    ~FontConfig() {
+        FcFini();
+    }
+
+    [[nodiscard]] std::optional<std::string> query_path(const std::string& name) const {
+        (void)this;
+
+        auto* pat_raw = FcNameParse(reinterpret_cast<const FcChar8*>(name.data()));
+        if (!pat_raw) return std::nullopt;
+        FontConfigPattern pat(pat_raw);
+
+        if (FcConfigSubstitute(nullptr, pat.get(), FcMatchPattern) != FcTrue)
+            return std::nullopt;
+        FcDefaultSubstitute(pat.get());
+
+        FcResult result;
+        auto* match_raw = FcFontMatch(nullptr, pat.get(), &result);
+        if (!match_raw) return std::nullopt;
+        FontConfigPattern match(match_raw);
+
+        auto* s = FcPatternFormat(match.get(), reinterpret_cast<const FcChar8*>("%{file}"));
+        if (!s) return std::nullopt;
+        std::string path(reinterpret_cast<char*>(s));
+        FcStrFree(s);
+
+        return path;
+    }
+};
 
 } // anonymous namespace
 
@@ -49,4 +103,9 @@ Surface Font::render(const std::string& text, Color fg, Color bg) const {
     auto* surf = TTF_RenderUTF8_Shaded(font_, text.c_str(), fg.to_sdl_color(), bg.to_sdl_color());
     if (!surf) PANIC("TTF_RenderUTF8_Shaded() failed");
     return Surface(surf);
+}
+
+std::optional<std::string> get_font_path(const std::string& name) {
+    static const FontConfig fontconfig;
+    return fontconfig.query_path(name);
 }

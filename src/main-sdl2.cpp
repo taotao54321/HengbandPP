@@ -480,22 +480,6 @@ SDL_Surface* make_wall_surface() {
     return surf;
 }
 
-std::optional<std::string> get_font_path(const std::string& name) {
-    const auto cmdline = FORMAT("fc-match --format=%{{file}} {}", name);
-
-    FILE* in = popen(cmdline.c_str(), "r");
-    if (!in) return std::nullopt;
-
-    char buf[1024];
-    const char* status = std::fgets(buf, sizeof(buf), in);
-
-    pclose(in);
-
-    if (!status) return std::nullopt;
-
-    return std::string(buf);
-}
-
 } // anonymous namespace
 
 void init_sdl2(int /*argc*/, char** /*argv*/) {

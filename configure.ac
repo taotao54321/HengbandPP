@@ -61,6 +61,7 @@ AX_BOOST_BASE([1.70], , [AC_MSG_ERROR([Boost not found])])
 PKG_CHECK_MODULES(FMT, [fmt])
 PKG_CHECK_MODULES(SDL2, [sdl2])
 PKG_CHECK_MODULES(SDL2_TTF, [SDL2_ttf])
+PKG_CHECK_MODULES(FONTCONFIG, [fontconfig])
 
 dnl Checks for header files.
 AC_PATH_XTRA

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 #include <utility>
 
@@ -37,3 +38,7 @@ public:
     // UTF-8 文字列 text を色 (fg,bg) で描画する。
     [[nodiscard]] Surface render(const std::string& text, Color fg, Color bg) const;
 };
+
+// フォント名 name に対応するフォントファイルのフルパスを得る。
+// 失敗したら std::nullopt を返す。
+std::optional<std::string> get_font_path(const std::string& name);
