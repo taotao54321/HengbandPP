@@ -219,7 +219,7 @@ BIT_FLAGS has_esp_good(player_type* creature_ptr) { return check_equipment_flags
  * @param creature_ptr 判定対象のクリーチャー参照ポインタ
  * @return 持っていたら所持前提ビットフラグを返す。
  */
-BIT_FLAGS has_esp_nonliving(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_GOOD); }
+BIT_FLAGS has_esp_nonliving(player_type* creature_ptr) { return check_equipment_flags(creature_ptr, TR_ESP_NONLIVING); }
 
 /*!
  * @brief クリーチャーがユニーク感知を持っているかを返す。
