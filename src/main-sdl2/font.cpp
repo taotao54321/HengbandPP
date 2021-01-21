@@ -2,6 +2,8 @@
 #include <string>
 #include <utility>
 
+#include <boost/core/noncopyable.hpp>
+
 #include <fontconfig/fontconfig.h>
 
 #include <SDL.h>
@@ -13,7 +15,7 @@
 
 namespace {
 
-class FontConfigPattern {
+class FontConfigPattern : private boost::noncopyable {
 private:
     FcPattern* pat_;
 
@@ -28,7 +30,7 @@ public:
     [[nodiscard]] FcPattern* get() const { return pat_; }
 };
 
-class FontConfig {
+class FontConfig : private boost::noncopyable {
 public:
     FontConfig() {
         if (FcInit() != FcTrue)
