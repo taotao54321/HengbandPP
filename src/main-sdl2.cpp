@@ -490,31 +490,26 @@ errr term_wipe_sdl2(const int c, const int r, const int n) {
 }
 
 errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_COLOR attr, const char* euc_arg) {
-    using std::begin, std::end;
-
     // 壁の内部コード。lib/pref/font-sdl.prf で指定されている。
     // この値は EUC-JP と干渉しない。
     constexpr char CH_WALL = 0x7F;
 
     const auto* win = wins[current_term_id()];
 
-    // Byte 数 == 文字幅と仮定
+    // 入力文字列内の CH_WALL を '#' に置換し、そのインデックスを記録していく。
+    // このインデックスたちを壁描画位置として使う。
+    // CH_WALL を含む入力ではバイト数と文字幅が等しいと仮定している。
+    // (EUC-JP の3バイト文字や半角カナを含まないということ)
 
     std::string euc(euc_arg, n);
-    std::vector<int> offs_wall; // 壁描画位置たち(文字単位)
-    {
-        for (auto it = begin(euc); it != end(euc);) {
-            if (*it == CH_WALL) {
-                // 壁の内部コードが現れたら位置を記録し、通常の文字に置換する
-                offs_wall.emplace_back(std::distance(begin(euc), it));
-                *it = '#';
-                ++it;
-            }
-            else {
-                euc_next(it, end(euc));
-            }
+    std::vector<int> offs_wall;
+    for (const auto i : IRANGE(n)) {
+        if (euc[i] == CH_WALL) {
+            offs_wall.emplace_back(i);
+            euc[i] = '#';
         }
     }
+
     const auto utf8 = euc_to_utf8(euc);
 
     const SDL_Color fg {
