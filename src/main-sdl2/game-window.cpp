@@ -197,7 +197,7 @@ bool GameWindow::is_visible() const {
     return !bool(SDL_GetWindowFlags(win_.get()) & SDL_WINDOW_HIDDEN);
 }
 
-void GameWindow::set_visible(const bool visible) {
+void GameWindow::set_visible(const bool visible) const {
     // メインウィンドウは非表示にできない
     if (visible || is_main_)
         SDL_ShowWindow(win_.get());
