@@ -55,6 +55,7 @@ public:
 
 class GameWindow {
 private:
+    bool is_main_;
     Font font_;
     Window win_;
     Renderer ren_;
@@ -62,7 +63,7 @@ private:
 
     [[nodiscard]] Texture init_tex_wall() const;
 
-    GameWindow(Font font, Window win);
+    GameWindow(bool is_main, Font font, Window win);
 
     // ウィンドウの4辺の枠幅を得る。top, left, bottom, right の順。
     [[nodiscard]] std::tuple<int, int, int, int> borders_size() const;

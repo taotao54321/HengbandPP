@@ -119,10 +119,9 @@ GameWindow GameWindowDesc::build(const bool is_main) const {
     }
     auto win = Window::create(title_, x_, y_, w, h, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN);
 
-    auto game_win = GameWindow(std::move(font), std::move(win));
+    auto game_win = GameWindow(is_main, std::move(font), std::move(win));
 
-    // メインウィンドウは非表示にできない
-    game_win.set_visible(visible_ || is_main);
+    game_win.set_visible(visible_);
 
     return game_win;
 }
@@ -133,11 +132,17 @@ Texture GameWindow::init_tex_wall() const {
     return surf.to_texture(ren_.get());
 }
 
-GameWindow::GameWindow(Font font, Window win)
-    : font_(std::move(font))
+GameWindow::GameWindow(const bool is_main, Font font, Window win)
+    : is_main_(is_main)
+    , font_(std::move(font))
     , win_(std::move(win))
     , ren_(Renderer::with_window(win_.get()))
     , tex_wall_(init_tex_wall()) {
+    if (is_main_) {
+        const auto [w_min, h_min] = client_area_size_for(MAIN_WIN_NCOL_MIN, MAIN_WIN_NROW_MIN);
+        SDL_SetWindowMinimumSize(win_.get(), w_min, h_min);
+    }
+
     // TODO: 再描画関数を設けるべきでは
     term_clear();
     present();
@@ -193,21 +198,28 @@ bool GameWindow::is_visible() const {
 }
 
 void GameWindow::set_visible(const bool visible) {
-    if (visible)
+    // メインウィンドウは非表示にできない
+    if (visible || is_main_)
         SDL_ShowWindow(win_.get());
     else
         SDL_HideWindow(win_.get());
 }
 
 std::pair<int, int> GameWindow::term_size() const {
-    // TODO: メインウィンドウの場合は最小端末サイズを下回らない措置を設けたい
-
     const auto [w, h] = client_area_size();
     return term_size_for(w, h);
 }
 
 std::pair<int, int> GameWindow::term_size_for(const int w, const int h) const {
-    return { w / font_.w(), h / font_.h() };
+    auto [ncol, nrow] = font_.xy2cr(w, h);
+
+    // メインウィンドウの場合は最小端末サイズを下回らないようにする
+    if (is_main_) {
+        chmax(ncol, MAIN_WIN_NCOL_MIN);
+        chmax(nrow, MAIN_WIN_NROW_MIN);
+    }
+
+    return { ncol, nrow };
 }
 
 void GameWindow::term_clear() const {
