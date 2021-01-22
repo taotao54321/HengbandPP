@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <functional>
+#include <iterator>
 #include <optional>
 #include <string>
 
@@ -174,7 +175,7 @@ bool Config::save() const {
     std::ofstream out(*path, std::ios::out);
     if (!out) return false;
 
-    out << picojson::value(json);
+    picojson::value(json).serialize(std::ostream_iterator<char>(out), /* prettify= */ true);
 
     return true;
 }
