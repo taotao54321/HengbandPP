@@ -157,6 +157,18 @@ errr on_window_size_change(const SDL_WindowEvent& ev, const int term_id) {
     return 0;
 }
 
+errr on_window_close(const SDL_WindowEvent&, const int term_id) {
+    // メインウィンドウは close イベントを無視
+    if (term_id == 0) return 0;
+
+    const auto& win = wins[term_id];
+    win.set_visible(false);
+
+    window_present(wins[0]);
+
+    return 0;
+}
+
 errr on_window(const SDL_WindowEvent& ev) {
     const auto term_id = window_id_to_term_id(ev.windowID);
 
@@ -169,6 +181,9 @@ errr on_window(const SDL_WindowEvent& ev) {
         break;
     case SDL_WINDOWEVENT_SIZE_CHANGED: {
         res = on_window_size_change(ev, term_id);
+        break;
+    case SDL_WINDOWEVENT_CLOSE:
+        res = on_window_close(ev, term_id);
         break;
     }
     default:
