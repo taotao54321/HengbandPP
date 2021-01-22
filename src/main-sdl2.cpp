@@ -19,7 +19,9 @@
 #include "term/gameterm.h"
 #include "term/term-color-types.h"
 #include "term/z-term.h"
+#include "term/z-util.h"
 
+#include "main-sdl2/config.hpp"
 #include "main-sdl2/encoding.hpp"
 #include "main-sdl2/game-window.hpp"
 #include "main-sdl2/prelude.hpp"
@@ -210,7 +212,7 @@ errr flush_events() {
     return 0;
 }
 
-errr term_xtra_sdl2(const int name, const int value) {
+extern "C" errr term_xtra_sdl2(const int name, const int value) {
     errr res = 0;
 
     switch (name) {
@@ -250,28 +252,30 @@ errr term_xtra_sdl2(const int name, const int value) {
     return res;
 }
 
-errr term_curs_sdl2(const int c, const int r) {
+extern "C" errr term_curs_sdl2(const int c, const int r) {
     const auto& win = wins[current_term_id()];
     win.term_fill_rect(c, r, 1, 1, Color(0xFF, 0xFF, 0xFF, 0xFF));
 
     return 0;
 }
 
-errr term_bigcurs_sdl2(const int c, const int r) {
+extern "C" errr term_bigcurs_sdl2(const int c, const int r) {
     const auto& win = wins[current_term_id()];
     win.term_fill_rect(c, r, 2, 1, Color(0xFF, 0xFF, 0xFF, 0xFF));
 
     return 0;
 }
 
-errr term_wipe_sdl2(const int c, const int r, const int n) {
+extern "C" errr term_wipe_sdl2(const int c, const int r, const int n) {
     const auto& win = wins[current_term_id()];
     win.term_fill_rect(c, r, n, 1, Color(0, 0, 0, 0xFF));
 
     return 0;
 }
 
-errr term_text_sdl2(const TERM_LEN c, const TERM_LEN r, const int n, const TERM_COLOR attr, const char* euc_arg) {
+extern "C" errr term_text_sdl2(
+    const TERM_LEN c, const TERM_LEN r, const int n,
+    const TERM_COLOR attr, const char* euc_arg) {
     // 壁の内部コード。lib/pref/font-sdl.prf で指定されている。
     // この値は EUC-JP と干渉しない。
     constexpr char CH_WALL = 0x7F;
@@ -330,6 +334,17 @@ std::vector<GameWindowDesc> get_window_descs() {
     };
 }
 
+// 終了時に設定を保存
+extern "C" void quit_hook(concptr) {
+    Config config;
+
+    for (const auto i : IRANGE(TERM_COUNT))
+        config.win_descs[i] = wins[i].desc();
+
+    if (!config.save())
+        EPRINTLN("failed to save config");
+}
+
 } // anonymous namespace
 
 void init_sdl2(int /*argc*/, char** /*argv*/) {
@@ -358,6 +373,8 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
         term->data = const_cast<void*>(static_cast<const void*>(&TERM_IDS[i]));
         angband_term[i] = term;
     }
+
+    quit_aux = quit_hook;
 
     // これを行わないとクラッシュする
     // Term の初期化はドライバ側の責任らしい
