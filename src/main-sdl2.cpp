@@ -127,6 +127,14 @@ errr on_keydown(const SDL_KeyboardEvent& ev) {
     return 0;
 }
 
+void window_present(const GameWindow& win) {
+    PresentParam param;
+    for (const auto i : IRANGE(8))
+        param.visibles[i] = wins[i].is_visible();
+
+    win.present(param);
+}
+
 void window_redraw(const int term_id) {
     const auto& win = wins[term_id];
     win.term_clear();
@@ -135,7 +143,7 @@ void window_redraw(const int term_id) {
     term_activate(term);
     term_redraw();
 
-    win.present();
+    window_present(win);
 }
 
 errr on_window_size_change(const SDL_WindowEvent& ev, const int term_id) {
@@ -170,6 +178,20 @@ errr on_window(const SDL_WindowEvent& ev) {
     return res;
 }
 
+errr on_mousedown(const SDL_MouseButtonEvent& ev) {
+    const auto term_id = window_id_to_term_id(ev.windowID);
+    const auto& win = wins[term_id];
+
+    const auto resp = win.on_click(ev.x, ev.y);
+    if (resp.win_idx > 0) {
+        wins[resp.win_idx].toggle_visible();
+        window_present(win);
+        win.raise();
+    }
+
+    return 0;
+}
+
 errr handle_event(const SDL_Event& ev) {
     const auto term_id_orig = current_term_id();
 
@@ -178,6 +200,9 @@ errr handle_event(const SDL_Event& ev) {
     switch (ev.type) {
     case SDL_KEYDOWN:
         res = on_keydown(ev.key);
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        res = on_mousedown(ev.button);
         break;
     case SDL_WINDOWEVENT:
         res = on_window(ev.window);
@@ -238,7 +263,7 @@ extern "C" errr term_xtra_sdl2(const int name, const int value) {
     case TERM_XTRA_FRESH: {
         // 現在のウィンドウの描画内容を反映
         const auto& win = wins[current_term_id()];
-        win.present();
+        window_present(win);
         break;
     }
     case TERM_XTRA_DELAY:
@@ -359,6 +384,9 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
         term->data = const_cast<void*>(static_cast<const void*>(&TERM_IDS[i]));
         angband_term[i] = term;
     }
+
+    for (const auto& win : wins)
+        window_present(win);
 
     quit_aux = quit_hook;
 

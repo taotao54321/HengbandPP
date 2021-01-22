@@ -3,6 +3,7 @@
 #include <utility>
 
 #include <SDL.h>
+#include <SDL_image.h>
 #include <SDL_ttf.h>
 
 #include "main-sdl2/prelude.hpp"
@@ -26,12 +27,20 @@ System::System() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         PANIC("SDL_Init() failed");
 
+    {
+        const int flags = IMG_INIT_JPG | IMG_INIT_PNG;
+        if (IMG_Init(flags) != flags)
+            PANIC("IMG_Init() failed");
+    }
+
     if (TTF_Init() != 0)
         PANIC("TTF_Init() failed");
 }
 
 System::~System() {
     TTF_Quit();
+
+    IMG_Quit();
 
     SDL_Quit();
 }
@@ -164,12 +173,12 @@ Surface Surface::create_tiled(SDL_Surface* tile, const int w, const int h) {
     return surf;
 }
 
-Surface Surface::from_bmp_bytes(const u8* buf, const std::size_t len) {
+Surface Surface::from_bytes(const u8* buf, const std::size_t len) {
     auto* rdr = SDL_RWFromConstMem(buf, len);
     if (!rdr) PANIC("SDL_RWFromConstMem() failed");
 
-    auto* surf = SDL_LoadBMP_RW(rdr, 1);
-    if (!surf) PANIC("SDL_LoadBMP_RW() failed");
+    auto* surf = IMG_Load_RW(rdr, 1);
+    if (!surf) PANIC("IMG_Load_RW() failed");
 
     return Surface(surf);
 }

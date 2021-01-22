@@ -113,8 +113,8 @@ public:
     // サイズ (w,h) に tile を敷き詰めた RGBA サーフェスを作る。
     static Surface create_tiled(SDL_Surface* tile, int w, int h);
 
-    // メモリ上の BMP ファイルからサーフェスを作る。
-    static Surface from_bmp_bytes(const u8* buf, std::size_t len);
+    // メモリ上の画像ファイルからサーフェスを作る。
+    static Surface from_bytes(const u8* buf, std::size_t len);
 
     // movable
     Surface(Surface&& other) noexcept;

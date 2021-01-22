@@ -1,7 +1,9 @@
+#include <algorithm>
 #include <string>
 #include <tuple>
 #include <utility>
 
+#include "main-sdl2/asset.hpp"
 #include "main-sdl2/font.hpp"
 #include "main-sdl2/game-window.hpp"
 #include "main-sdl2/prelude.hpp"
@@ -9,22 +11,12 @@
 
 namespace {
 
+constexpr int MAIN_WIN_MENU_H = 32;
+
 constexpr int MAIN_WIN_NCOL_MIN = 80;
 constexpr int MAIN_WIN_NROW_MIN = 24;
 
 constexpr char FONT_NAME_DEFAULT[] = "monospace";
-
-// src/wall.bmp と同一
-constexpr u8 WALL_BMP[] = {
-    0x42, 0x4d, 0x5e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x00,
-    0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x08, 0x00,
-    0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
-    0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff,
-    0xff, 0x00, 0x44, 0x00, 0x00, 0x00, 0xaa, 0x00, 0x00, 0x00, 0x05, 0x00,
-    0x00, 0x00, 0xaa, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x96, 0x00,
-    0x00, 0x00, 0x41, 0x00, 0x00, 0x00, 0xaa, 0x00, 0x00, 0x00
-};
 
 } // anonymous namespace
 
@@ -132,7 +124,7 @@ Texture GameWindow::init_tex_term() const {
 }
 
 Texture GameWindow::init_tex_wall() const {
-    const auto surf_tile = Surface::from_bmp_bytes(WALL_BMP, std::size(WALL_BMP));
+    const auto surf_tile = Surface::from_bytes(WALL_BMP, std::size(WALL_BMP));
     const auto surf = Surface::create_tiled(surf_tile.get(), font_.w(), font_.h());
     return surf.to_texture(ren_.get());
 }
@@ -148,11 +140,17 @@ GameWindow::GameWindow(const bool is_main, Font font, Window win)
     if (is_main_) {
         const auto [w_min, h_min] = client_area_size_for(MAIN_WIN_NCOL_MIN, MAIN_WIN_NROW_MIN);
         SDL_SetWindowMinimumSize(win_.get(), w_min, h_min);
+
+        texs_.emplace("win_1", Surface::from_bytes(WINDOW_1_PNG, std::size(WINDOW_1_PNG)).to_texture(ren_.get()));
+        texs_.emplace("win_2", Surface::from_bytes(WINDOW_2_PNG, std::size(WINDOW_2_PNG)).to_texture(ren_.get()));
+        texs_.emplace("win_3", Surface::from_bytes(WINDOW_3_PNG, std::size(WINDOW_3_PNG)).to_texture(ren_.get()));
+        texs_.emplace("win_4", Surface::from_bytes(WINDOW_4_PNG, std::size(WINDOW_4_PNG)).to_texture(ren_.get()));
+        texs_.emplace("win_5", Surface::from_bytes(WINDOW_5_PNG, std::size(WINDOW_5_PNG)).to_texture(ren_.get()));
+        texs_.emplace("win_6", Surface::from_bytes(WINDOW_6_PNG, std::size(WINDOW_6_PNG)).to_texture(ren_.get()));
+        texs_.emplace("win_7", Surface::from_bytes(WINDOW_7_PNG, std::size(WINDOW_7_PNG)).to_texture(ren_.get()));
     }
 
-    // TODO: 再描画関数を設けるべきでは
     term_clear();
-    present();
 }
 
 std::tuple<int, int, int, int> GameWindow::borders_size() const {
@@ -189,10 +187,20 @@ std::pair<int, int> GameWindow::client_area_size() const {
 }
 
 std::pair<int, int> GameWindow::client_area_size_for(const int ncol, const int nrow) const {
-    return font_.cr2xy(ncol, nrow);
+    auto [w, h] = font_.cr2xy(ncol, nrow);
+
+    // メインウィンドウの場合はメニューバーの分を足す
+    if (is_main_)
+        h += MAIN_WIN_MENU_H;
+
+    return { w, h };
 }
 
-std::pair<int, int> GameWindow::term_size_for(const int w, const int h) const {
+std::pair<int, int> GameWindow::term_size_for(int w, int h) const {
+    // メインウィンドウの場合はメニューバーの分を引く
+    if (is_main_)
+        h = std::max(1, h - MAIN_WIN_MENU_H);
+
     auto [ncol, nrow] = font_.xy2cr(w, h);
 
     // メインウィンドウの場合は最小端末サイズを下回らないようにする
@@ -226,6 +234,10 @@ void GameWindow::set_visible(const bool visible) const {
         SDL_ShowWindow(win_.get());
     else
         SDL_HideWindow(win_.get());
+}
+
+void GameWindow::toggle_visible() const {
+    set_visible(!is_visible());
 }
 
 void GameWindow::raise() const {
@@ -287,17 +299,44 @@ void GameWindow::term_draw_wall(const int c, const int r, Color color) const {
         PANIC("SDL_RenderCopy() failed");
 }
 
-void GameWindow::present() const {
+void GameWindow::present(const PresentParam& param) const {
     if (SDL_SetRenderTarget(ren_.get(), nullptr) != 0)
         PANIC("SDL_SetRenderTarget() failed");
 
+    // 端末画面表示
     {
+        // メインウィンドウの場合、メニューバーの下に表示
+        int x = 0;
+        int y = 0;
+        if (is_main_)
+            y += MAIN_WIN_MENU_H;
+
         int w, h;
         if (SDL_QueryTexture(tex_term_.get(), nullptr, nullptr, &w, &h) != 0)
             PANIC("SDL_QueryTexture() failed");
-        const SDL_Rect rect { 0, 0, w, h };
+        const SDL_Rect rect { x, y, w, h };
         if (SDL_RenderCopy(ren_.get(), tex_term_.get(), nullptr, &rect) != 0)
             PANIC("SDL_RenderCopy() failed");
+    }
+
+    // メインウィンドウの場合、メニューバー表示
+    if (is_main_) {
+        for (const auto i : IRANGE(1, 8)) {
+            const int x = 32 * i;
+            const SDL_Rect rect { x, 0, 32, 32 };
+
+            const auto& tex = texs_.at(FORMAT("win_{}", i));
+            if (SDL_RenderCopy(ren_.get(), tex.get(), nullptr, &rect) != 0)
+                PANIC("SDL_RenderCopy() failed");
+
+            const auto color = param.visibles[i] ? Color(0xC0, 0xC0, 0x20, 0x60) : Color(0x30, 0x30, 0x30, 0x60);
+            if (SDL_SetRenderDrawBlendMode(ren_.get(), SDL_BLENDMODE_BLEND) != 0)
+                PANIC("SDL_SetRenderDrawBlendMode() failed");
+            if (SDL_SetRenderDrawColor(ren_.get(), color.r(), color.g(), color.b(), color.a()) != 0)
+                PANIC("SDL_SetRenderDrawColor() failed");
+            if (SDL_RenderFillRect(ren_.get(), &rect) != 0)
+                PANIC("SDL_RenderFillRect() failed");
+        }
     }
 
     SDL_RenderPresent(ren_.get());
@@ -312,6 +351,18 @@ std::pair<int, int> GameWindow::on_size_change(const int w, const int h) {
     }
 
     return ncnr_new;
+}
+
+ClickResponse GameWindow::on_click(const int x, const int y) const {
+    ClickResponse resp { -1 };
+
+    if (is_main_ && y < MAIN_WIN_MENU_H) {
+        const auto i = x / 32;
+        if (1 <= i && i < 8)
+            resp.win_idx = i;
+    }
+
+    return resp;
 }
 
 GameWindowDesc GameWindow::desc() const {

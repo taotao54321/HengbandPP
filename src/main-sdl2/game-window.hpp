@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+#include <map>
 #include <string>
 #include <tuple>
 #include <utility>
@@ -53,15 +55,24 @@ public:
     [[nodiscard]] GameWindow build(bool is_main) const;
 };
 
+struct PresentParam {
+    std::array<bool, 8> visibles;
+};
+
+struct ClickResponse {
+    int win_idx;
+};
+
 class GameWindow {
 private:
     bool is_main_;
     Font font_;
     Window win_;
     Renderer ren_;
-    std::pair<int, int> ncnr_; // 端末画面サイズ (ncol,nrow)
-    Texture tex_term_;         // 端末画面テクスチャ
-    Texture tex_wall_;         // 壁画像テクスチャ
+    std::pair<int, int> ncnr_;            // 端末画面サイズ (ncol,nrow)
+    Texture tex_term_;                    // 端末画面テクスチャ
+    Texture tex_wall_;                    // 壁画像テクスチャ
+    std::map<std::string, Texture> texs_; // メニューバーの画像など
 
     // サイズ ncnr_ の端末画面テクスチャを作る。
     [[nodiscard]] Texture init_tex_term() const;
@@ -102,6 +113,7 @@ public:
 
     [[nodiscard]] bool is_visible() const;
     void set_visible(bool visible) const;
+    void toggle_visible() const;
 
     void raise() const;
 
@@ -127,10 +139,14 @@ public:
     void term_draw_wall(int c, int r, Color color) const;
 
     // バッファに描画した内容を画面に反映する。
-    void present() const;
+    void present(const PresentParam& param) const;
 
     // ウィンドウリサイズ時に呼ばれる。新たな端末画面サイズ (ncol,nrow) を返す。
-    [[nodiscard]] std::pair<int, int> on_size_change(int w, int h);
+    std::pair<int, int> on_size_change(int w, int h);
+
+    // マウスクリック時に呼ばれる。
+    // (今のところ)表示/非表示にするウィンドウを返す。
+    [[nodiscard]] ClickResponse on_click(int x, int y) const;
 
     [[nodiscard]] GameWindowDesc desc() const;
 };
