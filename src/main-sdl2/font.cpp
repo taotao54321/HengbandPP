@@ -130,8 +130,16 @@ std::pair<int, int> Font::xy2cr(const int x, const int y) const {
     return { x2c(x), y2r(y) };
 }
 
+std::pair<int, int> Font::xy2cr(const std::pair<int, int>& xy) const {
+    return xy2cr(xy.first, xy.second);
+}
+
 std::pair<int, int> Font::cr2xy(const int c, const int r) const {
     return { c2x(c), r2y(r) };
+}
+
+std::pair<int, int> Font::cr2xy(const std::pair<int, int>& cr) const {
+    return cr2xy(cr.first, cr.second);
 }
 
 SDL_Rect Font::calc_rect(const int c, const int r, const int ncol, const int nrow) const {

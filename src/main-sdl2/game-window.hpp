@@ -59,8 +59,14 @@ private:
     Font font_;
     Window win_;
     Renderer ren_;
-    Texture tex_wall_;
+    std::pair<int, int> ncnr_; // 端末画面サイズ (ncol,nrow)
+    Texture tex_term_;         // 端末画面テクスチャ
+    Texture tex_wall_;         // 壁画像テクスチャ
 
+    // サイズ ncnr_ の端末画面テクスチャを作る。
+    [[nodiscard]] Texture init_tex_term() const;
+
+    // 壁画像テクスチャを作る。
     [[nodiscard]] Texture init_tex_wall() const;
 
     GameWindow(bool is_main, Font font, Window win);
@@ -76,6 +82,10 @@ private:
 
     // 端末画面サイズ (ncol,nrow) を実現する最低限のクライアント領域サイズを得る。
     [[nodiscard]] std::pair<int, int> client_area_size_for(int ncol, int nrow) const;
+
+    // ウィンドウサイズを (w,h) にしたときの端末画面サイズ (ncol,nrow) を得る。
+    [[nodiscard]] std::pair<int, int> term_size_for(int w, int h) const;
+    [[nodiscard]] std::pair<int, int> term_size_for(const std::pair<int, int>& wh) const;
 
     friend class GameWindowDesc;
 
@@ -98,9 +108,6 @@ public:
     // 現在の端末画面サイズ (ncol,nrow) を得る。
     [[nodiscard]] std::pair<int, int> term_size() const;
 
-    // ウィンドウサイズを (w,h) にしたときの端末画面サイズ (ncol,nrow) を得る。
-    [[nodiscard]] std::pair<int, int> term_size_for(int w, int h) const;
-
     // 端末画面全体をクリアする。
     void term_clear() const;
 
@@ -121,6 +128,9 @@ public:
 
     // バッファに描画した内容を画面に反映する。
     void present() const;
+
+    // ウィンドウリサイズ時に呼ばれる。新たな端末画面サイズ (ncol,nrow) を返す。
+    [[nodiscard]] std::pair<int, int> on_size_change(int w, int h);
 
     [[nodiscard]] GameWindowDesc desc() const;
 };

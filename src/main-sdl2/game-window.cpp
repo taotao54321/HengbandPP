@@ -126,6 +126,11 @@ GameWindow GameWindowDesc::build(const bool is_main) const {
     return game_win;
 }
 
+Texture GameWindow::init_tex_term() const {
+    const auto [w, h] = font_.cr2xy(ncnr_);
+    return Texture::create_target(ren_.get(), w, h);
+}
+
 Texture GameWindow::init_tex_wall() const {
     const auto surf_tile = Surface::from_bmp_bytes(WALL_BMP, std::size(WALL_BMP));
     const auto surf = Surface::create_tiled(surf_tile.get(), font_.w(), font_.h());
@@ -137,6 +142,8 @@ GameWindow::GameWindow(const bool is_main, Font font, Window win)
     , font_(std::move(font))
     , win_(std::move(win))
     , ren_(Renderer::with_window(win_.get()))
+    , ncnr_(term_size_for(client_area_size()))
+    , tex_term_(init_tex_term())
     , tex_wall_(init_tex_wall()) {
     if (is_main_) {
         const auto [w_min, h_min] = client_area_size_for(MAIN_WIN_NCOL_MIN, MAIN_WIN_NROW_MIN);
@@ -185,6 +192,22 @@ std::pair<int, int> GameWindow::client_area_size_for(const int ncol, const int n
     return font_.cr2xy(ncol, nrow);
 }
 
+std::pair<int, int> GameWindow::term_size_for(const int w, const int h) const {
+    auto [ncol, nrow] = font_.xy2cr(w, h);
+
+    // メインウィンドウの場合は最小端末サイズを下回らないようにする
+    if (is_main_) {
+        chmax(ncol, MAIN_WIN_NCOL_MIN);
+        chmax(nrow, MAIN_WIN_NROW_MIN);
+    }
+
+    return { ncol, nrow };
+}
+
+std::pair<int, int> GameWindow::term_size_for(const std::pair<int, int>& wh) const {
+    return term_size_for(wh.first, wh.second);
+}
+
 u32 GameWindow::id() const {
     const auto res = SDL_GetWindowID(win_.get());
     if (res == 0) PANIC("SDL_GetWindowID() failed");
@@ -210,23 +233,13 @@ void GameWindow::raise() const {
 }
 
 std::pair<int, int> GameWindow::term_size() const {
-    const auto [w, h] = client_area_size();
-    return term_size_for(w, h);
-}
-
-std::pair<int, int> GameWindow::term_size_for(const int w, const int h) const {
-    auto [ncol, nrow] = font_.xy2cr(w, h);
-
-    // メインウィンドウの場合は最小端末サイズを下回らないようにする
-    if (is_main_) {
-        chmax(ncol, MAIN_WIN_NCOL_MIN);
-        chmax(nrow, MAIN_WIN_NROW_MIN);
-    }
-
-    return { ncol, nrow };
+    return ncnr_;
 }
 
 void GameWindow::term_clear() const {
+    if (SDL_SetRenderTarget(ren_.get(), tex_term_.get()) != 0)
+        PANIC("SDL_SetRenderTarget() failed");
+
     if (SDL_SetRenderDrawColor(ren_.get(), 0, 0, 0, 0xFF) != 0)
         PANIC("SDL_SetRenderDrawColor() failed");
     if (SDL_RenderClear(ren_.get()) != 0)
@@ -234,6 +247,9 @@ void GameWindow::term_clear() const {
 }
 
 void GameWindow::term_fill_rect(const int c, const int r, const int ncol, const int nrow, Color color) const {
+    if (SDL_SetRenderTarget(ren_.get(), tex_term_.get()) != 0)
+        PANIC("SDL_SetRenderTarget() failed");
+
     const auto rect = font_.calc_rect(c, r, ncol, nrow);
     if (SDL_SetRenderDrawColor(ren_.get(), color.r(), color.g(), color.b(), color.a()) != 0)
         PANIC("SDL_SetRenderDrawColor() failed");
@@ -247,6 +263,9 @@ void GameWindow::term_draw_text(const int c, const int r, const std::string& tex
     //   グウィルなど)ではそれなりに重くなる。
     //   ASCII 文字のみについてテクスチャキャッシュを持つなど工夫すべきか。
 
+    if (SDL_SetRenderTarget(ren_.get(), tex_term_.get()) != 0)
+        PANIC("SDL_SetRenderTarget() failed");
+
     const auto surf = font_.render(text, fg, bg);
 
     const auto [x, y] = font_.cr2xy(c, r);
@@ -258,6 +277,9 @@ void GameWindow::term_draw_text(const int c, const int r, const std::string& tex
 }
 
 void GameWindow::term_draw_wall(const int c, const int r, Color color) const {
+    if (SDL_SetRenderTarget(ren_.get(), tex_term_.get()) != 0)
+        PANIC("SDL_SetRenderTarget() failed");
+
     const auto rect = font_.calc_rect(c, r, 1, 1);
     if (SDL_SetTextureColorMod(tex_wall_.get(), color.r(), color.g(), color.b()) != 0)
         PANIC("SDL_SetTextureColorMod() failed");
@@ -266,7 +288,30 @@ void GameWindow::term_draw_wall(const int c, const int r, Color color) const {
 }
 
 void GameWindow::present() const {
+    if (SDL_SetRenderTarget(ren_.get(), nullptr) != 0)
+        PANIC("SDL_SetRenderTarget() failed");
+
+    {
+        int w, h;
+        if (SDL_QueryTexture(tex_term_.get(), nullptr, nullptr, &w, &h) != 0)
+            PANIC("SDL_QueryTexture() failed");
+        const SDL_Rect rect { 0, 0, w, h };
+        if (SDL_RenderCopy(ren_.get(), tex_term_.get(), nullptr, &rect) != 0)
+            PANIC("SDL_RenderCopy() failed");
+    }
+
     SDL_RenderPresent(ren_.get());
+}
+
+std::pair<int, int> GameWindow::on_size_change(const int w, const int h) {
+    // 端末画面サイズが変わる場合、端末画面テクスチャを作り直す
+    const auto ncnr_new = term_size_for(w, h);
+    if (ncnr_ != ncnr_new) {
+        ncnr_ = ncnr_new;
+        tex_term_ = init_tex_term();
+    }
+
+    return ncnr_new;
 }
 
 GameWindowDesc GameWindow::desc() const {

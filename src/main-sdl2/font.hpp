@@ -58,9 +58,11 @@ public:
 
     // ピクセル座標 (x,y) を文字座標 (c,r) に変換する。
     [[nodiscard]] std::pair<int, int> xy2cr(int x, int y) const;
+    [[nodiscard]] std::pair<int, int> xy2cr(const std::pair<int, int>& xy) const;
 
     // 文字座標 (c,r) をピクセル座標 (x,y) に変換する。
     [[nodiscard]] std::pair<int, int> cr2xy(int c, int r) const;
+    [[nodiscard]] std::pair<int, int> cr2xy(const std::pair<int, int>& cr) const;
 
     // (c,r,ncol,nrow) をカバーする矩形を求める。
     [[nodiscard]] SDL_Rect calc_rect(int c, int r, int ncol, int nrow) const;

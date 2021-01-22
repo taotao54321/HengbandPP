@@ -106,6 +106,13 @@ void Texture::drop() {
 Texture::Texture(SDL_Texture* tex)
     : tex_(tex) { }
 
+Texture Texture::create_target(SDL_Renderer* ren, const int w, const int h) {
+    // TODO: ピクセルフォーマットはこれが最善なのか?
+    auto* tex = SDL_CreateTexture(ren, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, w, h);
+    if (!tex) PANIC("SDL_CreateTexture() failed");
+    return Texture(tex);
+}
+
 Texture Texture::from_surface(SDL_Renderer* ren, SDL_Surface* surf) {
     auto* tex = SDL_CreateTextureFromSurface(ren, surf);
     if (!tex) PANIC("SDL_CreateTextureFromSurface() failed");

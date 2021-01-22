@@ -84,6 +84,9 @@ private:
 public:
     explicit Texture(SDL_Texture* tex);
 
+    // ターゲットテクスチャを作る。
+    static Texture create_target(SDL_Renderer* ren, int w, int h);
+
     static Texture from_surface(SDL_Renderer* ren, SDL_Surface* surf);
 
     // movable
