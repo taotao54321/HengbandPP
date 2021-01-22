@@ -99,9 +99,7 @@ Renderer& Renderer::operator=(Renderer&& rhs) noexcept {
     return *this;
 }
 
-Renderer::~Renderer() {
-    SDL_DestroyRenderer(ren_);
-}
+Renderer::~Renderer() { drop(); }
 
 SDL_Renderer* Renderer::get() const { return ren_; }
 
