@@ -93,6 +93,8 @@ public:
     [[nodiscard]] bool is_visible() const;
     void set_visible(bool visible) const;
 
+    void raise() const;
+
     // 現在の端末画面サイズ (ncol,nrow) を得る。
     [[nodiscard]] std::pair<int, int> term_size() const;
 

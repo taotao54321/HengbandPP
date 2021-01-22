@@ -205,6 +205,10 @@ void GameWindow::set_visible(const bool visible) const {
         SDL_HideWindow(win_.get());
 }
 
+void GameWindow::raise() const {
+    SDL_RaiseWindow(win_.get());
+}
+
 std::pair<int, int> GameWindow::term_size() const {
     const auto [w, h] = client_area_size();
     return term_size_for(w, h);

@@ -362,6 +362,9 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
 
     quit_aux = quit_hook;
 
+    // メインウィンドウをアクティブ化
+    wins[0].raise();
+
     // これを行わないとクラッシュする
     // Term の初期化はドライバ側の責任らしい
     term_activate(angband_term[0]);
