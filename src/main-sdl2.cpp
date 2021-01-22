@@ -35,10 +35,10 @@ constexpr int TERM_COUNT = 8;
 constexpr std::array<int, TERM_COUNT> TERM_IDS { 0, 1, 2, 3, 4, 5, 6, 7 };
 // clang-format on
 
+Config config {};
+
 System* sys {};
-
 std::vector<GameWindow> wins {};
-
 std::array<term_type, TERM_COUNT> terms {};
 
 int current_term_id() {
@@ -321,23 +321,8 @@ extern "C" errr term_text_sdl2(
     return 0;
 }
 
-std::vector<GameWindowDesc> get_window_descs() {
-    return {
-        GameWindowDesc().title("Hengband").x(0).y(0).w(1350).h(756).font_pt(18),
-        GameWindowDesc().title("Term-1").x(0).y(780).w(1350).h(252).font_pt(18),
-        GameWindowDesc().title("Term-2").x(1360).y(0).w(549).h(252).font_pt(18),
-        GameWindowDesc().title("Term-3").x(1360).y(260).w(549).h(483).font_pt(18),
-        GameWindowDesc().title("Term-4").x(1360).y(780).w(549).h(273).font_pt(18),
-        GameWindowDesc().title("Term-5").visible(false),
-        GameWindowDesc().title("Term-6").visible(false),
-        GameWindowDesc().title("Term-7").visible(false),
-    };
-}
-
 // 終了時に設定を保存
 extern "C" void quit_hook(concptr) {
-    Config config;
-
     for (const auto i : IRANGE(TERM_COUNT))
         config.win_descs[i] = wins[i].desc();
 
@@ -351,13 +336,14 @@ void init_sdl2(int /*argc*/, char** /*argv*/) {
     // ファイルローカルで確保したリソースの解放については考えない。
     // どうせプログラム終了時に解放されるので。
 
-    sys = new System;
+    if (const auto config_loaded = Config::load())
+        config = *config_loaded;
 
-    const auto win_descs = get_window_descs();
+    sys = new System;
 
     for (const auto i : IRANGE(TERM_COUNT)) {
         const auto is_main = i == 0;
-        auto win = win_descs[i].build(is_main);
+        auto win = config.win_descs[i].build(is_main);
         const auto [ncol, nrow] = win.term_size();
         wins.emplace_back(std::move(win));
 

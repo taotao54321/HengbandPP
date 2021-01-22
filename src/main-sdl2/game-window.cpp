@@ -1,4 +1,5 @@
 #include <string>
+#include <tuple>
 #include <utility>
 
 #include "main-sdl2/font.hpp"
@@ -141,6 +142,17 @@ GameWindow::GameWindow(Font font, Window win)
     present();
 }
 
+std::tuple<int, int, int, int> GameWindow::borders_size() const {
+    int top;
+    int left;
+    int bottom;
+    int right;
+    // X11 以外ではサポートされていないため失敗する
+    if (SDL_GetWindowBordersSize(win_.get(), &top, &left, &bottom, &right) != 0)
+        return { 0, 0, 0, 0 };
+    return { top, left, bottom, right };
+}
+
 std::pair<int, int> GameWindow::pos() const {
     int x, y;
     SDL_GetWindowPosition(win_.get(), &x, &y);
@@ -235,13 +247,21 @@ void GameWindow::present() const {
 }
 
 GameWindowDesc GameWindow::desc() const {
+    // TODO:
+    //   X11 環境以外での動作は未検証。
+    //   X11 環境では SDL_GetWindowPosition() と SDL_GetWindowBordersSize() を
+    //   組み合わせることで外枠も含めたウィンドウ位置が得られる。
+
+    int border_top, border_left;
+    std::tie(border_top, border_left, std::ignore, std::ignore) = borders_size();
+
     const auto [x, y] = pos();
     const auto [w, h] = client_area_size();
 
     return GameWindowDesc()
         .title(SDL_GetWindowTitle(win_.get()))
-        .x(x)
-        .y(y)
+        .x(x - border_left)
+        .y(y - border_top)
         .w(w)
         .h(h)
         .font_path(font_.path())

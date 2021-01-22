@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <tuple>
 #include <utility>
 
 #include <boost/core/noncopyable.hpp>
@@ -62,6 +63,9 @@ private:
     [[nodiscard]] Texture init_tex_wall() const;
 
     GameWindow(Font font, Window win);
+
+    // ウィンドウの4辺の枠幅を得る。top, left, bottom, right の順。
+    [[nodiscard]] std::tuple<int, int, int, int> borders_size() const;
 
     // ウィンドウ位置を得る。
     [[nodiscard]] std::pair<int, int> pos() const;
