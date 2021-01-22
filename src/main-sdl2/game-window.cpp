@@ -141,12 +141,10 @@ GameWindow::GameWindow(Font font, Window win)
     present();
 }
 
-const Font& GameWindow::font() const { return font_; }
-
-u32 GameWindow::id() const {
-    const auto res = SDL_GetWindowID(win_.get());
-    if (res == 0) PANIC("SDL_GetWindowID() failed");
-    return res;
+std::pair<int, int> GameWindow::pos() const {
+    int x, y;
+    SDL_GetWindowPosition(win_.get(), &x, &y);
+    return { x, y };
 }
 
 std::pair<int, int> GameWindow::client_area_size() const {
@@ -163,6 +161,14 @@ std::pair<int, int> GameWindow::client_area_size() const {
     int w, h;
     SDL_GetWindowSize(win_.get(), &w, &h);
     return { w, h };
+}
+
+const Font& GameWindow::font() const { return font_; }
+
+u32 GameWindow::id() const {
+    const auto res = SDL_GetWindowID(win_.get());
+    if (res == 0) PANIC("SDL_GetWindowID() failed");
+    return res;
 }
 
 bool GameWindow::is_visible() const {
@@ -226,4 +232,19 @@ void GameWindow::term_draw_wall(const int c, const int r, Color color) const {
 
 void GameWindow::present() const {
     SDL_RenderPresent(ren_.get());
+}
+
+GameWindowDesc GameWindow::desc() const {
+    const auto [x, y] = pos();
+    const auto [w, h] = client_area_size();
+
+    return GameWindowDesc()
+        .title(SDL_GetWindowTitle(win_.get()))
+        .x(x)
+        .y(y)
+        .w(w)
+        .h(h)
+        .font_path(font_.path())
+        .font_pt(font_.pt())
+        .visible(is_visible());
 }

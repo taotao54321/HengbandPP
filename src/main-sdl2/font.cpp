@@ -76,7 +76,9 @@ void Font::drop() {
 }
 
 Font::Font(const std::string& path, const int pt)
-    : font_(TTF_OpenFont(path.c_str(), pt)) {
+    : path_(path)
+    , pt_(pt)
+    , font_(TTF_OpenFont(path.c_str(), pt)) {
     constexpr char CHARS_ASCII[] = R"( !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~)";
 
     if (!font_) PANIC("TTF_OpenFont() failed");
@@ -107,6 +109,9 @@ Font& Font::operator=(Font&& rhs) noexcept {
 }
 
 Font::~Font() { drop(); }
+
+const std::string& Font::path() const { return path_; }
+int Font::pt() const { return pt_; }
 
 int Font::w() const { return w_; }
 int Font::h() const { return h_; }

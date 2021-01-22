@@ -69,11 +69,14 @@ std::optional<std::reference_wrapper<const T>> json_get(const picojson::value& v
     return v.get<T>();
 }
 
+#if 0
+// 今のところ未使用
 std::optional<int> json_get_int(const picojson::value& v) {
     const auto real = json_get<double>(v);
     if (!real) return std::nullopt;
     return int(*real);
 }
+#endif
 
 template <class T>
 std::optional<std::reference_wrapper<const T>> json_object_get(const picojson::object& o, const std::string& key) {

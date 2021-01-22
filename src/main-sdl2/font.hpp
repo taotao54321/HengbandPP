@@ -15,6 +15,8 @@
 // 事前に TTF_Init() を呼んでおくこと。
 class Font : private boost::noncopyable {
 private:
+    std::string path_;
+    int pt_;
     TTF_Font* font_;
     int w_;
     int h_;
@@ -29,6 +31,12 @@ public:
     Font& operator=(Font&& rhs) noexcept;
 
     ~Font();
+
+    // フォントファイルのパスを得る。
+    [[nodiscard]] const std::string& path() const;
+
+    // フォントのポイント数を得る。
+    [[nodiscard]] int pt() const;
 
     // 文字の幅を得る。
     [[nodiscard]] int w() const;

@@ -63,6 +63,12 @@ private:
 
     GameWindow(Font font, Window win);
 
+    // ウィンドウ位置を得る。
+    [[nodiscard]] std::pair<int, int> pos() const;
+
+    // クライアント領域のサイズを得る。
+    [[nodiscard]] std::pair<int, int> client_area_size() const;
+
     friend class GameWindowDesc;
 
 public:
@@ -78,9 +84,6 @@ public:
     [[nodiscard]] const Font& font() const;
 
     [[nodiscard]] u32 id() const;
-
-    // クライアント領域のサイズを得る。
-    [[nodiscard]] std::pair<int, int> client_area_size() const;
 
     [[nodiscard]] bool is_visible() const;
     void set_visible(bool visible);
@@ -108,4 +111,6 @@ public:
 
     // バッファに描画した内容を画面に反映する。
     void present() const;
+
+    [[nodiscard]] GameWindowDesc desc() const;
 };
