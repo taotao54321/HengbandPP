@@ -96,12 +96,16 @@ Font::Font(const std::string& path, const int pt)
 }
 
 Font::Font(Font&& other) noexcept
-    : font_(std::exchange(other.font_, nullptr))
+    : path_(std::move(other.path_))
+    , pt_(other.pt_)
+    , font_(std::exchange(other.font_, nullptr))
     , w_(other.w_)
     , h_(other.h_) { }
 
 Font& Font::operator=(Font&& rhs) noexcept {
     drop();
+    path_ = std::move(rhs.path_);
+    pt_ = rhs.pt_;
     font_ = std::exchange(rhs.font_, nullptr);
     w_ = rhs.w_;
     h_ = rhs.h_;
