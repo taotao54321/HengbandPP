@@ -37,40 +37,56 @@ GameWindowDesc::GameWindowDesc()
     , font_pt_(16)
     , visible_(true) { }
 
+const std::string& GameWindowDesc::title() const { return title_; }
+
 GameWindowDesc& GameWindowDesc::title(std::string title) {
     title_ = std::move(title);
     return *this;
 }
+
+int GameWindowDesc::x() const { return x_; }
 
 GameWindowDesc& GameWindowDesc::x(const int x) {
     x_ = x;
     return *this;
 }
 
+int GameWindowDesc::y() const { return y_; }
+
 GameWindowDesc& GameWindowDesc::y(const int y) {
     y_ = y;
     return *this;
 }
+
+int GameWindowDesc::w() const { return w_; }
 
 GameWindowDesc& GameWindowDesc::w(const int w) {
     w_ = w;
     return *this;
 }
 
+int GameWindowDesc::h() const { return h_; }
+
 GameWindowDesc& GameWindowDesc::h(const int h) {
     h_ = h;
     return *this;
 }
+
+const std::string& GameWindowDesc::font_path() const { return font_path_; }
 
 GameWindowDesc& GameWindowDesc::font_path(std::string path) {
     font_path_ = std::move(path);
     return *this;
 }
 
+int GameWindowDesc::font_pt() const { return font_pt_; }
+
 GameWindowDesc& GameWindowDesc::font_pt(const int pt) {
     font_pt_ = pt;
     return *this;
 }
+
+bool GameWindowDesc::visible() const { return visible_; }
 
 GameWindowDesc& GameWindowDesc::visible(const bool visible) {
     visible_ = visible;

@@ -25,13 +25,28 @@ private:
 public:
     GameWindowDesc();
 
+    [[nodiscard]] const std::string& title() const;
     GameWindowDesc& title(std::string title);
+
+    [[nodiscard]] int x() const;
     GameWindowDesc& x(int x);
+
+    [[nodiscard]] int y() const;
     GameWindowDesc& y(int y);
+
+    [[nodiscard]] int w() const;
     GameWindowDesc& w(int w);
+
+    [[nodiscard]] int h() const;
     GameWindowDesc& h(int h);
+
+    [[nodiscard]] const std::string& font_path() const;
     GameWindowDesc& font_path(std::string path);
+
+    [[nodiscard]] int font_pt() const;
     GameWindowDesc& font_pt(int pt);
+
+    [[nodiscard]] bool visible() const;
     GameWindowDesc& visible(bool visible);
 
     [[nodiscard]] GameWindow build(bool is_main) const;
