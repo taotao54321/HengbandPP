@@ -141,7 +141,7 @@ void window_redraw(const int term_id) {
 errr on_window_size_change(const SDL_WindowEvent& ev, const int term_id) {
     const auto& win = wins[term_id];
 
-    const auto [ncol, nrow] = win.font().xy2cr(ev.data1, ev.data2);
+    const auto [ncol, nrow] = win.term_size_for(ev.data1, ev.data2);
 
     term_activate(&terms[term_id]);
     term_resize(ncol, nrow);

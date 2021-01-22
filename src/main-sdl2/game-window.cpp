@@ -176,7 +176,9 @@ std::pair<int, int> GameWindow::client_area_size() const {
     return { w, h };
 }
 
-const Font& GameWindow::font() const { return font_; }
+std::pair<int, int> GameWindow::client_area_size_for(const int ncol, const int nrow) const {
+    return font_.cr2xy(ncol, nrow);
+}
 
 u32 GameWindow::id() const {
     const auto res = SDL_GetWindowID(win_.get());
@@ -201,6 +203,10 @@ std::pair<int, int> GameWindow::term_size() const {
     // TODO: メインウィンドウの場合は最小端末サイズを下回らない措置を設けたい
 
     const auto [w, h] = client_area_size();
+    return term_size_for(w, h);
+}
+
+std::pair<int, int> GameWindow::term_size_for(const int w, const int h) const {
     return { w / font_.w(), h / font_.h() };
 }
 

@@ -70,8 +70,11 @@ private:
     // ウィンドウ位置を得る。
     [[nodiscard]] std::pair<int, int> pos() const;
 
-    // クライアント領域のサイズを得る。
+    // 現在のクライアント領域サイズを得る。
     [[nodiscard]] std::pair<int, int> client_area_size() const;
+
+    // 端末画面サイズ (ncol,nrow) を実現する最低限のクライアント領域サイズを得る。
+    [[nodiscard]] std::pair<int, int> client_area_size_for(int ncol, int nrow) const;
 
     friend class GameWindowDesc;
 
@@ -84,16 +87,16 @@ public:
     GameWindow(GameWindow&& other) noexcept = default;
     GameWindow& operator=(GameWindow&& rhs) noexcept = default;
 
-    // FIXME: リサイズ処理に必要なので生やしたが、リファクタの余地ありそう
-    [[nodiscard]] const Font& font() const;
-
     [[nodiscard]] u32 id() const;
 
     [[nodiscard]] bool is_visible() const;
     void set_visible(bool visible);
 
-    // 端末画面の (ncol,nrow) を得る。
+    // 現在の端末画面サイズ (ncol,nrow) を得る。
     [[nodiscard]] std::pair<int, int> term_size() const;
+
+    // ウィンドウサイズを (w,h) にしたときの端末画面サイズ (ncol,nrow) を得る。
+    [[nodiscard]] std::pair<int, int> term_size_for(int w, int h) const;
 
     // 端末画面全体をクリアする。
     void term_clear() const;
