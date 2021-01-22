@@ -96,7 +96,7 @@ GameWindowDesc& GameWindowDesc::visible(const bool visible) {
 
 GameWindow GameWindowDesc::build(const bool is_main) const {
     // フォント生成
-    // フォント名が未指定ならデフォルトフォント名を使う
+    // フォント名が未指定ならデフォルトフォント名を使う。
     auto font_path = font_path_;
     if (font_path.empty()) {
         const auto path_monospace = get_font_path(FONT_NAME_DEFAULT);
@@ -106,7 +106,8 @@ GameWindow GameWindowDesc::build(const bool is_main) const {
     Font font(font_path, font_pt_);
 
     // ウィンドウ生成
-    // メインウィンドウの場合、最小端末サイズを下回っていたら補正
+    // メインウィンドウの場合、最小端末サイズを下回っていたら補正。
+    // 起動時に非表示ウィンドウが見切れるのを防ぐため、最初は hidden 状態で生成する。
     auto w = w_;
     auto h = h_;
     auto [ncol, nrow] = font.xy2cr(w, h);
@@ -116,7 +117,7 @@ GameWindow GameWindowDesc::build(const bool is_main) const {
         if (chmax(nrow, MAIN_WIN_NROW_MIN))
             h = font.r2y(nrow);
     }
-    auto win = Window::create(title_, x_, y_, w, h);
+    auto win = Window::create(title_, x_, y_, w, h, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN);
 
     auto game_win = GameWindow(std::move(font), std::move(win));
 

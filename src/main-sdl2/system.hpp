@@ -42,7 +42,7 @@ private:
 public:
     explicit Window(SDL_Window* win);
 
-    static Window create(const std::string& title, int x, int y, int w, int h);
+    static Window create(const std::string& title, int x, int y, int w, int h, u32 flags);
 
     // movable
     Window(Window&& other) noexcept;

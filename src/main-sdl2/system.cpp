@@ -46,8 +46,8 @@ void Window::drop() {
 Window::Window(SDL_Window* win)
     : win_(win) { }
 
-Window Window::create(const std::string& title, const int x, const int y, const int w, const int h) {
-    auto* win = SDL_CreateWindow(title.c_str(), x, y, w, h, SDL_WINDOW_RESIZABLE);
+Window Window::create(const std::string& title, const int x, const int y, const int w, const int h, const u32 flags) {
+    auto* win = SDL_CreateWindow(title.c_str(), x, y, w, h, flags);
     if (!win) PANIC("SDL_CreateWindow() failed");
     return Window(win);
 }
