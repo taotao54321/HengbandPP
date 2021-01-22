@@ -372,7 +372,7 @@ extern "C" void quit_hook(concptr) {
 
 } // anonymous namespace
 
-void init_sdl2(int /*argc*/, char** /*argv*/) {
+extern "C" void init_sdl2(int /*argc*/, char** /*argv*/) {
     // ファイルローカルで確保したリソースの解放については考えない。
     // どうせプログラム終了時に解放されるので。
 
