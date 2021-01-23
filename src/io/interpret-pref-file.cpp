@@ -369,21 +369,26 @@ static errr interpret_macro_keycodes(int tok, char** zz) {
 
     int m = max_macrotrigger;
     max_macrotrigger++;
+
+    // バックスラッシュによるエスケープを処理
     t = buf_aux;
     s = zz[0];
     while (*s) {
         if ('\\' == *s) s++;
         *t++ = *s++;
     }
-
     *t = '\0';
+
+    // トリガーと対応するキーコードを登録
     macro_trigger_name[m] = string_make(buf_aux);
     macro_trigger_keycode[0][m] = string_make(zz[1]);
+
+    // Shift キーコードがあれば登録
     if (tok == 3) {
         macro_trigger_keycode[1][m] = string_make(zz[2]);
         return 0;
     }
-
+    // Shift キーコードがない場合、keycode と同じものを登録
     macro_trigger_keycode[1][m] = string_make(zz[1]);
     return 0;
 }
