@@ -316,6 +316,7 @@ static errr interpret_z_token(char* buf) {
  * @return エラーコード
  */
 static errr decide_template_modifier(int tok, char** zz) {
+    // 既にマクロテンプレートが存在する場合は消す
     if (macro_template != NULL) {
         int macro_modifier_length = strlen(macro_modifier_chr);
         string_free(macro_template);
@@ -334,12 +335,15 @@ static errr decide_template_modifier(int tok, char** zz) {
         max_macrotrigger = 0;
     }
 
+    // <template> が空なら何もしない
     if (*zz[0] == '\0') return 0;
 
+    // modifier 数が正しくなければエラー
     int zz_length = strlen(zz[1]);
     zz_length = MIN(MAX_MACRO_MOD, zz_length);
     if (2 + zz_length != tok) return 1;
 
+    // マクロテンプレートを新規作成
     macro_template = string_make(zz[0]);
     macro_modifier_chr = string_make(zz[1]);
     for (int i = 0; i < zz_length; i++) {
