@@ -322,7 +322,7 @@ void GameWindow::present(const PresentParam& param) const {
     // メインウィンドウの場合、メニューバー表示
     if (is_main_) {
         for (const auto i : IRANGE(1, 8)) {
-            const int x = 32 * i;
+            const int x = client_area_size().first - 32 * 7 + 32 * (i - 1);
             const SDL_Rect rect { x, 0, 32, 32 };
 
             const auto& tex = texs_.at(FORMAT("win_{}", i));
@@ -357,7 +357,7 @@ ClickResponse GameWindow::on_click(const int x, const int y) const {
     ClickResponse resp { -1 };
 
     if (is_main_ && y < MAIN_WIN_MENU_H) {
-        const auto i = x / 32;
+        const auto i = (x - (client_area_size().first - 32 * 8)) / 32;
         if (1 <= i && i < 8)
             resp.win_idx = i;
     }
