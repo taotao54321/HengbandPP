@@ -77,6 +77,8 @@ static int angband_strnicmp(concptr a, concptr b, int n) {
     return 0;
 }
 
+// text_to_ascii() 下請け
+// "\[F1]" などの処理
 static void trigger_text_to_ascii(char** bufptr, concptr* strptr) {
     char* s = *bufptr;
     concptr str = *strptr;
@@ -86,30 +88,41 @@ static void trigger_text_to_ascii(char** bufptr, concptr* strptr) {
     int shiftstatus = 0;
     concptr key_code;
 
+    // マクロテンプレートがなければ無視
     if (macro_template == NULL)
         return;
 
+    // 修飾キーフラグ初期化
     for (i = 0; macro_modifier_chr[i]; i++)
         mod_status[i] = FALSE;
+
+    // '[' を読み飛ばす
     str++;
 
     /* Examine modifier keys */
     while (TRUE) {
+        // 修飾キー文字列 ("shift-" など) と一致するか調べる(case insensitive)
         for (i = 0; macro_modifier_chr[i]; i++) {
             len = strlen(macro_modifier_name[i]);
 
             if (!angband_strnicmp(str, macro_modifier_name[i], len))
-                break;
+                break; // 一致した
         }
-
+        // 一致がなければ次の処理へ
         if (!macro_modifier_chr[i])
             break;
+
+        // 修飾キー文字列部分の次まで読み進め、修飾キーフラグを立てる
         str += len;
         mod_status[i] = TRUE;
+
+        // Shift キーの場合、shift フラグを立てる
         if ('S' == macro_modifier_chr[i])
             shiftstatus = 1;
     }
 
+    // 一致するマクロトリガーを探す
+    // 例えば "F1]" なら F1 に一致
     for (i = 0; i < max_macrotrigger; i++) {
         len = strlen(macro_trigger_name[i]);
         if (!angband_strnicmp(str, macro_trigger_name[i], len) && ']' == str[len]) {
@@ -117,37 +130,52 @@ static void trigger_text_to_ascii(char** bufptr, concptr* strptr) {
         }
     }
 
+    // 一致するマクロトリガーが見つからなかった場合
     if (i == max_macrotrigger) {
         str = angband_strchr(str, ']');
         if (str) {
+            // 後続の ']' がある場合
+            // マクロトリガー開始文字 (31) と '\r' を書き込む
+            // "[...]" の中身は読み飛ばす (次は ']' から読む)
             *s++ = (char)31;
             *s++ = '\r';
             *bufptr = s;
             *strptr = str; /* where **strptr == ']' */
         }
+        // 後続の ']' がない場合、単に無視する
 
         return;
     }
 
+    // 一致するマクロトリガーが見つかった
+
+    // 対応するキーコードを取得 (pref 内の "T:<trigger>:<keycode>:<shift-keycode>")
     key_code = macro_trigger_keycode[shiftstatus][i];
+
+    // ']' まで読み進める
     str += len;
 
+    // マクロトリガー開始文字 (31) を書き込む
     *s++ = (char)31;
+
+    // マクロテンプレート展開
     for (i = 0; macro_template[i]; i++) {
         char ch = macro_template[i];
         switch (ch) {
         case '&':
+            // '&' は修飾キーたちに置換
             for (int j = 0; macro_modifier_chr[j]; j++) {
                 if (mod_status[j])
                     *s++ = macro_modifier_chr[j];
             }
-
             break;
         case '#':
+            // '#' はキーコードに置換
             strcpy(s, key_code);
             s += strlen(key_code);
             break;
         default:
+            // その他の文字はそのまま
             *s++ = ch;
             break;
         }
@@ -166,36 +194,49 @@ static void trigger_text_to_ascii(char** bufptr, concptr* strptr) {
  * I have no clue if this function correctly handles, for example,
  * parsing "\xFF" into a (signed) char.  Whoever thought of making
  * the "sign" of a "char" undefined is a complete moron.  Oh well.
+ *
+ * buf: 変換先
+ * str: 変換元
  */
 void text_to_ascii(char* buf, concptr str) {
     char* s = buf;
     while (*str) {
         if (*str == '\\') {
+            // バックスラッシュで始まる文字列の処理
             str++;
+
+            // バックスラッシュの後に何もなければ無視
             if (!(*str))
                 break;
 
             if (*str == '[') {
+                // "\[F1]" などの処理
                 trigger_text_to_ascii(&s, &str);
             }
             else {
                 if (*str == 'x') {
+                    // "\xFF" などの処理 (16進)
                     *s = 16 * (char)dehex(*++str);
                     *s++ += (char)dehex(*++str);
                 }
                 else if (*str == '\\') {
+                    // "\\" は単一のバックスラッシュ
                     *s++ = '\\';
                 }
                 else if (*str == '^') {
+                    // "\^" は "^" (生の "^" はコントロール文字を表すためエスケープが必要)
                     *s++ = '^';
                 }
                 else if (*str == 's') {
+                    // "\s" はスペース
                     *s++ = ' ';
                 }
                 else if (*str == 'e') {
+                    // "\e" はエスケープ
                     *s++ = ESCAPE;
                 }
                 else if (*str == 'b') {
+                    // "\b" はバックスペース
                     *s++ = '\b';
                 }
                 else if (*str == 'n') {
@@ -207,6 +248,7 @@ void text_to_ascii(char* buf, concptr str) {
                 else if (*str == 't') {
                     *s++ = '\t';
                 }
+                // ここから "\377" などの処理 (8進)
                 else if (*str == '0') {
                     *s = 8 * (char)deoct(*++str);
                     *s++ += (char)deoct(*++str);
@@ -223,11 +265,14 @@ void text_to_ascii(char* buf, concptr str) {
                     *s = 64 * 3 + 8 * (char)deoct(*++str);
                     *s++ += (char)deoct(*++str);
                 }
+                // ここまで8進の処理
             }
 
             str++;
         }
         else if (*str == '^') {
+            // "^a" などの処理 (コントロール文字)
+            // 下位 5bit のみを取り出す
             str++;
             *s++ = (*str++ & 037);
         }
