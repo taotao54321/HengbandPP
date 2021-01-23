@@ -135,7 +135,7 @@ static void trigger_text_to_ascii(char** bufptr, concptr* strptr) {
         str = angband_strchr(str, ']');
         if (str) {
             // 後続の ']' がある場合
-            // マクロトリガー開始文字 (31) と '\r' を書き込む
+            // マクロトリガー開始文字 '\x31' と終端文字 '\r' を書き込む
             // "[...]" の中身は読み飛ばす (次は ']' から読む)
             *s++ = (char)31;
             *s++ = '\r';
@@ -155,7 +155,7 @@ static void trigger_text_to_ascii(char** bufptr, concptr* strptr) {
     // ']' まで読み進める
     str += len;
 
-    // マクロトリガー開始文字 (31) を書き込む
+    // マクロトリガー開始文字 '\x31' を書き込む
     *s++ = (char)31;
 
     // マクロテンプレート展開
@@ -181,6 +181,7 @@ static void trigger_text_to_ascii(char** bufptr, concptr* strptr) {
         }
     }
 
+    // マクロトリガー終端文字 '\r' を書き込む
     *s++ = '\r';
 
     *bufptr = s;
